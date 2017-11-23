@@ -33,7 +33,7 @@
   };
 
   # Set your time zone.
-  # time.timeZone = "America/New_York";
+  time.timeZone = "America/New_York";
 
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
