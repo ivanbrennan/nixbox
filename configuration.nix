@@ -42,6 +42,7 @@
     git
     mkpasswd
     vimHugeX
+    xcape
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -67,7 +68,7 @@
   # Enable the X11 windowing system.
   services.xserver.enable = true;
   services.xserver.layout = "us";
-  # services.xserver.xkbOptions = "eurosign:e";
+  services.xserver.xkbOptions = "caps:ctrl_modifier, shift:both_capslock";
 
   # Enable touchpad support.
   services.xserver.libinput.enable = true;
@@ -75,6 +76,11 @@
   # Enable the KDE Desktop Environment.
   # services.xserver.displayManager.sddm.enable = true;
   # services.xserver.desktopManager.plasma5.enable = true;
+
+  services.xserver.displayManager.sessionCommands = ''
+    # tap caps to escape
+    xcape -e 'Caps_Lock=Escape' &
+  '';
 
   # Gnome desktop
   services.xserver.desktopManager = {
