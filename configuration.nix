@@ -8,6 +8,7 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ./prompt-init.nix
     ];
 
   # Use the systemd-boot EFI boot loader.
@@ -50,22 +51,6 @@
   nixpkgs.config.allowUnfree = true;
 
   environment.etc."inputrc".source = pkgs.lib.mkForce ./inputrc;
-
-  programs.bash.promptInit = ''
-    # Provide a nice prompt if the terminal supports it.
-    if [ "$TERM" != "dumb" -o -n "$INSIDE_EMACS" ]; then
-      CYAN="\033[0;36m"
-      NORMAL="\033[0m"
-
-      PS1="╭$CYAN\w$NORMAL\n╰(\u)• "
-      PS2=" ❯ "
-      PS4=" + "
-
-      if test "$TERM" = "xterm"; then
-        PS1="\[\033]2;\h:\u:\w\007\]$PS1"
-      fi
-    fi
-  '';
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
