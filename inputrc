@@ -1,0 +1,78 @@
+set bell-style none
+set colored-completion-prefix on
+set colored-stats off
+set completion-ignore-case on
+set convert-meta off
+set echo-control-characters off
+set enable-bracketed-paste on
+set input-meta on
+set keyseq-timeout 250
+set mark-symlinked-directories on
+set output-meta on
+set skip-completed-text on
+
+# Search history for the characters preceding the cursor
+control-p: previous-history
+control-n: next-history
+"\e[1;5A": history-search-backward
+"\e[1;5B": history-search-forward
+"\ep": history-search-backward
+"\en": history-search-forward
+
+# # Shift-Space
+"\e[32;2u": " "
+# # Ctrl-Shift-Space
+"\e[32;6u": " "
+
+# # Alt-Tab
+# "\e[9;3u": "\t"
+# # Alt-Shift-Tab
+# "\e[1;3Z": "\t"
+
+# # Ctrl-,
+"\e[44;5u": ","
+# Ctrl-.
+"\e[46;5u": "."
+
+# Shift-Enter
+"\e[13;2u": "\n"
+# Ctrl-Enter
+"\e[13;5u": "\n"
+# Alt-Enter
+"\e[13;3u": "\n"
+
+# Shift-Left
+"\e[1;2D": backward-word
+# Ctrl-Left
+"\e[1;5D": backward-word
+# Ctrl-Shift-Left
+"\e[1;6D": beginning-of-line
+
+# Shift-Right
+"\e[1;2C": forward-word
+# Ctrl-Right
+"\e[1;5C": forward-word
+# Ctrl-Shift-Right
+"\e[1;6C": end-of-line
+
+
+# for linux console and RH/Debian xterm
+"\e[1~": beginning-of-line
+"\e[4~": end-of-line
+"\e[5~": beginning-of-history
+"\e[6~": end-of-history
+"\e[3~": delete-char
+"\e[2~": quoted-insert
+"\e[5C": forward-word
+"\e[5D": backward-word
+
+# for rxvt
+"\e[8~": end-of-line
+
+# for non RH/Debian xterm, can't hurt for RH/DEbian xterm
+"\eOH": beginning-of-line
+"\eOF": end-of-line
+
+# for freebsd console
+"\e[H": beginning-of-line
+"\e[F": end-of-line
