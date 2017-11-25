@@ -42,6 +42,7 @@
     git
     mkpasswd
     slack
+    tree
     vimHugeX
     xcape
   ];
