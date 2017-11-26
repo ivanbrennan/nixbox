@@ -6,6 +6,7 @@
   imports =
     [
       ./bash-aliases.nix
+      ./environment/default.nix
       ./hardware-configuration.nix
       ./interactive-shell-init.nix
       ./prompt-init.nix
@@ -35,7 +36,6 @@
   # Set your time zone.
   time.timeZone = "America/New_York";
 
-  environment = (import ./environment/default.nix) pkgs;
   nixpkgs.config.allowUnfree = true;
 
   # Some programs need SUID wrappers, can be configured further or are
