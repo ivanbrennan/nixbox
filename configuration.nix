@@ -1,12 +1,10 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
+# For help, see ‘man configuration.nix’ and ‘nixos-help’.
 
 { config, pkgs, ... }:
 
 {
   imports =
-    [ # Include the results of the hardware scan.
+    [
       ./bash-aliases.nix
       ./hardware-configuration.nix
       ./interactive-shell-init.nix
