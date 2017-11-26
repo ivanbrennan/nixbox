@@ -7,6 +7,7 @@
 {
   imports =
     [ # Include the results of the hardware scan.
+      ./bash-aliases.nix
       ./hardware-configuration.nix
       ./prompt-init.nix
     ];
