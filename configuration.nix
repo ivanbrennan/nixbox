@@ -81,28 +81,7 @@
   # Enable CUPS to print documents.
   # services.printing.enable = true;
 
-  # Enable the X11 windowing system.
-  services.xserver.enable = true;
-  services.xserver.layout = "us";
-  services.xserver.xkbOptions = "caps:ctrl_modifier, shift:both_capslock";
-
-  # Enable touchpad support.
-  services.xserver.libinput.enable = true;
-
-  # Enable the KDE Desktop Environment.
-  # services.xserver.displayManager.sddm.enable = true;
-  # services.xserver.desktopManager.plasma5.enable = true;
-
-  services.xserver.displayManager.sessionCommands = ''
-    # tap caps to escape
-    xcape -e 'Caps_Lock=Escape' &
-  '';
-
-  # Gnome desktop
-  services.xserver.desktopManager = {
-    gnome3.enable = true;
-    default = "gnome3";
-  };
+  services.xserver = import ./services/xserver.nix;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.extraUsers.ivan = {
