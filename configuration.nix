@@ -35,28 +35,9 @@
   # Set your time zone.
   time.timeZone = "America/New_York";
 
-  # List packages installed in system profile. To search by name, run:
-  # $ nix-env -qaP | grep wget
-  environment.systemPackages = with pkgs; [
-    chromium
-    git
-    mkpasswd
-    slack
-    tmux
-    tree
-    vimHugeX
-    xcape
-  ];
-
+  environment.systemPackages = (import ./environment/system-packages.nix) pkgs;
   nixpkgs.config.allowUnfree = true;
-
-  environment.variables = {
-    DOTFILES = "$HOME/Development/resources/dotfiles-nixos";
-    EDITOR = "vim";
-    VISUAL = "vim";
-    GIT_EDITOR = "vim";
-    GIT_MERGE_AUTOEDIT = "no";
-  };
+  environment.variables = import ./environment/variables.nix;
 
   environment.etc."inputrc".source = pkgs.lib.mkForce ./inputrc;
 
