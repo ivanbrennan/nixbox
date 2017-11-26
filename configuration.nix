@@ -35,11 +35,8 @@
   # Set your time zone.
   time.timeZone = "America/New_York";
 
-  environment.systemPackages = (import ./environment/system-packages.nix) pkgs;
+  environment = (import ./environment/default.nix) pkgs;
   nixpkgs.config.allowUnfree = true;
-  environment.variables = import ./environment/variables.nix;
-
-  environment.etc."inputrc".source = pkgs.lib.mkForce ./inputrc;
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -47,15 +44,7 @@
   # programs.mtr.enable = true;
   # programs.gnupg.agent = { enable = true; enableSSHSupport = true; };
 
-  # List services that you want to enable:
-
-  # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
-
-  # Enable CUPS to print documents.
-  # services.printing.enable = true;
-
-  services.xserver = import ./services/xserver.nix;
+  services = import ./services/default.nix;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.extraUsers.ivan = {

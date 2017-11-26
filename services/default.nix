@@ -1,0 +1,3 @@
+{
+  xserver = import ./xserver.nix;
+}
