@@ -11,6 +11,7 @@
       ./interactive-shell-init.nix
       ./prompt-init.nix
       ./services/default.nix
+      ./users/default.nix
     ];
 
   # Use the systemd-boot EFI boot loader.
@@ -44,8 +45,6 @@
   programs.bash.enableCompletion = true;
   # programs.mtr.enable = true;
   # programs.gnupg.agent = { enable = true; enableSSHSupport = true; };
-
-  users = import ./users/default.nix;
 
   nix.gc.automatic = true;
   nix.gc.dates = "03:15";
