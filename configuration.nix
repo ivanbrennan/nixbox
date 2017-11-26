@@ -53,6 +53,14 @@
 
   nixpkgs.config.allowUnfree = true;
 
+  environment.variables = {
+    DOTFILES = "$HOME/Development/resources/dotfiles-nixos";
+    EDITOR = "vim";
+    VISUAL = "vim";
+    GIT_EDITOR = "vim";
+    GIT_MERGE_AUTOEDIT = "no";
+  };
+
   environment.etc."inputrc".source = pkgs.lib.mkForce ./inputrc;
 
   # Some programs need SUID wrappers, can be configured further or are

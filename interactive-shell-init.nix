@@ -1,5 +1,27 @@
 {
   programs.bash.interactiveShellInit = ''
+    CDPATH=".:~/Development:~/Development/resources:~"
+
+    shopt -s histappend cmdhist lithist
+
+    # If shell is interactive, disable START/STOP output control.
+    # This allows Ctrl-S to trigger i-search.
+    if [[ $- = *i* ]]; then
+      # -ixon : Disable START/STOP output control.
+      # This allows Ctrl-S to trigger i-search.
+      stty -ixon
+    fi
+
+    unset -v MAILCHECK
+
+    HISTTIMEFORMAT='%F %T '
+    HISTCONTROL=erasedups:ignorespace
+    HISTSIZE=10000
+    HISTFILESIZE=20000
+    HISTIGNORE='jobs:[fb]g:history:gst:tls:fgg'
+
+    shopt -s no_empty_cmd_completion
+
     showpath() {
       col_bold="\033[30;01m"
       col_reset="\033[39;49;00m"
