@@ -11,4 +11,8 @@
     t = "tmux";
     tls = "tmux ls";
   };
+
+  programs.bash.interactiveShellInit = ''
+    complete -F _tmux t
+  '';
 }
