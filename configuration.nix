@@ -10,6 +10,7 @@
       ./hardware-configuration.nix
       ./interactive-shell-init.nix
       ./prompt-init.nix
+      ./services/default.nix
     ];
 
   # Use the systemd-boot EFI boot loader.
@@ -43,8 +44,6 @@
   programs.bash.enableCompletion = true;
   # programs.mtr.enable = true;
   # programs.gnupg.agent = { enable = true; enableSSHSupport = true; };
-
-  services = import ./services/default.nix;
 
   users = import ./users/default.nix;
 

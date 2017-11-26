@@ -1,3 +1,5 @@
 {
-  xserver = import ./xserver.nix;
+  services = {
+    xserver = import ./xserver.nix;
+  };
 }
