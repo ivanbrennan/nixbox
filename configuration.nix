@@ -9,6 +9,7 @@
     [ # Include the results of the hardware scan.
       ./bash-aliases.nix
       ./hardware-configuration.nix
+      ./interactive-shell-init.nix
       ./prompt-init.nix
     ];
 
