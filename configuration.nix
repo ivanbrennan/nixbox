@@ -5,11 +5,9 @@
 {
   imports =
     [
-      ./bash-aliases.nix
       ./environment/default.nix
       ./hardware-configuration.nix
-      ./interactive-shell-init.nix
-      ./prompt-init.nix
+      ./programs/default.nix
       ./services/default.nix
       ./users/default.nix
     ];
@@ -39,12 +37,6 @@
   time.timeZone = "America/New_York";
 
   nixpkgs.config.allowUnfree = true;
-
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  programs.bash.enableCompletion = true;
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = { enable = true; enableSSHSupport = true; };
 
   nix.gc.automatic = true;
   nix.gc.dates = "03:15";
