@@ -2,6 +2,7 @@ pkgs:
 
 with pkgs; [
   chromium
+  docker
   git
   mkpasswd
   slack

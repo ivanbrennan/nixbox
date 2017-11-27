@@ -35,6 +35,8 @@
   # Set your time zone.
   time.timeZone = "America/New_York";
 
+  virtualisation.docker.enable = true;
+
   nixpkgs.config.allowUnfree = true;
 
   nix.gc.automatic = true;
