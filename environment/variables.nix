@@ -1,5 +1,5 @@
 {
-  DOTFILES = "$HOME/Development/resources/dotfiles-nixos";
+  DOTFILES = "$HOME/Development/resources/dotfiles";
   EDITOR = "vim";
   VISUAL = "vim";
   GIT_EDITOR = "vim";
