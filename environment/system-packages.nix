@@ -1,6 +1,7 @@
 pkgs:
 
 with pkgs; [
+  ag
   chromium
   docker
   git
