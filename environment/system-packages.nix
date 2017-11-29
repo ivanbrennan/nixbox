@@ -3,6 +3,7 @@ pkgs:
 with pkgs; [
   ag
   chromium
+  dmidecode
   docker
   git
   mkpasswd
