@@ -8,16 +8,16 @@ set secure         " disable unsafe commands in local .vimrc files
 if !isdirectory($HOME."/.vim/tmp")
   call mkdir($HOME."/.vim/tmp", "p")
 endif
-set directory=~/.vim/tmp
-set backup
 if !isdirectory($HOME."/.vim/backup")
   call mkdir($HOME."/.vim/backup", "p")
 endif
-set backupdir=~/.vim/backup
-set undofile
 if !isdirectory($HOME."/.vim/undo")
   call mkdir($HOME."/.vim/undo", "p")
 endif
+set directory=~/.vim/tmp
+set backup
+set backupdir=~/.vim/backup
+set undofile
 set undodir=~/.vim/undo
 set history=1000
 set hidden
@@ -95,7 +95,7 @@ set expandtab                   " convert tabs to spaces
 
 " characters
 if exists('&guifont')
-  set guifont=Sauce\ Code\ Powerline:h14
+  set guifont=Source\ Code\ Pro:h14
 endif
 set list                         " show invisible characters
 set listchars=""                 " reset the listchars
