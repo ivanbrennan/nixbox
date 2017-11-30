@@ -8,6 +8,7 @@ let
     docker
     git
     mkpasswd
+    par
     slack
     tmux
     tree
