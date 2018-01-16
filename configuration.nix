@@ -19,7 +19,7 @@
   boot.initrd.luks.devices = [
     {
       name = "root";
-      device = "/dev/disk/by-uuid/338a237d-0db7-4520-8ff5-3188533c59f6";
+      device = "/dev/disk/by-uuid/01f0c2eb-300c-49e9-9b5f-0180f45445b0";
       preLVM = true;
     }
   ];
