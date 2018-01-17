@@ -8,7 +8,8 @@
       # sudo ln -sr /etc/nixos/machines/{HOSTNAME/default,self}.nix
       ./machines/self.nix
 
-      ./environment/default.nix
+      # shared
+      ./environment
       ./programs/default.nix
       ./services/default.nix
       ./users/default.nix
@@ -23,7 +24,10 @@
 
   virtualisation.docker.enable = true;
 
-  nixpkgs.config.allowUnfree = true;
+  nixpkgs.config = {
+    allowUnfree = true;
+    packageOverrides = (import ./package-overrides);
+  };
 
   fonts.fonts = [
     pkgs.source-code-pro
