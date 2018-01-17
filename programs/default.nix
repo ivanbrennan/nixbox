@@ -1,6 +1,6 @@
 {
   programs = {
-    bash = import ./bash/default.nix;
-    tmux = import ./tmux/default.nix;
+    bash = import ./bash;
+    tmux = import ./tmux;
   };
 }

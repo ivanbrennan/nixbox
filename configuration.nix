@@ -10,9 +10,9 @@
 
       # shared
       ./environment
-      ./programs/default.nix
-      ./services/default.nix
-      ./users/default.nix
+      ./programs
+      ./services
+      ./users
     ];
 
   i18n = {
