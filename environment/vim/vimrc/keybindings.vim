@@ -13,41 +13,41 @@ nnoremap          <leader>f; :DotVim init/
 nnoremap       <leader>f<CR> :DotVim 
 
 " ··········· buffers ········· {{{1
-nmap     <leader>o      :edit <C-R>=fnameescape(expand('%:~:.:h')).'/'<CR>
-nnoremap <leader>e      :edit 
-nnoremap <leader><C-E>  :edit **/
+nmap     <leader>o     :edit <C-R>=fnameescape(expand('%:~:.:h')).'/'<CR>
+nnoremap <leader>e     :edit 
+nnoremap <leader><C-E> :edit **/
 
-nnoremap <leader>fs     :write<CR>
-nnoremap <leader>wq     :wq 
+nnoremap <leader>fs    :write<CR>
+nnoremap <leader>wq    :wq 
 
-nnoremap  <leader>dd    :bdelete<CR>
-nnoremap  <leader>dl    :bdelete#<CR>
+nnoremap  <leader>dd   :bdelete<CR>
+nnoremap  <leader>dl   :bdelete#<CR>
 
 " Buffer list
-nnoremap <leader>bn     :bnext<CR>
-nnoremap <leader>bp     :bprevious<CR>
-nnoremap <leader>l      <C-^>
+nnoremap <leader>bn    :bnext<CR>
+nnoremap <leader>bp    :bprevious<CR>
+nnoremap <leader>l     <C-^>
 
 " Quickfix list (alt h/j/k/l)
-nmap     <C-@>          <Plug>(listical_quickfix)
-nmap     <C-Space>      <Plug>(listical_quickfix)
-nnoremap <M-j>          :cnext<CR>
-nnoremap <M-k>          :cprevious<CR>
-nnoremap <M-h>          :colder<CR>
-nnoremap <M-l>          :cnewer<CR>
+nmap     <C-@>         <Plug>(listical_quickfix)
+nmap     <C-Space>     <Plug>(listical_quickfix)
+nnoremap <M-j>         :cnext<CR>
+nnoremap <M-k>         :cprevious<CR>
+nnoremap <M-h>         :colder<CR>
+nnoremap <M-l>         :cnewer<CR>
 
 " Location List (alt H/J/K/L)
-nmap     <C-S-Space>    <Plug>(listical_loclist)
-nnoremap <M-J>          :lnext<CR>
-nnoremap <M-K>          :lprevious<CR>
-nnoremap <M-H>          :lolder<CR>
-nnoremap <M-L>          :lnewer<CR>
+nmap     <C-S-Space>   <Plug>(listical_loclist)
+nnoremap <M-J>         :lnext<CR>
+nnoremap <M-K>         :lprevious<CR>
+nnoremap <M-H>         :lolder<CR>
+nnoremap <M-L>         :lnewer<CR>
 
 " ··········· command-line ···· {{{1
-noremap  <leader>x        :
-nnoremap <leader>1        :!
-nnoremap <leader>h        :help 
-nnoremap <leader><C-H>    :help <C-R><C-W>
+noremap  <leader>x     :
+nnoremap <leader>1     :!
+nnoremap <leader>h     :help 
+nnoremap <leader><C-H> :help <C-R><C-W>
 
 cnoremap        <C-A> <Home>
 cnoremap   <C-X><C-A> <C-A>
@@ -77,8 +77,8 @@ vnoremap     > >gv
 
 " ··········· editing ········· {{{1
 " spawn newline
-inoremap <S-CR>     <C-O>O
-inoremap <C-CR>     <C-O>o
+inoremap <S-CR> <C-O>O
+inoremap <C-CR> <C-O>o
 
 " sensible Y
 nnoremap Y y$
@@ -90,27 +90,28 @@ vnoremap <BS> "_d
 inoremap <C-U> <C-G>u<C-U>
 
 " jump around insert mode
-inoremap        <C-A> <Home>
-inoremap   <C-X><C-A> <C-A>
-inoremap        <C-B> <C-G>U<Left>
-inoremap        <C-F> <C-G>U<Right>
-inoremap        JL    <End>
+inoremap      <C-A> <Home>
+inoremap <C-X><C-A> <C-A>
+inoremap      <C-B> <C-G>U<Left>
+inoremap      <C-F> <C-G>U<Right>
+inoremap      JL    <End>
 
 " edit like you're emacs
-inoremap        <C-D> <Del>
+inoremap <C-D> <Del>
+inoremap <C-T> <Esc>xpa
 
 " + / -
-nnoremap +          <C-A>
-nnoremap -          <C-X>
+nnoremap + <C-A>
+nnoremap - <C-X>
 
 " ··········· shell ··········· {{{1
-nnoremap    <leader>i  <C-Z>
+nnoremap <leader>i <C-Z>
 
 " ··········· autocompletion ·· {{{1
-inoremap        <C-L>  <C-X><C-L>
-inoremap        <C-]>  <C-X><C-]>
-inoremap        <C-@>  <C-X><C-O>
-inoremap    <C-Space>  <C-X><C-O>
+inoremap     <C-L> <C-X><C-L>
+inoremap     <C-]> <C-X><C-]>
+inoremap     <C-@> <C-X><C-O>
+inoremap <C-Space> <C-X><C-O>
 
 inoremap <expr> <Tab>   SuperTab("\<C-N>", "\<C-F>")
 inoremap <expr> <S-Tab> SuperTab("\<C-P>", "\<C-D>")
@@ -133,20 +134,21 @@ endf
 
 cnoremap <expr> <C-P> IsSearch() ? "\<C-T>" : "\<Up>"
 cnoremap <expr> <C-N> IsSearch() ? "\<C-G>" : "\<Down>"
+cnoremap <expr> <C-Y> IsSearch() ? "\<C-L>" : "\<C-Y>"
 
 " :nohlsearch
 nnoremap <silent> <M-U> :nohlsearch<CR>
 nnoremap coh :<C-R>=eval(&hls) ? (v:hlsearch ? 'noh' : 'set nohls') : 'set hls'<CR><CR>
 
 " substitute
-nnoremap <leader>S  :%s/
-nnoremap <leader>s  :s/
-vnoremap <leader>s  :s/
-nnoremap        c.  *Ncgn
+nnoremap <leader>S :%s/
+nnoremap <leader>s :s/
+vnoremap <leader>s :s/
+nnoremap        c. *Ncgn
 
 " preserve flags
-nnoremap &  :&&<CR>
-xnoremap &  :&&<CR>
+nnoremap & :&&<CR>
+xnoremap & :&&<CR>
 
 " ··········· movement ········ {{{1
 " first non-blank on next/previous line
@@ -160,16 +162,16 @@ noremap <C-E> $
 noremap <C-A> 0
 
 " ··········· splits ·········· {{{1
-nnoremap          <C-D>          <C-W><C-Q>
-noremap           <leader>,      <C-W>p
-noremap           <C-W><C-Y>     <C-W>z
+nnoremap <C-D>      <C-W><C-Q>
+noremap  <leader>,  <C-W>p
+noremap  <C-W><C-Y> <C-W>z
 
 " ··········· tabs ············ {{{1
-noremap           <C-W><C-N>   gt
-noremap           <C-W><C-P>   gT
+noremap <C-W><C-N> gt
+noremap <C-W><C-P> gT
 
 " folding
-nnoremap                 z.  za
+nnoremap z. za
 
 " emacs redraws
 nnoremap <C-L>         zz
@@ -177,5 +179,5 @@ nnoremap <C-U><C-L>    zt
 nnoremap <leader><C-L> <C-L>
 
 " ··········· git ············· {{{1
-noremap <silent> gb  :Gblame<CR>
-noremap <silent> gs  :Gstatus<CR>
+noremap <silent> gb :Gblame<CR>
+noremap <silent> gs :Gstatus<CR>

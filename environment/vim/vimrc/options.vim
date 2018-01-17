@@ -67,7 +67,6 @@ augroup END
 
 " appearance
 set synmaxcol=256
-set number
 set title
 set nowrap
 set showtabline=1
