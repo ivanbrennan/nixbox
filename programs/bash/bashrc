@@ -20,6 +20,14 @@ HISTIGNORE='jobs:[fb]g:history:gst:tls:fgg'
 
 shopt -s no_empty_cmd_completion
 
+export LESS_TERMCAP_md=$'\e[1;37m' \
+       LESS_TERMCAP_me=$'\e[0m' \
+       LESS_TERMCAP_us=$'\e[0;36m' \
+       LESS_TERMCAP_ue=$'\e[0m' \
+       LESS="-~" \
+       MANPAGER="less -isR" \
+       GROFF_NO_SGR=1
+
 complete -F _tmux t
 
 showpath() {
@@ -58,4 +66,13 @@ bashdoc_match() {
 
 fdoc() {
   curl dict://dict.org/d:${1}:foldoc
+}
+
+blink() {
+  if [ "$cursor_code" = 3 ]; then
+    cursor_code=0
+  else
+    cursor_code=3
+  fi
+  printf '\e[%i q' $cursor_code
 }
