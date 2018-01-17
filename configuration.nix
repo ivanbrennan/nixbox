@@ -25,6 +25,11 @@
 
   nixpkgs.config.allowUnfree = true;
 
+  fonts.fonts = [
+    pkgs.source-code-pro
+    pkgs.emacs-all-the-icons-fonts
+  ];
+
   nix.gc.automatic = true;
   nix.gc.dates = "03:15";
 
