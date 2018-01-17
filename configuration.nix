@@ -4,9 +4,11 @@
 
 {
   imports =
-    [
+    [ # Symlink to ./machines/HOSTNAME.nix
+      # sudo ln -sr /etc/nixos/machines/{HOSTNAME/default,self}.nix
+      ./machines/self.nix
+
       ./environment/default.nix
-      ./hardware-configuration.nix
       ./programs/default.nix
       ./services/default.nix
       ./users/default.nix
@@ -23,8 +25,6 @@
       preLVM = true;
     }
   ];
-
-  networking.hostName = "nixosbox";
 
   # Select internationalisation properties.
   i18n = {
