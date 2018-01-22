@@ -29,7 +29,7 @@ let
     vlc
     weechat
     xcape
-    xclip
+    xsel
   ];
   vimPackages = (import ./vim/packages.nix) pkgs;
 in
