@@ -7,6 +7,7 @@ let
     alacritty
     aspell
     aspellDicts.en
+    binutils
     chromium
     conky
     dmidecode
