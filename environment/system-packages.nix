@@ -8,6 +8,7 @@ let
     aspell
     aspellDicts.en
     binutils
+    cabal2nix
     chromium
     conky
     dmidecode
