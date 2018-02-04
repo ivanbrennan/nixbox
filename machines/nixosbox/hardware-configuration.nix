@@ -9,8 +9,8 @@
     ];
 
   boot.initrd.availableKernelModules = [ "xhci_pci" "nvme" "usb_storage" "sd_mod" "rtsx_pci_sdmmc" ];
-  boot.kernelModules = [ "kvm-intel" ];
-  boot.extraModulePackages = [ ];
+  boot.kernelModules = [ "kvm-intel" "i8042_debounce" ];
+  boot.extraModulePackages = [ pkgs.linuxPackages.i8042_debounce ];
 
   fileSystems."/" =
     { device = "/dev/disk/by-uuid/7a969b7f-e6a2-4eac-ad78-e496a67eb967";
