@@ -91,6 +91,7 @@ set tabstop=2                   " tab is two spaces
 set softtabstop=2               " softtab is two spaces
 set shiftwidth=2                " autoindent is two spaces
 set expandtab                   " convert tabs to spaces
+set autoindent                  " copy indent from current line
 
 " characters
 if exists('&guifont')
