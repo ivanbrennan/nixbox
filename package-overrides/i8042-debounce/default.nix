@@ -7,8 +7,8 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "ivanbrennan";
     repo = "i8042-debounce";
-    rev = "3e2e7af99af10fa949743ce541f60845d079c73e";
-    sha256 = "03zkz4ib0fpdsb0j90mzlxbjfnd54d6m29yw6y6p6mj93y3nz1zv";
+    rev = "28c1c01899f2965cff23ca9c99fa17e622c66919";
+    sha256 = "1rk6glmx0n2swwcfc9q7mb2afvgz81qy9pbria2npzcqxwgpld3n";
   };
 
   nativeBuildInputs = kernel.moduleBuildDependencies;
