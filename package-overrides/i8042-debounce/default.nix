@@ -7,8 +7,8 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "ivanbrennan";
     repo = "i8042-debounce";
-    rev = "27f9f355b004c69f70323615ff37c4795fb6cb7b";
-    sha256 = "1wyngkbwx9s6nm1vc65948vyrwf4a9hnww2x9szlhrj5m6hrj78m";
+    rev = "14baa86d57b43dc5faff804dcb92da32b1d029d1";
+    sha256 = "1r2xx4y8riy397x7wp6zznhym715n1vb60fpb5321i0h6iqpfmj7";
   };
 
   nativeBuildInputs = kernel.moduleBuildDependencies;
@@ -18,8 +18,6 @@ stdenv.mkDerivation rec {
   makeFlags = [
     "KVERSION=${kernel.version}"
     "KDIR=${kernel.dev}/lib/modules/${kernel.modDirVersion}/build"
-    "MULTI_THRESHOLD=90"
-    "SINGLE_THRESHOLD=60"
   ];
 
   dontPatchELF = true;
