@@ -25,6 +25,7 @@ let
     slack
     sqliteInteractive
     stack
+    stow
     tmux
     tree
     universal-ctags
