@@ -7,8 +7,8 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "ivanbrennan";
     repo = "i8042-debounce";
-    rev = "428ab56aeafb09fb878eb48c2c365d8e758c8879";
-    sha256 = "1r3f0cvfzp26812bgcmarccssvzznbv8n4zd3qahc656p5b1hmpb";
+    rev = "fbccddfb6101afc8da28a3be0b6ee8d7107252fe";
+    sha256 = "1l0q13h4wh03bb89499p6dr0fvzn7flsmgpaj1scrb2kchj28gr7";
   };
 
   nativeBuildInputs = kernel.moduleBuildDependencies;
@@ -31,7 +31,7 @@ stdenv.mkDerivation rec {
 
   meta = {
     description = "Module to debounce keypresses on crapppyy keyboards";
-    homepage = https://github.com/ivanbrennan/i8042-debounce;
+    homepage = https://github.com/nylen/i8042-debounce;
     license = stdenv.lib.licenses.gpl3;
     platforms = [ "x86_64-linux" ];
   };
