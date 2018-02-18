@@ -14,3 +14,20 @@ Try some window managers
 gsettings set org.gnome.desktop.input-sources xkb-options \
   "['caps:ctrl_modifier', 'shift:both_capslock']"
 ```
+
+## Channel
+I'm switching from nixos-stable to nixos-unstable. There are too many bug-fixes I want, which have been merged into master but won't make it into the stable channel for a long time.
+For example, https://github.com/NixOS/nixpkgs/pull/32203
+
+**Subscribe to nixos-unstable**
+```
+# switch to unstable
+sudo nix-channel --remove nixos
+sudo nix-channel --add https://nixos.org/channels/nixos-unstable nixos
+sudo nix-channel --update
+
+# switch to stable
+sudo nix-channel --remove nixos
+sudo nix-channel --add https://nixos.org/channels/nixos-17.09 nixos
+sudo nix-channel --update
+```
