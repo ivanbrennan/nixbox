@@ -17,6 +17,7 @@ let
     flac
     git
     global
+    gnumake
     lshw
     mkpasswd
     nix-repl
