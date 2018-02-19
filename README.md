@@ -1,3 +1,9 @@
+## make
+
+``` sh
+sudo make -C /etc/nixos machine=MACHINE
+```
+
 ## Todo
 Try some window managers
 - [i3](https://i3wm.org)

@@ -4,8 +4,7 @@
 
 {
   imports =
-    [ # Symlink to ./machines/HOSTNAME.nix
-      # sudo ln -sr /etc/nixos/machines/{HOSTNAME/default,self}.nix
+    [ # Symlink: sudo make -C /etc/nixos machine=MACHINE
       ./machines/self.nix
 
       # shared
