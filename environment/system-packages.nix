@@ -19,6 +19,7 @@ let
     global
     gnumake
     lshw
+    lsof
     mkpasswd
     nix-repl
     par
