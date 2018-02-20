@@ -2,7 +2,7 @@ machine = $(shell hostname)
 
 all: symlink-machine set-channel
 
-symlink-machine:
+symlink-machine: validate-user
 	make -C machines machine=${machine}
 
 set-channel: validate-user
