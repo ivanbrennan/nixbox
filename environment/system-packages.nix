@@ -7,6 +7,7 @@ let
     alacritty
     aspell
     aspellDicts.en
+    bind
     binutils
     cabal2nix
     chromium
