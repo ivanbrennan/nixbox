@@ -4,10 +4,9 @@ if [ "$TERM" != "dumb" -o -n "$INSIDE_EMACS" ]; then
   BOLD="\033[1m"
   NORMAL="\033[0m"
 
-  NBSP=' '
-  PS1="╭${BOLD}\w${NORMAL}\$(_git_ps1_)${NORMAL}\n╰(\u)•${NBSP}"
+  PS1="╭${BOLD}\w${NORMAL}\$(_git_ps1_)${NORMAL}\n╰(\u)• "
   PS2=" ❯ "
-  PS4=" +${NBSP}"
+  PS4=" + "
 
   _git_ps1_() {
     if [ -n "$(__gitdir)" ]; then
