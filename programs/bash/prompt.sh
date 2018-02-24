@@ -9,12 +9,10 @@ if [ "$TERM" != "dumb" -o -n "$INSIDE_EMACS" ]; then
   PS4=" + "
 
   _git_ps1_() {
-    if [ -n "$(__gitdir)" ]; then
-      local color="${CYAN}"
+    local color="${CYAN}"
 
-      # __git_ps1 inserts the current git branch where %s is
-      echo " $(__git_ps1 "(${color}%s${NORMAL})")"
-    fi
+    # __git_ps1 inserts the current git branch where %s is
+    echo "$(__git_ps1 " (${color}%s${NORMAL})")"
   }
 
   if test "$TERM" = "xterm"; then
