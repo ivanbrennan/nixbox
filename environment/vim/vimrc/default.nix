@@ -1,6 +1,7 @@
 let
   vimrc = builtins.readFile ./vimrc;
   autocmd = builtins.readFile ./autocmd.vim;
+  colorscheme = builtins.readFile ./colorscheme.vim;
   cursor = builtins.readFile ./cursor.vim;
   filetype = builtins.readFile ./filetype.vim;
   functions = builtins.readFile ./functions.vim;
@@ -16,6 +17,7 @@ in
   runtime vimrc-before.vim
   ${vimrc}
   ${autocmd}
+  ${colorscheme}
   ${cursor}
   ${filetype}
   ${functions}
