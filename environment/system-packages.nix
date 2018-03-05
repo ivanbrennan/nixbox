@@ -25,6 +25,7 @@ let
     nix-repl
     par
     pstree
+    rxvt_unicode
     slack
     sqliteInteractive
     stack
