@@ -102,7 +102,9 @@ inoremap <C-T> <Esc>xpa
 
 " + / -
 nnoremap + <C-A>
+xnoremap + <C-A>
 nnoremap - <C-X>
+xnoremap - <C-X>
 
 " ··········· shell ··········· {{{1
 nnoremap <leader>i <C-Z>
