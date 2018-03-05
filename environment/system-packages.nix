@@ -16,6 +16,7 @@ let
     docker
     emacs
     flac
+    gimp
     git
     global
     gnumake
