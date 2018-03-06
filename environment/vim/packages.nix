@@ -2,6 +2,15 @@ pkgs:
 
 let
   customPlugins = {
+    articulate = pkgs.vimUtils.buildVimPlugin {
+      name = "articulate";
+      src = pkgs.fetchFromGitHub {
+        owner = "ivanbrennan";
+        repo = "articulate";
+        rev = "82d03316b67249a32cdddfc9a0385b1f4c2ff3a1";
+        sha256 = "1cg4djcg3qh0hjic65ivkvcz1jcblahnvvi560qd9jvjm9j58kss";
+      };
+    };
     coot = pkgs.vimUtils.buildVimPlugin {
       name = "coot";
       src = pkgs.fetchFromGitHub {
@@ -26,7 +35,8 @@ let
     vimrcConfig.customRC = import ./vimrc;
     vimrcConfig.vam.knownPlugins = pkgs.vimPlugins // customPlugins;
     vimrcConfig.vam.pluginDictionaries =
-      [ { name = "coot"; }
+      [ { name = "articulate"; }
+        { name = "coot"; }
         { name = "vim-unimpaired"; }
       ];
   };
