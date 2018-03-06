@@ -1,6 +1,6 @@
 # Provide a nice prompt if the terminal supports it.
 if [ "$TERM" != "dumb" -o -n "$INSIDE_EMACS" ]; then
-  CYAN="\033[0;36m"
+  GREEN="\033[0;32m"
   BOLD="\033[1m"
   NORMAL="\033[0m"
 
@@ -9,7 +9,7 @@ if [ "$TERM" != "dumb" -o -n "$INSIDE_EMACS" ]; then
   PS4=" + "
 
   _git_ps1_() {
-    local color="${CYAN}"
+    local color="${GREEN}"
 
     # __git_ps1 inserts the current git branch where %s is
     echo "$(__git_ps1 " (${color}%s${NORMAL})")"
