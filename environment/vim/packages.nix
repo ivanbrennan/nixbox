@@ -20,6 +20,24 @@ let
         sha256 = "14h0r5hkwx0r5rhzc56sdnkdczzy2nrv8xhyj2hsgwbyaa3a5j16";
       };
     };
+    mline = pkgs.vimUtils.buildVimPlugin {
+      name = "mline";
+      src = pkgs.fetchFromGitHub {
+        owner = "ivanbrennan";
+        repo = "mline";
+        rev = "7bffa6a6a1d5296dca2ea75170859307696068a7";
+        sha256 = "0c6wgyvd4yvrr725z6ch90m9gx3hpqpyf1b9b5gcizd6r2bx6y5k";
+      };
+    };
+    pinnacle = pkgs.vimUtils.buildVimPlugin {
+      name = "pinnacle";
+      src = pkgs.fetchFromGitHub {
+        owner = "wincent";
+        repo = "pinnacle";
+        rev = "ec3373b33d289f2e7f2d8a324aef5e0b20f95b7b";
+        sha256 = "1sv82861mf3z9rkxmlwaiwzbpa1ri6mhw67ngw67177xg4cghz6q";
+      };
+    };
     vim-unimpaired = pkgs.vimUtils.buildVimPlugin {
       name = "vim-unimpaired";
       src = pkgs.fetchFromGitHub {
@@ -37,6 +55,9 @@ let
     vimrcConfig.vam.pluginDictionaries =
       [ { name = "articulate"; }
         { name = "coot"; }
+        { name = "fugitive"; }
+        { name = "mline"; }
+        { name = "pinnacle"; }
         { name = "vim-unimpaired"; }
       ];
   };
