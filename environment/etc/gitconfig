@@ -17,7 +17,7 @@
 	status = auto
 	branch = auto
 [format]
-	pretty = %C(cyan)%h%Creset %s %C(red)(%an, %cr)%Creset
+	pretty = %C(cyan dim italic)%h%Creset %s %C(magenta dim)(%an, %cr)%Creset
 [diff "elisp"]
   xfuncname = ^[[:space:]]*(\\(.+)$
 [commit]
