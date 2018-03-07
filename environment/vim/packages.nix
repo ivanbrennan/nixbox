@@ -68,6 +68,7 @@ let
         { name = "gundo"; }
         { name = "mline"; }
         { name = "pinnacle"; }
+        { name = "surround"; }
         { name = "vim-matchit"; }
         { name = "vim-repeat"; }
         { name = "vim-unimpaired"; }
