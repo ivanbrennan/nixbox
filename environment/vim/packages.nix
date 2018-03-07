@@ -38,6 +38,15 @@ let
         sha256 = "1sv82861mf3z9rkxmlwaiwzbpa1ri6mhw67ngw67177xg4cghz6q";
       };
     };
+    vim-matchit = pkgs.vimUtils.buildVimPlugin {
+      name = "vim-matchit";
+      src = pkgs.fetchFromGitHub {
+        owner = "jwhitley";
+        repo = "vim-matchit";
+        rev = "57de3a754795fe325771bf0c3991905ae1d0246e";
+        sha256 = "0k31j4fbzdilkl8bqi1lkljyamj298fb2d4shds84lr1bmz4mlqm";
+      };
+    };
     vim-unimpaired = pkgs.vimUtils.buildVimPlugin {
       name = "vim-unimpaired";
       src = pkgs.fetchFromGitHub {
@@ -58,6 +67,7 @@ let
         { name = "fugitive"; }
         { name = "mline"; }
         { name = "pinnacle"; }
+        { name = "vim-matchit"; }
         { name = "vim-unimpaired"; }
       ];
   };
