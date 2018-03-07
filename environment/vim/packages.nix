@@ -11,6 +11,15 @@ let
         sha256 = "1cg4djcg3qh0hjic65ivkvcz1jcblahnvvi560qd9jvjm9j58kss";
       };
     };
+    bstack = pkgs.vimUtils.buildVimPlugin {
+      name = "bstack";
+      src = pkgs.fetchFromGitHub {
+        owner = "ivanbrennan";
+        repo = "bstack";
+        rev = "f49d13b87728c1e3732a7add55a789c93fa5f849";
+        sha256 = "0s82lijwabk0lm64nidx6yv536l7ig04pvyn9333ncwxpa6zyfky";
+      };
+    };
     coot = pkgs.vimUtils.buildVimPlugin {
       name = "coot";
       src = pkgs.fetchFromGitHub {
@@ -18,6 +27,15 @@ let
         repo = "coot";
         rev = "dbba4c34a20e1cebcd54e62bec0de455f5615adb";
         sha256 = "14h0r5hkwx0r5rhzc56sdnkdczzy2nrv8xhyj2hsgwbyaa3a5j16";
+      };
+    };
+    ftglue = pkgs.vimUtils.buildVimPlugin {
+      name = "ftglue";
+      src = pkgs.fetchFromGitHub {
+        owner = "ivanbrennan";
+        repo = "ftglue";
+        rev = "ad5ef42075c5959f669412b9218fa7f100cf3890";
+        sha256 = "1py6vswillkm0b57j4wxjrbgwd4wbggl69fpmy66jd14412cm2r7";
       };
     };
     loupe = pkgs.vimUtils.buildVimPlugin {
@@ -65,6 +83,15 @@ let
         sha256 = "0qd9as008r2vycls48bfb163rp7dddw7l495xn4l1gl00sh79cxy";
       };
     };
+    vmacs = pkgs.vimUtils.buildVimPlugin {
+      name = "vmacs";
+      src = pkgs.fetchFromGitHub {
+        owner = "ivanbrennan";
+        repo = "vmacs";
+        rev = "30c5972f1b9cf53162ca1562d83643aae9d31c66";
+        sha256 = "10q2bq4vn63z2pdzxfvm33pdmw89k77wyai9nqff30nsz895b40s";
+      };
+    };
   };
   vim = pkgs.vim_configurable.customize {
     name = "vim";
@@ -72,7 +99,9 @@ let
     vimrcConfig.vam.knownPlugins = pkgs.vimPlugins // customPlugins;
     vimrcConfig.vam.pluginDictionaries =
       [ { name = "articulate"; }
+        { name = "bstack"; }
         { name = "coot"; }
+        { name = "ftglue"; }
         { name = "fugitive"; }
         { name = "gundo"; }
         { name = "loupe"; }
@@ -82,6 +111,7 @@ let
         { name = "vim-matchit"; }
         { name = "vim-repeat"; }
         { name = "vim-unimpaired"; }
+        { name = "vmacs"; }
       ];
   };
 in [ vim ]
