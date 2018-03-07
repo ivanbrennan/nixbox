@@ -20,6 +20,15 @@ let
         sha256 = "14h0r5hkwx0r5rhzc56sdnkdczzy2nrv8xhyj2hsgwbyaa3a5j16";
       };
     };
+    loupe = pkgs.vimUtils.buildVimPlugin {
+      name = "loupe";
+      src = pkgs.fetchFromGitHub {
+        owner = "ivanbrennan";
+        repo = "loupe";
+        rev = "188509d4dc8089e1690fc62d2d6df86a60b4c9fe";
+        sha256 = "1il8c873661bwl8d9lil9zkq5pfys5z1cnh2v0jpw2831zw0cjq4";
+      };
+    };
     mline = pkgs.vimUtils.buildVimPlugin {
       name = "mline";
       src = pkgs.fetchFromGitHub {
@@ -66,6 +75,7 @@ let
         { name = "coot"; }
         { name = "fugitive"; }
         { name = "gundo"; }
+        { name = "loupe"; }
         { name = "mline"; }
         { name = "pinnacle"; }
         { name = "surround"; }
