@@ -65,6 +65,7 @@ let
       [ { name = "articulate"; }
         { name = "coot"; }
         { name = "fugitive"; }
+        { name = "gundo"; }
         { name = "mline"; }
         { name = "pinnacle"; }
         { name = "vim-matchit"; }
