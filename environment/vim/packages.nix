@@ -69,6 +69,7 @@ let
         { name = "mline"; }
         { name = "pinnacle"; }
         { name = "vim-matchit"; }
+        { name = "vim-repeat"; }
         { name = "vim-unimpaired"; }
       ];
   };
