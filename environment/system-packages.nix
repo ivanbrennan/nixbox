@@ -20,6 +20,7 @@ let
     git
     global
     gnumake
+    gnupg
     lshw
     lsof
     mkpasswd
