@@ -25,8 +25,8 @@ let
       src = pkgs.fetchFromGitHub {
         owner = "ivanbrennan";
         repo = "coot";
-        rev = "dbba4c34a20e1cebcd54e62bec0de455f5615adb";
-        sha256 = "14h0r5hkwx0r5rhzc56sdnkdczzy2nrv8xhyj2hsgwbyaa3a5j16";
+        rev = "82152e1eb891b06c360102a44fcc1d895e150eb7";
+        sha256 = "0pcjfbqa7y60qi49j8pn3ym2pj6d9kikda3c9347sa9rw4ri7b81";
       };
     };
     ftglue = pkgs.vimUtils.buildVimPlugin {
