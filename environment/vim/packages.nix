@@ -109,6 +109,7 @@ let
         { name = "pinnacle"; }
         { name = "surround"; }
         { name = "vim-matchit"; }
+        { name = "vim-nix"; }
         { name = "vim-repeat"; }
         { name = "vim-unimpaired"; }
         { name = "vmacs"; }
