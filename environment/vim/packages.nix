@@ -34,8 +34,8 @@ let
       src = pkgs.fetchFromGitHub {
         owner = "ivanbrennan";
         repo = "ftglue";
-        rev = "ad5ef42075c5959f669412b9218fa7f100cf3890";
-        sha256 = "1py6vswillkm0b57j4wxjrbgwd4wbggl69fpmy66jd14412cm2r7";
+        rev = "3d925e0f314db7c3855176a5fa502fc1d72e4368";
+        sha256 = "0m5m9y50r7d6yb3afi8188clf3vipbv3cpbp33mrrkpbgxcbhip3";
       };
     };
     loupe = pkgs.vimUtils.buildVimPlugin {
