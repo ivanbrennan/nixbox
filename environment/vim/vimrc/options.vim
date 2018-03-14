@@ -76,6 +76,7 @@ set foldlevelstart=10
 set foldtext=MyFoldText()
 set nofoldenable
 set showcmd
+set laststatus=2
 set lazyredraw
 
 " notifications

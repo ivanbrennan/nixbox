@@ -8,7 +8,6 @@ let
   keybindings = builtins.readFile ./keybindings.vim;
   netrw = builtins.readFile ./netrw.vim;
   options = builtins.readFile ./options.vim;
-  statusline = builtins.readFile ./statusline.vim;
   terminal = builtins.readFile ./terminal.vim;
   wild = builtins.readFile ./wild.vim;
 in
@@ -24,7 +23,6 @@ in
   ${keybindings}
   ${netrw}
   ${options}
-  ${statusline}
   ${terminal}
   ${wild}
   runtime vimrc-after.vim
