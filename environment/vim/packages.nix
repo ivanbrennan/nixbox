@@ -16,8 +16,8 @@ let
       src = pkgs.fetchFromGitHub {
         owner = "ivanbrennan";
         repo = "bstack";
-        rev = "f49d13b87728c1e3732a7add55a789c93fa5f849";
-        sha256 = "0s82lijwabk0lm64nidx6yv536l7ig04pvyn9333ncwxpa6zyfky";
+        rev = "3c90419f686d0bbbbe036dd5abe7735d6ffc3cc8";
+        sha256 = "02ggkpkwq6z5a2hcw5jwyxx2fr9pl7hwb7b3d8gahnw6awadl6px";
       };
     };
     coot = pkgs.vimUtils.buildVimPlugin {
@@ -25,8 +25,8 @@ let
       src = pkgs.fetchFromGitHub {
         owner = "ivanbrennan";
         repo = "coot";
-        rev = "82152e1eb891b06c360102a44fcc1d895e150eb7";
-        sha256 = "0pcjfbqa7y60qi49j8pn3ym2pj6d9kikda3c9347sa9rw4ri7b81";
+        rev = "bc8ffbc036cc0d1f8d2fe20f1fc4f10e1e637931";
+        sha256 = "0g0551ldkjl1cz5grlm1agbp1q7daxdygpr2qaa1swjb9c7wgfg0";
       };
     };
     ftglue = pkgs.vimUtils.buildVimPlugin {
@@ -52,8 +52,17 @@ let
       src = pkgs.fetchFromGitHub {
         owner = "ivanbrennan";
         repo = "mline";
-        rev = "7bffa6a6a1d5296dca2ea75170859307696068a7";
-        sha256 = "0c6wgyvd4yvrr725z6ch90m9gx3hpqpyf1b9b5gcizd6r2bx6y5k";
+        rev = "b817df9f46508b4e213753bd7a6f8830d677eb0d";
+        sha256 = "1rm47g0hfjq2x6g38hc2lqb8cgcml4is8gxhqdmdidmr2msxs0lp";
+      };
+    };
+    optcycle = pkgs.vimUtils.buildVimPlugin {
+      name = "optcycle";
+      src = pkgs.fetchFromGitHub {
+        owner = "ivanbrennan";
+        repo = "optcycle";
+        rev = "ab3baa018218d347b6b26589a4774c9b25e31021";
+        sha256 = "1y4qn6icdgwi41dnbf9h938j7598i8217aqlg916lxv0vffa6ajr";
       };
     };
     pinnacle = pkgs.vimUtils.buildVimPlugin {
@@ -106,6 +115,7 @@ let
         { name = "gundo"; }
         { name = "loupe"; }
         { name = "mline"; }
+        { name = "optcycle"; }
         { name = "pinnacle"; }
         { name = "surround"; }
         { name = "vim-matchit"; }
