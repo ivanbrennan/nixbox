@@ -1,7 +1,18 @@
 pkgs:
 
 let
-  customPlugins = {
+  publicPlugins = with pkgs.vimPlugins;
+    [ fugitive
+      gundo
+      surround
+      vim-nix
+      vim-repeat
+    ];
+
+  privatePlugins = map (key: builtins.getAttr key privateSet)
+                       (builtins.attrNames privateSet);
+
+  privateSet = {
     articulate = pkgs.vimUtils.buildVimPlugin {
       name = "articulate";
       src = pkgs.fetchFromGitHub {
@@ -111,28 +122,19 @@ let
       };
     };
   };
+
   vim = pkgs.vim_configurable.customize {
     name = "vim";
+
+    vimrcConfig.packages.myPackage = {
+      # loaded on launch
+      start = publicPlugins ++ privatePlugins;
+      # manually loadable by calling `:packadd $plugin-name`
+      opt = [ ];
+      # To automatically load a plugin when opening a filetype, add vimrc lines like:
+      # autocmd FileType php :packadd phpCompletion
+    };
+
     vimrcConfig.customRC = import ./vimrc;
-    vimrcConfig.vam.knownPlugins = pkgs.vimPlugins // customPlugins;
-    vimrcConfig.vam.pluginDictionaries =
-      [ { name = "articulate"; }
-        { name = "bstack"; }
-        { name = "coot"; }
-        { name = "edot"; }
-        { name = "ftglue"; }
-        { name = "fugitive"; }
-        { name = "gundo"; }
-        { name = "loupe"; }
-        { name = "mline"; }
-        { name = "optcycle"; }
-        { name = "pinnacle"; }
-        { name = "surround"; }
-        { name = "vim-matchit"; }
-        { name = "vim-nix"; }
-        { name = "vim-repeat"; }
-        { name = "vim-unimpaired"; }
-        { name = "vmacs"; }
-      ];
   };
 in [ vim ]
