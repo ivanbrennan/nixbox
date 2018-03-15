@@ -25,8 +25,8 @@ let
       src = pkgs.fetchFromGitHub {
         owner = "ivanbrennan";
         repo = "coot";
-        rev = "bc8ffbc036cc0d1f8d2fe20f1fc4f10e1e637931";
-        sha256 = "0g0551ldkjl1cz5grlm1agbp1q7daxdygpr2qaa1swjb9c7wgfg0";
+        rev = "7930805b43ec89b2ef43991e15f2df8c9b2d64ff";
+        sha256 = "0f8qlqi67jb6mm5x9iww9ihwya8x0ansgm1xka9siccwb68078ck";
       };
     };
     ftglue = pkgs.vimUtils.buildVimPlugin {
@@ -101,6 +101,15 @@ let
         sha256 = "10q2bq4vn63z2pdzxfvm33pdmw89k77wyai9nqff30nsz895b40s";
       };
     };
+    edot = pkgs.vimUtils.buildVimPlugin {
+      name = "edot";
+      src = pkgs.fetchFromGitHub {
+        owner = "ivanbrennan";
+        repo = "edot";
+        rev = "0e969d9a9850e1ed28edce1c4be1eb37543f7b84";
+        sha256 = "0c6i8m75q2n6s4ik90rvg2hyzygmhnpv8kjvwk7awxjj5w0bgf3v";
+      };
+    };
   };
   vim = pkgs.vim_configurable.customize {
     name = "vim";
@@ -110,6 +119,7 @@ let
       [ { name = "articulate"; }
         { name = "bstack"; }
         { name = "coot"; }
+        { name = "edot"; }
         { name = "ftglue"; }
         { name = "fugitive"; }
         { name = "gundo"; }

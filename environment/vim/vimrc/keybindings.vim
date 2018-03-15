@@ -8,9 +8,8 @@ map <Space> <Leader>
 set timeout timeoutlen=1000 ttimeoutlen=5
 
 " source / edit vimrc
-nnoremap <silent> <leader>f= :DotVimReload<CR>
-nnoremap          <leader>f; :DotVim init/
-nnoremap       <leader>f<CR> :DotVim 
+nmap     <leader>vv    <Plug>(edot_source) 
+nmap     <leader>vo    <Plug>(edot_edit) 
 
 " ··········· buffers ········· {{{1
 nmap     <leader>o     :edit <C-R>=empty(expand('%')) ? '' : expand('%:~:.:h').'/'<CR>
@@ -94,7 +93,7 @@ inoremap      <C-A> <Home>
 inoremap <C-X><C-A> <C-A>
 inoremap      <C-B> <C-G>U<Left>
 inoremap      <C-F> <C-G>U<Right>
-inoremap      JL    <End>
+inoremap      JK    <End>
 
 " edit like you're emacs
 inoremap <C-D> <Del>
