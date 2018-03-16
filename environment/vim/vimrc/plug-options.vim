@@ -9,4 +9,17 @@ let g:optcycle_config = {
 \   ]
 \ }
 
+let g:projectionist_heuristics = {
+\   '*': {
+\     '*.c': {
+\       'alternate': '{}.h',
+\       'type': 'source'
+\     },
+\     '*.h': {
+\       'alternate': '{}.c',
+\       'type': 'header'
+\     }
+\   }
+\ }
+
 let g:dirvish_mode = ':sort r /[^\/]$/'

@@ -6,8 +6,11 @@ let
       fugitive
       gundo
       surround
+      vim-easy-align
+      vim-eunuch
       vim-nix
       vim-repeat
+      vim-ruby
     ];
 
   privatePlugins = map (key: builtins.getAttr key privateSet)
@@ -50,6 +53,15 @@ let
         sha256 = "0f08w5cipad5q3wa7klw5w2ld6abkr1iy467zsqz6f65hbhp5hnd";
       };
     };
+    edot = pkgs.vimUtils.buildVimPlugin {
+      name = "edot";
+      src = pkgs.fetchFromGitHub {
+        owner = "ivanbrennan";
+        repo = "edot";
+        rev = "0e969d9a9850e1ed28edce1c4be1eb37543f7b84";
+        sha256 = "0c6i8m75q2n6s4ik90rvg2hyzygmhnpv8kjvwk7awxjj5w0bgf3v";
+      };
+    };
     ftglue = pkgs.vimUtils.buildVimPlugin {
       name = "ftglue";
       src = pkgs.fetchFromGitHub {
@@ -57,6 +69,24 @@ let
         repo = "ftglue";
         rev = "59a6f6fd0ccc63165b6aea28a56c2d6682694267";
         sha256 = "0kcqf3rc1ypxpn05dycwsc7y21mjzs99cv0yqwidjxzsllqx3jf4";
+      };
+    };
+    vim-projectionist = pkgs.vimUtils.buildVimPlugin {
+      name = "vim-projectionist";
+      src = pkgs.fetchFromGitHub {
+        owner = "tpope";
+        repo = "vim-projectionist";
+        rev = "d20f2a25fe820c5d0abf4b584c46203ecf067f2d";
+        sha256 = "1vn55f3jls06bsavk4vf9fy9hq0izbg57b69f6j58kv887xvynlv";
+      };
+    };
+    listical = pkgs.vimUtils.buildVimPlugin {
+      name = "listical";
+      src = pkgs.fetchFromGitHub {
+        owner = "ivanbrennan";
+        repo = "listical";
+        rev = "b66979f3d530d970e43f190e7d67e8ab03044544";
+        sha256 = "1byiz75k4xfhcf2qp45lvx0dslpxzxn03f0h57dn8zikm0bx35mm";
       };
     };
     loupe = pkgs.vimUtils.buildVimPlugin {
@@ -95,6 +125,15 @@ let
         sha256 = "1sv82861mf3z9rkxmlwaiwzbpa1ri6mhw67ngw67177xg4cghz6q";
       };
     };
+    super-shell-indent = pkgs.vimUtils.buildVimPlugin {
+      name = "Super-Shell-Indent";
+      src = pkgs.fetchFromGitHub {
+        owner = "vim-scripts";
+        repo = "Super-Shell-Indent";
+        rev = "eee1c2ef40f333049c45c6cadd1a2b9fa58c8488";
+        sha256 = "1k7mr8q7jbhqhg07a1m00ihcrvsnmg49rp8y7sdna20dd5jd3yfd";
+      };
+    };
     vim-matchit = pkgs.vimUtils.buildVimPlugin {
       name = "vim-matchit";
       src = pkgs.fetchFromGitHub {
@@ -120,15 +159,6 @@ let
         repo = "vmacs";
         rev = "30c5972f1b9cf53162ca1562d83643aae9d31c66";
         sha256 = "10q2bq4vn63z2pdzxfvm33pdmw89k77wyai9nqff30nsz895b40s";
-      };
-    };
-    edot = pkgs.vimUtils.buildVimPlugin {
-      name = "edot";
-      src = pkgs.fetchFromGitHub {
-        owner = "ivanbrennan";
-        repo = "edot";
-        rev = "0e969d9a9850e1ed28edce1c4be1eb37543f7b84";
-        sha256 = "0c6i8m75q2n6s4ik90rvg2hyzygmhnpv8kjvwk7awxjj5w0bgf3v";
       };
     };
   };

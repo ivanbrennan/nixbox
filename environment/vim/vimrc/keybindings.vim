@@ -108,6 +108,12 @@ nmap <leader>;  <Plug>Commentary
 omap <leader>;  <Plug>Commentary
 nmap <leader>;; <Plug>CommentaryLine
 
+" EasyAlign
+nmap     ga  <Plug>(EasyAlign)
+xmap     ga  <Plug>(EasyAlign)
+nnoremap gA  ga
+xnoremap gA  ga
+
 " + / -
 nnoremap + <C-A>
 xnoremap + <C-A>
