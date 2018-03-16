@@ -42,6 +42,9 @@ nnoremap <M-K>         :lprevious<CR>
 nnoremap <M-H>         :lolder<CR>
 nnoremap <M-L>         :lnewer<CR>
 
+" Directory tree
+nmap <leader>u <Plug>(dirvish_up)
+
 " ··········· command-line ···· {{{1
 noremap  <leader>x     :
 nnoremap <leader>1     :!

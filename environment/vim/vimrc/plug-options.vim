@@ -8,3 +8,5 @@ let g:optcycle_config = {
 \     { 'colorscheme': 'blight' }
 \   ]
 \ }
+
+let g:dirvish_mode = ':sort r /[^\/]$/'

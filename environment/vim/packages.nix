@@ -40,13 +40,22 @@ let
         sha256 = "0f8qlqi67jb6mm5x9iww9ihwya8x0ansgm1xka9siccwb68078ck";
       };
     };
+    dirvish = pkgs.vimUtils.buildVimPlugin {
+      name = "dirvish";
+      src = pkgs.fetchFromGitHub {
+        owner = "justinmk";
+        repo = "vim-dirvish";
+        rev = "e535cca83c8eb0e4d1a2c0861c3a03b7f6d67705";
+        sha256 = "0f08w5cipad5q3wa7klw5w2ld6abkr1iy467zsqz6f65hbhp5hnd";
+      };
+    };
     ftglue = pkgs.vimUtils.buildVimPlugin {
       name = "ftglue";
       src = pkgs.fetchFromGitHub {
         owner = "ivanbrennan";
         repo = "ftglue";
-        rev = "3d925e0f314db7c3855176a5fa502fc1d72e4368";
-        sha256 = "0m5m9y50r7d6yb3afi8188clf3vipbv3cpbp33mrrkpbgxcbhip3";
+        rev = "59a6f6fd0ccc63165b6aea28a56c2d6682694267";
+        sha256 = "0kcqf3rc1ypxpn05dycwsc7y21mjzs99cv0yqwidjxzsllqx3jf4";
       };
     };
     loupe = pkgs.vimUtils.buildVimPlugin {
