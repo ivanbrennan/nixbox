@@ -102,6 +102,12 @@ inoremap      JK    <End>
 inoremap <C-D> <Del>
 inoremap <C-T> <Esc>xpa
 
+" commentary
+xmap <leader>;  <Plug>Commentary
+nmap <leader>;  <Plug>Commentary
+omap <leader>;  <Plug>Commentary
+nmap <leader>;; <Plug>CommentaryLine
+
 " + / -
 nnoremap + <C-A>
 xnoremap + <C-A>

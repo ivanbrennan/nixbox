@@ -2,7 +2,8 @@ pkgs:
 
 let
   publicPlugins = with pkgs.vimPlugins;
-    [ fugitive
+    [ commentary
+      fugitive
       gundo
       surround
       vim-nix
