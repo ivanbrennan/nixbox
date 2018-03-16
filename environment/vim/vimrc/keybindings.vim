@@ -100,7 +100,9 @@ inoremap      JK    <End>
 
 " edit like you're emacs
 inoremap <C-D> <Del>
-inoremap <C-T> <Esc>xpa
+imap <C-T> <Plug>(vmacs_transpose_i)
+cmap <C-T> <Plug>(vmacs_transpose_c)
+imap <C-A> <Plug>(vmacs_start_of_line)
 
 " commentary
 xmap <leader>;  <Plug>Commentary

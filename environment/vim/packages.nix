@@ -157,8 +157,8 @@ let
       src = pkgs.fetchFromGitHub {
         owner = "ivanbrennan";
         repo = "vmacs";
-        rev = "30c5972f1b9cf53162ca1562d83643aae9d31c66";
-        sha256 = "10q2bq4vn63z2pdzxfvm33pdmw89k77wyai9nqff30nsz895b40s";
+        rev = "bbcfcff6b6d31269af436a5f66645805949b0161";
+        sha256 = "0y4wwcxw9i2spykdrj8inlgy9pqdqni2n6gn7dph21imfc4zlhz4";
       };
     };
   };
