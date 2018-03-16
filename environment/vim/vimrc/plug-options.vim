@@ -23,3 +23,7 @@ let g:projectionist_heuristics = {
 \ }
 
 let g:dirvish_mode = ':sort r /[^\/]$/'
+
+let g:LoupeCenterResults = 0
+let g:LoupeHlSearchTimeout = 1000
+let g:LoupeVeryMagic = 0

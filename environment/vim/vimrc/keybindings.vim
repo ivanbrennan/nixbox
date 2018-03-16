@@ -114,6 +114,14 @@ xmap     ga  <Plug>(EasyAlign)
 nnoremap gA  ga
 xnoremap gA  ga
 
+" tag, pop
+nmap <C-.> <Plug>(ArticulateTag)
+xmap <C-.> <Plug>(ArticulateTag)
+nmap <C-,> <Plug>(ArticulatePop)
+xmap <C-,> <Plug>(ArticulatePop)
+nmap g.    <Plug>(ArticulateTjump)
+xmap g.    <Plug>(ArticulateTjump)
+
 " + / -
 nnoremap + <C-A>
 xnoremap + <C-A>
