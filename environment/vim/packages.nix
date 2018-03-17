@@ -35,6 +35,15 @@ let
         sha256 = "02ggkpkwq6z5a2hcw5jwyxx2fr9pl7hwb7b3d8gahnw6awadl6px";
       };
     };
+    coherent = pkgs.vimUtils.buildVimPlugin {
+      name = "coherent";
+      src = pkgs.fetchFromGitHub {
+        owner = "ivanbrennan";
+        repo = "coherent";
+        rev = "a84686fc509a1e4434a588d86e029c2105f033ab";
+        sha256 = "0rgrj1xy2qyfjzp45q39adkracv89x02l6jrwb4hhs38b11yp7wl";
+      };
+    };
     coot = pkgs.vimUtils.buildVimPlugin {
       name = "coot";
       src = pkgs.fetchFromGitHub {
@@ -96,15 +105,6 @@ let
         repo = "loupe";
         rev = "188509d4dc8089e1690fc62d2d6df86a60b4c9fe";
         sha256 = "1il8c873661bwl8d9lil9zkq5pfys5z1cnh2v0jpw2831zw0cjq4";
-      };
-    };
-    mline = pkgs.vimUtils.buildVimPlugin {
-      name = "mline";
-      src = pkgs.fetchFromGitHub {
-        owner = "ivanbrennan";
-        repo = "mline";
-        rev = "b817df9f46508b4e213753bd7a6f8830d677eb0d";
-        sha256 = "1rm47g0hfjq2x6g38hc2lqb8cgcml4is8gxhqdmdidmr2msxs0lp";
       };
     };
     optcycle = pkgs.vimUtils.buildVimPlugin {
