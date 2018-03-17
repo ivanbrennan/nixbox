@@ -174,7 +174,5 @@ let
       # To automatically load a plugin when opening a filetype, add vimrc lines like:
       # autocmd FileType php :packadd phpCompletion
     };
-
-    vimrcConfig.customRC = import ./vimrc;
   };
 in [ vim ]
