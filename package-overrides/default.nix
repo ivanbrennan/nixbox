@@ -1,4 +1,5 @@
 pkgs: {
+  dotvim = pkgs.callPackage ./dotvim { };
   sysless = pkgs.callPackage ./sysless { };
   linuxPackages = (pkgs.linuxPackagesFor pkgs.linuxPackages.kernel).extend (
     self: super:
