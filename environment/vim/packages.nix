@@ -112,8 +112,8 @@ let
       src = pkgs.fetchFromGitHub {
         owner = "ivanbrennan";
         repo = "optcycle";
-        rev = "ab3baa018218d347b6b26589a4774c9b25e31021";
-        sha256 = "1y4qn6icdgwi41dnbf9h938j7598i8217aqlg916lxv0vffa6ajr";
+        rev = "29b14a7a4320bf12bb35bcee565e9d0a7d32bfe0";
+        sha256 = "11887nfzy63h80qxrj4fwn069jar19z86z2b3bky4hkjl60myr6k";
       };
     };
     pinnacle = pkgs.vimUtils.buildVimPlugin {
