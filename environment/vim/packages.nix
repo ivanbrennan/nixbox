@@ -40,8 +40,8 @@ let
       src = pkgs.fetchFromGitHub {
         owner = "ivanbrennan";
         repo = "coherent";
-        rev = "4fe01087612b9aee38bafad56f39a187208b9827";
-        sha256 = "0c0v1ynp96qqshpgbs1082rglqraczdyr73ym01nsqkh0gspklm9";
+        rev = "1fdce02e082c6039d50a425e99dff7cd5ac1660e";
+        sha256 = "0r81lq50kfnp64k5a4l696cgn9rmlfkxb53qdajsr4h8cv9k986v";
       };
     };
     coot = pkgs.vimUtils.buildVimPlugin {
@@ -80,15 +80,6 @@ let
         sha256 = "0kcqf3rc1ypxpn05dycwsc7y21mjzs99cv0yqwidjxzsllqx3jf4";
       };
     };
-    vim-projectionist = pkgs.vimUtils.buildVimPlugin {
-      name = "vim-projectionist";
-      src = pkgs.fetchFromGitHub {
-        owner = "tpope";
-        repo = "vim-projectionist";
-        rev = "d20f2a25fe820c5d0abf4b584c46203ecf067f2d";
-        sha256 = "1vn55f3jls06bsavk4vf9fy9hq0izbg57b69f6j58kv887xvynlv";
-      };
-    };
     listical = pkgs.vimUtils.buildVimPlugin {
       name = "listical";
       src = pkgs.fetchFromGitHub {
@@ -107,6 +98,15 @@ let
         sha256 = "1il8c873661bwl8d9lil9zkq5pfys5z1cnh2v0jpw2831zw0cjq4";
       };
     };
+    mline = pkgs.vimUtils.buildVimPlugin {
+      name = "mline";
+      src = pkgs.fetchFromGitHub {
+        owner = "ivanbrennan";
+        repo = "mline";
+        rev = "3ef4d2c8a4987ec103935d32154b656a76130a4d";
+        sha256 = "0475x9ww2k8sg44gp7839r8dniyjs62d27r4wfibk8768yl84vpi";
+      };
+    };
     optcycle = pkgs.vimUtils.buildVimPlugin {
       name = "optcycle";
       src = pkgs.fetchFromGitHub {
@@ -114,15 +114,6 @@ let
         repo = "optcycle";
         rev = "29b14a7a4320bf12bb35bcee565e9d0a7d32bfe0";
         sha256 = "11887nfzy63h80qxrj4fwn069jar19z86z2b3bky4hkjl60myr6k";
-      };
-    };
-    pinnacle = pkgs.vimUtils.buildVimPlugin {
-      name = "pinnacle";
-      src = pkgs.fetchFromGitHub {
-        owner = "wincent";
-        repo = "pinnacle";
-        rev = "ec3373b33d289f2e7f2d8a324aef5e0b20f95b7b";
-        sha256 = "1sv82861mf3z9rkxmlwaiwzbpa1ri6mhw67ngw67177xg4cghz6q";
       };
     };
     super-shell-indent = pkgs.vimUtils.buildVimPlugin {
@@ -141,6 +132,15 @@ let
         repo = "vim-matchit";
         rev = "57de3a754795fe325771bf0c3991905ae1d0246e";
         sha256 = "0k31j4fbzdilkl8bqi1lkljyamj298fb2d4shds84lr1bmz4mlqm";
+      };
+    };
+    vim-projectionist = pkgs.vimUtils.buildVimPlugin {
+      name = "vim-projectionist";
+      src = pkgs.fetchFromGitHub {
+        owner = "tpope";
+        repo = "vim-projectionist";
+        rev = "d20f2a25fe820c5d0abf4b584c46203ecf067f2d";
+        sha256 = "1vn55f3jls06bsavk4vf9fy9hq0izbg57b69f6j58kv887xvynlv";
       };
     };
     vim-unimpaired = pkgs.vimUtils.buildVimPlugin {
