@@ -40,8 +40,8 @@ let
       src = pkgs.fetchFromGitHub {
         owner = "ivanbrennan";
         repo = "coherent";
-        rev = "1fdce02e082c6039d50a425e99dff7cd5ac1660e";
-        sha256 = "0r81lq50kfnp64k5a4l696cgn9rmlfkxb53qdajsr4h8cv9k986v";
+        rev = "bf56855b7407f9f39bc0e8be2f95aaa6fab2aeed";
+        sha256 = "1h2ypsym3hvis1k3cycb0bsrjl0fnv41mdyy8lc40nrzf4svav2f";
       };
     };
     coot = pkgs.vimUtils.buildVimPlugin {
@@ -123,6 +123,15 @@ let
         repo = "Super-Shell-Indent";
         rev = "eee1c2ef40f333049c45c6cadd1a2b9fa58c8488";
         sha256 = "1k7mr8q7jbhqhg07a1m00ihcrvsnmg49rp8y7sdna20dd5jd3yfd";
+      };
+    };
+    tabtab = pkgs.vimUtils.buildVimPlugin {
+      name = "tabtab";
+      src = pkgs.fetchFromGitHub {
+        owner = "ivanbrennan";
+        repo = "tabtab";
+        rev = "1ef74cd0f40e498f00f9d00dc985231c6b14d171";
+        sha256 = "1rzr4gazvwxv3y8wk6gdv58a16zc41yllnsmhpyhm19xjmijxsfy";
       };
     };
     vim-matchit = pkgs.vimUtils.buildVimPlugin {
