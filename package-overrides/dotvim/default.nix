@@ -8,8 +8,8 @@ stdenv.mkDerivation {
   src = fetchFromGitHub {
     owner = "ivanbrennan";
     repo = "dotvim";
-    rev = "1fe95b456e92df175656a6420e03e5de4cc79f9d";
-    sha256 = "0kz580gadqdwq8mc5ayrwq8a4amksmbcqk6pkxkc5b16kny72hws";
+    rev = "ef4b550fb3e668bea2ba38b09d46296847ca482f";
+    sha256 = "1izxx6amm3v8f0z61ghbcyih5k1pgaadabn4ny1v9yvrbs1dz7sv";
   };
 
   builder = ./builder.sh;
