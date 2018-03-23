@@ -85,8 +85,8 @@ let
       src = pkgs.fetchFromGitHub {
         owner = "ivanbrennan";
         repo = "iota";
-        rev = "44c5104786edf9a58542fc47a708156ab49d8e96";
-        sha256 = "0byrfpyrzhj9j91jvkbm89nllqk8bxyvdqa8lbbzxa7kxapxn0ar";
+        rev = "e1317dbd2355a3694c072350150ff0f9982f98b5";
+        sha256 = "1qznd5rw6a4ad6s5gwqimkib51wbgwancwykb37pqilg4qd6i5jb";
       };
     };
     listical = pkgs.vimUtils.buildVimPlugin {
