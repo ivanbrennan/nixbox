@@ -76,8 +76,8 @@ let
       src = pkgs.fetchFromGitHub {
         owner = "ivanbrennan";
         repo = "ftglue";
-        rev = "b346b35eaef7b6010fe3fcaafd69383599348fe1";
-        sha256 = "1f5kf1cn2lz1nhzjajvlgkyv1cvrv6149jgf48aq2rrsflkww1rw";
+        rev = "b8b60b42c05fc46935ff3bc94ea10ad2d34702cb";
+        sha256 = "18kn4k1znycspbvxsgv5z7i41s7zddlv70dm37f1lsqrx9rbr2ni";
       };
     };
     iota = pkgs.vimUtils.buildVimPlugin {
