@@ -40,8 +40,8 @@ let
       src = pkgs.fetchFromGitHub {
         owner = "ivanbrennan";
         repo = "coherent";
-        rev = "b3a079964f6b66d686de8b1023b574f70bc1e41a";
-        sha256 = "04fg6xri535d3fqm8yvjhxk6ak2jmaxs1nyqq6d22sm68rfpsrp6";
+        rev = "d13f0ddadaba273a27c78f3ae7e5e6594a5578a0";
+        sha256 = "0q1qmysw9m3hrw9md757w4qhba66mn8p0acsj6fgrd0bzr2lgq48";
       };
     };
     coot = pkgs.vimUtils.buildVimPlugin {
@@ -76,8 +76,8 @@ let
       src = pkgs.fetchFromGitHub {
         owner = "ivanbrennan";
         repo = "ftglue";
-        rev = "59a6f6fd0ccc63165b6aea28a56c2d6682694267";
-        sha256 = "0kcqf3rc1ypxpn05dycwsc7y21mjzs99cv0yqwidjxzsllqx3jf4";
+        rev = "6c839476ffbef55c491ca11479feb348f8f761fe";
+        sha256 = "0xn204wlafml99cb5iwdhcxa44z6p5r3c7m7gwpk9g0ck728cxnp";
       };
     };
     iota = pkgs.vimUtils.buildVimPlugin {
@@ -114,6 +114,15 @@ let
         repo = "mline";
         rev = "3ef4d2c8a4987ec103935d32154b656a76130a4d";
         sha256 = "0475x9ww2k8sg44gp7839r8dniyjs62d27r4wfibk8768yl84vpi";
+      };
+    };
+    ocursor = pkgs.vimUtils.buildVimPlugin {
+      name = "ocursor";
+      src = pkgs.fetchFromGitHub {
+        owner = "ivanbrennan";
+        repo = "ocursor";
+        rev = "6980b0f611ad7f02280800855c6098319a3d906e";
+        sha256 = "08bzbjjhj0qg9rkgs62frpj94sdgvyxzxclx6y02gq7v18qba743";
       };
     };
     optcycle = pkgs.vimUtils.buildVimPlugin {
