@@ -40,8 +40,8 @@ let
       src = pkgs.fetchFromGitHub {
         owner = "ivanbrennan";
         repo = "coherent";
-        rev = "d13f0ddadaba273a27c78f3ae7e5e6594a5578a0";
-        sha256 = "0q1qmysw9m3hrw9md757w4qhba66mn8p0acsj6fgrd0bzr2lgq48";
+        rev = "fe9e1f5e05b407902a668e0c484cdb45361809d5";
+        sha256 = "058mysq7zsykqw2gxmnj6rzfblqn2xqjy0zgxyj0frfks0j6qizi";
       };
     };
     coot = pkgs.vimUtils.buildVimPlugin {
@@ -132,6 +132,15 @@ let
         repo = "optcycle";
         rev = "29b14a7a4320bf12bb35bcee565e9d0a7d32bfe0";
         sha256 = "11887nfzy63h80qxrj4fwn069jar19z86z2b3bky4hkjl60myr6k";
+      };
+    };
+    sohi = pkgs.vimUtils.buildVimPlugin {
+      name = "sohi";
+      src = pkgs.fetchFromGitHub {
+        owner = "ivanbrennan";
+        repo = "sohi";
+        rev = "837bb832e71878edf1a4398742b8e674f57e66a5";
+        sha256 = "04lq8x6525hnaqxiy76zizqwpkalgcfpj5kg3jrjjzplycf238c4";
       };
     };
     super-shell-indent = pkgs.vimUtils.buildVimPlugin {
