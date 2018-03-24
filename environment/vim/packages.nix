@@ -40,8 +40,8 @@ let
       src = pkgs.fetchFromGitHub {
         owner = "ivanbrennan";
         repo = "coherent";
-        rev = "fe9e1f5e05b407902a668e0c484cdb45361809d5";
-        sha256 = "058mysq7zsykqw2gxmnj6rzfblqn2xqjy0zgxyj0frfks0j6qizi";
+        rev = "9c6b9011382782b590479de3b8c8a6e2cb43eb90";
+        sha256 = "0gips47ml8rqng4wcwbvaah7v5ajidm4bwr3h9g2g80zman5bc3m";
       };
     };
     coot = pkgs.vimUtils.buildVimPlugin {
@@ -94,8 +94,8 @@ let
       src = pkgs.fetchFromGitHub {
         owner = "ivanbrennan";
         repo = "listical";
-        rev = "b66979f3d530d970e43f190e7d67e8ab03044544";
-        sha256 = "1byiz75k4xfhcf2qp45lvx0dslpxzxn03f0h57dn8zikm0bx35mm";
+        rev = "540f21f41a82c0cd04611498bc3a095be565a4e0";
+        sha256 = "0r3kwrvdmh9srpqc5xh6c2xx1mr4lhqr9rxzca4i9lfdiblwcw29";
       };
     };
     loupe = pkgs.vimUtils.buildVimPlugin {
@@ -139,8 +139,8 @@ let
       src = pkgs.fetchFromGitHub {
         owner = "ivanbrennan";
         repo = "sohi";
-        rev = "837bb832e71878edf1a4398742b8e674f57e66a5";
-        sha256 = "04lq8x6525hnaqxiy76zizqwpkalgcfpj5kg3jrjjzplycf238c4";
+        rev = "5a4b8e0cb75919085df8830aefe4cf83b6689dd8";
+        sha256 = "1ps6rng7yhh47vb704ixc0sbiqj2sgx1xh4d5mjqk39p3gh91xm5";
       };
     };
     super-shell-indent = pkgs.vimUtils.buildVimPlugin {
