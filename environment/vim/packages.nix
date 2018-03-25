@@ -40,8 +40,8 @@ let
       src = pkgs.fetchFromGitHub {
         owner = "ivanbrennan";
         repo = "coherent";
-        rev = "9c6b9011382782b590479de3b8c8a6e2cb43eb90";
-        sha256 = "0gips47ml8rqng4wcwbvaah7v5ajidm4bwr3h9g2g80zman5bc3m";
+        rev = "c441fd3c651428156b0182e82058fc42d6ed69d8";
+        sha256 = "1jh81a2q6kmfx8s7j0pyvavvllsz5qgyjbr1jk7ss8q2gd55a1sc";
       };
     };
     coot = pkgs.vimUtils.buildVimPlugin {
@@ -49,8 +49,8 @@ let
       src = pkgs.fetchFromGitHub {
         owner = "ivanbrennan";
         repo = "coot";
-        rev = "7930805b43ec89b2ef43991e15f2df8c9b2d64ff";
-        sha256 = "0f8qlqi67jb6mm5x9iww9ihwya8x0ansgm1xka9siccwb68078ck";
+        rev = "a91aa2f63bc17bbd71cf99a4c2016b0252f6c18b";
+        sha256 = "15jvnyg5hk6i05pnbxwn5p81fa7yyxhy6vkdz7p5c9x8kr1ldgh2";
       };
     };
     dirvish = pkgs.vimUtils.buildVimPlugin {
@@ -67,8 +67,8 @@ let
       src = pkgs.fetchFromGitHub {
         owner = "ivanbrennan";
         repo = "edot";
-        rev = "0e969d9a9850e1ed28edce1c4be1eb37543f7b84";
-        sha256 = "0c6i8m75q2n6s4ik90rvg2hyzygmhnpv8kjvwk7awxjj5w0bgf3v";
+        rev = "23cc0a5f038cd049af000d650d3ab4921f920378";
+        sha256 = "0xk74bq5y1xpjki2yrbll3flp76vwnqly7zb9fhnqlhpxm27wjf3";
       };
     };
     ftglue = pkgs.vimUtils.buildVimPlugin {
@@ -94,8 +94,8 @@ let
       src = pkgs.fetchFromGitHub {
         owner = "ivanbrennan";
         repo = "listical";
-        rev = "540f21f41a82c0cd04611498bc3a095be565a4e0";
-        sha256 = "0r3kwrvdmh9srpqc5xh6c2xx1mr4lhqr9rxzca4i9lfdiblwcw29";
+        rev = "d5fa6f64102ee33e96c6e66fecfe023f04ba3be8";
+        sha256 = "09xy2nabmrc0s8xhskvyvj7c57kcsb3knxw7l45pr6l35isshvcn";
       };
     };
     loupe = pkgs.vimUtils.buildVimPlugin {
@@ -103,8 +103,8 @@ let
       src = pkgs.fetchFromGitHub {
         owner = "ivanbrennan";
         repo = "loupe";
-        rev = "188509d4dc8089e1690fc62d2d6df86a60b4c9fe";
-        sha256 = "1il8c873661bwl8d9lil9zkq5pfys5z1cnh2v0jpw2831zw0cjq4";
+        rev = "75806062bf3d8f134b312c6093c9034d59cf0513";
+        sha256 = "104aybyymjw6d67i10r4syb4rnhbq9a8waifr49rl9x0xn7m4zn6";
       };
     };
     mline = pkgs.vimUtils.buildVimPlugin {
