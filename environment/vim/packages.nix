@@ -85,8 +85,8 @@ let
       src = pkgs.fetchFromGitHub {
         owner = "ivanbrennan";
         repo = "hint";
-        rev = "ef64e93100b3ed1e2e71849492505e8bbbff2626";
-        sha256 = "0zqhypzsgjh33l8r77z74jbcbjm5scjc636s94ajav281wwpc0ac";
+        rev = "ab21f7d0348420e8caead7bc39dfa2ed69e16fd5";
+        sha256 = "1cy5qz59wn04ab97c4z2hdqfcp6011r1lqxjjbzjk93r4f0bc5rr";
       };
     };
     iota = pkgs.vimUtils.buildVimPlugin {
