@@ -40,8 +40,8 @@ let
       src = pkgs.fetchFromGitHub {
         owner = "ivanbrennan";
         repo = "coherent";
-        rev = "c441fd3c651428156b0182e82058fc42d6ed69d8";
-        sha256 = "1jh81a2q6kmfx8s7j0pyvavvllsz5qgyjbr1jk7ss8q2gd55a1sc";
+        rev = "ef1c7c6a16bd740311646517c53e5ceb0d2da393";
+        sha256 = "0cpjh39fj7iry0i54vzz23hr8xkbdifg70c0r3fmcwm49x5vwf8z";
       };
     };
     coot = pkgs.vimUtils.buildVimPlugin {
@@ -80,6 +80,15 @@ let
         sha256 = "18kn4k1znycspbvxsgv5z7i41s7zddlv70dm37f1lsqrx9rbr2ni";
       };
     };
+    hint = pkgs.vimUtils.buildVimPlugin {
+      name = "hint";
+      src = pkgs.fetchFromGitHub {
+        owner = "ivanbrennan";
+        repo = "hint";
+        rev = "ef64e93100b3ed1e2e71849492505e8bbbff2626";
+        sha256 = "0zqhypzsgjh33l8r77z74jbcbjm5scjc636s94ajav281wwpc0ac";
+      };
+    };
     iota = pkgs.vimUtils.buildVimPlugin {
       name = "iota";
       src = pkgs.fetchFromGitHub {
@@ -96,15 +105,6 @@ let
         repo = "listical";
         rev = "d5fa6f64102ee33e96c6e66fecfe023f04ba3be8";
         sha256 = "09xy2nabmrc0s8xhskvyvj7c57kcsb3knxw7l45pr6l35isshvcn";
-      };
-    };
-    loupe = pkgs.vimUtils.buildVimPlugin {
-      name = "loupe";
-      src = pkgs.fetchFromGitHub {
-        owner = "ivanbrennan";
-        repo = "loupe";
-        rev = "75806062bf3d8f134b312c6093c9034d59cf0513";
-        sha256 = "104aybyymjw6d67i10r4syb4rnhbq9a8waifr49rl9x0xn7m4zn6";
       };
     };
     mline = pkgs.vimUtils.buildVimPlugin {
