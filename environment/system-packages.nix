@@ -36,6 +36,7 @@ let
     tree
     universal-ctags
     vlc
+    vln
     weechat
     xcape
     xsel
