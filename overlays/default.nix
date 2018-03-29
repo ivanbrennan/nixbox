@@ -1,29 +1,14 @@
 [ (self: super: {
-    dotvim = super.callPackage ./dotvim {
-      stdenv = self.stdenv;
-      fetchFromGitHub = self.fetchFromGitHub;
-    };
+    dotvim = super.callPackage ./dotvim { };
 
     linuxPackages = (super.linuxPackagesFor super.linuxPackages.kernel).extend (
-      inner_self: inner_super: {
-        i8042_debounce = super.callPackage ./i8042-debounce {
-          stdenv = self.stdenv;
-          fetchFromGitHub = self.fetchFromGitHub;
-          kernel = inner_self.kernel;
-        };
+      self': super': {
+        i8042_debounce = super'.callPackage ./i8042-debounce { };
       }
     );
 
-    sysless = super.callPackage ./sysless {
-      stdenv = self.stdenv;
-      fetchFromGitHub = self.fetchFromGitHub;
-      less = self.less;
-    };
+    sysless = super.callPackage ./sysless { };
 
-    vln = super.callPackage ./vln {
-      stdenv = self.stdenv;
-      fetchFromGitHub = self.fetchFromGitHub;
-      stow = self.stow;
-    };
+    vln = super.callPackage ./vln { };
   })
 ]
