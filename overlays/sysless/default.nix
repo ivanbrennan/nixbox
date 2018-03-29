@@ -14,7 +14,16 @@ stdenv.mkDerivation {
   };
 
   buildInputs = [ less ];
-  builder = ./builder.sh;
+
+  phases = [
+    "unpackPhase"
+    "installPhase"
+  ];
+
+  installPhase = ''
+    mkdir -p $out/etc
+    lesskey --output=$out/etc/sysless -- $src/lesskey
+  '';
 
   meta = {
     description = "Key bindings for Less";
