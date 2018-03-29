@@ -25,11 +25,12 @@
 
   nixpkgs.config = {
     allowUnfree = true;
-    packageOverrides = (import ./package-overrides);
 
     # Don't patch vim with minimal nix support. I'll use a plugin instead.
     vim.ftNix = false;
   };
+
+  nixpkgs.overlays = (import ./overlays);
 
   fonts.fonts = [
     pkgs.source-code-pro
