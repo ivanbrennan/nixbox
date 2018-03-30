@@ -19,17 +19,12 @@ control-n: next-history
 "\ep": history-search-backward
 "\en": history-search-forward
 
-# # Shift-Space
+# Shift-Space
 "\e[32;2u": " "
-# # Ctrl-Shift-Space
+# Ctrl-Shift-Space
 "\e[32;6u": " "
 
-# # Alt-Tab
-# "\e[9;3u": "\t"
-# # Alt-Shift-Tab
-# "\e[1;3Z": "\t"
-
-# # Ctrl-,
+# Ctrl-,
 "\e[44;5u": ","
 # Ctrl-.
 "\e[46;5u": "."
@@ -41,12 +36,20 @@ control-n: next-history
 # Alt-Enter
 "\e[13;3u": "\n"
 
+# Shift-Up
+"\e[1;2A": beginning-of-history
+
+# Shift-Down
+"\e[1;2B": end-of-history
+
 # Shift-Left
 "\e[1;2D": backward-word
 # Ctrl-Left
 "\e[1;5D": backward-word
 # Ctrl-Shift-Left
 "\e[1;6D": beginning-of-line
+# Alt-Left
+"\e[1;3D": backward-word
 
 # Shift-Right
 "\e[1;2C": forward-word
@@ -54,6 +57,8 @@ control-n: next-history
 "\e[1;5C": forward-word
 # Ctrl-Shift-Right
 "\e[1;6C": end-of-line
+# Alt-Right
+"\e[1;3C": forward-word
 
 
 # for linux console and RH/Debian xterm
