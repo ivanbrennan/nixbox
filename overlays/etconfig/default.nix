@@ -8,8 +8,8 @@ stdenv.mkDerivation {
   src = fetchFromGitHub {
     owner = "ivanbrennan";
     repo = "dotfiles";
-    rev = "dcd560a51be59dcf1f9b10d986f76b343cd932e6";
-    sha256 = "0vxq804y6idmm2785y1j2zan0317bbvpzpsb7cii3lyp30wx224y";
+    rev = "8b4df5bc9f0a868078ee0f55eaf9c452fb687466";
+    sha256 = "1wz2bkgyq0idvr2jydkbrg7ayjw990gxhv5xvyavcgsylkrdr5b0";
   };
 
   phases = [
@@ -22,6 +22,7 @@ stdenv.mkDerivation {
     cp $src/git/attributes $out/etc/gitattributes
     cp $src/git/ignore     $out/etc/gitignore
     cp $src/shell/inputrc  $out/etc/inputrc
+    cp $src/tmux/tmux.conf $out/etc/tmux.conf
   '';
 
   meta = {

@@ -1,6 +1,8 @@
+{ pkgs, ... }:
+
 {
   programs = {
     bash = import ./bash;
-    tmux = import ./tmux;
+    tmux = (import ./tmux) pkgs;
   };
 }
