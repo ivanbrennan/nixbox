@@ -4,4 +4,5 @@
   VISUAL = "vim";
   GIT_EDITOR = "vim";
   GIT_MERGE_AUTOEDIT = "no";
+  FZF_DEFAULT_OPTS = "--exact";
 }

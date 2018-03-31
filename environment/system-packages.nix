@@ -16,6 +16,7 @@ let
     docker
     emacs
     flac
+    fzf
     gimp
     git
     global
