@@ -58,8 +58,8 @@ let
       src = pkgs.fetchFromGitHub {
         owner = "justinmk";
         repo = "vim-dirvish";
-        rev = "e535cca83c8eb0e4d1a2c0861c3a03b7f6d67705";
-        sha256 = "0f08w5cipad5q3wa7klw5w2ld6abkr1iy467zsqz6f65hbhp5hnd";
+        rev = "0ad27e1e9161057ad83c6a96e9a4b8acd6e17f98";
+        sha256 = "19a21sr7c5lk8b6vx3gsyla03c32lixgk670md4n79gslxy40f6a";
       };
     };
     edot = pkgs.vimUtils.buildVimPlugin {
