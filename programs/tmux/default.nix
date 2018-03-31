@@ -2,5 +2,5 @@
 
 {
   enable = true;
-  extraTmuxConf = builtins.readFile "${pkgs.etconfig}/etc/tmux.conf";
+  extraTmuxConf = builtins.readFile "${pkgs.etcdots}/etc/tmux.conf";
 }

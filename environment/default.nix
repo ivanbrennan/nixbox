@@ -5,10 +5,10 @@
     systemPackages = (import ./system-packages.nix) pkgs;
     variables = import ./variables.nix;
     etc = {
-      "gitattributes".source = "${pkgs.etconfig}/etc/gitattributes";
+      "gitattributes".source = "${pkgs.etcdots}/etc/gitattributes";
       "gitconfig".source = pkgs.lib.mkForce ./etc/gitconfig;
-      "gitignore".source = "${pkgs.etconfig}/etc/gitignore";
-      "inputrc".source = "${pkgs.etconfig}/etc/inputrc";
+      "gitignore".source = "${pkgs.etcdots}/etc/gitignore";
+      "inputrc".source = "${pkgs.etcdots}/etc/inputrc";
       "sysless".source = "${pkgs.sysless}/etc/sysless";
     };
   };

@@ -3,7 +3,7 @@
 }:
 
 stdenv.mkDerivation {
-  name = "etconfig";
+  name = "etcdots";
 
   src = fetchFromGitHub {
     owner = "ivanbrennan";

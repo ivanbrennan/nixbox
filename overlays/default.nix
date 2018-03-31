@@ -1,7 +1,7 @@
 [ (self: super: {
     dotvim = super.callPackage ./dotvim { };
 
-    etconfig = super.callPackage ./etconfig { };
+    etcdots = super.callPackage ./etcdots { };
 
     linuxPackages = (super.linuxPackagesFor super.linuxPackages.kernel).extend (
       self': super': {
