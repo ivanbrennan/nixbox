@@ -9,8 +9,6 @@
       }
     );
 
-    sysless = super.callPackage ./sysless { };
-
     vln = super.callPackage ./vln { };
   })
 ]

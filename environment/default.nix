@@ -9,7 +9,7 @@
       "gitconfig".source = pkgs.lib.mkForce ./etc/gitconfig;
       "gitignore".source = "${pkgs.etcdots}/etc/gitignore";
       "inputrc".source = "${pkgs.etcdots}/etc/inputrc";
-      "sysless".source = "${pkgs.sysless}/etc/sysless";
+      "sysless".source = "${pkgs.etcdots}/etc/sysless";
     };
   };
 }
