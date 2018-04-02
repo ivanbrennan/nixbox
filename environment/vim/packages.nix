@@ -139,8 +139,8 @@ let
       src = pkgs.fetchFromGitHub {
         owner = "ivanbrennan";
         repo = "refract";
-        rev = "1d095190faa8cbddca35ededde796d9785983284";
-        sha256 = "0hbf3andrkn2r1x7q7ingrp9fc54d5nkxl79a6dcp40fpkvxkn9s";
+        rev = "76ed1146d962743ed3861267eb9ce58797aae8d4";
+        sha256 = "0gffsn236rx58y5ixy6nvcrwli4n0q67zf5npk6hnca83raqh6rd";
       };
     };
     sohi = pkgs.vimUtils.buildVimPlugin {
