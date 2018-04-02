@@ -40,8 +40,8 @@ let
       src = pkgs.fetchFromGitHub {
         owner = "ivanbrennan";
         repo = "coherent";
-        rev = "ef1c7c6a16bd740311646517c53e5ceb0d2da393";
-        sha256 = "0cpjh39fj7iry0i54vzz23hr8xkbdifg70c0r3fmcwm49x5vwf8z";
+        rev = "f86822465873315c26a9a2f536f63389fddf7f6c";
+        sha256 = "1ndpk9dl3iaqsngn9h84pdqz6f24s4wl8p9dyd8bs5k7s6vrljmp";
       };
     };
     coot = pkgs.vimUtils.buildVimPlugin {
@@ -132,6 +132,15 @@ let
         repo = "optcycle";
         rev = "29b14a7a4320bf12bb35bcee565e9d0a7d32bfe0";
         sha256 = "11887nfzy63h80qxrj4fwn069jar19z86z2b3bky4hkjl60myr6k";
+      };
+    };
+    refract = pkgs.vimUtils.buildVimPlugin {
+      name = "refract";
+      src = pkgs.fetchFromGitHub {
+        owner = "ivanbrennan";
+        repo = "refract";
+        rev = "1d095190faa8cbddca35ededde796d9785983284";
+        sha256 = "0hbf3andrkn2r1x7q7ingrp9fc54d5nkxl79a6dcp40fpkvxkn9s";
       };
     };
     sohi = pkgs.vimUtils.buildVimPlugin {
