@@ -40,8 +40,8 @@ let
       src = pkgs.fetchFromGitHub {
         owner = "ivanbrennan";
         repo = "coherent";
-        rev = "f86822465873315c26a9a2f536f63389fddf7f6c";
-        sha256 = "1ndpk9dl3iaqsngn9h84pdqz6f24s4wl8p9dyd8bs5k7s6vrljmp";
+        rev = "b5002433bbef7b8839b1bf0556e00af0facbf58f";
+        sha256 = "0nl70kks9jjf6pm41pijcg70bcxih7pq9fr5khz0ml13pcxcx3m4";
       };
     };
     coot = pkgs.vimUtils.buildVimPlugin {
