@@ -40,8 +40,8 @@ let
       src = pkgs.fetchFromGitHub {
         owner = "ivanbrennan";
         repo = "coherent";
-        rev = "b5002433bbef7b8839b1bf0556e00af0facbf58f";
-        sha256 = "0nl70kks9jjf6pm41pijcg70bcxih7pq9fr5khz0ml13pcxcx3m4";
+        rev = "a09eeb9431c4367c9dd96c529c306888a4f00fa1";
+        sha256 = "0453sxmgma5d8vsa4kq7aw16ypshyjxvgvdmqsld2v6a459iyn2w";
       };
     };
     coot = pkgs.vimUtils.buildVimPlugin {
@@ -204,6 +204,15 @@ let
         repo = "vmacs";
         rev = "bbcfcff6b6d31269af436a5f66645805949b0161";
         sha256 = "0y4wwcxw9i2spykdrj8inlgy9pqdqni2n6gn7dph21imfc4zlhz4";
+      };
+    };
+    zoo = pkgs.vimUtils.buildVimPlugin {
+      name = "zoo";
+      src = pkgs.fetchFromGitHub {
+        owner = "ivanbrennan";
+        repo = "zoo";
+        rev = "9af580fee42b144d7f4981737b1e704f2417f739";
+        sha256 = "0hvm5hzz8y106kyxwyzj0341scgqk83k2hhmdbgb22zbmy9251fc";
       };
     };
   };
