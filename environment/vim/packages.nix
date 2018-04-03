@@ -4,6 +4,8 @@ let
   publicPlugins = with pkgs.vimPlugins;
     [ commentary
       fugitive
+      fzf-vim
+      fzfWrapper
       gundo
       surround
       vim-easy-align
