@@ -10,6 +10,7 @@ let
       surround
       vim-easy-align
       vim-eunuch
+      vim-grepper
       vim-nix
       vim-repeat
       vim-ruby
@@ -42,8 +43,8 @@ let
       src = pkgs.fetchFromGitHub {
         owner = "ivanbrennan";
         repo = "coherent";
-        rev = "a09eeb9431c4367c9dd96c529c306888a4f00fa1";
-        sha256 = "0453sxmgma5d8vsa4kq7aw16ypshyjxvgvdmqsld2v6a459iyn2w";
+        rev = "7a25e8b9033061aabaef91957f67ebaa74486e51";
+        sha256 = "1jvzr7dcawnvjkb7ci4n7kjqlrb0zq481sy6j8c1vx8nn2c7rprb";
       };
     };
     coot = pkgs.vimUtils.buildVimPlugin {
