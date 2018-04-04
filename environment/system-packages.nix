@@ -15,6 +15,7 @@ let
     dmidecode
     docker
     emacs
+    fd
     flac
     fzf
     gimp
