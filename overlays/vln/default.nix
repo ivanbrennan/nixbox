@@ -9,8 +9,8 @@ stdenv.mkDerivation {
   src = fetchFromGitHub {
     owner = "ivanbrennan";
     repo = "vln";
-    rev = "c75b9e752cd11930112d008f8178308e4f616b82";
-    sha256 = "179nv6iiwjycv401xb5b8jl7gv1k4rr881jzmcf4d0ywfc2b4ljr";
+    rev = "b86aa6b6f2cfcd6ed4613b4f18bb60c734d6e49e";
+    sha256 = "1vvw2d0wfg6ra96740kqbc10fjbnmp9x6v0j1yqiqm3vz8yz4qjw";
   };
 
   propagatedBuildInputs = [ stow ];
