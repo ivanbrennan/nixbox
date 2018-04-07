@@ -26,8 +26,14 @@
   nixpkgs.config = {
     allowUnfree = true;
 
-    # Don't patch vim with minimal nix support. I'll use a plugin instead.
-    vim.ftNix = false;
+    vim = {
+      # Don't patch vim with minimal nix support. I'll use a plugin instead.
+      ftNix = false;
+
+      # I don't think I have any need for gui support, and turning it off fixes
+      # a cursor redraw bug. https://github.com/mhinz/vim-grepper/pull/156
+      gui = "no";
+    };
   };
 
   nixpkgs.overlays = (import ./overlays);
