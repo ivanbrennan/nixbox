@@ -37,27 +37,62 @@ ppath() {
   printf '%bPATH%b:\n%s\n' "$col_bold" "$col_reset" "${PATH//:/$'\n'}"
 }
 
-# jump to Bash builtin documentation
-man () {
-  case "$(type -t "$1")" in
-    builtin)
-      local pattern="^ *$1"
+man() {
+    case "$1" in
+        vim|vimdiff|view)
+            __vim_man "$@"
+            ;;
+        *)
+            __man "$@"
+            ;;
+    esac
+}
 
-      if bashdoc_match "${pattern} \+[-[]"; then
-        command man bash | less --pattern="${pattern} +[-[]"
-      elif bashdoc_match "${pattern}\b"; then
-        command man bash | less --pattern="${pattern}[[:>:]]"
-      else
-        command man bash
-      fi
-      ;;
-    keyword)
-      command man bash | less --hilite-search --pattern='^SHELL GRAMMAR$'
-      ;;
-    *)
-      command man "$@"
-      ;;
-  esac
+# jump to Bash builtin documentation
+__man() {
+    case "$(type -t "$1")" in
+        builtin)
+            local pattern="^ *$1"
+
+            if bashdoc_match "${pattern} \+[-[]"; then
+                command man bash | less --pattern="${pattern} +[-[]"
+            elif bashdoc_match "${pattern}\b"; then
+                command man bash | less --pattern="${pattern}[[:>:]]"
+            else
+                command man bash
+            fi
+            ;;
+        keyword)
+            command man bash | less --hilite-search --pattern='^SHELL GRAMMAR$'
+            ;;
+        *)
+            command man "$@"
+            ;;
+    esac
+}
+
+# hacky workaround for vim_configurable's lack of man pages
+# https://github.com/NixOS/nixpkgs/issues/24691
+__vim_man() {
+    local name=$1
+    shift
+    find $(__vim_configurable_out)/share/man \
+        -name "${name}.*" \
+        -exec man {} "$@" \;
+}
+# hacky workaround for vim_configurable's unexposed view/vimdiff outputs
+# https://github.com/NixOS/nixpkgs/issues/11442
+view() {
+    $(__vim_configurable_bin)/view "$@"
+}
+vimdiff() {
+    $(__vim_configurable_bin)/vimdiff "$@"
+}
+__vim_configurable_bin() {
+    echo $(__vim_configurable_out)/bin
+}
+__vim_configurable_out() {
+    awk '/^exec /{print $2}' $(readlink -f $(which vim)) | sed 's,/bin/vim$,,'
 }
 
 bashdoc_match() {
