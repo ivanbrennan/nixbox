@@ -96,7 +96,7 @@ __vim_configurable_out() {
 }
 
 bashdoc_match() {
-  command man bash | col -b | grep -l "$1" > /dev/null
+    { command man bash | col -b | grep -l "$1" ; } >/dev/null 2>&1
 }
 
 fdoc() {
