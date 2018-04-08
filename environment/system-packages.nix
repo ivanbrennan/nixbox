@@ -26,6 +26,7 @@ let
     lshw
     lsof
     mkpasswd
+    nice-backgrounds
     nix-repl
     par
     pstree

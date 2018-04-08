@@ -9,6 +9,8 @@
       }
     );
 
+    nice-backgrounds = super.callPackage ./nice-backgrounds { };
+
     vln = super.callPackage ./vln { };
   })
 ]
