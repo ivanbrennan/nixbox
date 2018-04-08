@@ -27,7 +27,6 @@ let
     lsof
     mkpasswd
     nice-backgrounds
-    nix-repl
     par
     pstree
     rxvt_unicode
