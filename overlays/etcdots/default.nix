@@ -9,8 +9,8 @@ stdenv.mkDerivation {
   src = fetchFromGitHub {
     owner = "ivanbrennan";
     repo = "dotfiles";
-    rev = "ac11b4af403b7c30d7c1a8ab7327d8f8c88e9914";
-    sha256 = "1yd3z17cp1l041bwyh14l27l55wrf73y09zaw0ip5nn3kyc8i2f9";
+    rev = "0dca1ea67896ad48d7d98c9f4b8d773489e7bba6";
+    sha256 = "1s6l1qpz9cb8ry9yk6y3ci6ydx6gwmcgzmq6k9jvjgp1cqyvamrb";
   };
 
   buildInputs = [ less ];
