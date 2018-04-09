@@ -8,6 +8,7 @@ let
       fzfWrapper
       gundo
       surround
+      targets-vim
       vim-easy-align
       vim-eunuch
       vim-grepper
@@ -43,8 +44,8 @@ let
       src = pkgs.fetchFromGitHub {
         owner = "ivanbrennan";
         repo = "coherent";
-        rev = "ead58f67f57af41daba16201154619b47eb3b2c6";
-        sha256 = "0pqwjyy3zzar6hbfic2gvx10scxnqd1bx4ivll8wjffmhhn9287y";
+        rev = "4741c2102e963c8e936622eecd80fff9f51947ef";
+        sha256 = "0ngljy137q22ywwqb8ymh8bbjzaakfi70q3kns56plq2d3jhi14l";
       };
     };
     coot = pkgs.vimUtils.buildVimPlugin {
@@ -52,8 +53,8 @@ let
       src = pkgs.fetchFromGitHub {
         owner = "ivanbrennan";
         repo = "coot";
-        rev = "a91aa2f63bc17bbd71cf99a4c2016b0252f6c18b";
-        sha256 = "15jvnyg5hk6i05pnbxwn5p81fa7yyxhy6vkdz7p5c9x8kr1ldgh2";
+        rev = "1237fa3e33aa7693d54c265472f2ebfa750eeac8";
+        sha256 = "0xkajx0ns04z6i2rldqjcgrb7jfbs9mr21wmlvxnb436n25cqyyq";
       };
     };
     dirvish = pkgs.vimUtils.buildVimPlugin {
@@ -88,8 +89,8 @@ let
       src = pkgs.fetchFromGitHub {
         owner = "ivanbrennan";
         repo = "hint";
-        rev = "7f47192fe9f0fdb7cf6358ba829b2059e913e345";
-        sha256 = "0s50nggqg1r1x4awn0zx04rdfiyy781nb14gmdvq3y1k1aiylmjw";
+        rev = "8f9430484918dca15d518a4390dfd7a462e715b9";
+        sha256 = "0zs6g98fbmqris54va3h6xhm9b58gh7m71717i863hq0gv76gfdv";
       };
     };
     iota = pkgs.vimUtils.buildVimPlugin {
@@ -133,8 +134,8 @@ let
       src = pkgs.fetchFromGitHub {
         owner = "ivanbrennan";
         repo = "optcycle";
-        rev = "29b14a7a4320bf12bb35bcee565e9d0a7d32bfe0";
-        sha256 = "11887nfzy63h80qxrj4fwn069jar19z86z2b3bky4hkjl60myr6k";
+        rev = "e6daf39223912b87dafa71ffe8d650950d1485b1";
+        sha256 = "0ly8gfvrkq9m1l55njg4c3w5d1jkdgmi9mdghy84hxnazsdwrzgp";
       };
     };
     refract = pkgs.vimUtils.buildVimPlugin {
@@ -142,8 +143,8 @@ let
       src = pkgs.fetchFromGitHub {
         owner = "ivanbrennan";
         repo = "refract";
-        rev = "76ed1146d962743ed3861267eb9ce58797aae8d4";
-        sha256 = "0gffsn236rx58y5ixy6nvcrwli4n0q67zf5npk6hnca83raqh6rd";
+        rev = "5b00cf6bcf943243b383e86166c6f47864ae3ed1";
+        sha256 = "0pmwkxpk7w8g329qnqc5s305kgjsqwci55i8n2xqlbf4l8yamm8c";
       };
     };
     sohi = pkgs.vimUtils.buildVimPlugin {
@@ -205,8 +206,8 @@ let
       src = pkgs.fetchFromGitHub {
         owner = "ivanbrennan";
         repo = "vmacs";
-        rev = "bbcfcff6b6d31269af436a5f66645805949b0161";
-        sha256 = "0y4wwcxw9i2spykdrj8inlgy9pqdqni2n6gn7dph21imfc4zlhz4";
+        rev = "684cec57a8c4ce25408cdae5f7ff586979dc4a6c";
+        sha256 = "1hrmqazd28k2wbl7c8mv833yfs8rq03wn8qksdddbisjdj9xrnjh";
       };
     };
     zoo = pkgs.vimUtils.buildVimPlugin {
