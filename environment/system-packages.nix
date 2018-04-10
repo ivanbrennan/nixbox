@@ -27,6 +27,7 @@ let
     lsof
     mkpasswd
     nice-backgrounds
+    neovim
     par
     pstree
     rxvt_unicode
