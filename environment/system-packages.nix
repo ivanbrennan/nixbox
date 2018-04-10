@@ -21,6 +21,7 @@ let
     gimp
     git
     global
+    gnomeExtensions.nohotcorner
     gnumake
     gnupg
     lshw
