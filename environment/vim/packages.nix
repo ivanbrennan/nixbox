@@ -106,8 +106,8 @@ let
       src = pkgs.fetchFromGitHub {
         owner = "ivanbrennan";
         repo = "listical";
-        rev = "d5fa6f64102ee33e96c6e66fecfe023f04ba3be8";
-        sha256 = "09xy2nabmrc0s8xhskvyvj7c57kcsb3knxw7l45pr6l35isshvcn";
+        rev = "e1dfe06907eb54a238708d2c416461f93facfff2";
+        sha256 = "1m8nj2cb7ris8fc4yszcjszzrf16m05s1b7cvfifmq56j3srvs51";
       };
     };
     mline = pkgs.vimUtils.buildVimPlugin {
@@ -178,8 +178,8 @@ let
       src = pkgs.fetchFromGitHub {
         owner = "ivanbrennan";
         repo = "vim-grepper";
-        rev = "1f5c16ee515f845da43fb338e189d52b68797130";
-        sha256 = "09jz8akl3ravv45lyw1g79hi90qw4gb92dswh84iyblbjvkwxwvn";
+        rev = "5fc735e9475b3e8e736be76a136e06d3c83d0d17";
+        sha256 = "1gpxkw5h97d2w9prrsnyjb74v77wd0b6az5lw2b8f47zj3nyxa90";
       };
     };
     vim-matchit = pkgs.vimUtils.buildVimPlugin {
