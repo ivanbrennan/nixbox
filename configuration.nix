@@ -26,8 +26,13 @@
   nixpkgs.config = {
     allowUnfree = true;
 
-    # Don't patch minimal nix support into vim. I'll use a plugin.
-    vim.ftNix = false;
+    vim = {
+      # Don't patch minimal nix support into vim. I'll use a plugin.
+      ftNix = false;
+
+      # Avoid cursor redraw bugs
+      gui = "no";
+    };
   };
 
   nixpkgs.overlays = (import ./overlays);
