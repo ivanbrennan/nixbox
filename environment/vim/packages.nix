@@ -11,7 +11,6 @@ let
       targets-vim
       vim-easy-align
       vim-eunuch
-      vim-grepper
       vim-nix
       vim-repeat
       vim-ruby
@@ -172,6 +171,15 @@ let
         repo = "tabtab";
         rev = "1ef74cd0f40e498f00f9d00dc985231c6b14d171";
         sha256 = "1rzr4gazvwxv3y8wk6gdv58a16zc41yllnsmhpyhm19xjmijxsfy";
+      };
+    };
+    vim-grepper = pkgs.vimUtils.buildVimPlugin {
+      name = "vim-grepper";
+      src = pkgs.fetchFromGitHub {
+        owner = "ivanbrennan";
+        repo = "vim-grepper";
+        rev = "1f5c16ee515f845da43fb338e189d52b68797130";
+        sha256 = "09jz8akl3ravv45lyw1g79hi90qw4gb92dswh84iyblbjvkwxwvn";
       };
     };
     vim-matchit = pkgs.vimUtils.buildVimPlugin {
