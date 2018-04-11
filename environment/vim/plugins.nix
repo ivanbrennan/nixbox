@@ -181,6 +181,15 @@ pkgs:
       sha256 = "1vn55f3jls06bsavk4vf9fy9hq0izbg57b69f6j58kv887xvynlv";
     };
   };
+  vim-rake = pkgs.vimUtils.buildVimPlugin {
+    name = "vim-rake";
+    src = pkgs.fetchFromGitHub {
+      owner = "tpope";
+      repo = "vim-rake";
+      rev = "79e51f17d26e2f31321af94ffd45bc9060623fdb";
+      sha256 = "0k5n06fwqlmkkmf8a7n9whrhc57l54fwl5dnr2hc1lyfjn8bqv45";
+    };
+  };
   vim-unimpaired = pkgs.vimUtils.buildVimPlugin {
     name = "vim-unimpaired";
     src = pkgs.fetchFromGitHub {

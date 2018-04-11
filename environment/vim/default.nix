@@ -47,7 +47,7 @@ let
         zoo
       ];
 
-    opt = [ ];
+    opt = [ vim-rake ];
   };
 
   vim = pkgs.vim_configurable.customize {
