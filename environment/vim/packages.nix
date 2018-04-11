@@ -43,8 +43,8 @@ let
       src = pkgs.fetchFromGitHub {
         owner = "ivanbrennan";
         repo = "coherent";
-        rev = "4741c2102e963c8e936622eecd80fff9f51947ef";
-        sha256 = "0ngljy137q22ywwqb8ymh8bbjzaakfi70q3kns56plq2d3jhi14l";
+        rev = "6ad6883536d68322725ac01320aea11dc231f686";
+        sha256 = "1f79hiiippsq0349acd1zblcl0c1i8p1id5p2qfmz0cx0fgrvci4";
       };
     };
     coot = pkgs.vimUtils.buildVimPlugin {
@@ -79,8 +79,8 @@ let
       src = pkgs.fetchFromGitHub {
         owner = "ivanbrennan";
         repo = "ftglue";
-        rev = "ece62427a6d598bbe5f429e41d14c992d161b8ea";
-        sha256 = "09hlvinlcdar3sgb75m10cwx2m290hfsa4lyssn2vxrxgl6vhm6r";
+        rev = "a17718f984faf0c95dd9091531d6edfa44b00f7b";
+        sha256 = "0mwyrgzkcmy5b9ylr7a8sp9fqsskcmi88p2q2hyfnq9jznk2prq2";
       };
     };
     hint = pkgs.vimUtils.buildVimPlugin {
@@ -106,8 +106,8 @@ let
       src = pkgs.fetchFromGitHub {
         owner = "ivanbrennan";
         repo = "listical";
-        rev = "e1dfe06907eb54a238708d2c416461f93facfff2";
-        sha256 = "1m8nj2cb7ris8fc4yszcjszzrf16m05s1b7cvfifmq56j3srvs51";
+        rev = "ad09e75e69b63708fa2ae810c7f30fd1b5c1f29d";
+        sha256 = "0bi8f4x4mghpgsacj8hv3px40amzsii00rr52fyn981wrnw9xgib";
       };
     };
     mline = pkgs.vimUtils.buildVimPlugin {
@@ -178,8 +178,8 @@ let
       src = pkgs.fetchFromGitHub {
         owner = "ivanbrennan";
         repo = "vim-grepper";
-        rev = "5fc735e9475b3e8e736be76a136e06d3c83d0d17";
-        sha256 = "1gpxkw5h97d2w9prrsnyjb74v77wd0b6az5lw2b8f47zj3nyxa90";
+        rev = "7ac2533e891958a63d408cfbaf017462cb66018b";
+        sha256 = "1vwl7b7ck7ph90yiv4b3qcgpln6qh9h4l9bwdjzlijrhh3cxc6vy";
       };
     };
     vim-matchit = pkgs.vimUtils.buildVimPlugin {
