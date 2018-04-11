@@ -45,6 +45,6 @@ let
     xcape
     xsel
   ];
-  vimPackages = (import ./vim/packages.nix) pkgs;
+  vimPackages = (import ./vim) pkgs;
 in
   packages ++ vimPackages
