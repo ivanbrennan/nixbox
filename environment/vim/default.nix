@@ -47,13 +47,23 @@ let
         zoo
       ];
 
-    opt = [ vim-rake ];
+    opt =
+      [ splitjoin
+        vim-javascript-syntax
+        vim-racket
+        vim-rails
+        vim-rake
+        vim-spec-runner
+        vim-tmux-runner
+        vmux
+        wmgraphviz
+      ];
   };
 
   vim = pkgs.vim_configurable.customize {
     name = "vim";
 
-    vimrcConfig.packages.myPackage = {
+    vimrcConfig.packages.core = {
       start = public.start ++ private.start;
       opt = public.opt ++ private.opt;
       # To automatically load a plugin when opening a filetype, add vimrc lines like:
