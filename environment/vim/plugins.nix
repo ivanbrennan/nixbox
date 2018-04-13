@@ -96,8 +96,8 @@ pkgs:
     src = pkgs.fetchFromGitHub {
       owner = "ivanbrennan";
       repo = "listical";
-      rev = "d5b3e1566783b07fa1395c9e0fed6c459a4ec7e4";
-      sha256 = "03mq3g4xyqflaspq08ps6c3khsahp5vjvy6b7bx4wd15mqcv5nz6";
+      rev = "5c583181263e22945c5fc8ca2b8d19de13cd5d5f";
+      sha256 = "0q6w3c8k23kjifkn7smvsa045pnl3q0hvi0hakpb5vsnzyqw0dhk";
     };
   };
 
