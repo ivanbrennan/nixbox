@@ -316,8 +316,8 @@ pkgs:
     src = pkgs.fetchFromGitHub {
       owner = "ivanbrennan";
       repo = "zoo";
-      rev = "7f5f8575bfb0daab2b40e6472bb674047d6b4713";
-      sha256 = "05aqj6mcccnb35ddy4k721ydfqzp28lgnv8sj4rh5n1pnc9q2pbn";
+      rev = "05bd06b491b3fe45c4f0192bc8bad8bd86164c42";
+      sha256 = "0z4zcvwfsx97n64bn3jis2b249zplrz2k34iz8qgdi98lgdlzhx9";
     };
   };
 }
