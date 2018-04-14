@@ -26,6 +26,7 @@
 	default = current
 [advice]
 	statusHints = false
+	waitingForEditor = false
 [status]
 	submodulesummary = true
 	showuntrackedfiles = all
