@@ -20,7 +20,7 @@ let
     opt = [];
   };
 
-  private = with (import ./plugins.nix) pkgs; {
+  private = with pkgs.privateVimPlugins; {
     start =
       [ articulate
         bstack

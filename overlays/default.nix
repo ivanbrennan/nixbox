@@ -11,6 +11,8 @@
 
     nice-backgrounds = super.callPackage ./nice-backgrounds { };
 
+    privateVimPlugins = (import ./private-vim-plugins.nix) self;
+
     vln = super.callPackage ./vln { };
   })
 ]
