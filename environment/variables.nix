@@ -5,8 +5,6 @@
   GIT_EDITOR = "vim";
   GIT_MERGE_AUTOEDIT = "no";
   FZF_DEFAULT_COMMAND = "fd -t file -E GTAGS -E GRTAGS -E GPATH";
-  FZF_CTRL_T_COMMAND = "$FZF_DEFAULT_COMMAND";
-  FZF_TMUX = "1";
   FZF_DEFAULT_OPTS = ''
     --prompt='• '
     --history=$HOME/.fzf_history
@@ -25,4 +23,15 @@
     --color=prompt:#b8e068
     --color=spinner:#181818
   '';
+  FZF_CTRL_T_COMMAND = "$FZF_DEFAULT_COMMAND";
+  FZF_CTRL_T_OPTS = ''
+    --preview='[[ \$(file --mime {}) =~ binary ]] &&
+                   echo {} is a binary file ||
+                   (highlight -O ansi -l {} ||
+                    coderay {} ||
+                    rougify {} ||
+                    cat {}) 2> /dev/null | head -500'
+    --bind="?:toggle-preview"
+  '';
+  FZF_TMUX = "1";
 }

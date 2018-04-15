@@ -15,6 +15,7 @@ with pkgs; [
   docker
   emacs
   fd
+  file
   flac
   fzf
   gimp
@@ -30,6 +31,7 @@ with pkgs; [
   neovim
   par
   pstree
+  rouge
   rxvt_unicode
   slack
   sqliteInteractive

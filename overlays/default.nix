@@ -9,6 +9,8 @@
 
     nice-backgrounds = super.callPackage ./nice-backgrounds { };
 
+    rouge = super.callPackage ./rouge { };
+
     vln = super.callPackage ./vln { };
   })
 
