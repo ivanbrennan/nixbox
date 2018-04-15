@@ -2,7 +2,7 @@
 
 {
   programs = {
-    bash = import ./bash;
+    bash = (import ./bash) pkgs;
     tmux = (import ./tmux) pkgs;
   };
 }

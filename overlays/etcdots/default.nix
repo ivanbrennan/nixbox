@@ -9,8 +9,8 @@ stdenv.mkDerivation {
   src = fetchFromGitHub {
     owner = "ivanbrennan";
     repo = "dotfiles";
-    rev = "d73b37fa8c2cf07034fa1b6555c0125b6191d8e3";
-    sha256 = "1z86xs95zi2ymlxldyj0mk95dkdx7m08c39qf25xdm411jwsws5h";
+    rev = "85039a06e99422942673bb0853567b5232db9065";
+    sha256 = "19qnkm1alcnz9w6qdk5p76rbylf6djkw0b24pwysb4r2sd4wksnw";
   };
 
   buildInputs = [ less ];
@@ -22,6 +22,7 @@ stdenv.mkDerivation {
 
   installPhase = ''
     mkdir -p $out/etc
+    mkdir -p $out/share/etcdots
 
     cp $src/git/attributes $out/etc/gitattributes
     cp $src/git/ignore     $out/etc/gitignore
@@ -29,6 +30,8 @@ stdenv.mkDerivation {
     cp $src/tmux/tmux.conf $out/etc/tmux.conf
 
     lesskey --output=$out/etc/sysless -- $src/lesskey
+
+    cp $src/fzf/key-bindings.bash $out/share/etcdots/key-bindings.bash
   '';
 
   meta = {
