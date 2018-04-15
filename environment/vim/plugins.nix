@@ -26,8 +26,8 @@ pkgs:
     src = pkgs.fetchFromGitHub {
       owner = "ivanbrennan";
       repo = "coherent";
-      rev = "8c7a7f78cef390ad2f33d80c0402a3415f3ad85f";
-      sha256 = "0nbar603mkdphy9cdnyac1krwns60zja3if5zlj5pf4d6a8lc8xs";
+      rev = "68db38fbb03bb87957616f78c8c27e162cba7e57";
+      sha256 = "02gf730qx2k1g9sm9acrs9szk4xwnn6a6c0lc81hav5kwivnfj5m";
     };
   };
 
@@ -66,8 +66,8 @@ pkgs:
     src = pkgs.fetchFromGitHub {
       owner = "ivanbrennan";
       repo = "ftglue";
-      rev = "0166ce1d7788c5bb1f56e9c6832cce4527159759";
-      sha256 = "15jgf9fxld6fjcgxmig12mdww5xgxdrbj2nsgnnc3d48fz2piyzs";
+      rev = "79c0ed2338654439b32a108e0ad400211dfd0c23";
+      sha256 = "09fnaij8w1mf7nj4mzyn55gqb7cvpgv2rb5h98l98sj3qh1x5irx";
     };
   };
 
@@ -88,6 +88,16 @@ pkgs:
       repo = "iota";
       rev = "eb6409db09f7b547f769dfd0a00de4396e7af14c";
       sha256 = "159hfipy63vlykxcqwb9wzp6mfzv5v7ibj5lznjpzmkfn36sb867";
+    };
+  };
+
+  latitude = pkgs.vimUtils.buildVimPlugin {
+    name = "latitude";
+    src = pkgs.fetchFromGitHub {
+      owner = "ivanbrennan";
+      repo = "latitude";
+      rev = "b2aeba14230cb9524f78e3578f54797779320c52";
+      sha256 = "072mvhip91310ps8mir1gwi8b6nd0hqzi721wgl6241mgkzw1198";
     };
   };
 

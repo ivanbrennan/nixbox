@@ -31,6 +31,7 @@ let
         ftglue
         hint
         iota
+        latitude
         listical
         mline
         ocursor
