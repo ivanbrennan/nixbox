@@ -26,8 +26,8 @@ pkgs:
     src = pkgs.fetchFromGitHub {
       owner = "ivanbrennan";
       repo = "coherent";
-      rev = "68db38fbb03bb87957616f78c8c27e162cba7e57";
-      sha256 = "02gf730qx2k1g9sm9acrs9szk4xwnn6a6c0lc81hav5kwivnfj5m";
+      rev = "464a49c0d411092bae3e3ba75e7b6347b50f850b";
+      sha256 = "1l0f0lw7zfp8p4knxfjlmbqbpwbgbp43f045cwjmxwb5pa3p1ndv";
     };
   };
 
@@ -36,8 +36,8 @@ pkgs:
     src = pkgs.fetchFromGitHub {
       owner = "ivanbrennan";
       repo = "coot";
-      rev = "4c62e0174fb68241dae3f64b54c023f9aceff59b";
-      sha256 = "1biyvmgcgvlzfzw26gcbfil6b8hw4n55678y9hzdaz1p3pcng594";
+      rev = "fa9d8a80b70e47c1b1610ad40bcbedd5cf49be45";
+      sha256 = "0scp4q0s7ahab499dg76cv0s89sabr51dqcx82h3zgy38r29vxl1";
     };
   };
 
@@ -76,8 +76,8 @@ pkgs:
     src = pkgs.fetchFromGitHub {
       owner = "ivanbrennan";
       repo = "hint";
-      rev = "964c1d5499af08623877bb2c3405fa52eb391fd3";
-      sha256 = "0mibp8mqdxjaf7nkzlvwbq7gn5w0rjz7pjrk7w22qh6wgl450j3c";
+      rev = "67527ae70f48759789ecb9ea1bf90ef215315524";
+      sha256 = "17kv8s9bighrx839w6dqvrqznar1kkcnzfyl097am8jkx1r446gb";
     };
   };
 
