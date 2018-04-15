@@ -1,34 +1,20 @@
 pkgs:
 
 let
-  public = with pkgs.vimPlugins; {
-    start =
-      [ commentary
-        fugitive
-        fzf-vim
-        fzfWrapper
-        gundo
-        surround
-        targets-vim
-        vim-easy-align
-        vim-eunuch
-        vim-nix
-        vim-repeat
-        vim-ruby
-      ];
-
-    opt = [];
-  };
-
-  private = with pkgs.privateVimPlugins; {
+  core = with (pkgs.vimPlugins // pkgs.privateVimPlugins); {
     start =
       [ articulate
         bstack
         coherent
+        commentary
         coot
         dirvish
         edot
         ftglue
+        fugitive
+        fzf-vim
+        fzfWrapper
+        gundo
         hint
         iota
         latitude
@@ -39,10 +25,17 @@ let
         refract
         sohi
         super-shell-indent
+        surround
         tabtab
+        targets-vim
+        vim-easy-align
+        vim-eunuch
         vim-grepper
         vim-matchit
+        vim-nix
         vim-projectionist
+        vim-repeat
+        vim-ruby
         vim-unimpaired
         vmacs
         zoo
@@ -60,17 +53,14 @@ let
         wmgraphviz
       ];
   };
+  # To automatically load a plugin when opening a filetype, add vimrc lines like:
+  # autocmd FileType php :packadd phpCompletion
 
   vim = pkgs.vim_configurable.customize {
     name = "vim";
-
-    vimrcConfig.packages.core = {
-      start = public.start ++ private.start;
-      opt = public.opt ++ private.opt;
-      # To automatically load a plugin when opening a filetype, add vimrc lines like:
-      # autocmd FileType php :packadd phpCompletion
+    vimrcConfig = {
+      packages.core = core;
+      customRC = builtins.readFile "${pkgs.dotvim}/vimrc";
     };
-
-    vimrcConfig.customRC = builtins.readFile "${pkgs.dotvim}/vimrc";
   };
 in [ vim ]
