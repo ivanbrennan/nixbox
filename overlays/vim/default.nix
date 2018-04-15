@@ -1,7 +1,7 @@
 pkgs:
 
 let
-  core = with (pkgs.vimPlugins // pkgs.privateVimPlugins); {
+  core = with (pkgs.vimPlugins // pkgs.vimPrivatePlugins); {
     start =
       [ articulate
         bstack
@@ -56,11 +56,11 @@ let
   # To automatically load a plugin when opening a filetype, add vimrc lines like:
   # autocmd FileType php :packadd phpCompletion
 
-  vim = pkgs.vim_configurable.customize {
+in
+  pkgs.vim_configurable.customize {
     name = "vim";
     vimrcConfig = {
       packages.core = core;
       customRC = builtins.readFile "${pkgs.dotvim}/vimrc";
     };
-  };
-in [ vim ]
+  }

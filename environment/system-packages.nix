@@ -1,50 +1,47 @@
 pkgs:
 
-let
-  packages = with pkgs; [
-    abcde
-    ag
-    alacritty
-    aspell
-    aspellDicts.en
-    bind
-    binutils
-    cabal2nix
-    chromium
-    conky
-    dmidecode
-    docker
-    emacs
-    fd
-    flac
-    fzf
-    gimp
-    git
-    global
-    gnomeExtensions.nohotcorner
-    gnumake
-    gnupg
-    lshw
-    lsof
-    mkpasswd
-    nice-backgrounds
-    neovim
-    par
-    pstree
-    rxvt_unicode
-    slack
-    sqliteInteractive
-    stack
-    stow
-    tmux
-    tree
-    universal-ctags
-    vlc
-    vln
-    weechat
-    xcape
-    xsel
-  ];
-  vimPackages = (import ./vim) pkgs;
-in
-  packages ++ vimPackages
+with pkgs; [
+  abcde
+  ag
+  alacritty
+  aspell
+  aspellDicts.en
+  bind
+  binutils
+  cabal2nix
+  chromium
+  conky
+  dmidecode
+  docker
+  emacs
+  fd
+  flac
+  fzf
+  gimp
+  git
+  global
+  gnomeExtensions.nohotcorner
+  gnumake
+  gnupg
+  lshw
+  lsof
+  mkpasswd
+  nice-backgrounds
+  neovim
+  par
+  pstree
+  rxvt_unicode
+  slack
+  sqliteInteractive
+  stack
+  stow
+  tmux
+  tree
+  universal-ctags
+  vim-configured
+  vlc
+  vln
+  weechat
+  xcape
+  xsel
+]
