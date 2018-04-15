@@ -1,6 +1,4 @@
 [ (self: super: {
-    dotvim = super.callPackage ./dotvim { };
-
     etcdots = super.callPackage ./etcdots { };
 
     linuxPackages = (super.linuxPackagesFor super.linuxPackages.kernel).extend (
@@ -11,10 +9,8 @@
 
     nice-backgrounds = super.callPackage ./nice-backgrounds { };
 
-    vimPrivatePlugins = (import ./vim/private-plugins.nix) self;
-
-    vim-configured = (import ./vim) self;
-
     vln = super.callPackage ./vln { };
   })
+
+  (import ./vim-overlay)
 ]
