@@ -82,16 +82,23 @@ __vim_man() {
 # hacky workaround for vim_configurable's unexposed view/vimdiff outputs
 # https://github.com/NixOS/nixpkgs/issues/11442
 view() {
-    $(__vim_configurable_bin)/view "$@"
+    $(__vim_configurable_bin)/view \
+        -u $(__vim_configurable_vimrc) "$@"
 }
 vimdiff() {
-    $(__vim_configurable_bin)/vimdiff "$@"
+    $(__vim_configurable_bin)/vimdiff \
+        -u $(__vim_configurable_vimrc) "$@"
 }
 __vim_configurable_bin() {
     echo $(__vim_configurable_out)/bin
 }
 __vim_configurable_out() {
-    awk '/^exec /{print $2}' $(readlink -f $(which vim)) | sed 's,/bin/vim$,,'
+    grep -oP '^exec \K/nix/store/[^/]+' \
+        $(readlink -f $(which vim))
+}
+__vim_configurable_vimrc() {
+    grep -oP '^exec /nix/store/[^/]+/bin/vim -u \K\S+' \
+        $(readlink -f $(which vim))
 }
 
 bashdoc_match() {
