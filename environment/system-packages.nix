@@ -10,7 +10,6 @@ with pkgs; [
   binutils
   cabal2nix
   chromium
-  coderay
   conky
   dmidecode
   docker
@@ -33,7 +32,6 @@ with pkgs; [
   neovim
   par
   pstree
-  rouge
   rxvt_unicode
   slack
   sqliteInteractive
