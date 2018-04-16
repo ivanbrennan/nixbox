@@ -32,6 +32,7 @@ with pkgs; [
   neovim
   par
   pstree
+  ripgrep
   rxvt_unicode
   slack
   sqliteInteractive
