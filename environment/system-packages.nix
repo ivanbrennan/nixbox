@@ -10,6 +10,7 @@ with pkgs; [
   binutils
   cabal2nix
   chromium
+  coderay
   conky
   dmidecode
   docker

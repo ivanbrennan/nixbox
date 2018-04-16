@@ -1,4 +1,6 @@
 [ (self: super: {
+    coderay = super.callPackage ./coderay { };
+
     etcdots = super.callPackage ./etcdots { };
 
     linuxPackages = (super.linuxPackagesFor super.linuxPackages.kernel).extend (
