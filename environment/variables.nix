@@ -7,7 +7,7 @@
   FZF_DEFAULT_COMMAND = "fd -t file -E GTAGS -E GRTAGS -E GPATH";
   FZF_DEFAULT_OPTS = ''
     --prompt='• '
-    --history=$HOME/.local/share/fzf-history
+    --history=$HOME/.fzf-history
     --bind=ctrl-p:up
     --bind=ctrl-n:down
     --bind=alt-p:previous-history
