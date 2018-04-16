@@ -25,6 +25,7 @@ with pkgs; [
   gnomeExtensions.nohotcorner
   gnumake
   gnupg
+  highlight
   lshw
   lsof
   mkpasswd
