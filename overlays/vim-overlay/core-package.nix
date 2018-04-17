@@ -2,7 +2,8 @@ pkgs:
 
 with (pkgs.vimPlugins) // (pkgs.vimPrivatePlugins); {
   start =
-    [ articulate
+    [ abolish
+      articulate
       bstack
       coherent
       commentary

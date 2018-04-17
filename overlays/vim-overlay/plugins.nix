@@ -1,6 +1,16 @@
 pkgs:
 
 {
+  abolish = pkgs.vimUtils.buildVimPlugin {
+    name = "abolish";
+    src = pkgs.fetchFromGitHub {
+      owner = "tpope";
+      repo = "vim-abolish";
+      rev = "b6a8b49e2173ba5a1b34d00e68e0ed8addac3ebd";
+      sha256 = "0i9q3l7r5p8mk4in3c1j4x0jbln7ir9lg1cqjxci0chjjzfzc53m";
+    };
+  };
+
   articulate = pkgs.vimUtils.buildVimPlugin {
     name = "articulate";
     src = pkgs.fetchFromGitHub {
