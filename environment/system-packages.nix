@@ -33,6 +33,7 @@ with pkgs; [
   par
   pstree
   ripgrep
+  ruby
   rxvt_unicode
   slack
   sqliteInteractive
