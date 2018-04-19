@@ -116,8 +116,8 @@ pkgs:
     src = pkgs.fetchFromGitHub {
       owner = "ivanbrennan";
       repo = "listical";
-      rev = "dd06e37742bc1a9cbb43397f9567d15122b48f17";
-      sha256 = "15acm992h21240ynlc280982riagq4p4w44myf5c2b5gjzbf6mkh";
+      rev = "e209707be3cc2898cceaadb15e01b6ff957367ec";
+      sha256 = "1vqslnlh8pa70a3s3h4z8fqzr2ll03y5sqbj97bj20bk65nck2yx";
     };
   };
 
@@ -206,8 +206,8 @@ pkgs:
     src = pkgs.fetchFromGitHub {
       owner = "ivanbrennan";
       repo = "vim-grepper";
-      rev = "5589c45ee9ee1c9aa3e9bf28cdaf0d809034fa94";
-      sha256 = "0p2sadhdvli7piickd2i7jh14z6q1rsq4za5340vh6cmbk4g2i6s";
+      rev = "2d397b549480056da655eba7ef54fc36ea23b66d";
+      sha256 = "0scvx7dhwd81n2q0grwx2xmlqhbwxis3i1n2w5w80hpafpiz2ngf";
     };
   };
 
