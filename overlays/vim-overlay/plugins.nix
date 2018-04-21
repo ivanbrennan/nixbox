@@ -86,8 +86,8 @@ pkgs:
     src = pkgs.fetchFromGitHub {
       owner = "ivanbrennan";
       repo = "hint";
-      rev = "67527ae70f48759789ecb9ea1bf90ef215315524";
-      sha256 = "17kv8s9bighrx839w6dqvrqznar1kkcnzfyl097am8jkx1r446gb";
+      rev = "cc5705fcaf65360a56e6a26a7ff0f5bcfef681f8";
+      sha256 = "0081vnlfgmpd26nd994knarm7qldqspfgywvyrd4j2ciywmx0wi0";
     };
   };
 
