@@ -1,6 +1,5 @@
 { stdenv
 , fetchFromGitHub
-, less
 }:
 
 stdenv.mkDerivation {
@@ -12,8 +11,6 @@ stdenv.mkDerivation {
     rev = "f8a9f56c7ec2055e608988aca9cbc4fb24583ac4";
     sha256 = "1d1fkrnxp412kzsq9w7jrma14qj2hbyhaza1gj5l21003nc9s2xv";
   };
-
-  buildInputs = [ less ];
 
   phases = [
     "unpackPhase"
@@ -29,7 +26,7 @@ stdenv.mkDerivation {
     cp $src/shell/inputrc  $out/etc/inputrc
     cp $src/tmux/tmux.conf $out/etc/tmux.conf
 
-    lesskey --output=$out/etc/sysless -- $src/lesskey
+    cp $src/lesskey $out/lesskey
 
     cp $src/fzf/key-bindings.bash $out/share/etcdots/key-bindings.bash
   '';
