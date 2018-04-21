@@ -86,8 +86,8 @@ pkgs:
     src = pkgs.fetchFromGitHub {
       owner = "ivanbrennan";
       repo = "hint";
-      rev = "cc5705fcaf65360a56e6a26a7ff0f5bcfef681f8";
-      sha256 = "0081vnlfgmpd26nd994knarm7qldqspfgywvyrd4j2ciywmx0wi0";
+      rev = "5e5e2776d0a6a7fcc6b582ff7532d9d47c60bb99";
+      sha256 = "0qhjsdrg2nj8cxw27iv4kmr7zlpx9m919wjg5p0dqwybz3ybvn8j";
     };
   };
 
@@ -198,6 +198,16 @@ pkgs:
       repo = "tabtab";
       rev = "cfd2119fdfd22c62af63a11417d6a2bb09b12534";
       sha256 = "1f5f4p3y31ricyjsfgpizxfrqf6wa4iybc0vlh14rfix82rkrzzj";
+    };
+  };
+
+  traces = pkgs.vimUtils.buildVimPlugin {
+    name = "traces";
+    src = pkgs.fetchFromGitHub {
+      owner = "markonm";
+      repo = "traces.vim";
+      rev = "391c6c39e7f2105388f9f688f3bfcd6dd040cc5d";
+      sha256 = "0alfrh7zkl50yclzbfbxfdypkliy9xfzg8pm45hkwgzx9k0y5ykp";
     };
   };
 

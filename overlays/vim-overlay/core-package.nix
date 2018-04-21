@@ -28,6 +28,7 @@ with (pkgs.vimPlugins) // (pkgs.vimPrivatePlugins); {
       surround
       tabtab
       targets-vim
+      traces
       vim-easy-align
       vim-eunuch
       vim-grepper
