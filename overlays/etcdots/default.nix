@@ -25,6 +25,7 @@ stdenv.mkDerivation {
     cp $src/git/ignore     $out/etc/gitignore
     cp $src/shell/inputrc  $out/etc/inputrc
     cp $src/tmux/tmux.conf $out/etc/tmux.conf
+    cp $src/irbrc          $out/etc/irbrc
 
     cp $src/lesskey $out/lesskey
 

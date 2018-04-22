@@ -1,9 +1,12 @@
+pkgs:
+
 {
   DOTFILES = "$HOME/Development/resources/dotfiles";
   EDITOR = "vim";
-  VISUAL = "vim";
   GIT_EDITOR = "vim";
   GIT_MERGE_AUTOEDIT = "no";
+  VISUAL = "vim";
+
   FZF_DEFAULT_COMMAND = "fd -t file -E GTAGS -E GRTAGS -E GPATH";
   FZF_DEFAULT_OPTS = ''
     --prompt='• '
@@ -32,4 +35,6 @@
     --bind="?:toggle-preview"
   '';
   FZF_TMUX = "1";
+
+  IRBRC = "${pkgs.etcdots}/etc/irbrc";
 }
