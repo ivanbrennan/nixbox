@@ -28,11 +28,12 @@ pkgs:
   '';
   FZF_CTRL_T_COMMAND = "$FZF_DEFAULT_COMMAND";
   FZF_CTRL_T_OPTS = ''
+    --preview-window=hidden
+    --bind="?:toggle-preview"
     --preview='[[ \$(file --mime {}) =~ binary ]] &&
                    echo {} is a binary file ||
                    (highlight -O ansi -l {} ||
                     cat {}) 2> /dev/null | head -500'
-    --bind="?:toggle-preview"
   '';
   FZF_TMUX = "1";
 
