@@ -36,8 +36,8 @@ pkgs:
     src = pkgs.fetchFromGitHub {
       owner = "ivanbrennan";
       repo = "coherent";
-      rev = "e3b3eb2610e77072a56b127e49de24343fb6b399";
-      sha256 = "0x1v9gapjxr35jv6a78xzbrn6qvczqkr783f83yv2qh4dnbpmqvk";
+      rev = "2085f0440f494ade1c8017937f3c86680f40c5c1";
+      sha256 = "1cjycqqw358wwq4m72m1nzhjmzmixac4p6h1j8bha7yy75kdn30c";
     };
   };
 
