@@ -46,8 +46,8 @@ pkgs:
     src = pkgs.fetchFromGitHub {
       owner = "ivanbrennan";
       repo = "coot";
-      rev = "fa9d8a80b70e47c1b1610ad40bcbedd5cf49be45";
-      sha256 = "0scp4q0s7ahab499dg76cv0s89sabr51dqcx82h3zgy38r29vxl1";
+      rev = "6236481661c002e859e1932abf254b05eb27de60";
+      sha256 = "1khm42vr4d9ps86zasb848pb28gr4203hlc2gjc4sz11639kczdq";
     };
   };
 
@@ -206,8 +206,8 @@ pkgs:
     src = pkgs.fetchFromGitHub {
       owner = "markonm";
       repo = "traces.vim";
-      rev = "391c6c39e7f2105388f9f688f3bfcd6dd040cc5d";
-      sha256 = "0alfrh7zkl50yclzbfbxfdypkliy9xfzg8pm45hkwgzx9k0y5ykp";
+      rev = "4f320183504702baf069b2de9a800a7e765ff97a";
+      sha256 = "0pp1g1g04ff1008593fd5623x9ld53ynd7d3aq0bhbbzyhf4vnwa";
     };
   };
 
