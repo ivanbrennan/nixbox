@@ -166,8 +166,8 @@ pkgs:
     src = pkgs.fetchFromGitHub {
       owner = "ivanbrennan";
       repo = "sohi";
-      rev = "89c004a3ecd197aed2bf8f63169ccfd29ff8b40e";
-      sha256 = "02yh4spwifgbnm8zmnnkvbl3qpxkksphax3nl8gsx6l8w3k0y9pq";
+      rev = "e63e700c2b3c8251db10d75a859123271aed9b9f";
+      sha256 = "0xbxvg6rygm915lz60rfc2byqis5w7cb9ny4b95314izzpi27k79";
     };
   };
 
