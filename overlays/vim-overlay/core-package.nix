@@ -43,7 +43,8 @@ with (pkgs.vimPlugins) // (pkgs.vimPrivatePlugins); {
     ];
 
   opt =
-    [ splitjoin
+    [ haskell-vim
+      splitjoin
       vim-javascript-syntax
       vim-racket
       vim-rails
@@ -53,6 +54,4 @@ with (pkgs.vimPlugins) // (pkgs.vimPrivatePlugins); {
       vmux
       wmgraphviz
     ];
-  # To automatically load a plugin when opening a filetype, add vimrc lines like:
-  # autocmd FileType php :packadd phpCompletion
 }
