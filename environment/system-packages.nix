@@ -25,6 +25,7 @@ with pkgs; [
   gnumake
   gnupg
   highlight
+  interactive-editor
   lshw
   lsof
   mkpasswd
