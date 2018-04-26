@@ -37,6 +37,13 @@
 
   nixpkgs.overlays = (import ./overlays);
 
+  # see machines/self.nix for hostName
+  networking = {
+    nameservers = [ "1.1.1.1" ];
+
+    firewall.allowedTCPPorts = [ ];
+  };
+
   fonts.fonts = [
     pkgs.source-code-pro
     pkgs.emacs-all-the-icons-fonts
