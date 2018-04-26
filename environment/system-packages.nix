@@ -30,6 +30,7 @@ with pkgs; [
   mkpasswd
   nice-backgrounds
   neovim
+  openssl
   par
   pstree
   ripgrep
