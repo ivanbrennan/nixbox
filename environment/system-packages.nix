@@ -41,6 +41,7 @@ with pkgs; [
   sqliteInteractive
   stack
   stow
+  tcpdump
   tmux
   tree
   universal-ctags
