@@ -35,7 +35,21 @@
     };
   };
 
-  nixpkgs.overlays = (import ./overlays);
+  nixpkgs.overlays =
+    [ (import ./overlays/core)
+      (import ./overlays/vim)
+    ];
+
+  nix = {
+    nixPath =
+      [ "nixpkgs=/nix/var/nix/profiles/per-user/root/channels/nixos/nixpkgs"
+        "nixpkgs-overlays=/etc/nixos/overlays"
+        "nixos-config=/etc/nixos/configuration.nix"
+        "/nix/var/nix/profiles/per-user/root/channels"
+      ];
+    gc.automatic = true;
+    gc.dates = "03:15";
+  };
 
   # see machines/self.nix for hostName
   networking = {
@@ -55,9 +69,6 @@
     pkgs.source-code-pro
     pkgs.emacs-all-the-icons-fonts
   ];
-
-  nix.gc.automatic = true;
-  nix.gc.dates = "03:15";
 
   # This value determines the NixOS release with which your system is to be
   # compatible, in order to avoid breaking some software such as database

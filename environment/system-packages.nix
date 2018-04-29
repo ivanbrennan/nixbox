@@ -25,7 +25,6 @@ with pkgs; [
   gnumake
   gnupg
   highlight
-  interactive-editor
   lshw
   lsof
   mkpasswd
@@ -35,7 +34,6 @@ with pkgs; [
   par
   pstree
   ripgrep
-  ruby
   rxvt_unicode
   slack
   sqliteInteractive
