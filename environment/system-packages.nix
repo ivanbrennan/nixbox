@@ -44,6 +44,7 @@ with pkgs; [
   tree
   universal-ctags
   vim-configured
+  vimPrivatePlugins.haskell-vim
   vlc
   vln
   weechat

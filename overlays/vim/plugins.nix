@@ -81,6 +81,16 @@ pkgs:
     };
   };
 
+  haskell-vim = pkgs.vimUtils.buildVimPlugin {
+    name = "haskell-vim";
+    src = pkgs.fetchFromGitHub {
+      owner = "neovimhaskell";
+      repo = "haskell-vim";
+      rev = "a5302e09292a1ca00aa48927332ea77f7de5409d";
+      sha256 = "1s2y82c70aihn1nkwqn0f8vkd5kv8a70p6vp6s6xq2lq9zic6m7h";
+    };
+  };
+
   hint = pkgs.vimUtils.buildVimPlugin {
     name = "hint";
     src = pkgs.fetchFromGitHub {
