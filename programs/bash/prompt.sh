@@ -1,10 +1,11 @@
 # Provide a nice prompt if the terminal supports it.
 if [ "$TERM" != "dumb" -o -n "$INSIDE_EMACS" ]; then
   GREEN="\033[0;32m"
+  BLACK="\033[0;30m"
   BOLD="\033[1m"
   NORMAL="\033[0m"
 
-  PS1="╭\[${BOLD}\]\w\[${NORMAL}\]\$(_git_ps1_)\[${NORMAL}\]\n╰(\u)• "
+  PS1="╭\[${BOLD}\]\w\[${NORMAL}\]\$(_git_ps1_)\[${NORMAL}\] \[${BLACK}\]\t\[${NORMAL}\]\n╰(\u)• "
   PS2=" ❯ "
   PS4=" + "
 
