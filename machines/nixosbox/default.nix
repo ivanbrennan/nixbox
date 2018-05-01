@@ -1,3 +1,5 @@
+{ pkgs, ... }:
+
 {
   imports = [ ./hardware-configuration.nix ];
 
@@ -14,4 +16,16 @@
       preLVM = true;
     }
   ];
+
+  boot.kernel.sysctl."vm.swappiness" = 1;
+
+  hardware.cpu.intel.updateMicrocode = true;
+
+  hardware.opengl.extraPackages = with pkgs; [
+    vaapiIntel
+    vaapiVdpau
+    libvdpau-va-gl
+  ];
+
+  services.xserver.videoDrivers = [ "intel" ];
 }
