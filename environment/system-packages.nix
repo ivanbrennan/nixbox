@@ -34,6 +34,7 @@ with pkgs; [
   openssl
   par
   pstree
+  pup
   ripgrep
   rxvt_unicode
   slack
