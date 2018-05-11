@@ -50,6 +50,7 @@ with pkgs; [
   vlc
   vln
   weechat
+  wget
   xcape
   xsel
 ]
