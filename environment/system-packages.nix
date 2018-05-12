@@ -26,6 +26,7 @@ with pkgs; [
   gnupg
   highlight
   jq
+  lastpass-cli
   lshw
   lsof
   mkpasswd
