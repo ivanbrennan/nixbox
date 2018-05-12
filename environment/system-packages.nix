@@ -6,6 +6,7 @@ with pkgs; [
   alacritty
   aspell
   aspellDicts.en
+  awscli
   bind
   binutils
   cabal2nix
