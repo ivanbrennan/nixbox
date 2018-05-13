@@ -21,7 +21,14 @@
 
   time.timeZone = "America/New_York";
 
-  virtualisation.docker.enable = true;
+  virtualisation = {
+    docker.enable = true;
+
+    virtualbox.host = {
+      enable = true;
+      headless = true;
+    };
+  };
 
   nixpkgs.config = {
     allowUnfree = true;

@@ -27,9 +27,11 @@ with pkgs; [
   gnupg
   highlight
   jq
+  kubectl
   lastpass-cli
   lshw
   lsof
+  minikube
   mkpasswd
   nice-backgrounds
   neovim
@@ -50,6 +52,7 @@ with pkgs; [
   universal-ctags
   vim-configured
   vimPrivatePlugins.haskell-vim
+  virtualboxHeadless
   vlc
   vln
   weechat
