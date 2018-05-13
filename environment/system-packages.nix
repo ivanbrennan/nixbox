@@ -50,6 +50,7 @@ with pkgs; [
   tmux
   tree
   universal-ctags
+  unzip
   vim-configured
   vimPrivatePlugins.haskell-vim
   virtualboxHeadless
@@ -59,4 +60,5 @@ with pkgs; [
   wget
   xcape
   xsel
+  zip
 ]
