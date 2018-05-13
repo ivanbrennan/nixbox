@@ -37,6 +37,7 @@ with pkgs; [
   par
   pstree
   pup
+  qbittorrent
   ripgrep
   rxvt_unicode
   slack
