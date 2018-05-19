@@ -14,6 +14,7 @@ with pkgs; [
   conky
   dmidecode
   docker
+  easyrsa
   emacs
   fd
   file

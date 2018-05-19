@@ -70,6 +70,7 @@
       ];
 
     firewall.allowedTCPPorts = [ ];
+    firewall.allowedUDPPorts = [ ];
   };
 
   fonts.fonts = [

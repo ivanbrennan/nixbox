@@ -1,1 +1,6 @@
 /machines/self.nix
+
+*.crt
+*.key
+*.pass
+*.private.conf
