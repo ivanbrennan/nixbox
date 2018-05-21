@@ -23,8 +23,8 @@ stdenv.mkDerivation rec {
   dontPatchELF = true;
 
   installPhase = ''
-    mkdir -p $out/lib/modules/${kernel.modDirVersion}/misc/i8042_debounce
-    install i8042_debounce.ko $out/lib/modules/${kernel.modDirVersion}/misc/i8042_debounce
+    install -D i8042_debounce.ko \
+      $out/lib/modules/${kernel.modDirVersion}/misc/i8042_debounce/i8042_debounce.ko
   '';
 
   enableParallelBuilding = true;
