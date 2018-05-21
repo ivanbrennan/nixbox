@@ -18,9 +18,8 @@ stdenv.mkDerivation {
   ];
 
   installPhase = ''
-    mkdir -p $out/share/backgrounds/gnome
-
-    cp $src/backgrounds/Godafoss_Iceland.jpg $out/share/backgrounds/gnome/
+    install -D $src/backgrounds/Godafoss_Iceland.jpg \
+      $out/share/backgrounds/gnome/Godafoss_Iceland.jpg
   '';
 
   meta = {

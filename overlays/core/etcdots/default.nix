@@ -18,18 +18,15 @@ stdenv.mkDerivation {
   ];
 
   installPhase = ''
-    mkdir -p $out/etc
-    mkdir -p $out/share/etcdots
+    install -D $src/lesskey               $out/lesskey
 
-    cp $src/git/attributes $out/etc/gitattributes
-    cp $src/git/ignore     $out/etc/gitignore
-    cp $src/shell/inputrc  $out/etc/inputrc
-    cp $src/tmux/tmux.conf $out/etc/tmux.conf
-    cp $src/irbrc          $out/etc/irbrc
+    install -D $src/git/attributes        $out/etc/gitattributes
+    install -D $src/git/ignore            $out/etc/gitignore
+    install -D $src/shell/inputrc         $out/etc/inputrc
+    install -D $src/tmux/tmux.conf        $out/etc/tmux.conf
+    install -D $src/irbrc                 $out/etc/irbrc
 
-    cp $src/lesskey $out/lesskey
-
-    cp $src/fzf/key-bindings.bash $out/share/etcdots/key-bindings.bash
+    install -D $src/fzf/key-bindings.bash $out/share/etcdots/key-bindings.bash
   '';
 
   meta = {

@@ -21,11 +21,8 @@ stdenv.mkDerivation {
   ];
 
   installPhase = ''
-    mkdir -p $out/bin
-    mkdir -p $out/share/bash-completion/completions
-
-    cp $src/vln $out/bin/vln
-    cp $src/completions/vln $out/share/bash-completion/completions/vln
+    install -D $src/vln $out/bin/vln
+    install -D $src/completions/vln $out/share/bash-completion/completions/vln
   '';
 
   meta = {

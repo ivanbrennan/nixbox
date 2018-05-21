@@ -18,8 +18,7 @@ stdenv.mkDerivation {
   ];
 
   installPhase = ''
-    mkdir -p $out
-    cp $src/vimrc $out/vimrc
+    install -D $src/vimrc $out/vimrc
   '';
 
   meta = {
