@@ -27,6 +27,10 @@ stdenv.mkDerivation rec {
       $out/lib/modules/${kernel.modDirVersion}/misc/i8042_debounce/i8042_debounce.ko
   '';
 
+  postInstall = ''
+    xz $out/lib/modules/${kernel.modDirVersion}/misc/i8042_debounce/i8042_debounce.ko
+  '';
+
   enableParallelBuilding = true;
 
   meta = {
