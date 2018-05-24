@@ -18,15 +18,15 @@ stdenv.mkDerivation {
   ];
 
   installPhase = ''
-    install -D $src/lesskey               $out/lesskey
+    install -D -m644 $src/lesskey               $out/lesskey
 
-    install -D $src/git/attributes        $out/etc/gitattributes
-    install -D $src/git/ignore            $out/etc/gitignore
-    install -D $src/shell/inputrc         $out/etc/inputrc
-    install -D $src/tmux/tmux.conf        $out/etc/tmux.conf
-    install -D $src/irbrc                 $out/etc/irbrc
+    install -D -m644 $src/git/attributes        $out/etc/gitattributes
+    install -D -m644 $src/git/ignore            $out/etc/gitignore
+    install -D -m644 $src/shell/inputrc         $out/etc/inputrc
+    install -D -m644 $src/tmux/tmux.conf        $out/etc/tmux.conf
+    install -D -m644 $src/irbrc                 $out/etc/irbrc
 
-    install -D $src/fzf/key-bindings.bash $out/share/etcdots/key-bindings.bash
+    install -D -m644 $src/fzf/key-bindings.bash $out/share/etcdots/key-bindings.bash
   '';
 
   meta = {

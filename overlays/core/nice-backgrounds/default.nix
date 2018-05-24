@@ -18,7 +18,7 @@ stdenv.mkDerivation {
   ];
 
   installPhase = ''
-    install -D $src/backgrounds/Godafoss_Iceland.jpg \
+    install -D -m644 $src/backgrounds/Godafoss_Iceland.jpg \
       $out/share/backgrounds/gnome/Godafoss_Iceland.jpg
   '';
 

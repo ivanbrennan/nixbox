@@ -23,7 +23,7 @@ stdenv.mkDerivation rec {
   dontPatchELF = true;
 
   installPhase = ''
-    install -D i8042_debounce.ko \
+    install -D -m644 i8042_debounce.ko \
       $out/lib/modules/${kernel.modDirVersion}/misc/i8042_debounce/i8042_debounce.ko
   '';
 

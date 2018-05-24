@@ -18,7 +18,7 @@ stdenv.mkDerivation {
   ];
 
   installPhase = ''
-    install -D $src/vimrc $out/vimrc
+    install -D -m644 $src/vimrc $out/vimrc
   '';
 
   meta = {
