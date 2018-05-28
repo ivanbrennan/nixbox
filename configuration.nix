@@ -44,6 +44,7 @@
 
   nixpkgs.overlays =
     [ (import ./overlays/core)
+      (import ./overlays/sumall)
       (import ./overlays/vim)
     ];
 
@@ -83,5 +84,4 @@
   # servers. You should change this only after NixOS release notes say you
   # should.
   system.nixos.stateVersion = "17.09"; # Did you read the comment?
-
 }

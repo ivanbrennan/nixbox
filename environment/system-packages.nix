@@ -35,6 +35,7 @@ with pkgs; [
   minikube
   mkpasswd
   nice-backgrounds
+  nix-prefetch-git
   neovim
   openssl
   par
@@ -45,6 +46,7 @@ with pkgs; [
   ripgrep
   rxvt_unicode
   slack
+  socat
   sqliteInteractive
   stack
   stow
