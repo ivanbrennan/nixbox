@@ -1,7 +1,7 @@
 self: super: {
-  sumall-cli = super.callPackage ./sumall-cli { pkgs = self; };
+  sumall-cli = super.callPackage ./sumall-cli { };
 
-  sumall-completion = super.callPackage ./sumall-completion { pkgs = self; };
+  sumall-completion = self.python2.pkgs.argcomplete;
 
   sumall-env = super.buildEnv {
     name = "sumall-env";
