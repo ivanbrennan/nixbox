@@ -18,7 +18,6 @@
 
     # Try to preserve some state across restarts.
     persist-key
-    persist-tun
 
     # Verify server certificate to protect against mitm attacks.
     remote-cert-tls server
