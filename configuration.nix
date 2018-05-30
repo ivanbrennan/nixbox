@@ -55,6 +55,12 @@
         "nixos-config=/etc/nixos/configuration.nix"
         "/nix/var/nix/profiles/per-user/root/channels"
       ];
+
+    envVars = {
+      NIX_GITHUB_PRIVATE_USERNAME = import ./github-username.private;
+      NIX_GITHUB_PRIVATE_PASSWORD = import ./github-token.private;
+    };
+
     gc.automatic = true;
     gc.dates = "03:15";
   };

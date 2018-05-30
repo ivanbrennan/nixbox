@@ -95,10 +95,12 @@ in with python.pkgs; buildPythonApplication rec {
   name = "sumall-cli-${version}";
   version = "7.1.0";
 
-  src = fetchgitPrivate {
-    url = "git@github.com:SumAll/sumall-cli.git";
+  src = fetchFromGitHub {
+    owner = "SumAll";
+    repo = "sumall-cli";
     rev = version;
     sha256 = "18m53zcjbxadvrg5ggk0n9jdmb6v24rjn1wkqw54ximg8pf6gnml";
+    private = true;
   };
 
   buildInputs = [ libffi openssl ];
