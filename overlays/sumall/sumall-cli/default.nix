@@ -128,6 +128,13 @@ in with python.pkgs; buildPythonApplication rec {
     sed -i '/^argparse/d' requirements.txt
   '';
 
+  postFixup = ''
+    makeWrapper \
+      ${argcomplete}/bin/register-python-argcomplete \
+      $out/bin/register-sumall-argcomplete \
+      --argv0 '$0' --add-flags sumall
+  '';
+
   checkInputs = [ pytest ];
 
   checkPhase = "pytest -v";
