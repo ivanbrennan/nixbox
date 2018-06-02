@@ -1,9 +1,6 @@
-{ stdenv
-, python2
-, fetchFromGitHub
-, libffi
-, openssl
-}:
+{ pkgs ? import ./nixpkgs.nix }:
+
+with pkgs;
 
 let
   depName = dep: (builtins.parseDrvName dep.name).name;
