@@ -1,7 +1,6 @@
 { stdenv
 , python2
 , fetchFromGitHub
-, fetchgitPrivate
 , libffi
 , openssl
 }:
