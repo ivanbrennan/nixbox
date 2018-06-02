@@ -1,3 +1,5 @@
+# To update: ./update-sumall VERSION
+
 { pkgs ? import ./nixpkgs.nix }:
 
 with pkgs;
@@ -87,16 +89,17 @@ let
     };
   };
 
+  sumallVersion = import ./version.nix;
+
 in with python.pkgs; buildPythonApplication rec {
   name = "sumall-cli-${version}";
-  version = "7.1.0";
+  version = sumallVersion.rev;
 
   src = fetchFromGitHub {
     owner = "SumAll";
     repo = "sumall-cli";
-    rev = version;
-    sha256 = "18m53zcjbxadvrg5ggk0n9jdmb6v24rjn1wkqw54ximg8pf6gnml";
     private = true;
+    inherit (sumallVersion) rev sha256;
   };
 
   buildInputs = [ libffi openssl ];

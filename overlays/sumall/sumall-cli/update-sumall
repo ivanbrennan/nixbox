@@ -1,0 +1,25 @@
+#! /usr/bin/env nix-shell
+#! nix-shell -i bash -p gnused coreutils jq
+
+if [ $# != 1 ]; then
+    printf '\n%sUsage%s:\n%s %sREVISION%s\n' \
+        $(tput bold) $(tput sgr0) ${0} $(tput sitm) $(tput sgr0)
+    printf '\n%sExample%s:\n%s 7.2.1\n' \
+        $(tput bold) $(tput sgr0) ${0}
+    exit 1
+fi
+
+remote=git@github.com:SumAll/sumall-cli.git
+version=$(dirname $0)/version.nix
+
+pat='^\(\s*rev\s*=\s*"\)[^"]\+'
+rev=$1
+sed -i "s|${pat}|\\1${rev}|" $version
+
+pat='^\(\s*sha256\s*=\s*"\)[^"]\+'
+sha256=$(nix-prefetch-git $remote --rev $rev | jq -r '.sha256')
+sed -i "s|${pat}|\\1${sha256}|" $version
+
+printf '\n%s%s✓%s %sDone%s\n' \
+    $(tput bold) $(tput setaf 2) $(tput sgr0) \
+    $(tput bold) $(tput sgr0)
