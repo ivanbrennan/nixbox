@@ -38,6 +38,7 @@ with pkgs; [
   nix-prefetch-git
   neovim
   openssl
+  pass
   par
   pstree
   pup
