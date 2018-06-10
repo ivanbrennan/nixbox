@@ -27,6 +27,7 @@ with pkgs; [
   gnumake
   gnupg
   highlight
+  htop
   jq
   kubectl
   lastpass-cli
