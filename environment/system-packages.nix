@@ -47,6 +47,7 @@ with pkgs; [
   redis
   ripgrep
   rxvt_unicode
+  shellcheck
   slack
   socat
   sqliteInteractive
