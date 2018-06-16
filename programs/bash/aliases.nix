@@ -16,4 +16,5 @@
   nirb = "nix-shell -p ruby interactive-editor --command irb";
   t = "tmux";
   tls = "tmux ls";
+  xopen = "xdg-open";
 }
