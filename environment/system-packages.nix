@@ -42,6 +42,7 @@ with pkgs; [
   pass
   par
   pstree
+  python36Packages.glances
   pup
   qbittorrent
   redis
