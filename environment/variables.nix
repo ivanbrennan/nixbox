@@ -38,4 +38,5 @@ pkgs:
   FZF_TMUX = "1";
 
   IRBRC = "${pkgs.etcdots}/etc/irbrc";
+  LPASS_AGENT_TIMEOUT = "43200";
 }
