@@ -21,7 +21,7 @@ stdenv.mkDerivation {
   ];
 
   installPhase = ''
-    install -D -m644 $src/vln $out/bin/vln
+    install -D -m755 $src/vln $out/bin/vln
     install -D -m644 $src/completions/vln $out/share/bash-completion/completions/vln
   '';
 
