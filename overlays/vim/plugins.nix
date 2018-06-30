@@ -36,8 +36,8 @@ pkgs:
     src = pkgs.fetchFromGitHub {
       owner = "ivanbrennan";
       repo = "coherent";
-      rev = "2085f0440f494ade1c8017937f3c86680f40c5c1";
-      sha256 = "1cjycqqw358wwq4m72m1nzhjmzmixac4p6h1j8bha7yy75kdn30c";
+      rev = "011f80c97435b14a76d8d1533c96631da2184ea1";
+      sha256 = "1rnvmhlc4yc9sp02jcjad7f8gk1h5v5xpmw83sajijzkk70vrdpd";
     };
   };
 
@@ -156,8 +156,8 @@ pkgs:
     src = pkgs.fetchFromGitHub {
       owner = "ivanbrennan";
       repo = "optcycle";
-      rev = "9848e68c3de086f82cf66613ee141ff0a5aba46e";
-      sha256 = "0y35j171lygfd4nhf2iqf0zapam24fzkdy7h6ks967zsvsl2dxmn";
+      rev = "35ecda5d3a8f7dfd57ec87d71db826f965b7aaff";
+      sha256 = "1y5q56fq6iwck79jajhs5v4lnaa79whlwl7bslxbh3laibqk2bc9";
     };
   };
 
