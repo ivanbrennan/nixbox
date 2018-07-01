@@ -10,6 +10,7 @@
       # shared
       ./environment
       ./programs
+      ./security
       ./services
       ./users
     ];
