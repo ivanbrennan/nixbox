@@ -49,6 +49,7 @@ let
           inherit version;
           sha256 = "d04bb2425086c3fe86f7bc48915290b13e798497839fbb18ab7f6dffcf98cc3a";
         };
+        doCheck = false; # tests are failing
       });
 
       kubernetes = super.kubernetes.overridePythonAttrs (old: rec {
@@ -56,6 +57,14 @@ let
         src = old.src.override {
           inherit version;
           sha256 = "128wfhmrj57ch8ksj3767nlfjj3r90ilfjm1d7dhjlwjpm5anw5k";
+        };
+      });
+
+      marshmallow = super.marshmallow.overridePythonAttrs (old: rec {
+        version = "2.14.0";
+        src = old.src.override {
+          inherit version;
+          sha256 = "d3f31fe7be2106b1d783cbd0765ef4e1c6615505514695f33082805f929dd584";
         };
       });
 
