@@ -37,7 +37,3 @@ sed -i "s|${pat}|\\1${url}|" $nixpkgs
 pat='^\(\s*sha256\s*=\s*"\)[^"]\+'
 sha256=$(nix-prefetch-url --unpack ${url})
 sed -i "s|${pat}|\\1${sha256}|" $nixpkgs
-
-printf '\n%s%s✓%s %sDone%s\n' \
-    $(tput bold) $(tput setaf 2) $(tput sgr0) \
-    $(tput bold) $(tput sgr0)

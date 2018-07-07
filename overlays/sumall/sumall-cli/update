@@ -3,39 +3,80 @@
 set -eu
 
 dstDir=/etc/nixos/overlays/sumall/sumall-cli
-tmpDir=$(mktemp --tmpdir -d sumall-cli-nixpkg.XXXXXX)
+tmpDir=$(mktemp --tmpdir -d sumall-cli.XXXXXX)
 
-# make workspace
-git clone git@github.com:SumAll/sumall-cli.git $tmpDir/sumall-cli
-pushd $tmpDir/sumall-cli
+main() {
+    make_workspace
+    package_dependencies
+    package_sumall_cli
 
-# generate dependencies package set
-nix-shell -p pypi2nix --run '
-    pypi2nix -V "2.7" -r requirements.txt -E libffi -E openssl
-'
+    if test_build
+    then
+        success
+    else
+        failure
+    fi
+}
 
-# copy existing sumall-cli package components
-cp $dstDir/{default,nixpkgs,requirements_override,version}.nix .
-cp $dstDir/{update-nixpkgs,update-sumall} .
+make_workspace() {
+    printf '%sMaking temporary workspace%s\n' $(tput bold) $(tput sgr0)
 
-# update sumall-cli and nixpkgs to latest versions
-rev=$(grep -oP '__version__ = "\K[^"]+' sumall/__init__.py)
-./update-sumall "$rev"
-./update-nixpkgs
+    nix-shell --packages git --run \
+        "git clone --depth 1 git@github.com:SumAll/sumall-cli.git $tmpDir"
 
-if nix-build --no-out-link .
-then
+    pushd $tmpDir
+}
+
+package_dependencies() {
+    printf '%sPackaging dependencies%s\n' $(tput bold) $(tput sgr0)
+
+    nix-shell --packages pypi2nix --run \
+        'pypi2nix -V "2.7" -r requirements.txt -E libffi -E openssl'
+}
+
+package_sumall_cli() {
+    printf '%sPackaging sumall-cli%s\n' $(tput bold) $(tput sgr0)
+
+    # copy existing components
+    cp $dstDir/{default,nixpkgs,requirements_override,version}.nix $tmpDir/
+    cp $dstDir/{update-nixpkgs,update-sumall-cli} $tmpDir/
+
+    local version
+    version=$(grep -oP '__version__ = "\K[^"]+' $tmpDir/sumall/__init__.py)
+
+    # update revisions
+    $tmpDir/update-sumall-cli "$tmpDir" "$version"
+    $tmpDir/update-nixpkgs
+}
+
+test_build() {
+    printf '%sRunning test build%s\n' $(tput bold) $(tput sgr0)
+
+    nix-build --no-out-link $tmpDir
+}
+
+success() {
     for x in {nixpkgs,requirements,version}.nix
     do
-        cp --force $x $dstDir/
+        cp --force $tmpDir/$x $dstDir/
     done
-    popd && rm --recursive --force $tmpDir
+
+    popd >/dev/null && rm --recursive --force $tmpDir
+
     printf '\n%s%s✓%s %sDone%s\n' \
         $(tput bold) $(tput setaf 2) $(tput sgr0) \
         $(tput bold) $(tput sgr0)
-else
+
+    exit 0
+}
+
+failure() {
     printf '\n%s%s✗%s %sBuild Failed%s\n' \
         $(tput bold) $(tput setaf 1) $(tput sgr0) \
         $(tput bold) $(tput sgr0)
+
+    echo "Workspace: $PWD"
     exit 1
-fi
+}
+
+main
