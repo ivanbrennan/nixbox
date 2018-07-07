@@ -52,14 +52,6 @@ let
         doCheck = false; # tests are failing
       });
 
-      kubernetes = super.kubernetes.overridePythonAttrs (old: rec {
-        version = "6.0.0";
-        src = old.src.override {
-          inherit version;
-          sha256 = "128wfhmrj57ch8ksj3767nlfjj3r90ilfjm1d7dhjlwjpm5anw5k";
-        };
-      });
-
       marshmallow = super.marshmallow.overridePythonAttrs (old: rec {
         version = "2.14.0";
         src = old.src.override {
