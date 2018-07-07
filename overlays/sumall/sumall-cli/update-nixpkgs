@@ -3,14 +3,29 @@
 
 set -eu
 
-if (( $# > 1 )); then
+git_rev=/nix/var/nix/profiles/per-user/root/channels/nixos/.git-revision
+
+usage() {
     printf '\n%sUsage%s:\n%s %s[REVISION]%s\n' \
         $(tput bold) $(tput sgr0) ${0} $(tput sitm) $(tput sgr0)
+    example
+}
+
+example() {
     printf '\n%sExample%s:\n%s 5da85431fb1df4fb3ac36730b2591ccc9bdf5c21\n' \
         $(tput bold) $(tput sgr0) ${0}
+}
+
+if (( $# > 1 )); then
+    usage
     exit 1
 else
-    rev=${1:-$(< /nix/var/nix/profiles/per-user/root/channels/nixos/.git-revision)}
+    rev=${1:-$(if [ -e "$git_rev" ]; then cat "$git_rev"; fi)}
+fi
+if [ -z "$rev" ]; then
+    printf '\nNo revision found. Try specifying %sREVISION%s\n' $(tput sitm) $(tput sgr0)
+    example
+    exit 1
 fi
 
 nixpkgs=$(dirname $0)/nixpkgs.nix

@@ -2,128 +2,43 @@
 
 { pkgs ? import ./nixpkgs.nix }:
 
-with pkgs;
-
 let
-  depName = dep: (builtins.parseDrvName dep.name).name;
-  depMatch = dep: name: stdenv.lib.hasSuffix ("-" + name) (depName dep);
+  python = import ./requirements.nix { inherit pkgs; };
+  pyPkgs = python.packages;
+  versionInfo = import ./version.nix;
 
-  removeDependencies = names: deps:
-    builtins.filter
-    (dep: builtins.all (name: !depMatch dep name) names)
-    deps;
-
-  python = python2.override {
-    packageOverrides = self: super: {
-
-      boto3 = super.boto3.overridePythonAttrs (old: rec {
-        version = "1.6.7";
-        src = fetchFromGitHub {
-          owner  = "boto";
-          repo   = "boto3";
-          rev    = version;
-          sha256 = "1758h04rzc0l9csvqw0a0r1wlpm2l1xd1qvvlllj75hm1ixrc76h";
-        };
-      });
-
-      botocore = super.botocore.overridePythonAttrs (old: rec {
-        version = "1.9.7";
-        src = old.src.override {
-          inherit version;
-          sha256 = "1hbpr47r3h17fhz33h2mdgi3zk9f9afk2g5ly1yin3d5ym5rk507";
-        };
-      });
-
-      credstash = super.credstash.overridePythonAttrs (old: rec {
-        version = "1.13.4";
-        src = old.src.override {
-          inherit version;
-          sha256 = "10czhy2yjf4kdm7sky0iqhksykx612fz1vlaqxhc5pj3c4xc0v37";
-        };
-        patches = [ ];
-      });
-
-      cryptography = super.cryptography.overridePythonAttrs (old: rec {
-        version = "2.0.3";
-        src = old.src.override {
-          inherit version;
-          sha256 = "d04bb2425086c3fe86f7bc48915290b13e798497839fbb18ab7f6dffcf98cc3a";
-        };
-        doCheck = false; # tests are failing
-      });
-
-      marshmallow = super.marshmallow.overridePythonAttrs (old: rec {
-        version = "2.14.0";
-        src = old.src.override {
-          inherit version;
-          sha256 = "d3f31fe7be2106b1d783cbd0765ef4e1c6615505514695f33082805f929dd584";
-        };
-      });
-
-      redis = super.redis.overridePythonAttrs (old: rec {
-        version = "2.10.5";
-        src = old.src.override {
-          inherit version;
-          sha256 = "0csmrkxb29x7xs9b51zplwkkq2hwnbh9jns1g85dykn5rxmaxysx";
-        };
-      });
-
-      requests = super.requests.overridePythonAttrs (old: rec {
-        version = "2.14.2";
-        src = old.src.override {
-          inherit version;
-          sha256 = "0lyi82a0ijs1m7k9w1mqwbmq1qjsac35fazx7xqyh8ws76xanx52";
-        };
-      });
-
-      urllib3 = super.urllib3.overridePythonAttrs (old: rec {
-        version = "1.20";
-        name = "urllib3-1.20";
-        src = old.src.override {
-          inherit version;
-          sha256 = "0bx76if7shzlyykmaj4fhjkir5bswc4fdx5r4q0lrn3q51p2pvwp";
-        };
-        propagatedBuildInputs =
-          removeDependencies [ "pyOpenSSL" ] old.propagatedBuildInputs;
-      });
-
-    };
-  };
-
-  sumallVersion = import ./version.nix;
-
-in with python.pkgs; buildPythonApplication rec {
+in python.mkDerivation rec {
   name = "sumall-cli-${version}";
-  version = sumallVersion.rev;
+  version = versionInfo.rev;
 
-  src = fetchFromGitHub {
+  src = pkgs.fetchFromGitHub {
     owner = "SumAll";
     repo = "sumall-cli";
     private = true;
-    inherit (sumallVersion) rev sha256;
+    inherit (versionInfo) rev sha256;
   };
 
-  buildInputs = [ libffi openssl ];
+  buildInputs = with pkgs; [ libffi openssl ];
 
   propagatedBuildInputs = [
-    ansicolors
-    argcomplete
-    boto
-    boto3
-    botocore
-    colorama
-    credstash
-    html5lib
-    jinja2
-    kubernetes
-    marshmallow
-    progressbar
-    pyyaml
-    redis
-    requests
-    retrying
-    semantic-version
-    urllib3
+    pyPkgs."ansicolors"
+    pyPkgs."argcomplete"
+    pyPkgs."boto"
+    pyPkgs."boto3"
+    pyPkgs."botocore"
+    pyPkgs."colorama"
+    pyPkgs."credstash"
+    pyPkgs."html5lib"
+    pyPkgs."Jinja2"
+    pyPkgs."kubernetes"
+    pyPkgs."marshmallow"
+    pyPkgs."progressbar"
+    pyPkgs."PyYAML"
+    pyPkgs."redis"
+    pyPkgs."requests"
+    pyPkgs."retrying"
+    pyPkgs."semantic-version"
+    pyPkgs."urllib3"
   ];
 
   preConfigure = ''
@@ -132,12 +47,12 @@ in with python.pkgs; buildPythonApplication rec {
 
   postFixup = ''
     makeWrapper \
-      ${argcomplete}/bin/register-python-argcomplete \
+      ${pyPkgs."argcomplete"}/bin/register-python-argcomplete \
       $out/bin/register-sumall-argcomplete \
       --argv0 '$0' --add-flags sumall
   '';
 
-  checkInputs = [ pytest ];
+  checkInputs = [ pyPkgs."pytest" ];
 
   checkPhase = "pytest -v";
 }

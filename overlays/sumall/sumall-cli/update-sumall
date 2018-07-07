@@ -1,6 +1,8 @@
 #! /usr/bin/env nix-shell
 #! nix-shell -i bash -p gnused coreutils jq
 
+set -eu
+
 if [ $# != 1 ]; then
     printf '\n%sUsage%s:\n%s %sREVISION%s\n' \
         $(tput bold) $(tput sgr0) ${0} $(tput sitm) $(tput sgr0)
