@@ -1,0 +1,41 @@
+#! /usr/bin/env bash
+
+set -eu
+
+dstDir=/etc/nixos/overlays/sumall/sumall-cli
+tmpDir=$(mktemp --tmpdir -d sumall-cli-nixpkg.XXXXXX)
+
+# make workspace
+git clone git@github.com:SumAll/sumall-cli.git $tmpDir/sumall-cli
+pushd $tmpDir/sumall-cli
+
+# generate dependencies package set
+nix-shell -p pypi2nix --run '
+    pypi2nix -V "2.7" -r requirements.txt -E libffi -E openssl
+'
+
+# copy existing sumall-cli package components
+cp $dstDir/{default,nixpkgs,requirements_override,version}.nix .
+cp $dstDir/{update-nixpkgs,update-sumall} .
+
+# update sumall-cli and nixpkgs to latest versions
+rev=$(grep -oP '__version__ = "\K[^"]+' sumall/__init__.py)
+./update-sumall "$rev"
+./update-nixpkgs
+
+if nix-build --no-out-link .
+then
+    for x in {nixpkgs,requirements,version}.nix
+    do
+        cp --force $x $dstDir/
+    done
+    popd && rm --recursive --force $tmpDir
+    printf '\n%s%s✓%s %sDone%s\n' \
+        $(tput bold) $(tput setaf 2) $(tput sgr0) \
+        $(tput bold) $(tput sgr0)
+else
+    printf '\n%s%s✗%s %sBuild Failed%s\n' \
+        $(tput bold) $(tput setaf 1) $(tput sgr0) \
+        $(tput bold) $(tput sgr0)
+    exit 1
+fi

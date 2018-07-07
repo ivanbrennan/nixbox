@@ -1,4 +1,4 @@
-# To update: ./update-sumall VERSION
+# To update: ./update
 
 { pkgs ? import ./nixpkgs.nix }:
 
