@@ -21,24 +21,24 @@ in python.mkDerivation rec {
   buildInputs = with pkgs; [ libffi openssl ];
 
   propagatedBuildInputs = [
-    pyPkgs."ansicolors"
-    pyPkgs."argcomplete"
-    pyPkgs."boto"
-    pyPkgs."boto3"
-    pyPkgs."botocore"
-    pyPkgs."colorama"
-    pyPkgs."credstash"
-    pyPkgs."html5lib"
-    pyPkgs."Jinja2"
-    pyPkgs."kubernetes"
-    pyPkgs."marshmallow"
-    pyPkgs."progressbar"
-    pyPkgs."PyYAML"
-    pyPkgs."redis"
-    pyPkgs."requests"
-    pyPkgs."retrying"
-    pyPkgs."semantic-version"
-    pyPkgs."urllib3"
+    pyPkgs.ansicolors
+    pyPkgs.argcomplete
+    pyPkgs.boto
+    pyPkgs.boto3
+    pyPkgs.botocore
+    pyPkgs.colorama
+    pyPkgs.credstash
+    pyPkgs.html5lib
+    pyPkgs.Jinja2
+    pyPkgs.kubernetes
+    pyPkgs.marshmallow
+    pyPkgs.progressbar
+    pyPkgs.PyYAML
+    pyPkgs.redis
+    pyPkgs.requests
+    pyPkgs.retrying
+    pyPkgs.semantic-version
+    pyPkgs.urllib3
   ];
 
   preConfigure = ''
@@ -47,12 +47,12 @@ in python.mkDerivation rec {
 
   postFixup = ''
     makeWrapper \
-      ${pyPkgs."argcomplete"}/bin/register-python-argcomplete \
+      ${pyPkgs.argcomplete}/bin/register-python-argcomplete \
       $out/bin/register-sumall-argcomplete \
       --argv0 '$0' --add-flags sumall
   '';
 
-  checkInputs = [ pyPkgs."pytest" ];
+  checkInputs = [ pyPkgs.pytest ];
 
   checkPhase = "pytest -v";
 }
