@@ -5,7 +5,9 @@ if [ "$TERM" != "dumb" -o -n "$INSIDE_EMACS" ]; then
   BOLD="\033[1m"
   NORMAL="\033[0m"
 
-  PS1="\n╭\[${BOLD}\]\w\[${NORMAL}\]\$(_git_ps1_)\[${NORMAL}\] \[${BLACK}\]\t\[${NORMAL}\]\n╰(\u)• "
+  line1="╭\[${BOLD}\]\w\[${NORMAL}\]\$(_git_ps1_)\[${NORMAL}\] \[${BLACK}\]\t\[${NORMAL}\]"
+  line2="╰(\u)• "
+  PS1="\n${line1}\n${line2}"
   PS2=" ❯ "
   PS4=" + "
 
