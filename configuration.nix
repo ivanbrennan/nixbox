@@ -77,7 +77,7 @@
         "2606:4700:4700::1001"
       ];
 
-    firewall.allowedTCPPorts = [ ];
+    firewall.allowedTCPPorts = import ./allowed-tcp-ports.nix.private;
     firewall.allowedUDPPorts = [ ];
   };
 
