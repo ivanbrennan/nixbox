@@ -41,7 +41,7 @@ with pkgs; [
   openssl
   pass
   par
-  pstree
+  psmisc
   python36Packages.glances
   pup
   qbittorrent
