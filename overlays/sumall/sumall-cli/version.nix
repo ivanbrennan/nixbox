@@ -1,6 +1,6 @@
 # To update: ./update-sumall-cli REVISION
 
 {
-  rev = "7.5.0";
-  sha256 = "15mi65kmywdr0zjaqa4i2056s8l9140fpg5qp8xq1wdbhbm3dvk1";
+  rev = "7.6.0";
+  sha256 = "0ga76anfwqj6zvy235rvw7ln7sd4f08z8cqn93hxh5dfkg8xbh24";
 }
