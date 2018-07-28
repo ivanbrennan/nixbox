@@ -3,8 +3,6 @@
 
 set -eu
 
-git_rev=/nix/var/nix/profiles/per-user/root/channels/nixos/.git-revision
-
 usage() {
     printf '\n%sUsage%s:\n%s %s[REVISION]%s\n' \
         $(tput bold) $(tput sgr0) ${0} $(tput sitm) $(tput sgr0)
@@ -16,12 +14,17 @@ example() {
         $(tput bold) $(tput sgr0) ${0}
 }
 
-if (( $# > 1 )); then
+git_rev=/nix/var/nix/profiles/per-user/root/channels/nixos/.git-revision
+
+if (( $# == 0 )) && [[ -e "$git_rev" ]]; then
+    rev="$git_rev"
+elif (( $# == 1 )); then
+    rev=$1
+else
     usage
     exit 1
-else
-    rev=${1:-$(if [ -e "$git_rev" ]; then cat "$git_rev"; fi)}
 fi
+
 if [ -z "$rev" ]; then
     printf '\nNo revision found. Try specifying %sREVISION%s\n' $(tput sitm) $(tput sgr0)
     example

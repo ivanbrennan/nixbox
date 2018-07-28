@@ -2,19 +2,19 @@
 
 set -eu
 
-dstDir=/etc/nixos/overlays/sumall/sumall-cli
 tmpDir=$(mktemp --tmpdir -d sumall-cli.XXXXXX)
+dstDir=/etc/nixos/overlays/sumall/sumall-cli
 
 main() {
     make_workspace
     package_dependencies
     package_sumall_cli
 
-    if test_build
+    if check_build
     then
-        success
+        apply_update
     else
-        failure
+        report_failure
     fi
 }
 
@@ -49,13 +49,13 @@ package_sumall_cli() {
     $tmpDir/update-nixpkgs
 }
 
-test_build() {
+check_build() {
     printf '%sRunning test build%s\n' $(tput bold) $(tput sgr0)
 
     nix-build --no-out-link $tmpDir
 }
 
-success() {
+apply_update() {
     for x in {nixpkgs,requirements,version}.nix
     do
         cp --force $tmpDir/$x $dstDir/
@@ -70,7 +70,7 @@ success() {
     exit 0
 }
 
-failure() {
+report_failure() {
     printf '\n%s%s✗%s %sBuild Failed%s\n' \
         $(tput bold) $(tput setaf 1) $(tput sgr0) \
         $(tput bold) $(tput sgr0)
