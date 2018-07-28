@@ -1,4 +1,4 @@
-# To update: ./update-nixpkgs REVISION
+# To update: ./update-nixpkgs.sh REVISION
 
 import (builtins.fetchTarball {
   url = "https://github.com/NixOS/nixpkgs/archive/dae9cf6106da19f79a39714f183ed253c62b32c5.tar.gz";

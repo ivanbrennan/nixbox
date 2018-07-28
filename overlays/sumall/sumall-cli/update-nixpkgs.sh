@@ -14,12 +14,13 @@ example() {
         $(tput bold) $(tput sgr0) ${0}
 }
 
-git_rev=/nix/var/nix/profiles/per-user/root/channels/nixos/.git-revision
-
-if (( $# == 0 )) && [[ -e "$git_rev" ]]; then
-    rev="$git_rev"
-elif (( $# == 1 )); then
+if (( $# == 1 ))
+then
     rev=$1
+elif (( $# == 0 ))
+then
+    pkgs=$(grep -oP 'nixpkgs=\K[^:]+' <<< $NIX_PATH || true)
+    rev=$(cat ${pkgs}/.git-revision 2>/dev/null || true)
 else
     usage
     exit 1

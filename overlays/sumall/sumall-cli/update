@@ -39,14 +39,14 @@ package_sumall_cli() {
 
     # copy existing components
     cp $dstDir/{default,nixpkgs,requirements_override,version}.nix $tmpDir/
-    cp $dstDir/{update-nixpkgs,update-sumall-cli} $tmpDir/
+    cp $dstDir/{update-nixpkgs,update-sumall-cli}.sh $tmpDir/
 
     local version
     version=$(grep -oP '__version__ = "\K[^"]+' $tmpDir/sumall/__init__.py)
 
     # update revisions
-    $tmpDir/update-sumall-cli "$tmpDir" "$version"
-    $tmpDir/update-nixpkgs
+    $tmpDir/update-sumall-cli.sh "$tmpDir" "$version"
+    $tmpDir/update-nixpkgs.sh
 }
 
 check_build() {

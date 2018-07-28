@@ -1,4 +1,4 @@
-# To update: ./update-sumall-cli REVISION
+# To update: ./update-sumall-cli.sh REVISION
 
 {
   rev = "7.6.0";
