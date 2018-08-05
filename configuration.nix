@@ -58,8 +58,8 @@
       ];
 
     envVars = {
-      NIX_GITHUB_PRIVATE_USERNAME = import ./github-username.private;
-      NIX_GITHUB_PRIVATE_PASSWORD = import ./github-token.private;
+      NIX_GITHUB_PRIVATE_USERNAME = import ./environment/github-username.private;
+      NIX_GITHUB_PRIVATE_PASSWORD = import ./environment/github-token.private;
     };
 
     gc.automatic = true;

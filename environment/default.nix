@@ -9,6 +9,11 @@
       "gitconfig".source = pkgs.lib.mkForce ./etc/gitconfig;
       "gitignore".source = "${pkgs.etcdots}/etc/gitignore";
       "inputrc".source = "${pkgs.etcdots}/etc/inputrc";
+      "nix/netrc".source = pkgs.writeText "netrc" ''
+        machine github.com
+        login ${import ./github-username.private}
+        password ${import ./github-token.private}
+      '';
     };
   };
 }
