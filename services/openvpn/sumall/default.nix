@@ -28,7 +28,7 @@
     # Server has compression enabled, so we can too.
     compress lzo
 
-    # Don't cache passwords in memory
+    # Don't cache passwords in memory.
     auth-nocache
 
     ${builtins.readFile ./client.private.conf}
