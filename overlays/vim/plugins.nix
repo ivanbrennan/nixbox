@@ -46,8 +46,8 @@ pkgs:
     src = pkgs.fetchFromGitHub {
       owner = "ivanbrennan";
       repo = "coot";
-      rev = "ea0a86f4b337a8608e08b2b3fe20765f712bb66a";
-      sha256 = "0k7bcy4gfms15iw6hfbbq3zrq5c209fs6mlnzf2db5m31k8295aj";
+      rev = "026309a963e3dcc42ede6f4abcb27255d57a798e";
+      sha256 = "1kixgw2gsy3crar0w995j8m4242rw2nmqh630asq4sc18q80rjv1";
     };
   };
 
