@@ -35,6 +35,7 @@ with pkgs; [
   lsof
   minikube
   mkpasswd
+  mutt
   nice-backgrounds
   nix-prefetch-git
   neovim
