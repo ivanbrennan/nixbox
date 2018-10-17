@@ -76,8 +76,8 @@ pkgs:
     src = pkgs.fetchFromGitHub {
       owner = "ivanbrennan";
       repo = "ftglue";
-      rev = "23d1b831ef8cf833a17179afc0d58543c9d8d34a";
-      sha256 = "0igkgvj4y9r7mdrkjbshpml4jsjq9dflmbwmq0cqq3pw5956s880";
+      rev = "0e8ae2db322b0d47b2b5b0e032348b0d7e65a97f";
+      sha256 = "0pbhqqcknh6x76jx7clhsgwwib0wv24j04mm2n6ysdppkamqgdk6";
     };
   };
 
