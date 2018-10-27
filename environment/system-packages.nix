@@ -19,6 +19,7 @@ with pkgs; [
   fd
   file
   flac
+  flaccurate
   fzf
   gimp
   git
@@ -28,11 +29,13 @@ with pkgs; [
   gnupg
   highlight
   htop
+  imagemagick
   jq
   kubectl
   lastpass-cli
   lshw
   lsof
+  lsscsi
   minikube
   mkpasswd
   mutt
