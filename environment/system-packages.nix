@@ -12,6 +12,7 @@ with pkgs; [
   cabal2nix
   cdparanoia
   chromium
+  cmus
   conky
   dmidecode
   docker
