@@ -1,5 +1,6 @@
 {
   SS = "unset __ETC_BASHRC_SOURCED && . /etc/bashrc";
+  abcde-1 = "abcde -1 -a cddb,getalbumart,read,encode,replaygain,tag,move,clean,cue";
   du1 = "du -h -d 1";
   fgg = "fg '%-'";
   finame = "find . -name";
