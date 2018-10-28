@@ -10,6 +10,7 @@ with pkgs; [
   bind
   binutils
   cabal2nix
+  cdparanoia
   chromium
   conky
   dmidecode
@@ -37,6 +38,7 @@ with pkgs; [
   lsof
   lsscsi
   minikube
+  mkcue
   mkpasswd
   mutt
   nice-backgrounds
