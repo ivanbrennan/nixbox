@@ -13,8 +13,5 @@
   '';
 
   # Gnome desktop
-  desktopManager = {
-    gnome3.enable = true;
-    default = "gnome3";
-  };
+  desktopManager.gnome3.enable = true;
 }
