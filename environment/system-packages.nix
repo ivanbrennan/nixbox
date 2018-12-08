@@ -9,6 +9,7 @@ with pkgs; [
   awscli
   bind
   binutils
+  cabal-install
   cabal2nix
   cdparanoia
   chromium
