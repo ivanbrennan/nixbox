@@ -6,6 +6,12 @@ self: super: {
     '';
   });
 
+  credstash = with super.python3Packages; toPythonApplication (
+    credstash.overridePythonAttrs (old: rec {
+      postInstall = "rm $out/bin/credstash.py";
+    })
+  );
+
   etcdots = super.callPackage ./etcdots { };
 
   flaccurate = super.callPackage ./flaccurate { };
