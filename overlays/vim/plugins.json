@@ -67,8 +67,8 @@
     "src": {
       "owner": "ivanbrennan",
       "repo": "ftglue",
-      "rev": "0e8ae2db322b0d47b2b5b0e032348b0d7e65a97f",
-      "sha256": "0pbhqqcknh6x76jx7clhsgwwib0wv24j04mm2n6ysdppkamqgdk6"
+      "rev": "dcf46097dde224c7595c6dc9a2accc7cd6a3fd7d",
+      "sha256": "1nyjax0ifkv8nnih6vwq8rl9s432pbj6w47vgskdgc2q4xxv94fl"
     }
   },
   "haskell-vim": {

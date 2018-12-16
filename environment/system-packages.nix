@@ -7,6 +7,7 @@ with pkgs; [
   aspell
   aspellDicts.en
   awscli
+  bats
   bind
   binutils
   cabal-install
