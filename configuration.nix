@@ -20,7 +20,9 @@
     consoleUseXkbConfig = true;
   };
 
-  time.timeZone = "America/New_York";
+  # Allow timezone to be set imperatively using:
+  # timedatectl set-timezone America/New_York
+  time.timeZone = null;
 
   virtualisation = {
     docker.enable = true;
