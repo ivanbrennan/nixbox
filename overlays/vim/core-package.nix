@@ -30,6 +30,7 @@ with (pkgs.vimPlugins) // (pkgs.vimPrivatePlugins); {
       targets-vim
       traces
       vim-easy-align
+      vim-elixir
       vim-eunuch
       vim-grepper
       vim-matchit
