@@ -71,7 +71,7 @@ with pkgs; [
   universal-ctags
   unzip
   vim-configured
-  vimPrivatePlugins.haskell-vim
+  vimPlugins.haskell-vim
   virtualboxHeadless
   vlc
   vln
