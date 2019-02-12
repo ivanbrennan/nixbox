@@ -33,6 +33,7 @@ with pkgs; [
   gnomeExtensions.nohotcorner
   gnumake
   gnupg
+  graphviz
   highlight
   htop
   imagemagick
