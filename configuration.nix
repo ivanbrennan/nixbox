@@ -47,7 +47,7 @@
 
   nixpkgs.overlays =
     [ (import ./overlays/core)
-      (import ./overlays/sumall)
+      (import ./overlays/odeko)
       (import ./overlays/vim)
     ];
 
