@@ -1,7 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    ffi (1.9.23)
+    ffi (1.10.0)
     interactive_editor (0.0.11)
       spoon (>= 0.0.1)
     spoon (0.0.6)
@@ -14,4 +14,4 @@ DEPENDENCIES
   interactive_editor
 
 BUNDLED WITH
-   1.14.6
+   1.17.2
