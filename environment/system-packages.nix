@@ -34,6 +34,7 @@ with pkgs; [
   gnumake
   gnupg
   graphviz
+  haskellPackages.hasktags
   highlight
   htop
   imagemagick
