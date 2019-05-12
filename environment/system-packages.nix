@@ -7,6 +7,7 @@ with pkgs; [
   alacritty
   aspell
   aspellDicts.en
+  aws-iam-authenticator
   awscli
   bats
   bind
@@ -40,6 +41,7 @@ with pkgs; [
   imagemagick
   jq
   kubectl
+  kubernetes-helm
   lastpass-cli
   lshw
   lsof
