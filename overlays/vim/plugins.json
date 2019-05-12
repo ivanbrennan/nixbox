@@ -85,8 +85,8 @@
     "src": {
       "owner": "ivanbrennan",
       "repo": "iota",
-      "rev": "eb6409db09f7b547f769dfd0a00de4396e7af14c",
-      "sha256": "159hfipy63vlykxcqwb9wzp6mfzv5v7ibj5lznjpzmkfn36sb867"
+      "rev": "2a9be469cea772c906daec33e9558177715a1126",
+      "sha256": "1a85ddx6vr8w662p8dl596x9rrp8nyplg9yvah4r18g0yrwb5mms"
     }
   },
   "latitude": {
@@ -121,8 +121,8 @@
     "src": {
       "owner": "ivanbrennan",
       "repo": "ocursor",
-      "rev": "c21602a41d40b76117af029cb98b4e4e459bf6cd",
-      "sha256": "0c8ka85821b24g5l37lp2kigr44p6l567jdaa2smycqx8yspwamm"
+      "rev": "7960785e1de9b3a7e78cd6ad3e50511486ea34a8",
+      "sha256": "1n5nh24jlzxgrydamhc5jbr5lmykvxnirdn3j36av8fw7znfc8v9"
     }
   },
   "optcycle": {
