@@ -37,18 +37,7 @@ ppath() {
 }
 
 man() {
-    case "$@" in
-        vim|vimdiff|view)
-            __vim_man "$@"
-            ;;
-        *)
-            __man "$@"
-            ;;
-    esac
-}
-
-# jump to Bash builtin documentation
-__man() {
+    # jump to Bash builtin documentation
     if (( $# == 1 )) && [[ "$1" != -* ]]; then
         case "$(type -t "$1")" in
             builtin)
@@ -74,15 +63,6 @@ __man() {
     fi
 }
 
-# hacky workaround for vim_configurable's lack of man pages
-# https://github.com/NixOS/nixpkgs/issues/24691
-__vim_man() {
-    local name=$1
-    shift
-    find $(__vim_configurable_out)/share/man \
-        -name "${name}.*" \
-        -exec man {} "$@" \;
-}
 # hacky workaround for vim_configurable's unexposed view/vimdiff outputs
 # https://github.com/NixOS/nixpkgs/issues/11442
 view() {
