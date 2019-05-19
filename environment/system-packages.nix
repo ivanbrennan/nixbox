@@ -27,6 +27,7 @@ with pkgs; [
   file
   flac
   flaccurate
+  fly
   fzf
   gimp
   git
