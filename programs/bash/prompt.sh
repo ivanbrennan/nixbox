@@ -37,7 +37,7 @@ _git_ps1_() {
     local normal="\033[0m"
 
     # __git_ps1 inserts the current git branch where %s is
-    echo "$(__git_ps1 " (${green}%s${normal})")"
+    __git_ps1 " (${green}%s${normal})"
 }
 
 _build_prompt
