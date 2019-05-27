@@ -31,8 +31,8 @@
     "src": {
       "owner": "ivanbrennan",
       "repo": "coherent",
-      "rev": "543bbb941f810c574c2acb29bd005764209c9f41",
-      "sha256": "1lhvccwk2yaq9mbmrm4yxaswnrpr0m1nsz97mp2rd1pnr8p2yadv"
+      "rev": "da61d3a21654ff9a76ce52f3998b60abf6ed0366",
+      "sha256": "0x3ivg3abx76zb2i45dzx10msqk8442qny55ifxfr7944dgrzcv2"
     }
   },
   "coot": {
@@ -103,8 +103,8 @@
     "src": {
       "owner": "ivanbrennan",
       "repo": "listical",
-      "rev": "e209707be3cc2898cceaadb15e01b6ff957367ec",
-      "sha256": "1vqslnlh8pa70a3s3h4z8fqzr2ll03y5sqbj97bj20bk65nck2yx"
+      "rev": "9b8a995ee03f1737a136b3291908e69ac930237f",
+      "sha256": "1l8hxdxqgz9b68939q8r1r3hahw0f3qfyp700zgiw9dwz641sdrj"
     }
   },
   "mline": {
