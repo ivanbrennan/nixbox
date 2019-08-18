@@ -4,7 +4,8 @@
 }:
 
 buildPerlPackage rec {
-  name = "flaccurate";
+  pname = "flaccurate";
+  version = "1.0";
 
   src = fetchFromGitHub {
     owner = "ivanbrennan";
