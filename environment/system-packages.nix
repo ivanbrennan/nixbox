@@ -42,7 +42,7 @@ with pkgs; [
   imagemagick
   jq
   kubectl
-  kubernetes-helm
+  kubernetes-helm-2_11
   lastpass-cli
   lshw
   lsof

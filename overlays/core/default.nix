@@ -18,6 +18,12 @@ self: super: {
 
   interactive-editor = super.callPackage ./interactive-editor { };
 
+  kubernetes-helm-2_11 =
+    (import (builtins.fetchTarball {
+      url = "https://github.com/NixOS/nixpkgs/archive/a071bfa7e7bbd62e1b43830e5e79d8b36afe5fa6.tar.gz";
+      sha256 = "0yl2bsan5x69a7z6r1fb8zlv4zpibq67pb2x45jjp7wx42ssdkq2";
+    }) { }).kubernetes-helm;
+
   linuxPackages = (super.linuxPackagesFor super.linuxPackages.kernel).extend (
     self': super': {
       i8042_debounce = super'.callPackage ./i8042-debounce { };
