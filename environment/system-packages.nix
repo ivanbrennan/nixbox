@@ -68,7 +68,7 @@ with pkgs; [
   slack
   socat
   sqliteInteractive
-  stack
+  stack-1_9_3
   stow
   tcpdump
   tmux
