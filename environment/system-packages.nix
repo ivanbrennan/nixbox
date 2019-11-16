@@ -10,6 +10,7 @@ with pkgs; [
   aws-iam-authenticator
   awscli
   bats
+  bc
   bind
   binutils
   cabal-install
