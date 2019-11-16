@@ -36,6 +36,10 @@ ppath() {
   printf '%bPATH%b:\n%s\n' "$col_bold" "$col_reset" "${PATH//:/$'\n'}"
 }
 
+psaux() {
+    ps aux | grep "$(sed 's/./[&]/' <<< "$1")\|[P]ID"
+}
+
 man() {
     # jump to Bash builtin documentation
     if (( $# == 1 )) && [[ "$1" != -* ]]; then
