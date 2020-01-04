@@ -29,6 +29,12 @@ export LESS_TERMCAP_md=$'\e[1;37m' \
 
 complete -F _tmux t
 
+ghcWithPackages() {
+    nix-shell \
+        --packages "haskellPackages.ghcWithPackages (p: with p; [${*}])" \
+        --run ghci
+}
+
 ppath() {
   col_bold="\033[30;01m"
   col_reset="\033[39;49;00m"
