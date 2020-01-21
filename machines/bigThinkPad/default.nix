@@ -3,7 +3,14 @@
 {
   imports = [ ./hardware-configuration.nix ];
 
-  networking.hostName = "nixosbox";
+  networking.hostName = "bigThinkPad";
+
+  # The global useDHCP flag is deprecated, therefore explicitly set to false here.
+  # Per-interface useDHCP will be mandatory in the future, so this generated config
+  # replicates the default behaviour.
+  networking.useDHCP = false;
+  networking.interfaces.enp0s31f6.useDHCP = true;
+  networking.interfaces.wlp3s0.useDHCP = true;
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
@@ -12,23 +19,12 @@
   boot.initrd.luks.devices = [
     {
       name = "root";
-      device = "/dev/disk/by-uuid/01f0c2eb-300c-49e9-9b5f-0180f45445b0";
+      device = "/dev/disk/by-uuid/c66379e1-3d77-409d-b190-842c6b91606f";
       preLVM = true;
     }
   ];
 
-  boot.kernel.sysctl."vm.swappiness" = 1;
-
   hardware.cpu.intel.updateMicrocode = true;
-
-  hardware.opengl.extraPackages = with pkgs; [
-    vaapiIntel
-    vaapiVdpau
-    libvdpau-va-gl
-  ];
-
-  # support Bluetooth headsets
-  hardware.pulseaudio.package = pkgs.pulseaudioFull;
 
   services.xserver.videoDrivers = [ "intel" ];
 
@@ -36,5 +32,5 @@
   # compatible, in order to avoid breaking some software such as database
   # servers. You should change this only after NixOS release notes say you
   # should.
-  system.stateVersion = "17.09"; # Did you read the comment?
+  system.stateVersion = "19.09"; # Did you read the comment?
 }
