@@ -111,3 +111,43 @@ blink() {
   fi
   printf '\e[%i q' $cursor_code
 }
+
+# gsettings
+
+superswap() {
+    local old new swap
+
+    old=$(gsettings get org.gnome.desktop.input-sources xkb-options)
+    old="${old/#@as /}"  # remove type annotation
+
+    swap="'altwin:swap_alt_win'"
+
+    if grep -q "$swap" <<< "$old"; then
+        new="${old//$swap}"      # remove swap
+    else
+        new="${old/%]/, $swap]}" # append swap
+    fi
+
+    new="${new/#[, /[}"  # remove leading comma
+    new="${new/%, ]/]}"  # remove trailing comma
+    new="${new//, ,/,}"  # remove embedded comma
+
+    gsettings set org.gnome.desktop.input-sources xkb-options "$new"
+}
+
+font_size() {
+    local size="$1"
+    gnome_terminal_set font "Source Code Pro ${size}"
+}
+
+gnome_terminal_set() {
+  local key=$1 val=$2
+  gsettings set "$(gnome_terminal_profile)" "$key" "$val"
+}
+
+gnome_terminal_profile() {
+  local schema uuid
+  schema='org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles'
+  uuid=$(gsettings get org.gnome.Terminal.ProfilesList default)
+  printf '%s:/:%s/' ${schema} "${uuid:1:-1}"
+}
