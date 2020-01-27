@@ -1,4 +1,4 @@
-machine = $(shell hostname)
+machine ?= $(shell hostname)
 
 all: symlink-machine set-channel
 
