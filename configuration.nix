@@ -25,6 +25,10 @@
   # timedatectl set-timezone America/New_York
   time.timeZone = null;
 
+  # Allow redshift to work.
+  location.latitude = 40.7;
+  location.longitude = -74.0;
+
   virtualisation = {
     docker.enable = true;
 
