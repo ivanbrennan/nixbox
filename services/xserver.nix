@@ -7,11 +7,6 @@
   # Enable touchpad support.
   libinput.enable = true;
 
-  displayManager.sessionCommands = ''
-    # tap caps to escape
-    xcape &
-  '';
-
   # Gnome desktop
   desktopManager.gnome3.enable = true;
 }
