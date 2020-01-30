@@ -8,6 +8,9 @@ sudo make -C /etc/nixos machine=MACHINE
 Try some window managers
 - [i3](https://i3wm.org)
   - set $mod to super
+  - change lightdm background image
+  - ssh-agent, gnupg-agent https://yashagarwal.in/posts/2017/12/setting-up-ssh-agent-in-i3/
+  - hide cursor
   - run dmenu (or j4) by pressing $mod alone
   - equivalent gsettings
     - [✓] desktop.interface gtk-key-theme "Emacs"
@@ -26,11 +29,10 @@ Try some window managers
     - [ ] desktop.wm.keybindings activate-window-menu "['<Alt><Shift>space']"
     - [ ] desktop.background picture-uri '/run/current-system/sw/share/backgrounds/gnome/Godafoss_Iceland.jpg'
   - easily logout / lock screen?
+  - gtk themes?
   - configure urxvt and/or alacritty
   - configure i3 hjkl
   - xcape stopped working?
-  - ssh-agent, gnupg-agent https://yashagarwal.in/posts/2017/12/setting-up-ssh-agent-in-i3/
-  - hide cursor
   - alt+c alt+v copy/paste
 - [Openbox](http://openbox.org/wiki/Main_Page)
 - [XMonad](http://xmonad.org)
