@@ -10,7 +10,7 @@ Try some window managers
   - set $mod to super
   - run dmenu (or j4) by pressing $mod alone
   - equivalent gsettings
-    - [ ] desktop.interface gtk-key-theme "Emacs"
+    - [✓] desktop.interface gtk-key-theme "Emacs"
     - [ ] desktop.interface clock-format "12h"
     - [✓] services.xserver.libinput.tapping
     - [✓] services.xserver.libinput.clickMethod
