@@ -12,10 +12,10 @@ Try some window managers
   - equivalent gsettings
     - [ ] desktop.interface gtk-key-theme "Emacs"
     - [ ] desktop.interface clock-format "12h"
-    - [ ] desktop.peripherals.touchpad tap-to-click true
-    - [ ] desktop.peripherals.touchpad click-method "fingers"
-    - [ ] desktop.peripherals.keyboard delay 200
-    - [ ] desktop.peripherals.keyboard repeat-interval 30
+    - [✓] services.xserver.libinput.tapping
+    - [✓] services.xserver.libinput.clickMethod
+    - [✓] services.xserver.autoRepeatDelay
+    - [✓] services.xserver.autoRepeatInterval
     - [ ] Terminal.Legacy.${keybindings} copy '<Ctrl><Alt>c'
     - [ ] Terminal.Legacy.${keybindings} paste '<Ctrl><Alt>v'
     - [ ] Terminal.Legacy.${keybindings} new-window '<Ctrl><Alt>n'
