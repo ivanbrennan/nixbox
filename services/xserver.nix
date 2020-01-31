@@ -19,6 +19,7 @@ pkgs:
 
   # i3
   windowManager.i3.enable = true;
+  windowManager.i3.configFile = i3/config;
 
   displayManager.sessionCommands = ''
     ${pkgs.xorg.xrdb}/bin/xrdb -merge < ${./Xresources}
