@@ -1,0 +1,41 @@
+urxvt*scrollBar: False
+urxvt*saveLines: 3200
+urxvt*font: xft:Source Code Pro:size=14
+urxvt*boldFont: xft:Source Code Pro:style=Bold:size=14
+
+! special
+*.foreground: #d5d8dc
+*.background: #181818
+*.cursorColor: #d2d8e3
+
+! Black
+*color0:   #181818
+*color8:   #303d4b
+
+! Red
+*color1:   #de4d3a
+*color9:   #f4718c
+
+! Green
+*color2:   #b8e068
+*color10:  #d8e778
+
+! Yellow
+*color3:   #ebcb8b
+*color11:  #f8bb39
+
+! Blue
+*color4:   #61b3c9
+*color12:  #a1b3c9
+
+! Magneta
+*color5:   #617fa0
+*color13:  #53769d
+
+! Cyan
+*color6:   #69d2e7
+*color14:  #26a6a6
+
+! White
+*color7:   #d5d8dc
+*color15:  #ffffff

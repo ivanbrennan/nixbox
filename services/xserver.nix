@@ -1,3 +1,5 @@
+pkgs:
+
 {
   # Enable the X11 windowing system.
   enable = true;
@@ -18,6 +20,7 @@
   # i3
   windowManager.i3.enable = true;
 
-  # displayManager is set to lightdm
-  # the "none+i3" entry denotes "none" desktop manager + "i3" window manager
+  displayManager.sessionCommands = ''
+    ${pkgs.xorg.xrdb}/bin/xrdb -merge < ${./Xresources}
+  '';
 }
