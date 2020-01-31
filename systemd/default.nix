@@ -1,13 +1,15 @@
 { pkgs, ... }:
 
 {
-  systemd.user.services."xcape" = {
+  systemd.user.services.xcape = {
     enable = true;
-    description = "Xcape: Ctrl is Esc when pressed alone";
-    wantedBy = [ "default.target" ];
-    serviceConfig.Type = "forking";
-    serviceConfig.Restart = "always";
-    serviceConfig.RestartSec = 2;
-    serviceConfig.ExecStart = "${pkgs.xcape}/bin/xcape";
+    description = "xcape";
+    after = [ "graphical-session-pre.target" ];
+    partOf = [ "graphical-session.target" ];
+    wantedBy = [ "graphical-session.target" ];
+    serviceConfig = {
+      Type = "forking";
+      ExecStart = "${pkgs.xcape}/bin/xcape";
+    };
   };
 }
