@@ -25,7 +25,7 @@ in {
       "xdg/gtk-2.0/gtkrc".source = etc/xdg/gtk-2.0/gtkrc;
     };
     extraInit = ''
-      export XDG_CONFIG_DIRS="/etc/xdg:$XDG_CONFIG_DIRS"
+      export XDG_CONFIG_DIRS="/etc/xdg''${XDG_CONFIG_DIRS:+:}$XDG_CONFIG_DIRS"
     '';
   };
 }
