@@ -16,7 +16,6 @@ HISTTIMEFORMAT='%F %T '
 HISTCONTROL=erasedups:ignorespace
 HISTSIZE=10000
 HISTFILESIZE=20000
-HISTIGNORE='jobs:[fb]g:history:gst:tls:fgg'
 
 shopt -s no_empty_cmd_completion
 
