@@ -83,7 +83,6 @@ with pkgs; [
   vln
   weechat
   wget
-  xcape
   xsel
   zip
 ]

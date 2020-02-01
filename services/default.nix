@@ -3,6 +3,9 @@
 {
   services = {
     emacs.enable = true;
+
+    interception-tools.enable = true;
+
     openvpn = import ./openvpn;
 
     redshift = {

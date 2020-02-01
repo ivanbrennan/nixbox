@@ -12,7 +12,6 @@
       ./programs
       ./security
       ./services
-      ./systemd
       ./users
     ];
 
