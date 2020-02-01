@@ -10,6 +10,6 @@
       temperature.night = 4700;
     };
 
-    xserver = (import ./xserver.nix) pkgs;
+    xserver = (import ./xserver) pkgs;
   };
 }

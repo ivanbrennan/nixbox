@@ -11,15 +11,19 @@ pkgs:
   autoRepeatInterval = 30;
 
   # Configure touchpad.
-  libinput.enable = true;
-  libinput.naturalScrolling = true;
+  libinput = {
+    enable = true;
+    naturalScrolling = true;
+  };
 
   # Gnome desktop
   desktopManager.gnome3.enable = true;
 
   # i3
-  windowManager.i3.enable = true;
-  windowManager.i3.configFile = i3/config;
+  windowManager.i3 = {
+    enable = true;
+    configFile = i3/config;
+  };
 
   displayManager.sessionCommands = ''
     ${pkgs.xorg.xrdb}/bin/xrdb -merge < ${./Xresources}
