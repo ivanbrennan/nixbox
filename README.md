@@ -32,7 +32,6 @@ Try some window managers
   - configure urxvt and/or alacritty
   - configure i3 hjkl
   - xcape stopped working?
-  - caps2esc: can we have esc on both caps _and_ esc?
   - alt+c alt+v copy/paste
 - [Openbox](http://openbox.org/wiki/Main_Page)
 - [XMonad](http://xmonad.org)

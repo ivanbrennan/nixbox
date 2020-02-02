@@ -4,7 +4,10 @@
   services = {
     emacs.enable = true;
 
-    interception-tools.enable = true;
+    interception-tools = {
+      enable = true;
+      udevmonConfig = ./udevmon.yaml;
+    };
 
     openvpn = import ./openvpn;
 
