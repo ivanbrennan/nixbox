@@ -38,5 +38,20 @@ self: super: {
 
   nice-backgrounds = super.callPackage ./nice-backgrounds { };
 
+  interception-tools-plugins = super.interception-tools-plugins // {
+    caps2esc = super.interception-tools-plugins.caps2esc.overrideAttrs (old:
+      let
+        version = "0.1.3";
+        pname = "interception-tools-caps2esc";
+      in
+        {
+          name = "${pname}-${version}";
+          src = self.fetchurl {
+            url = "https://gitlab.com/interception/linux/plugins/caps2esc/repository/v${version}/archive.tar.gz";
+            sha256 = "196yn32wvfkhsd4am4rk72481f3bhmfn7cz7q898ryjs35d54ma0";
+          };
+        });
+      };
+
   vln = super.callPackage ./vln { };
 }
