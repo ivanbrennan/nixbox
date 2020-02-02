@@ -39,19 +39,14 @@ self: super: {
   nice-backgrounds = super.callPackage ./nice-backgrounds { };
 
   interception-tools-plugins = super.interception-tools-plugins // {
-    caps2esc = super.interception-tools-plugins.caps2esc.overrideAttrs (old:
-      let
-        version = "0.1.3";
-        pname = "interception-tools-caps2esc";
-      in
-        {
-          name = "${pname}-${version}";
-          src = self.fetchurl {
-            url = "https://gitlab.com/interception/linux/plugins/caps2esc/repository/v${version}/archive.tar.gz";
-            sha256 = "196yn32wvfkhsd4am4rk72481f3bhmfn7cz7q898ryjs35d54ma0";
-          };
-        });
+    caps2esc = super.interception-tools-plugins.caps2esc.overrideAttrs (old: {
+      name = "interception-tools-caps2esc-0.1.3";
+      src = self.fetchurl {
+        url = "https://gitlab.com/ivanbrennan/caps2esc/repository/66d3a345e1f7ad13c9ca9c07faef9572939adc5c/archive.tar.gz";
+        sha256 = "0f376z9af2mmxaw9hx4m7przjnqg5084cgbn8rv56zd0ihzr7x7w";
       };
+    });
+  };
 
   vln = super.callPackage ./vln { };
 }
