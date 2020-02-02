@@ -28,6 +28,20 @@ Try some window managers
     - [ ] Terminal.Legacy.${keybindings} zoom-in '<Ctrl>equal'
     - [ ] desktop.wm.keybindings activate-window-menu "['<Alt><Shift>space']"
     - [✓] desktop.background picture-uri '/run/current-system/sw/share/backgrounds/gnome/Godafoss_Iceland.jpg'
+  - ssh-agent not running
+  - gnome-keyring is running? who ran it? why isn't it handling ssh keys?
+    `desktopManager.gnome3.enable = true;`
+    ```
+    grep keyring /etc/pam.d/login
+    auth optional /nix/store/yhnjbwazdyqc37mrgcp3jbyhsyy6s6b2-gnome-keyring-3.31.91/lib/security/pam_gnome_keyring.so
+    password optional /nix/store/yhnjbwazdyqc37mrgcp3jbyhsyy6s6b2-gnome-keyring-3.31.91/lib/security/pam_gnome_keyring.so use_authtok
+    session optional /nix/store/yhnjbwazdyqc37mrgcp3jbyhsyy6s6b2-gnome-keyring-3.31.91/lib/security/pam_gnome_keyring.so auto_start
+    ```
+    ```
+    psaux bin/X
+    USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+    root      7070  0.5  0.6 524308 55756 tty7     Ssl+ 00:18   4:17 /nix/store/0x819sd3hbkb3k5xcs5jl58zgid4kmik-xorg-server-1.20.5/bin/X -config /nix/store/gf27brhsisc74s1dysh7a4qxxw90npz0-xserver.conf -xkbdir /nix/store/w2w29w2jc4z8mk3zxg71v66l997y2azx-xkeyboard-config-2.27/etc/X11/xkb -logfile /dev/null -verbose 3 -nolisten tcp -ardelay 200 -arinterval 30 -terminate -logfile /var/log/X.0.log :0 -seat seat0 -auth /var/run/lightdm/root/:0 -nolisten tcp vt7 -novtswitch
+    ```
   - easily logout / lock screen?
   - gtk themes?
   - configure urxvt and/or alacritty
