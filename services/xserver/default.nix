@@ -27,5 +27,14 @@ pkgs:
 
   displayManager.sessionCommands = ''
     ${pkgs.xorg.xrdb}/bin/xrdb -merge < ${./Xresources}
+
+    # A cleaner solution will be available soon via:
+    # services.xserver.windowManager.i3.extraSessionCommands
+    # https://github.com/NixOS/nixpkgs/pull/49492#issuecomment-579311286
+    if ! [ -e $HOME/.background-image ]
+    then
+        cp ${pkgs.nice-backgrounds}/share/backgrounds/gnome/Godafoss_Iceland.jpg \
+        $HOME/.background-image
+    fi
   '';
 }

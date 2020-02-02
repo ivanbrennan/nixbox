@@ -27,7 +27,7 @@ Try some window managers
     - [ ] Terminal.Legacy.${keybindings} full-screen '<Ctrl><Alt>Return'
     - [ ] Terminal.Legacy.${keybindings} zoom-in '<Ctrl>equal'
     - [ ] desktop.wm.keybindings activate-window-menu "['<Alt><Shift>space']"
-    - [ ] desktop.background picture-uri '/run/current-system/sw/share/backgrounds/gnome/Godafoss_Iceland.jpg'
+    - [✓] desktop.background picture-uri '/run/current-system/sw/share/backgrounds/gnome/Godafoss_Iceland.jpg'
   - easily logout / lock screen?
   - gtk themes?
   - configure urxvt and/or alacritty
