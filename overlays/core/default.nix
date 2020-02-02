@@ -38,9 +38,5 @@ self: super: {
 
   nice-backgrounds = super.callPackage ./nice-backgrounds { };
 
-  interception-tools-plugins = super.interception-tools-plugins // {
-    space2meta = super.callPackage ./space2meta { };
-  };
-
   vln = super.callPackage ./vln { };
 }

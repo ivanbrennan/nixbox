@@ -4,7 +4,7 @@
   services = {
     emacs.enable = true;
 
-    interception-tools = (import ./interception-tools) pkgs;
+    interception-tools.enable = true;
 
     openvpn = import ./openvpn;
 
