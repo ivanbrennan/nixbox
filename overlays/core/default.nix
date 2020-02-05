@@ -46,6 +46,7 @@ self: super: {
         sha256 = "0w58z0b16hr52sjynkpqd1v090sgyd5glwc8wb248j5l8q2b50zv";
       };
     });
+    tab2meta = super.callPackage ./tab2meta { };
   };
 
   vln = super.callPackage ./vln { };
