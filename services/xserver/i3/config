@@ -40,25 +40,37 @@ floating_modifier $mod
 
 # start a terminal
 # bindsym $mod+Return exec i3-sensible-terminal
-bindsym $mod+Return exec gnome-terminal
+bindsym $mod+Return exec /nix/store/2n4gssz4v1b0rfzq4358kcxjbdshjxma-alacritty-0.3.3/bin/alacritty
 bindsym Mod1+Shift+n exec gnome-terminal
+
+# GOLD!
+bindsym Control+period workspace next
+bindsym Control+comma workspace prev
+bindsym Control+semicolon focus right
+# bindsym Control+quote (??? iterate through windows?)
+bindsym Mod1+Return fullscreen toggle
+
+bindsym Control+Mod1+h focus left
+bindsym Control+Mod1+j focus down
+bindsym Control+Mod1+k focus up
+bindsym Control+Mod1+l focus right
 
 # kill focused window
 bindsym $mod+Shift+q kill
 
 # start dmenu (a program launcher)
 # bindsym $mod+d exec dmenu_run
-bindsym Shift+space exec j4-dmenu-desktop
+bindsym Mod1+space exec j4-dmenu-desktop
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
 # installed.
 # bindsym $mod+d exec --no-startup-id i3-dmenu-desktop
 
 # change focus
-bindsym $mod+j focus left
-bindsym $mod+k focus down
-bindsym $mod+l focus up
-bindsym $mod+semicolon focus right
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Left focus left
@@ -67,10 +79,10 @@ bindsym $mod+Up focus up
 bindsym $mod+Right focus right
 
 # move focused window
-bindsym $mod+Shift+j move left
-bindsym $mod+Shift+k move down
-bindsym $mod+Shift+l move up
-bindsym $mod+Shift+semicolon move right
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Shift+Left move left
@@ -78,11 +90,9 @@ bindsym $mod+Shift+Down move down
 bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
 
-# split in horizontal orientation
-bindsym $mod+h split h
+bindsym $mod+b split vertical; exec /nix/store/2n4gssz4v1b0rfzq4358kcxjbdshjxma-alacritty-0.3.3/bin/alacritty
 
-# split in vertical orientation
-bindsym $mod+v split v
+bindsym $mod+v split horizontal; exec /nix/store/2n4gssz4v1b0rfzq4358kcxjbdshjxma-alacritty-0.3.3/bin/alacritty
 
 # enter fullscreen mode for the focused container
 # TODO: $mod+Up?
@@ -179,12 +189,48 @@ bindsym $mod+r mode "resize"
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
-        status_command i3status
+    position top
+    colors {
+        background #121212
+        statusline #e8e8e8
+        separator #666666
+
+        focused_workspace  #3c6666 #283355 #ffffff
+        active_workspace   #333333 #5f676a #ffffff
+        inactive_workspace #333333 #222222 #888888
+        urgent_workspace   #2f343a #900000 #ffffff
+        binding_mode       #2f343a #900000 #ffffff
+    }
+    status_command i3status
 }
 
+default_border pixel 1
+hide_edge_borders smart
+
+# Colors set from ~/.Xresources
+set_from_resource	$background	background
+set_from_resource	$foreground	foreground
+set_from_resource	$color0		color0
+set_from_resource 	$color1 	color1
+set_from_resource 	$color2 	color2
+set_from_resource 	$color3 	color3
+set_from_resource 	$color4 	color4
+set_from_resource 	$color5 	color5
+set_from_resource 	$color6		color6
+set_from_resource	$color7		color7
+set_from_resource	$color8		color8
+set_from_resource	$color9		color9
+set_from_resource	$color10	color10
+set_from_resource	$color11	color11
+set_from_resource	$color12	color12
+set_from_resource	$color13	color13
+set_from_resource	$color14	color14
+set_from_resource	$color15	color15
+
+set_from_resource $colorTest colorTest #000000
 # class                 border  backgr. text    indicator child_border
-# client.focused          #4c7899 #285577 #ffffff #2e9ef4   #285577
-# client.focused_inactive #333333 #5f676a #ffffff #484e50   #5f676a
+client.focused          #4c7899 #285577 #ffffff #353940   $colorTest
+client.focused_inactive #333333 #5f676a #ffffff #484e50   #222222
 # client.unfocused        #333333 #222222 #888888 #292d2e   #222222
 # client.urgent           #2f343a #900000 #ffffff #900000   #900000
 # client.placeholder      #000000 #0c0c0c #ffffff #000000   #0c0c0c

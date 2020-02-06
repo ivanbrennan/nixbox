@@ -39,3 +39,5 @@ urxvt*boldFont: xft:Source Code Pro:style=Bold:size=14
 ! White
 *color7:   #d5d8dc
 *color15:  #ffffff
+
+*colorTest: #49555C
