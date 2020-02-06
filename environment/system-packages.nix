@@ -4,7 +4,7 @@ with pkgs; [
   _1password
   abcde
   ag
-  alacritty
+  alacritty-wrapped
   aspell
   aspellDicts.en
   aws-iam-authenticator
