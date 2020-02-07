@@ -69,6 +69,7 @@ with pkgs; [
   slack
   socat
   sqliteInteractive
+  st
   stack-1_9_3
   stow
   tcpdump

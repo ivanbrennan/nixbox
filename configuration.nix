@@ -47,6 +47,12 @@
       # Avoid cursor redraw bugs
       gui = "no";
     };
+
+    st = {
+      conf = builtins.readFile ./st-config.h;
+      patches = [];
+      extraLibs = [];
+    };
   };
 
   nixpkgs.overlays =
