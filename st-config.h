@@ -35,7 +35,7 @@ static float chscale = 1.0;
 char *worddelimiters = " ";
 
 /* selection timeouts (in milliseconds) */
-static unsigned int doubleclicktimeout = 300;
+static unsigned int doubleclicktimeout = 400;
 static unsigned int tripleclicktimeout = 600;
 
 /* alt screens */
