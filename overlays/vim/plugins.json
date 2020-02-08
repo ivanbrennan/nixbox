@@ -31,8 +31,8 @@
     "src": {
       "owner": "ivanbrennan",
       "repo": "coherent",
-      "rev": "d3422df063f07666bb17e13d5032e197517dfa91",
-      "sha256": "082lpkmfvf6pimxryig1ki4ja1xji8wbq3a4vb9fj0hxmv4bihyf"
+      "rev": "58f2ba1a28d7d547035a3039b1f34b756a570f7f",
+      "sha256": "04dn72q5pk14fnlid6g7s8bsp7c7y57419kxxqwg3zinws475vdb"
     }
   },
   "coot": {
@@ -85,8 +85,8 @@
     "src": {
       "owner": "ivanbrennan",
       "repo": "iota",
-      "rev": "7bf674d72dea89c33648de5516297c7a41b2abfe",
-      "sha256": "0w6jy89gqizv0hz4ibvsrimvbw5wf07xr6vwsqhrcbrd8ndxaxj7"
+      "rev": "c25e62146e579eabda5f40a85ea008f292b402e4",
+      "sha256": "0yqvbjz34ryrh6ixrzd8c477aamvc2yckjmzw9z31ps1gykrcmdn"
     }
   },
   "latitude": {
@@ -121,8 +121,8 @@
     "src": {
       "owner": "ivanbrennan",
       "repo": "ocursor",
-      "rev": "7960785e1de9b3a7e78cd6ad3e50511486ea34a8",
-      "sha256": "1n5nh24jlzxgrydamhc5jbr5lmykvxnirdn3j36av8fw7znfc8v9"
+      "rev": "8a4f1d0f54b97eeed89dbdbafe5f6238b4452993",
+      "sha256": "1r9w8f7bj78xnn8m78p3k8f8drza7zsklmd4css6splk8gnn1gmh"
     }
   },
   "optcycle": {
