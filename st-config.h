@@ -209,7 +209,9 @@ static Shortcut shortcuts[] = {
  * If you want keys other than the X11 function keys (0xFD00 - 0xFFFF)
  * to be mapped below, add them to this array.
  */
-static KeySym mappedkeys[] = { -1 };
+static KeySym mappedkeys[] = {
+	XK_space
+};
 
 /*
  * State bits to ignore when matching key or button events.  By default,
@@ -323,6 +325,9 @@ static Key key[] = {
 	{ XK_Right,         XK_ANY_MOD,     "\033OC",        0,   +1},
 	{ XK_ISO_Left_Tab,  ShiftMask,      "\033[Z",        0,    0},
 	{ XK_Return,        Mod1Mask,       "\033\r",        0,    0},
+	{ XK_Return,        ShiftMask,      "\033[13;2u",    0,    0},
+	{ XK_Return,     ShiftMask|Mod1Mask,"\033[13;4u",    0,    0},
+	{ XK_Return,        ControlMask,    "\033[13;5u",    0,    0},
 	{ XK_Return,        XK_ANY_MOD,     "\r",            0,    0},
 	{ XK_Insert,        ShiftMask,      "\033[4l",      -1,    0},
 	{ XK_Insert,        ShiftMask,      "\033[2;2~",    +1,    0},
@@ -439,6 +444,7 @@ static Key key[] = {
 	{ XK_F33,           XK_NO_MOD,      "\033[20;5~",    0,    0},
 	{ XK_F34,           XK_NO_MOD,      "\033[21;5~",    0,    0},
 	{ XK_F35,           XK_NO_MOD,      "\033[23;5~",    0,    0},
+	{ XK_space,         ShiftMask,      "\033[32;2u",    0,    0},
 };
 
 /*
