@@ -16,6 +16,8 @@
       temperature.night = 4700;
     };
 
+    xbanish.enable = true;
+
     xserver = (import ./xserver) pkgs;
   };
 }
