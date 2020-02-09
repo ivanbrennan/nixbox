@@ -50,5 +50,12 @@ self: super: {
     });
   };
 
+  st = super.st.overrideAttrs (old: {
+    src = self.fetchurl {
+      url = "https://github.com/ivanbrennan/st/archive/e47c9d1ccdce70b54d8f792d047edf03efac65d7.tar.gz";
+      sha256 = "1b5wzh7qpxnn0py53q13kc4sn2whxffh3j3dcgw89yp1jfbnqvsn";
+    };
+  });
+
   vln = super.callPackage ./vln { };
 }
