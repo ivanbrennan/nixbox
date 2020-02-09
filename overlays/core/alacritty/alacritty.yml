@@ -203,7 +203,7 @@ color_schemes:
     # If only text is unset the cell text color will remain the same.
     selection:
       text: '0xffffff'
-      background: '0x363f57'
+      background: '0x323848'
 
     # Normal colors
     normal:
