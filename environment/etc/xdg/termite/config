@@ -6,7 +6,7 @@
 #cell_width_scale = 1.0
 #clickable_url = true
 #dynamic_title = true
-font = Monospace 9
+font = Source Code Pro 14
 #fullscreen = true
 #icon_name = terminal
 #mouse_autohide = false
@@ -23,7 +23,7 @@ scrollback_lines = 10000
 #browser = xdg-open
 
 # "system", "on" or "off"
-#cursor_blink = system
+cursor_blink = off
 
 # "block", "underline" or "ibeam"
 #cursor_shape = block
@@ -41,37 +41,47 @@ scrollback_lines = 10000
 #scrollbar = off
 
 [colors]
-# If both of these are unset, cursor falls back to the foreground color,
-# and cursor_foreground falls back to the background color.
-#cursor = #dcdccc
-#cursor_foreground = #dcdccc
+highlight           = #2f2f2f
+foreground          = #d5d8dc
+foreground_bold     = #d5d8ec
+cursor              = #d2d8e3
+cursor_foreground   = #191e22
+background          = #181818
 
-#foreground = #dcdccc
-#foreground_bold = #ffffff
-#background = #3f3f3f
+# Normal colors
+# Black
+color0  = #181818
+# Red
+color1  = #de4d3a
+# Green
+color2  = #b8e068
+# Yellow
+color3  = #ebcb8b
+# Blue
+color4  = #61b3c9
+# Magenta
+color5  = #617fa0
+# Cyan
+color6  = #69d2e7
+# White
+color7  = #d5d8dc
 
-# 20% background transparency (requires a compositor)
-#background = rgba(63, 63, 63, 0.8)
-
-# If unset, will reverse foreground and background
-highlight = #2f2f2f
-
-# Colors from color0 to color254 can be set
-color0 = #3f3f3f
-color1 = #705050
-color2 = #60b48a
-color3 = #dfaf8f
-color4 = #506070
-color5 = #dc8cc3
-color6 = #8cd0d3
-color7 = #dcdccc
-color8 = #709080
-color9 = #dca3a3
-color10 = #c3bf9f
-color11 = #f0dfaf
-color12 = #94bff3
-color13 = #ec93d3
-color14 = #93e0e3
+# Bright colors
+# Black
+color8  = #303d4b
+# Red
+color9  = #f4718c
+# Green
+color10 = #d8e778
+# Yellow
+color11 = #f8bb39
+# Blue
+color12 = #a1b3c9
+# Magenta
+color13 = #53769d
+# Cyan
+color14 = #26a6a6
+# White
 color15 = #ffffff
 
 [hints]
