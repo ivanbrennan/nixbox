@@ -39,16 +39,18 @@ bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ to
 floating_modifier $mod
 
 # start a terminal
-# bindsym $mod+Return exec i3-sensible-terminal
-bindsym $mod+Return exec /nix/store/2n4gssz4v1b0rfzq4358kcxjbdshjxma-alacritty-0.3.3/bin/alacritty
+bindsym $mod+Return exec alacritty
 bindsym Mod1+Shift+n exec gnome-terminal
 
 # GOLD!
 bindsym Control+period workspace next
 bindsym Control+comma workspace prev
+bindsym $mod+n workspace next
+bindsym $mod+p workspace prev
 bindsym Control+semicolon focus right
+bindsym Mod1+Tab focus right
 # bindsym Control+quote (??? iterate through windows?)
-bindsym Mod1+Return fullscreen toggle
+bindsym Mod1+Shift+Return fullscreen toggle
 
 bindsym Control+Mod1+h focus left
 bindsym Control+Mod1+j focus down
@@ -59,8 +61,7 @@ bindsym Control+Mod1+l focus right
 bindsym $mod+Shift+q kill
 
 # start dmenu (a program launcher)
-# bindsym $mod+d exec dmenu_run
-bindsym Mod1+space exec j4-dmenu-desktop
+bindsym Mod1+space exec dmenu_run
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
 # installed.
@@ -90,9 +91,9 @@ bindsym $mod+Shift+Down move down
 bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
 
-bindsym $mod+b split vertical; exec /nix/store/2n4gssz4v1b0rfzq4358kcxjbdshjxma-alacritty-0.3.3/bin/alacritty
+bindsym $mod+b split vertical; exec alacritty
 
-bindsym $mod+v split horizontal; exec /nix/store/2n4gssz4v1b0rfzq4358kcxjbdshjxma-alacritty-0.3.3/bin/alacritty
+bindsym $mod+v split horizontal; exec alacritty
 
 # enter fullscreen mode for the focused container
 # TODO: $mod+Up?
