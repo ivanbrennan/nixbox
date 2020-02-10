@@ -73,7 +73,6 @@ with pkgs; [
   stack-1_9_3
   stow
   tcpdump
-  termite
   tmux
   tree
   universal-ctags
