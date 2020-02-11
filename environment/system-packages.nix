@@ -42,6 +42,7 @@ with pkgs; [
   htop
   imagemagick
   jq
+  kitty
   kubectl
   kubernetes-helm-2_11
   lastpass-cli
