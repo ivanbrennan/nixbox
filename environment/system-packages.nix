@@ -65,7 +65,7 @@ with pkgs; [
   qbittorrent
   redis
   ripgrep
-  rxvt_unicode
+  rxvt_unicode-with-plugins
   shellcheck
   slack
   socat
