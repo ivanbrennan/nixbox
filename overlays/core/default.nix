@@ -50,6 +50,16 @@ self: super: {
     });
   };
 
+  rxvt_unicode = super.rxvt_unicode.overrideAttrs (old: {
+    version = "2020-02-12";
+    src = super.fetchcvs {
+      cvsRoot = ":pserver:anonymous@cvs.schmorp.de/schmorpforge";
+      module = "rxvt-unicode";
+      date = "2020-02-12";
+      sha256 = "0n8z3c8fb1pqph09fnl9msswdw2wqm84xm5kaax6nf514gg05dpx";
+    };
+  });
+
   st = super.st.overrideAttrs (old: {
     src = self.fetchurl {
       url = "https://github.com/ivanbrennan/st/archive/e47c9d1ccdce70b54d8f792d047edf03efac65d7.tar.gz";
