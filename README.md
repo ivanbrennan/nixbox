@@ -31,7 +31,6 @@ Try some window managers
   - gtk themes?
   - configure urxvt and/or alacritty
   - configure i3 hjkl
-  - xcape stopped working?
   - alt+c alt+v copy/paste
 - [Openbox](http://openbox.org/wiki/Main_Page)
 - [XMonad](http://xmonad.org)
