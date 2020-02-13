@@ -26,11 +26,11 @@ export LESS_TERMCAP_md=$'\e[1;37m' \
        MANPAGER="less -s" \
        GROFF_NO_SGR=1
 
-if [[ "${TERM-}" == 'rxvt-unicode-256color' ]]
+if [[ "${TERM-}" == 'rxvt-unicode-256color' ]] || [[ -n "${TMUX-}" ]]
 then
-    # Get mouse/trackpad scrolling to work inside less for urxvt.
-    # This solution is not as responsive as that provided by other means
-    # in other terminals (e.g. alacritty), so only apply it for urxvt.
+    # Some terminals (e.g. alacritty) provide more responsive solutions
+    # to scrolling inside less, so we only apply this solution in cases
+    # where scrolling would be otherwise unavailable.
     export LESS="--mouse --wheel-lines=3"
 fi
 
