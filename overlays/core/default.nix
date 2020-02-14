@@ -60,6 +60,21 @@ self: super: {
     };
   });
 
+  urxvt_perls = super.urxvt_perls.overrideAttrs (old: rec {
+    name = "urxvt-perls-${version}";
+    version = "2.3";
+    src = super.fetchFromGitHub {
+      owner = "muennich";
+      repo = "urxvt-perls";
+      rev = version;
+      sha256 = "0xvwfw7965ghhd9g6rl6y6fgpd444l46rjqmlgg0rfjypbh6c0p1";
+    };
+    installPhase = ''
+      mkdir -p $out/lib/urxvt/perl
+      cp keyboard-select $out/lib/urxvt/perl
+    '';
+  });
+
   st = super.st.overrideAttrs (old: {
     src = self.fetchurl {
       url = "https://github.com/ivanbrennan/st/archive/e47c9d1ccdce70b54d8f792d047edf03efac65d7.tar.gz";
