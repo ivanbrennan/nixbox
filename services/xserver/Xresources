@@ -1,43 +1,64 @@
-urxvt*scrollBar: False
-urxvt*saveLines: 3200
-urxvt*font: xft:Source Code Pro:size=14
-urxvt*boldFont: xft:Source Code Pro:style=Bold:size=14
+Xft.dpi:       96
+Xft.antialias: true
+Xft.hinting:   true
+Xft.rgba:      rgb
+Xft.autohint:  false
+Xft.hintstyle: hintslight
+Xft.lcdfilter: lcddefault
+
+URxvt.scrollBar: False
+URxvt.saveLines: 8192
+URxvt.font:      xft:Source Code Pro:size=14
+URxvt.boldFont:  xft:Source Code Pro:style=Bold:size=14
+URxvt.fading:    2
+! perl extensions
+URxvt.perl-ext-common: readline,searchable-scrollback,keyboard-select,font-size
+URxvt.keysym.M-s:       searchable-scrollback:start
+URxvt.keysym.M-S-space: keyboard-select:activate
+URxvt.keysym.M-slash:   keyboard-select:search
+URxvt.keyboard-select.clipboard: true
+URxvt.keysym.C-plus:  builtin:
+URxvt.keysym.C-equal: font-size:increase
+URxvt.keysym.C-minus: font-size:decrease
+URxvt.keysym.C-0:     font-size:reset
+! extended modifiers
+URxvt.keysym.S-Return:   \033[13;2u
+URxvt.keysym.M-S-Return: \033[13;4u
+URxvt.keysym.C-Return:   \033[13;5u
+URxvt.keysym.S-space:    \033[32;2u
+URxvt.keysym.S-C-space:  \033[32;6u
+URxvt.keysym.C-comma:    \033[44;5u
+URxvt.keysym.C-period:   \033[46;5u
 
 ! special
 *.foreground: #d5d8dc
 *.background: #181818
-*.cursorColor: #d2d8e3
+*.cursorColor:  #d2d8e3
+*.cursorColor2: #191e22
+*.highlightColor: #323848
+*.highlightTextColor: #ffffff
 
 ! Black
 *color0:   #181818
 *color8:   #303d4b
-
 ! Red
 *color1:   #de4d3a
 *color9:   #f4718c
-
 ! Green
 *color2:   #b8e068
 *color10:  #d8e778
-
 ! Yellow
 *color3:   #ebcb8b
 *color11:  #f8bb39
-
 ! Blue
 *color4:   #61b3c9
 *color12:  #a1b3c9
-
 ! Magneta
 *color5:   #617fa0
 *color13:  #53769d
-
 ! Cyan
 *color6:   #69d2e7
 *color14:  #26a6a6
-
 ! White
 *color7:   #d5d8dc
 *color15:  #ffffff
-
-*colorTest: #49555C
