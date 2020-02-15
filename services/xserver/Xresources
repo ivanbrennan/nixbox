@@ -79,3 +79,6 @@ URxvt.keysym.M-Down:     \033[1;3B
 ! White
 *color7:   #d5d8dc
 *color15:  #ffffff
+
+! test i3 set_from_resource
+*colorTest: #39454C
