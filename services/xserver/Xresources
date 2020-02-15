@@ -49,7 +49,7 @@ URxvt.keysym.C-period:   \033[46;5u
 *color10:  #d8e778
 ! Yellow
 *color3:   #ebcb8b
-*color11:  #f8bb39
+*color11:  #f7c352
 ! Blue
 *color4:   #61b3c9
 *color12:  #a1b3c9

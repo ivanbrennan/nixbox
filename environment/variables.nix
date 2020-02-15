@@ -18,7 +18,7 @@ pkgs:
     --exact
     --color=fg+:#c4d5e5
     --color=bg+:#222222
-    --color=hl+:#f8bb39
+    --color=hl+:#f7c352
     --color=hl:#26a6a6
     --color=info:#48778b
     --color=marker:#bbe068
