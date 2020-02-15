@@ -86,5 +86,6 @@ with pkgs; [
   weechat
   wget
   xsel
+  xclip
   zip
 ]
