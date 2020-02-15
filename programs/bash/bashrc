@@ -42,6 +42,10 @@ ghcWithPackages() {
         --run ghci
 }
 
+nix-revision() {
+    cat $(grep -oP '\bnixpkgs=\K[^:]+' <<< "$NIX_PATH")/.git-revision
+}
+
 ppath() {
   col_bold="\033[30;01m"
   col_reset="\033[39;49;00m"
