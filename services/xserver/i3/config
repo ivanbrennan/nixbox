@@ -39,9 +39,9 @@ bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ to
 floating_modifier $mod
 
 # Take a screenshot
-bindsym --release Print exec --no-startup-id "systemctl --user stop xbanish.service ; mkdir -p \\"$HOME/Pictures\\" && import \\"$HOME/Pictures/screenshot_$(date +%F_%T).png\\" ; systemctl --user start xbanish.service"
-bindsym --release Shift+Print exec --no-startup-id "systemctl --user stop xbanish.service ; mkdir -p \\"$HOME/Pictures\\" && import -window root \\"$HOME/Pictures/screenshot_$(date +%F_%T).png\\" ; systemctl --user start xbanish.service"
-bindsym --release Control+Print exec --no-startup-id "systemctl --user stop xbanish.service ; import png:- | xclip -selection clipboard -target image/png ; systemctl --user start xbanish.service"
+bindsym --release Print exec --no-startup-id screenshot
+bindsym --release Shift+Print exec --no-startup-id "screenshot root"
+bindsym --release Control+Print exec --no-startup-id "screenshot clip"
 
 # start a terminal
 bindsym $mod+Return exec alacritty

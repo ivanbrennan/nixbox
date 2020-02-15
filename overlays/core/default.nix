@@ -75,6 +75,8 @@ self: super: {
     '';
   });
 
+  screenshot = super.callPackage ./screenshot { };
+
   st = super.st.overrideAttrs (old: {
     src = self.fetchurl {
       url = "https://github.com/ivanbrennan/st/archive/e47c9d1ccdce70b54d8f792d047edf03efac65d7.tar.gz";

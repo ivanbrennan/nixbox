@@ -66,6 +66,7 @@ with pkgs; [
   redis
   ripgrep
   rxvt_unicode-with-plugins
+  screenshot
   shellcheck
   slack
   socat
