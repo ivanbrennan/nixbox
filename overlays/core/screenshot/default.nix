@@ -1,6 +1,5 @@
 { coreutils
-, imagemagick
-, slop
+, maim
 , writeShellScriptBin
 , xclip
 }:
@@ -8,27 +7,30 @@
 writeShellScriptBin "screenshot" ''
   set -eu
 
-  if [[ "''${1-}" == 'root' ]]
+  all=false
+  clip=false
+
+  while getopts "ac" opt
+  do
+      case "$opt" in
+          a) all=true  ;;
+          c) clip=true ;;
+          *) exit 1    ;;
+      esac
+  done
+
+  if "$all"
   then
-      crop=""
+      shoot="${maim}/bin/maim"
   else
-      slop=$(${slop}/bin/slop --format="%g") || exit 1
-      read -r G < <(echo $slop)
-      crop="-crop $G"
+      shoot="${maim}/bin/maim --select"
   fi
 
-  if [[ "''${1-}" == 'clip' ]]
+  if "$clip"
   then
-      ${imagemagick}/bin/import \
-          -window root \
-          $crop \
-          png:- \
-          | ${xclip}/bin/xclip -selection clipboard -target image/png
+      $shoot | ${xclip}/bin/xclip -selection clipboard -target image/png
   else
       mkdir -p ~/Pictures
-      ${imagemagick}/bin/import \
-          -window root \
-          $crop \
-          ~/Pictures/screenshot_$(${coreutils}/bin/date +%F_%T).png
+      $shoot ~/Pictures/screenshot.$(${coreutils}/bin/date +%s).png
   fi
 ''
