@@ -6,6 +6,7 @@ general {
         color_degraded = "#FFBB49"
         color_bad = "#FE3D2A"
         interval = 5
+        markup = "pango"
 }
 
 order += "disk /"
@@ -15,10 +16,11 @@ order += "wireless _first_"
 order += "ethernet _first_"
 order += "battery all"
 order += "volume master"
+order += "tztime date"
 order += "tztime local"
 
 wireless _first_ {
-        format_up = " %essid"
+        format_up = " %essid"
         format_down = ""
 }
 
@@ -35,10 +37,10 @@ path_exists VPN {
 
 battery all {
         format = "%status %percentage"
-        status_chr = ""
+        status_chr = ""
         status_bat = ""
-        status_unk = ""
-        status_full = ""
+        status_unk = "  "
+        status_full = " "
         last_full_capacity = true
         hide_seconds = true
         integer_battery_capacity = true
@@ -46,16 +48,23 @@ battery all {
         threshold_type = percentage
 }
 
+tztime date {
+        format = "%Y-%m-%d"
+}
+
 tztime local {
-        format = "%Y-%m-%d %l:%M "
+        format = "<span foreground='#C1F0F7'>%time</span> "
+        format_time = "%l:%M"
 }
 
 load {
-        format = "%1min"
+        format                 = "<span foreground='#787888'>%1min</span>"
+        format_above_threshold = "<span foreground='#FFBB49'>%1min</span>"
 }
 
 disk "/" {
-        format = "%avail"
+        format                 = "<span foreground='#787888'>%avail</span>"
+        format_below_threshold = "<span foreground='#FE3D2A'>%avail</span>"
         low_threshold = 8
         threshold_type = gbytes_avail
         prefix_type = binary
@@ -63,6 +72,6 @@ disk "/" {
 
 volume master {
         device = "pulse"
-        format = " %volume"
-        format_muted = "   %volume"
+        format       = "<span foreground='#7F7F88'> %volume</span>"
+        format_muted = "<span foreground='#787888'>   %volume</span>"
 }

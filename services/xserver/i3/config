@@ -206,8 +206,8 @@ bar {
     font pango:monospace 10
     colors {
         background #121212
-        statusline #e8e8e8
-        separator #666666
+        statusline #a8b8b8
+        separator #444444
 
         focused_workspace  #3c6666 #283355 #ffffff
         active_workspace   #333333 #5f676a #ffffff
