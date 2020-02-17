@@ -25,6 +25,7 @@ with pkgs; [
   easyrsa
   emacs
   fd
+  feh
   file
   flac
   flaccurate
