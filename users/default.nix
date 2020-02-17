@@ -6,6 +6,7 @@
       createHome = true;
       home = "/home/ivan";
       extraGroups = [
+        "dialout"
         "docker"
         "networkmanager"
         "vboxusers"
