@@ -29,6 +29,8 @@ pkgs:
     '';
   };
 
+  displayManager.lightdm.background = "#112026";
+
   displayManager.sessionCommands = ''
     ${pkgs.xorg.xrdb}/bin/xrdb -merge < ${./Xresources}
 
@@ -37,7 +39,7 @@ pkgs:
     # https://github.com/NixOS/nixpkgs/pull/49492#issuecomment-579311286
     if ! [ -e $HOME/.background-image ]
     then
-        cp ${pkgs.nice-backgrounds}/share/backgrounds/gnome/Godafoss_Iceland.jpg \
+        cp ${pkgs.nice-backgrounds}/share/backgrounds/gnome/solid-112026.png \
         $HOME/.background-image
     fi
   '';
