@@ -22,14 +22,16 @@ pkgs:
   # i3
   windowManager.i3 = {
     enable = true;
-    configFile = i3/config;
+    # configFile = i3/config;
     extraSessionCommands = ''
       eval $(gnome-keyring-daemon --daemonize)
       export SSH_AUTH_SOCK
     '';
   };
 
-  displayManager.lightdm.background = "#112026";
+  displayManager.lightdm.background = ''
+    ${pkgs.nice-backgrounds}/share/backgrounds/gnome/snow-and-sky.jpg
+  '';
 
   displayManager.sessionCommands = ''
     ${pkgs.xorg.xrdb}/bin/xrdb -merge < ${./Xresources}
