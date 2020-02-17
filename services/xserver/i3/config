@@ -100,9 +100,8 @@ bindsym $mod+Shift+Down move down
 bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
 
-bindsym $mod+b split vertical; exec alacritty
-
-bindsym $mod+v split horizontal; exec alacritty
+bindsym $mod+b split vertical
+bindsym $mod+v split horizontal
 
 # enter fullscreen mode for the focused container
 # TODO: $mod+Up?
