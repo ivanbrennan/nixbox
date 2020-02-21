@@ -18,17 +18,22 @@ stdenv.mkDerivation {
   ];
 
   installPhase = ''
-    install -D -m644 $src/backgrounds/Godafoss_Iceland.jpg \
-      $out/share/backgrounds/gnome/Godafoss_Iceland.jpg
+    images=(
+      Godafoss_Iceland.jpg
+      lookup.jpg
+      moscow-subway.jpg
+      mountains.jpg
+      owl-eye.jpg
+      snow-and-sky.jpg
+      solid-0B1F27.png
+      solid-112026.png
+    )
 
-    install -D -m644 $src/backgrounds/snow-and-sky.jpg \
-      $out/share/backgrounds/gnome/snow-and-sky.jpg
-
-    install -D -m644 $src/backgrounds/solid-0B1F27.png \
-      $out/share/backgrounds/gnome/solid-0B1F27.png
-
-    install -D -m644 $src/backgrounds/solid-112026.png \
-      $out/share/backgrounds/gnome/solid-112026.png
+    for img in ''${images[@]}
+    do
+        install -D -m644 $src/backgrounds/$img \
+          $out/share/backgrounds/gnome/$img
+    done
   '';
 
   meta = {

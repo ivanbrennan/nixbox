@@ -30,8 +30,10 @@ pkgs:
   };
 
   displayManager.lightdm.background = ''
-    ${pkgs.nice-backgrounds}/share/backgrounds/gnome/snow-and-sky.jpg
+    ${pkgs.nice-backgrounds}/share/backgrounds/gnome/moscow-subway.jpg
   '';
+    # ${pkgs.nice-backgrounds}/share/backgrounds/gnome/owl-eye.jpg
+    # ${pkgs.nice-backgrounds}/share/backgrounds/gnome/lookup.jpg
 
   displayManager.sessionCommands = ''
     ${pkgs.xorg.xrdb}/bin/xrdb -merge < ${./Xresources}
