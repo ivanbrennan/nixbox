@@ -32,6 +32,7 @@ then
     # to scrolling inside less, so we only apply this solution in cases
     # where scrolling would be otherwise unavailable.
     export LESS="--mouse --wheel-lines=3"
+    # NOTE: does this break mouse selection in less?
 fi
 
 complete -F _tmux t
