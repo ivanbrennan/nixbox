@@ -18,6 +18,7 @@ pkgs:
 
   # Gnome desktop
   desktopManager.gnome3.enable = true;
+  desktopManager.default = "none";
 
   # i3
   windowManager.i3 = {
