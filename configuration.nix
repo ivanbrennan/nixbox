@@ -88,7 +88,8 @@
   };
 
   fonts.fonts = [
-    pkgs.source-code-pro
     pkgs.emacs-all-the-icons-fonts
+    pkgs.open-sans
+    pkgs.source-code-pro
   ];
 }
