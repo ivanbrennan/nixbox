@@ -41,6 +41,8 @@ bindsym XF86MonBrightnessDown exec light -U 10
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
+bindsym $mod+z exec "i3lock --color=1d1d1d"
+
 # Take a screenshot
 bindsym --release Print               exec --no-startup-id screenshot
 bindsym --release Control+Print       exec --no-startup-id "screenshot -c"
