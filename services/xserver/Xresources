@@ -6,6 +6,9 @@ Xft.autohint:  false
 Xft.hintstyle: hintslight
 Xft.lcdfilter: lcddefault
 
+xterm*faceName: Source Code Pro
+xterm*faceSize: 14
+
 URxvt.scrollBar:         false
 URxvt.saveLines:         8192
 URxvt.font:              xft:Source Code Pro:size=14, \
