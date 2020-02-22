@@ -16,11 +16,12 @@ pkgs:
     naturalScrolling = true;
   };
 
-  # Gnome desktop
+  # desktopManager
   desktopManager.gnome3.enable = true;
+  desktopManager.xterm.enable = false;
   desktopManager.default = "none";
 
-  # i3
+  # windowManager
   windowManager.i3 = {
     enable = true;
     configFile = i3/config;
