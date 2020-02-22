@@ -22,7 +22,7 @@ pkgs:
   # i3
   windowManager.i3 = {
     enable = true;
-    # configFile = i3/config;
+    configFile = i3/config;
     extraSessionCommands = ''
       eval $(gnome-keyring-daemon --daemonize)
       export SSH_AUTH_SOCK
