@@ -49,7 +49,7 @@ bindsym --release Control+Shift+Print exec --no-startup-id "screenshot -a -c"
 
 # start a terminal
 bindsym $mod+Return exec alacritty
-bindsym Mod1+Shift+n exec gnome-terminal
+bindsym Mod1+Shift+n exec alacritty
 
 # GOLD!
 bindsym Control+period workspace next
