@@ -22,13 +22,20 @@ pkgs:
   desktopManager.default = "none";
 
   # windowManager
-  windowManager.i3 = {
-    enable = true;
-    configFile = i3/config;
-    extraSessionCommands = ''
-      eval $(gnome-keyring-daemon --daemonize)
-      export SSH_AUTH_SOCK
-    '';
+  windowManager = {
+    i3 = {
+      enable = true;
+      configFile = i3/config;
+      extraSessionCommands = ''
+        eval $(gnome-keyring-daemon --daemonize)
+        export SSH_AUTH_SOCK
+      '';
+    };
+
+    xmonad = {
+      enable = true;
+      enableContribAndExtras = true;
+    };
   };
 
   displayManager.lightdm.background = ''
