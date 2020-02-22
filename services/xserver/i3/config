@@ -59,7 +59,8 @@ bindsym $mod+p workspace prev
 bindsym Control+semicolon focus right
 bindsym Mod1+Tab focus right
 # bindsym Control+quote (??? iterate through windows?)
-bindsym Mod1+Shift+Return fullscreen toggle
+bindsym $mod+period fullscreen toggle
+bindsym Mod1+Shift+greater fullscreen toggle
 
 bindsym Control+Mod1+h focus left
 bindsym Control+Mod1+j focus down
