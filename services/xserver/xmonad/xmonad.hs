@@ -217,7 +217,7 @@ defaults = def {
         clickJustFocuses   = False,
         borderWidth        = 1,
         modMask            = myModMask,
-        workspaces         = ["1","2","3","4","5","6","7","8","9"],
+        workspaces         = map show [1..9],
         normalBorderColor  = "#222222",
         focusedBorderColor = "#4C4950",
 
