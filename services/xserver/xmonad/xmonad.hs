@@ -5,16 +5,6 @@ import System.Exit
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
--- modMask lets you specify which modkey you want to use. The default
--- is mod1Mask ("left alt").  You may also consider using mod3Mask
--- ("right alt"), which does not conflict with emacs keybindings. The
--- "windows key" is usually mod4Mask.
---
-defaultModMask = mod1Mask
-
-------------------------------------------------------------------------
--- Key bindings. Add, modify or remove key bindings here.
---
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- launch a terminal
@@ -216,10 +206,10 @@ defaults = def {
         focusFollowsMouse  = True,
         clickJustFocuses   = False,
         borderWidth        = 1,
-        modMask            = defaultModMask,
+        modMask            = mod1Mask,
         workspaces         = map show [1..9],
-        normalBorderColor  = "#222222",
-        focusedBorderColor = "#4C4950",
+        normalBorderColor  = "gray13", -- "#212121"
+        focusedBorderColor = "gray29", -- "#4A4A4A"
 
       -- key bindings
         keys               = myKeys,
