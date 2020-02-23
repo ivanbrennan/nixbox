@@ -10,7 +10,7 @@ myKeys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- launch/kill
     [ ((modm .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf)
-    , ((modm,               xK_space ), spawn "dmenu_run")
+    , ((modm,               xK_space ), spawn "dmenu_run -fn monospace:size=12 -l 16 -i -nb '#1c1c1c' -nf '#a5adb7' -sb '#1f1f1f' -sf '#c8f5ff'")
     , ((modm .|. shiftMask, xK_d     ), kill)
 
     -- layout algorithms
