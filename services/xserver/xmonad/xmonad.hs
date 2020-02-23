@@ -24,7 +24,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm,               xK_space ), spawn "dmenu_run")
 
     -- close focused window
-    , ((modm .|. shiftMask, xK_c     ), kill)
+    , ((modm .|. shiftMask, xK_d     ), kill)
 
     -- Rotate through the available layout algorithms
     , ((modm .|. shiftMask, xK_space ), sendMessage NextLayout)
