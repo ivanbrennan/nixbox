@@ -10,7 +10,7 @@ import qualified Data.Map        as M
 -- ("right alt"), which does not conflict with emacs keybindings. The
 -- "windows key" is usually mod4Mask.
 --
-myModMask       = mod1Mask
+defaultModMask = mod1Mask
 
 ------------------------------------------------------------------------
 -- Key bindings. Add, modify or remove key bindings here.
@@ -216,7 +216,7 @@ defaults = def {
         focusFollowsMouse  = True,
         clickJustFocuses   = False,
         borderWidth        = 1,
-        modMask            = myModMask,
+        modMask            = defaultModMask,
         workspaces         = map show [1..9],
         normalBorderColor  = "#222222",
         focusedBorderColor = "#4C4950",
