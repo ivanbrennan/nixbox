@@ -26,7 +26,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- close focused window
     , ((modm .|. shiftMask, xK_c     ), kill)
 
-     -- Rotate through the available layout algorithms
+    -- Rotate through the available layout algorithms
     , ((modm .|. shiftMask, xK_space ), sendMessage NextLayout)
 
     -- Resize viewed windows to the correct size
