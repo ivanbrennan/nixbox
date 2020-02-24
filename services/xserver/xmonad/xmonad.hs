@@ -1,14 +1,30 @@
 import XMonad
-import Data.Monoid
-import System.Exit
+    (ChangeLayout(NextLayout), IncMasterN(IncMasterN), Layout, ManageHook, Resize(Expand, Shrink),
+     X, XConfig(XConfig), (=?), (-->), className, clickJustFocuses, composeAll, doFloat, doIgnore,
+     focusedBorderColor, handleEventHook, io, keys, kill, logHook, manageHook, modMask, normalBorderColor,
+     resource, screenWorkspace, sendMessage, spawn, startupHook, terminal, whenJust, windows, withFocused,
+     workspaces, xmonad
+    )
+import XMonad.StackSet
+    (focusDown, focusUp, focusMaster, shift, swapMaster, swapDown, swapUp, sink, greedyView, view
+    )
+import Graphics.X11
+    (KeyMask, KeySym, shiftMask, xK_1, xK_9, xK_d, xK_e, xK_h, xK_j, xK_k, xK_l, xK_m, xK_r, xK_t,
+     xK_w, xK_q, xK_Return, xK_Tab, xK_comma, xK_period, xK_space
+    )
+import Graphics.X11.Xlib.Extras (Event)
+import Data.Bits ((.|.))
+import Data.Default (def)
+import Data.Monoid (All)
+import System.Exit (ExitCode(ExitSuccess), exitWith)
 
-import qualified XMonad.StackSet as W
-import qualified Data.Map        as M
+import qualified Data.Map as M
+
 
 myKeys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
-myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
+myKeys conf@(XConfig {modMask = modm}) = M.fromList $
     -- launch/kill
-    [ ((modm .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf)
+    [ ((modm .|. shiftMask, xK_Return), spawn $ terminal conf)
     , ((modm,               xK_space ), spawn "dmenu_run -fn monospace:size=12 -l 16 -i -nb '#1c1c1c' -nf '#a5adb7' -sb '#1f1f1f' -sf '#c8f5ff'")
     , ((modm .|. shiftMask, xK_d     ), kill)
 
@@ -16,22 +32,22 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. shiftMask, xK_space ), sendMessage NextLayout)
 
     -- focus
-    , ((modm,               xK_Tab   ), windows W.focusDown)
-    , ((modm,               xK_j     ), windows W.focusDown)
-    , ((modm,               xK_k     ), windows W.focusUp  )
-    , ((modm,               xK_m     ), windows W.focusMaster)
+    , ((modm,               xK_Tab   ), windows focusDown)
+    , ((modm,               xK_j     ), windows focusDown)
+    , ((modm,               xK_k     ), windows focusUp  )
+    , ((modm,               xK_m     ), windows focusMaster)
 
     -- swap
-    , ((modm,               xK_Return), windows W.swapMaster)
-    , ((modm .|. shiftMask, xK_j     ), windows W.swapDown  )
-    , ((modm .|. shiftMask, xK_k     ), windows W.swapUp    )
+    , ((modm,               xK_Return), windows swapMaster)
+    , ((modm .|. shiftMask, xK_j     ), windows swapDown  )
+    , ((modm .|. shiftMask, xK_k     ), windows swapUp    )
 
     -- resize
     , ((modm,               xK_h     ), sendMessage Shrink)
     , ((modm,               xK_l     ), sendMessage Expand)
 
     -- tile
-    , ((modm,               xK_t     ), withFocused $ windows . W.sink)
+    , ((modm,               xK_t     ), withFocused $ windows . sink)
 
     -- increment/decrement master area
     , ((modm .|. shiftMask, xK_comma ), sendMessage (IncMasterN 1))
@@ -51,8 +67,8 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- mod-[1..9], Switch to workspace N
     -- mod-shift-[1..9], Move client to workspace N
     [ ((m .|. modm, k), windows $ f i)
-      | (i, k) <- zip (XMonad.workspaces conf) [xK_1..xK_9]
-      , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]
+      | (i, k) <- zip (workspaces conf) [xK_1..xK_9]
+      , (f, m) <- [(greedyView, 0), (shift, shiftMask)]
     ]
     ++
     -- mod-{w,e,r}, Switch to physical/Xinerama screens 1, 2, or 3
@@ -60,7 +76,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     --
     [ ((m .|. modm, key), screenWorkspace sc >>= flip whenJust (windows . f))
       | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
-      , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]
+      , (f, m) <- [(view, 0), (shift, shiftMask)]
     ]
 
 ------------------------------------------------------------------------
@@ -78,6 +94,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 -- To match on the WM_NAME, you can use 'title' in the same way that
 -- 'className' and 'resource' are used below.
 --
+myManageHook :: ManageHook
 myManageHook = composeAll
     [ className =? "vlc"            --> doFloat
     , resource  =? "desktop_window" --> doIgnore
@@ -92,6 +109,7 @@ myManageHook = composeAll
 -- return (All True) if the default handler is to be run afterwards. To
 -- combine event hooks use mappend or mconcat from Data.Monoid.
 --
+myEventHook :: Event -> X All
 myEventHook = mempty
 
 ------------------------------------------------------------------------
@@ -100,7 +118,8 @@ myEventHook = mempty
 -- Perform an arbitrary action on each internal state change or X event.
 -- See the 'XMonad.Hooks.DynamicLog' extension for examples.
 --
-myLogHook = return ()
+myLogHook :: X ()
+myLogHook = pure ()
 
 ------------------------------------------------------------------------
 -- Startup hook
@@ -110,14 +129,13 @@ myLogHook = return ()
 -- per-workspace layout choices.
 --
 -- By default, do nothing.
-myStartupHook = return ()
+myStartupHook :: X ()
+myStartupHook = pure ()
 
-------------------------------------------------------------------------
--- Now run xmonad with all the defaults we set up.
 
--- Run xmonad with the settings you specify. No need to modify this.
---
+main :: IO ()
 main = xmonad defaults
+
 
 defaults = def
     { terminal           = "alacritty"
