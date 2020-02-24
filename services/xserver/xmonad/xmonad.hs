@@ -1,16 +1,18 @@
 import XMonad
-    (ChangeLayout(NextLayout), IncMasterN(IncMasterN), Layout, ManageHook, Resize(Expand, Shrink),
-     X, XConfig(XConfig), (=?), (-->), className, clickJustFocuses, composeAll, doFloat, doIgnore,
-     focusedBorderColor, handleEventHook, io, keys, kill, logHook, manageHook, modMask, normalBorderColor,
-     resource, screenWorkspace, sendMessage, spawn, startupHook, terminal, whenJust, windows, withFocused,
-     workspaces, xmonad
+    (ChangeLayout(NextLayout), Choose, Full, IncMasterN(IncMasterN), Layout,
+     ManageHook, Mirror, Resize(Expand, Shrink), Tall, X, XConfig(XConfig),
+     (=?), (-->), className, clickJustFocuses, composeAll, doFloat, doIgnore,
+     focusedBorderColor, handleEventHook, io, keys, kill, logHook, manageHook,
+     modMask, normalBorderColor, resource, screenWorkspace, sendMessage, spawn,
+     startupHook, terminal, whenJust, windows, withFocused, workspaces, xmonad
     )
 import XMonad.StackSet
-    (focusDown, focusUp, focusMaster, shift, swapMaster, swapDown, swapUp, sink, greedyView, view
+    (focusDown, focusUp, focusMaster, shift, swapMaster, swapDown, swapUp,
+     sink, greedyView, view
     )
 import Graphics.X11
-    (KeyMask, KeySym, shiftMask, xK_1, xK_9, xK_d, xK_e, xK_h, xK_j, xK_k, xK_l, xK_m, xK_r, xK_t,
-     xK_w, xK_q, xK_Return, xK_Tab, xK_comma, xK_period, xK_space
+    (KeyMask, KeySym, shiftMask, xK_1, xK_9, xK_d, xK_e, xK_h, xK_j, xK_k, xK_l,
+     xK_m, xK_r, xK_t, xK_w, xK_q, xK_Return, xK_Tab, xK_comma, xK_period, xK_space
     )
 import Graphics.X11.Xlib.Extras (Event)
 import Data.Bits ((.|.))
@@ -137,6 +139,7 @@ main :: IO ()
 main = xmonad defaults
 
 
+defaults :: XConfig (Choose Tall (Choose (Mirror Tall) Full))
 defaults = def
     { terminal           = "alacritty"
     , clickJustFocuses   = False
