@@ -35,8 +35,8 @@ import qualified Data.Map as M
 -- https://hackage.haskell.org/package/xmonad-contrib-0.16/docs/XMonad-Util-Paste.html
 -- https://stackoverflow.com/questions/6605399/how-can-i-set-an-action-to-occur-on-a-key-release-in-xmonad
 
-myKeys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
-myKeys conf@(XConfig {modMask}) = M.fromList $
+keys' :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
+keys' conf@(XConfig {modMask}) = M.fromList $
     -- launch/kill
     [ ((modShiftMask,       xK_Return), spawn $ terminal conf)
     , ((modMask,            xK_space ), spawn "dmenu_run -fn monospace:size=12 -l 16 -i -nb '#1c1c1c' -nf '#a5adb7' -sb '#1f1f1f' -sf '#c8f5ff'")
@@ -117,8 +117,8 @@ myKeys conf@(XConfig {modMask}) = M.fromList $
 -- To match on the WM_NAME, you can use 'title' in the same way that
 -- 'className' and 'resource' are used below.
 --
-myManageHook :: ManageHook
-myManageHook = composeAll
+manageHook' :: ManageHook
+manageHook' = composeAll
     [ className =? "vlc"            --> doFloat
     , resource  =? "desktop_window" --> doIgnore
     , manageDocks
@@ -133,8 +133,8 @@ myManageHook = composeAll
 -- return (All True) if the default handler is to be run afterwards. To
 -- combine event hooks use mappend or mconcat from Data.Monoid.
 --
-myEventHook :: Event -> X All
-myEventHook = mempty
+eventHook :: Event -> X All
+eventHook = mempty
 
 ------------------------------------------------------------------------
 -- Status bars and logging
@@ -142,8 +142,8 @@ myEventHook = mempty
 -- Perform an arbitrary action on each internal state change or X event.
 -- See the 'XMonad.Hooks.DynamicLog' extension for examples.
 --
-myLogHook :: Handle -> X ()
-myLogHook xmobarProc =
+logHook' :: Handle -> X ()
+logHook' xmobarProc =
     dynamicLogWithPP xmobarPP
         { ppOutput = hPutStrLn xmobarProc
         , ppTitle = xmobarColor "green" "" . shorten 50
@@ -157,8 +157,8 @@ myLogHook xmobarProc =
 -- per-workspace layout choices.
 --
 -- By default, do nothing.
-myStartupHook :: X ()
-myStartupHook = pure ()
+startupHook' :: X ()
+startupHook' = pure ()
 
 
 layout
@@ -185,9 +185,9 @@ main = do
         , clickJustFocuses   = False
         , normalBorderColor  = "gray13" -- "#212121"
         , focusedBorderColor = "gray29" -- "#4A4A4A"
-        , keys               = myKeys
-        , manageHook         = myManageHook
-        , handleEventHook    = myEventHook
-        , logHook            = myLogHook xmobarProc
-        , startupHook        = myStartupHook
+        , keys               = keys'
+        , manageHook         = manageHook'
+        , handleEventHook    = eventHook
+        , logHook            = logHook' xmobarProc
+        , startupHook        = startupHook'
         }
