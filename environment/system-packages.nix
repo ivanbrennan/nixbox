@@ -1,7 +1,7 @@
 pkgs:
 
 with pkgs; [
-  _1password
+  _1password-0_9_2
   abcde
   ag
   alacritty
