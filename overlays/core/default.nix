@@ -34,6 +34,15 @@ self: super: {
       sha256 = "1siqklf863181fqk19d0x5cd0xzxf1w0zh08lv0l0dmjc8xic64a";
     }) { }).stack;
 
+  _1password-0_9_2 = super._1password.overrideAttrs (old: rec {
+    version = "0.9.2";
+    src = super.fetchzip {
+      url = "https://cache.agilebits.com/dist/1P/op/pkg/v${version}/op_linux_amd64_v${version}.zip";
+      sha256 = "1rb2d2ajdnwiz1civiyjhdrk63g680crgb1c238dnnz7fg8rd03y";
+      stripRoot = false;
+    };
+  });
+
   linuxPackages = (super.linuxPackagesFor super.linuxPackages.kernel).extend (
     self': super': {
       i8042_debounce = super'.callPackage ./i8042-debounce { };
