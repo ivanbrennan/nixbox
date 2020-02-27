@@ -8,6 +8,8 @@ self: super: {
 
   alacritty-wrapped = super.callPackage ./alacritty { };
 
+  bleep = super.callPackage ./bleep { };
+
   credstash = with super.python3Packages; toPythonApplication (
     credstash.overridePythonAttrs (old: rec {
       postInstall = "rm $out/bin/credstash.py";

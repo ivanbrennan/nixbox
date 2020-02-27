@@ -13,6 +13,7 @@ with pkgs; [
   bc
   bind
   binutils
+  bleep
   cabal-install
   cabal2nix
   cdparanoia
@@ -87,7 +88,8 @@ with pkgs; [
   vln
   weechat
   wget
-  xsel
   xclip
+  xmobar
+  xsel
   zip
 ]

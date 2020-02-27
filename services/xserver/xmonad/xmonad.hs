@@ -7,15 +7,14 @@ import XMonad
      logHook, manageHook, modMask, normalBorderColor, resource, screenWorkspace, sendMessage, spawn,
      startupHook, terminal, whenJust, windows, withFocused, workspaces, xmonad
     )
-import XMonad.Hooks.DynamicLog (dynamicLogWithPP, ppOutput, ppTitle, shorten, xmobarColor, xmobarPP)
-import XMonad.Hooks.ManageDocks (AvoidStruts, ToggleStruts(ToggleStruts), avoidStruts, docks, manageDocks)
+import XMonad.Hooks.DynamicLog (ppOutput, ppTitle, statusBar, xmobarColor, xmobarPP, ppCurrent, ppHidden, ppLayout, ppWsSep, wrap)
+import XMonad.Hooks.ManageDocks (AvoidStruts, avoidStruts, manageDocks)
 import XMonad.Layout.LayoutModifier (ModifiedLayout)
 import XMonad.Layout.NoBorders (SmartBorder, smartBorders)
 import XMonad.StackSet
     (focusDown, focusUp, focusMaster, shift, swapMaster, swapDown, swapUp,
      sink, greedyView, view
     )
-import XMonad.Util.Run (hPutStrLn, spawnPipe)
 import Graphics.X11
     (KeyMask, KeySym, Window, controlMask, mod4Mask, noModMask, shiftMask, xK_1, xK_9, xK_b, xK_d, xK_e, xK_h, xK_j,
      xK_k, xK_l, xK_m, xK_r, xK_t, xK_w, xK_q, xK_z, xK_Return, xK_Tab, xK_comma, xK_period, xK_space,
@@ -25,7 +24,6 @@ import Graphics.X11.Xlib.Extras (Event)
 import Data.Bits ((.|.))
 import Data.Default (def)
 import Data.Monoid (All)
-import GHC.IO.Handle (Handle)
 import System.Exit (ExitCode(ExitSuccess), exitWith)
 
 import qualified Data.Map as M
@@ -71,12 +69,6 @@ keys' conf@(XConfig {modMask}) = M.fromList $
     -- increment/decrement master area
     , ((modShiftMask,       xK_comma ), sendMessage (IncMasterN 1))
     , ((modShiftMask,       xK_period), sendMessage (IncMasterN (-1)))
-
-    -- Toggle the status bar gap
-    -- Use this binding with avoidStruts from Hooks.ManageDocks.
-    -- See also the statusBar function from Hooks.DynamicLog.
-    --
-    , ((modShiftMask,       xK_b     ), sendMessage ToggleStruts)
 
     -- quit or restart
     , ((mod4ShiftMask,      xK_q     ), io (exitWith ExitSuccess))
@@ -142,12 +134,8 @@ eventHook = mempty
 -- Perform an arbitrary action on each internal state change or X event.
 -- See the 'XMonad.Hooks.DynamicLog' extension for examples.
 --
-logHook' :: Handle -> X ()
-logHook' xmobarProc =
-    dynamicLogWithPP xmobarPP
-        { ppOutput = hPutStrLn xmobarProc
-        , ppTitle = xmobarColor "green" "" . shorten 50
-        }
+logHook' :: X ()
+logHook' = pure ()
 
 ------------------------------------------------------------------------
 -- Startup hook
@@ -176,10 +164,10 @@ layout =
 
 
 main :: IO ()
-main = do
-    xmobarProc <- spawnPipe "xmobar"
-
-    xmonad $ docks def
+main =
+    xmonad =<< statusBar "xmobar" barPP toggleStrutsKey config
+  where
+    config = def
         { layoutHook         = layout
         , terminal           = "alacritty"
         , clickJustFocuses   = False
@@ -188,6 +176,16 @@ main = do
         , keys               = keys'
         , manageHook         = manageHook'
         , handleEventHook    = eventHook
-        , logHook            = logHook' xmobarProc
+        , logHook            = logHook'
         , startupHook        = startupHook'
         }
+
+    barPP = xmobarPP
+        { ppCurrent = xmobarColor "#dddddd" "#004466" . wrap " " " "
+        , ppHidden  = xmobarColor "#888888" "#222222" . wrap " " " "
+        , ppWsSep = ""
+        , ppTitle = const ""
+        , ppLayout = const ""
+        }
+
+    toggleStrutsKey XConfig {modMask} = (modMask .|. shiftMask, xK_b)
