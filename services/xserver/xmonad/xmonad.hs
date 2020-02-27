@@ -7,6 +7,7 @@ import XMonad
      logHook, manageHook, modMask, normalBorderColor, resource, screenWorkspace, sendMessage, spawn,
      startupHook, terminal, whenJust, windows, withFocused, workspaces, xmonad
     )
+import XMonad.Actions.CycleWS (Direction1D(Next, Prev), WSType(NonEmptyWS), moveTo, toggleWS)
 import XMonad.Hooks.DynamicLog (ppOutput, ppTitle, statusBar, xmobarColor, xmobarPP, ppCurrent, ppHidden, ppLayout, ppWsSep, wrap)
 import XMonad.Hooks.ManageDocks (AvoidStruts, avoidStruts, manageDocks)
 import XMonad.Layout.LayoutModifier (ModifiedLayout)
@@ -79,6 +80,11 @@ keys' conf@(XConfig {modMask}) = M.fromList $
     , ((noModMask, xF86XK_AudioRaiseVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@ +1%")
     , ((noModMask, xF86XK_AudioLowerVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@ -1%")
     , ((noModMask, xF86XK_AudioMute       ), spawn "pactl set-sink-mute @DEFAULT_SINK@ toggle")
+
+    -- workspaces
+    , ((controlMask,        xK_period), moveTo Next NonEmptyWS)
+    , ((controlMask,        xK_comma ), moveTo Prev NonEmptyWS)
+    , ((modMask,            xK_l     ), toggleWS)
     ]
     ++
     -- mod-[1..9], Switch to workspace N
