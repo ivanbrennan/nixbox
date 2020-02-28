@@ -26,10 +26,6 @@ pkgs:
     i3 = {
       enable = true;
       configFile = i3/config;
-      extraSessionCommands = ''
-        eval $(gnome-keyring-daemon --daemonize)
-        export SSH_AUTH_SOCK
-      '';
     };
 
     xmonad = {
@@ -48,5 +44,8 @@ pkgs:
   displayManager.sessionCommands = ''
     ${pkgs.xorg.xrdb}/bin/xrdb -merge < ${./Xresources}
     ${pkgs.hsetroot}/bin/hsetroot -solid "#112026"
+
+    eval $(gnome-keyring-daemon --daemonize)
+    export SSH_AUTH_SOCK
   '';
 }
