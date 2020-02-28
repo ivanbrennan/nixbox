@@ -21,7 +21,9 @@ import Graphics.X11
      xK_k, xK_l, xK_m, xK_r, xK_t, xK_w, xK_q, xK_z, xK_Return, xK_Tab, xK_comma, xK_period, xK_space,
      xK_Print
     )
-import Graphics.X11.ExtraTypes (xF86XK_AudioRaiseVolume, xF86XK_AudioLowerVolume, xF86XK_AudioMute)
+import Graphics.X11.ExtraTypes
+    (xF86XK_AudioRaiseVolume, xF86XK_AudioLowerVolume, xF86XK_AudioMute, xF86XK_MonBrightnessUp, xF86XK_MonBrightnessDown
+    )
 import Graphics.X11.Xlib.Extras (Event)
 import Data.Bits ((.|.))
 import Data.Default (def)
@@ -76,10 +78,14 @@ keys' conf@(XConfig {modMask}) = M.fromList $
     , ((mod4ShiftMask,      xK_q     ), io (exitWith ExitSuccess))
     , ((mod4Mask,           xK_q     ), spawn "xmonad --recompile && xmonad --restart")
 
-    -- volume control
+    -- volume
     , ((noModMask, xF86XK_AudioRaiseVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@ +1%")
     , ((noModMask, xF86XK_AudioLowerVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@ -1%")
     , ((noModMask, xF86XK_AudioMute       ), spawn "pactl set-sink-mute @DEFAULT_SINK@ toggle")
+
+    -- brightness
+    , ((noModMask, xF86XK_MonBrightnessUp  ), spawn "light -A 10")
+    , ((noModMask, xF86XK_MonBrightnessDown), spawn "light -U 10")
 
     -- workspaces
     , ((controlMask,        xK_period), moveTo Next NonEmptyWS)
