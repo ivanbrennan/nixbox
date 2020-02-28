@@ -10,6 +10,7 @@ import XMonad
 import XMonad.Actions.CycleWS (Direction1D(Next, Prev), WSType(NonEmptyWS), moveTo, toggleWS)
 import XMonad.Hooks.DynamicLog (ppOutput, ppTitle, statusBar, xmobarColor, xmobarPP, ppCurrent, ppHidden, ppLayout, ppWsSep, wrap)
 import XMonad.Hooks.ManageDocks (AvoidStruts, avoidStruts, manageDocks)
+import XMonad.Hooks.ManageHelpers (doCenterFloat)
 import XMonad.Layout.LayoutModifier (ModifiedLayout)
 import XMonad.Layout.NoBorders (SmartBorder, smartBorders)
 import XMonad.StackSet
@@ -129,7 +130,8 @@ keys' conf@(XConfig {modMask}) = M.fromList $
 --
 manageHook' :: ManageHook
 manageHook' = composeAll
-    [ className =? "vlc"            --> doFloat
+    [ className =? "Gcr-prompter"   --> doCenterFloat
+    , className =? "vlc"            --> doFloat
     , resource  =? "desktop_window" --> doIgnore
     , manageDocks
     ]
