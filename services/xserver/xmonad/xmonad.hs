@@ -19,7 +19,7 @@ import XMonad.StackSet
     )
 import Graphics.X11
     (KeyMask, KeySym, Window, controlMask, mod4Mask, noModMask, shiftMask, xK_1, xK_9, xK_b, xK_d, xK_e, xK_h, xK_j,
-     xK_k, xK_l, xK_m, xK_r, xK_t, xK_w, xK_q, xK_z, xK_Return, xK_Tab, xK_comma, xK_period, xK_space,
+     xK_k, xK_l, xK_m, xK_r, xK_t, xK_w, xK_q, xK_z, xK_Return, xK_Tab, xK_comma, xK_period, xK_semicolon, xK_space,
      xK_Print
     )
 import Graphics.X11.ExtraTypes
@@ -65,8 +65,8 @@ keys' conf@(XConfig {modMask}) = M.fromList $
     , ((modShiftMask,       xK_k     ), windows swapUp    )
 
     -- resize
-    , ((modMask,            xK_h     ), sendMessage Shrink)
-    , ((modMask,            xK_l     ), sendMessage Expand)
+    , ((modShiftMask,       xK_h     ), sendMessage Shrink)
+    , ((modShiftMask,       xK_l     ), sendMessage Expand)
 
     -- tile
     , ((modMask,            xK_t     ), withFocused $ windows . sink)
@@ -91,7 +91,7 @@ keys' conf@(XConfig {modMask}) = M.fromList $
     -- workspaces
     , ((controlMask,        xK_period), moveTo Next NonEmptyWS)
     , ((controlMask,        xK_comma ), moveTo Prev NonEmptyWS)
-    , ((modMask,            xK_l     ), toggleWS)
+    , ((controlMask,     xK_semicolon), toggleWS)
     ]
     ++
     -- mod-[1..9], Switch to workspace N
