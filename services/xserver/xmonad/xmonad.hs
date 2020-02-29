@@ -28,6 +28,7 @@ import Graphics.X11.ExtraTypes
 import Graphics.X11.Xlib.Extras (Event)
 import Data.Bits ((.|.))
 import Data.Default (def)
+import Data.List (intercalate)
 import Data.Monoid (All)
 import System.Exit (ExitCode(ExitSuccess), exitWith)
 
@@ -160,13 +161,14 @@ logHook' = pure ()
 ------------------------------------------------------------------------
 -- Startup hook
 
--- Perform an arbitrary action each time xmonad starts or is restarted
--- with mod-q.  Used by, e.g., XMonad.Layout.PerWorkspace to initialize
--- per-workspace layout choices.
---
--- By default, do nothing.
 startupHook' :: X ()
-startupHook' = pure ()
+startupHook' =
+    -- https://github.com/jaor/xmobar/issues/432
+    spawn $ intercalate " | "
+      [ "ps axo pid,s,command"
+      , "awk '/alsactl monitor default$/'"
+      , "xargs --no-run-if-empty kill"
+      ]
 
 
 layout
