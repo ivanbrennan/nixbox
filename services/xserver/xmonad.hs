@@ -88,8 +88,8 @@ keys' conf@(XConfig {modMask}) = M.fromList $
     , ((mod4Mask,           xK_q     ), spawn "xmonad --recompile && xmonad --restart")
 
     -- volume
-    , ((noModMask, xF86XK_AudioRaiseVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@ +1%")
-    , ((noModMask, xF86XK_AudioLowerVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@ -1%")
+    , ((noModMask, xF86XK_AudioRaiseVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@ +2%")
+    , ((noModMask, xF86XK_AudioLowerVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@ -2%")
     , ((noModMask, xF86XK_AudioMute       ), spawn "pactl set-sink-mute @DEFAULT_SINK@ toggle")
 
     -- brightness
