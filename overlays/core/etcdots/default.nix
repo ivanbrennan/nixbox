@@ -8,8 +8,8 @@ stdenv.mkDerivation {
   src = fetchFromGitHub {
     owner = "ivanbrennan";
     repo = "dotfiles";
-    rev = "e352619567c51085232377dbb1e8fd4ab490f8ec";
-    sha256 = "0qm8gsn6h6gpx788c3a7ainh824sy97fr7abbklvmqzzqvhiz4q4";
+    rev = "8ead7cf23467f67dcb3c07c8bf2231b0655d82ad";
+    sha256 = "0yaj3jbanlh0jirq2h1ijp20zb359nhzyxh9l85vnr2p67cnzj09";
   };
 
   phases = [
@@ -28,6 +28,8 @@ stdenv.mkDerivation {
     install -D -m644 $src/abcde/abcde.conf      $out/etc/abcde.conf
 
     install -D -m644 $src/fzf/key-bindings.bash $out/share/etcdots/key-bindings.bash
+
+    cp -r $src/icons $out/share/icons
   '';
 
   meta = {

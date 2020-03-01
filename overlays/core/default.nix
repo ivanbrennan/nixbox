@@ -51,6 +51,12 @@ self: super: {
 
   nice-backgrounds = super.callPackage ./nice-backgrounds { };
 
+  nice-icons = super.buildEnv {
+    name = "nice-icons";
+    paths = [ self.etcdots ];
+    pathsToLink = ["/share"];
+  };
+
   interception-tools-plugins = super.interception-tools-plugins // {
     caps2esc = super.interception-tools-plugins.caps2esc.overrideAttrs (old: {
       name = "interception-tools-caps2esc-0.1.3";

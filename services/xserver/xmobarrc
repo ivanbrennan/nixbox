@@ -28,7 +28,7 @@ Config
           [ "--template", "<acstatus>"
           , "--"
           , "--on-icon-pattern"  , "<icon=battery/on/battery_on_%%.xpm/>"
-          , "--idle-icon-pattern", "<icon=battery/off/battery_off_%%.xpm/>"
+          , "--idle-icon-pattern", "<icon=battery/idle/battery_idle_%%.xpm/>"
           , "--off-icon-pattern" , "<icon=battery/off/battery_off_%%.xpm/>"
           , "--on"               , "<leftipat>"
           , "--idle"             , "<leftipat>"

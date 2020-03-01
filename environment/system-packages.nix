@@ -56,6 +56,7 @@ with pkgs; [
   mkpasswd
   mutt
   nice-backgrounds
+  nice-icons
   nix-prefetch-git
   neovim
   openssl
