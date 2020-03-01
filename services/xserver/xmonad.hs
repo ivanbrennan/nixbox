@@ -29,6 +29,7 @@ import Graphics.X11.ExtraTypes
     (xF86XK_AudioRaiseVolume, xF86XK_AudioLowerVolume, xF86XK_AudioMute, xF86XK_MonBrightnessUp, xF86XK_MonBrightnessDown
     )
 import Graphics.X11.Xlib.Extras (Event)
+import Control.Monad ((>=>))
 import Data.Bits ((.|.))
 import Data.Default (def)
 import Data.List (intercalate)
@@ -64,8 +65,8 @@ keys' conf@(XConfig {modMask}) = M.fromList $
     , ((modMask,            xK_m     ), windows focusMaster)
 
     -- copy/paste
-    , ((modMask,            xK_c     ), pasteMask >>= flip sendKey xK_c)
-    , ((modMask,            xK_v     ), pasteMask >>= flip sendKey xK_v)
+    , ((modMask,            xK_c     ), withFocused doCopy)
+    , ((modMask,            xK_v     ), withFocused doPaste)
 
     -- swap
     , ((mod4Mask,           xK_Return), windows swapMaster)
@@ -121,16 +122,20 @@ keys' conf@(XConfig {modMask}) = M.fromList $
     mod4ShiftMask = mod4Mask .|. shiftMask
     controlShiftMask = controlMask .|. shiftMask
 
-    pasteMask :: X KeyMask
-    pasteMask = withWindowSet $ \ws -> do
-      name <- maybe (pure "") (runQuery className) (focusedWindow ws)
+    doCopy :: Window -> X ()
+    doCopy =
+      cpMask >=> flip sendKey xK_c
+
+    doPaste :: Window -> X ()
+    doPaste =
+      cpMask >=> flip sendKey xK_v
+
+    cpMask :: Window -> X KeyMask
+    cpMask w = do
+      name <- runQuery className w
       case name of
         "Alacritty" -> pure (controlMask .|. modMask)
         _           -> pure controlMask
-
-    focusedWindow :: WindowSet -> Maybe Window
-    focusedWindow ws =
-      focus <$> (stack . workspace . current) ws
 
 ------------------------------------------------------------------------
 -- Window rules:
