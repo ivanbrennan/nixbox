@@ -51,3 +51,4 @@ Config
   , template =
       "%StdinReader% }{ %disku% %cpu%  <fn=1><fc=#585868>%vpn%</fc></fn> %wlp58s0wi%  %battery%  %alsa:default:Master% <fc=#585868><icon=seperators/seperator.xpm/></fc> %date% "
   }
+-- vim: filetype=haskell
