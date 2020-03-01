@@ -1,25 +1,28 @@
 {-# LANGUAGE NamedFieldPuns #-}
 
 import XMonad
-    (ChangeLayout(NextLayout), Choose, Full, IncMasterN(IncMasterN), Layout, ManageHook, Mirror,
+    (ChangeLayout(NextLayout), Choose, Full(Full), IncMasterN(IncMasterN), Layout, ManageHook, Mirror,
      Resize(Expand, Shrink), Tall, X, XConfig(XConfig), (=?), (-->), className, clickJustFocuses,
      composeAll, doFloat, doIgnore, focusedBorderColor, handleEventHook, io, keys, kill, layoutHook,
      logHook, manageHook, modMask, normalBorderColor, resource, screenWorkspace, sendMessage, spawn,
-     startupHook, terminal, whenJust, windows, withFocused, workspaces, xmonad
+     startupHook, terminal, whenJust, windows, withFocused, workspaces, xmonad, doF, withWindowSet, runQuery, WindowSet
     )
 import XMonad.Actions.CycleWS (Direction1D(Next, Prev), WSType(NonEmptyWS), moveTo, toggleWS)
 import XMonad.Hooks.DynamicLog (ppOutput, ppTitle, statusBar, xmobarColor, xmobarPP, ppCurrent, ppHidden, ppLayout, ppWsSep, wrap)
 import XMonad.Hooks.ManageDocks (AvoidStruts, avoidStruts, manageDocks)
-import XMonad.Hooks.ManageHelpers (doCenterFloat)
+import XMonad.Hooks.ManageHelpers (composeOne, doCenterFloat, isDialog, (-?>))
+import XMonad.Layout.Fullscreen (FullscreenFloat, fullscreenFloat, fullscreenEventHook, fullscreenManageHook)
 import XMonad.Layout.LayoutModifier (ModifiedLayout)
 import XMonad.Layout.NoBorders (SmartBorder, smartBorders)
+import XMonad.Layout.ToggleLayouts (ToggleLayouts, ToggleLayout(ToggleLayout), toggleLayouts)
 import XMonad.StackSet
     (focusDown, focusUp, focusMaster, shift, swapMaster, swapDown, swapUp,
-     sink, greedyView, view
+     sink, greedyView, view, focus, stack, workspace, current
     )
+import XMonad.Util.Paste (sendKey)
 import Graphics.X11
-    (KeyMask, KeySym, Window, controlMask, mod4Mask, noModMask, shiftMask, xK_1, xK_9, xK_b, xK_d, xK_e, xK_h, xK_j,
-     xK_k, xK_l, xK_m, xK_r, xK_t, xK_w, xK_q, xK_z, xK_Return, xK_Tab, xK_comma, xK_period, xK_semicolon, xK_space,
+    (KeyMask, KeySym, Window, controlMask, mod4Mask, noModMask, shiftMask, xK_1, xK_9, xK_b, xK_c, xK_d, xK_e, xK_h, xK_j,
+     xK_k, xK_l, xK_m, xK_r, xK_t, xK_w, xK_q, xK_v, xK_z, xK_Return, xK_comma, xK_period, xK_semicolon, xK_space,
      xK_Print
     )
 import Graphics.X11.ExtraTypes
@@ -52,16 +55,20 @@ keys' conf@(XConfig {modMask}) = M.fromList $
     , ((modShiftMask,       xK_d     ), kill)
 
     -- layout algorithms
-    , ((modShiftMask,       xK_space ), sendMessage NextLayout)
+    , ((mod4Mask,           xK_space ), sendMessage NextLayout)
+    , ((modShiftMask,       xK_space ), sendMessage ToggleLayout)
 
     -- focus
-    , ((modMask,            xK_Tab   ), windows focusDown)
     , ((modMask,            xK_j     ), windows focusDown)
     , ((modMask,            xK_k     ), windows focusUp  )
     , ((modMask,            xK_m     ), windows focusMaster)
 
+    -- copy/paste
+    , ((modMask,            xK_c     ), pasteMask >>= flip sendKey xK_c)
+    , ((modMask,            xK_v     ), pasteMask >>= flip sendKey xK_v)
+
     -- swap
-    , ((modMask,            xK_Return), windows swapMaster)
+    , ((mod4Mask,           xK_Return), windows swapMaster)
     , ((modShiftMask,       xK_j     ), windows swapDown  )
     , ((modShiftMask,       xK_k     ), windows swapUp    )
 
@@ -114,6 +121,17 @@ keys' conf@(XConfig {modMask}) = M.fromList $
     mod4ShiftMask = mod4Mask .|. shiftMask
     controlShiftMask = controlMask .|. shiftMask
 
+    pasteMask :: X KeyMask
+    pasteMask = withWindowSet $ \ws -> do
+      name <- maybe (pure "") (runQuery className) (focusedWindow ws)
+      case name of
+        "Alacritty" -> pure (controlMask .|. modMask)
+        _           -> pure controlMask
+
+    focusedWindow :: WindowSet -> Maybe Window
+    focusedWindow ws =
+      focus <$> (stack . workspace . current) ws
+
 ------------------------------------------------------------------------
 -- Window rules:
 
@@ -131,9 +149,14 @@ keys' conf@(XConfig {modMask}) = M.fromList $
 --
 manageHook' :: ManageHook
 manageHook' = composeAll
-    [ className =? "Gcr-prompter"   --> doCenterFloat
-    , className =? "vlc"            --> doFloat
-    , resource  =? "desktop_window" --> doIgnore
+    [ composeOne
+      [ isDialog                      -?> doFloat
+      , className =? "Gcr-prompter"   -?> doCenterFloat
+      , className =? "vlc"            -?> doFloat
+      , resource  =? "desktop_window" -?> doIgnore
+      , pure True                     -?> doF swapDown
+      ]
+    , fullscreenManageHook
     , manageDocks
     ]
 
@@ -147,7 +170,7 @@ manageHook' = composeAll
 -- combine event hooks use mappend or mconcat from Data.Monoid.
 --
 eventHook :: Event -> X All
-eventHook = mempty
+eventHook = fullscreenEventHook
 
 ------------------------------------------------------------------------
 -- Status bars and logging
@@ -172,15 +195,22 @@ startupHook' =
 
 
 layout
-    :: ModifiedLayout
-         AvoidStruts
-         ( ModifiedLayout
-             SmartBorder
-             (Choose Tall (Choose (Mirror Tall) Full))
-         )
-         Window
-layout =
-    avoidStruts
+    :: ToggleLayouts
+       Full
+     ( ModifiedLayout
+       FullscreenFloat
+     ( ModifiedLayout
+       AvoidStruts
+     ( ModifiedLayout
+       SmartBorder
+       ( Choose Tall ( Choose (Mirror Tall) Full )
+       )
+     )))
+       Window
+layout = id
+    . toggleLayouts Full
+    . fullscreenFloat
+    . avoidStruts
     . smartBorders
     $ layoutHook def
 
