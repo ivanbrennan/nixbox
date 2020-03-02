@@ -98,8 +98,8 @@ keys' conf@(XConfig {modMask}) = M.fromList $
     , ((noModMask, xF86XK_MonBrightnessDown), spawn "light -U 10")
 
     -- workspaces
-    , ((controlMask,        xK_period), moveTo Next NonEmptyWS)
-    , ((controlMask,        xK_comma ), moveTo Prev NonEmptyWS)
+    , ((modMask,            xK_period), moveTo Next NonEmptyWS)
+    , ((modMask,            xK_comma ), moveTo Prev NonEmptyWS)
     , ((controlMask,     xK_semicolon), toggleWS)
     ]
     ++
