@@ -196,23 +196,23 @@ startupHook' =
 
 
 layout
-    :: ToggleLayouts
+    :: ModifiedLayout
+       SmartBorder
+     ( ToggleLayouts
        Full
      ( ModifiedLayout
        FullscreenFloat
      ( ModifiedLayout
        AvoidStruts
-     ( ModifiedLayout
-       SmartBorder
        ( Choose Tall ( Choose (Mirror Tall) Full )
        )
      )))
        Window
 layout = id
+    . smartBorders
     . toggleLayouts Full
     . fullscreenFloat
     . avoidStruts
-    . smartBorders
     $ layoutHook def
 
 
