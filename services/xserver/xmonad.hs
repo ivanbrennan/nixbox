@@ -22,7 +22,7 @@ import XMonad.StackSet
 import XMonad.Util.Paste (sendKey)
 import Graphics.X11
     (KeyMask, KeySym, Window, controlMask, mod4Mask, noModMask, shiftMask, xK_1, xK_9, xK_b, xK_c, xK_d, xK_e, xK_h, xK_j,
-     xK_k, xK_l, xK_m, xK_r, xK_t, xK_w, xK_q, xK_v, xK_z, xK_Return, xK_comma, xK_period, xK_semicolon, xK_space,
+     xK_k, xK_l, xK_m, xK_o, xK_r, xK_t, xK_w, xK_q, xK_v, xK_z, xK_Return, xK_comma, xK_period, xK_semicolon, xK_space,
      xK_Print
     )
 import Graphics.X11.ExtraTypes
@@ -46,7 +46,7 @@ import qualified Data.Map as M
 keys' :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 keys' conf@(XConfig {modMask}) = M.fromList $
     -- launch/kill
-    [ ((modShiftMask,       xK_Return), spawn $ terminal conf)
+    [ ((modShiftMask,       xK_o     ), spawn (terminal conf))
     , ((modMask,            xK_space ), spawn "dmenu_run -fn monospace:size=12 -l 16 -i -nb '#1c1c1c' -nf '#a5adb7' -sb '#1f1f1f' -sf '#c8f5ff'")
     , ((modShiftMask,       xK_z     ), spawn "i3lock --color=1d1d1d")
     , ((noModMask,          xK_Print ), spawn "screenshot")
@@ -69,7 +69,7 @@ keys' conf@(XConfig {modMask}) = M.fromList $
     , ((modMask,            xK_v     ), clipboard xK_v)
 
     -- swap
-    , ((mod4Mask,           xK_Return), windows swapMaster)
+    , ((modShiftMask,       xK_Return), windows swapMaster)
     , ((modShiftMask,       xK_j     ), windows swapDown  )
     , ((modShiftMask,       xK_k     ), windows swapUp    )
 
@@ -100,7 +100,7 @@ keys' conf@(XConfig {modMask}) = M.fromList $
     -- workspaces
     , ((modMask,            xK_period), moveTo Next NonEmptyWS)
     , ((modMask,            xK_comma ), moveTo Prev NonEmptyWS)
-    , ((controlMask,     xK_semicolon), toggleWS)
+    , ((modMask,         xK_semicolon), toggleWS)
     ]
     ++
     -- mod-[1..9], Switch to workspace N
@@ -153,9 +153,10 @@ manageHook' = composeAll
     [ composeOne
       [ isDialog                      -?> doFloat
       , className =? "Gcr-prompter"   -?> doCenterFloat
+      , className =? "Xmessage"       -?> doCenterFloat
       , className =? "vlc"            -?> doFloat
       , resource  =? "desktop_window" -?> doIgnore
-      , pure True                     -?> doF swapDown
+      , pure True {- otherwise -}     -?> doF swapDown
       ]
     , fullscreenManageHook
     , manageDocks
