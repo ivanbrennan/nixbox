@@ -65,8 +65,8 @@ keys' conf@(XConfig {modMask}) = M.fromList $
     , ((modMask,            xK_m     ), windows focusMaster)
 
     -- copy/paste
-    , ((modMask,            xK_c     ), withFocused doCopy)
-    , ((modMask,            xK_v     ), withFocused doPaste)
+    , ((modMask,            xK_c     ), clipboard xK_c)
+    , ((modMask,            xK_v     ), clipboard xK_v)
 
     -- swap
     , ((mod4Mask,           xK_Return), windows swapMaster)
@@ -122,16 +122,12 @@ keys' conf@(XConfig {modMask}) = M.fromList $
     mod4ShiftMask = mod4Mask .|. shiftMask
     controlShiftMask = controlMask .|. shiftMask
 
-    doCopy :: Window -> X ()
-    doCopy =
-      cpMask >=> flip sendKey xK_c
+    clipboard :: KeySym -> X ()
+    clipboard k =
+      withFocused (clipMask >=> flip sendKey k)
 
-    doPaste :: Window -> X ()
-    doPaste =
-      cpMask >=> flip sendKey xK_v
-
-    cpMask :: Window -> X KeyMask
-    cpMask w = do
+    clipMask :: Window -> X KeyMask
+    clipMask w = do
       name <- runQuery className w
       case name of
         "Alacritty" -> pure (controlMask .|. modMask)
