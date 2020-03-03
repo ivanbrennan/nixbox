@@ -24,7 +24,7 @@ _build_color_prompt() {
     bold="\033[1m"
     normal="\033[0m"
 
-    line1="╭\[${bold}\]\w\[${normal}\]\$(_git_ps1_)\[${normal}\] \[${black}\]\d \t\[${normal}\]"
+    line1="╭\[${bold}\]\w\[${normal}\]\$(_git_ps1_)\[${normal}\] \[${black}\]exit:\$? \d \t\[${normal}\]"
     line2="╰(\u)• "
 
     PS1="\n${line1}\n${line2}"
@@ -33,11 +33,16 @@ _build_color_prompt() {
 }
 
 _git_ps1_() {
+    # preserve exit code
+    local exit=$?
+
     local green="\033[0;32m"
     local normal="\033[0m"
 
     # __git_ps1 inserts the current git branch where %s is
     __git_ps1 " (${green}%s${normal})"
+
+    return $exit
 }
 
 _build_prompt
