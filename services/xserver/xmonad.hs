@@ -49,29 +49,20 @@ import qualified Data.Map as M
 
 keys' :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 keys' conf@(XConfig {modMask}) = M.fromList $
-    -- launch/kill
-    [ ((modShiftMask,       xK_o     ), spawn (terminal conf))
-    , ((modMask,            xK_space ), spawn "dmenu_run -fn monospace:size=12 -l 16 -i -nb '#1c1c1c' -nf '#a5adb7' -sb '#1f1f1f' -sf '#c8f5ff'")
-    , ((modShiftMask,       xK_z     ), spawn "i3lock --color=1d1d1d")
-    , ((noModMask,          xK_Print ), spawn "screenshot")
-    , ((controlMask,        xK_Print ), spawn "screenshot -c")
-    , ((shiftMask,          xK_Print ), spawn "screenshot -a")
-    , ((controlShiftMask,   xK_Print ), spawn "screenshot -a -c")
-    , ((modShiftMask,       xK_d     ), kill)
-
     -- layout algorithms
-    , ((mod4Mask,           xK_space ), sendMessage NextLayout)
+    [ ((mod4Mask,           xK_space ), sendMessage NextLayout)
     , ((modShiftMask,       xK_space ), sendMessage ToggleLayout)
+
+    -- workspaces
+    , ((modMask,            xK_period), moveTo Next NonEmptyWS)
+    , ((modMask,            xK_comma ), moveTo Prev NonEmptyWS)
+    , ((modMask,            xK_Tab   ), cycleRecentWS [xK_Alt_L] xK_Tab xK_grave)
 
     -- focus
     , ((modMask,            xK_j     ), windows focusDown)
     , ((modMask,            xK_k     ), windows focusUp  )
     , ((modMask,            xK_m     ), windows focusMaster)
     , ((modMask,            xK_semicolon), nextMatch History (pure True))
-
-    -- copy/paste
-    , ((modMask,            xK_c     ), clipboard xK_c)
-    , ((modMask,            xK_v     ), clipboard xK_v)
 
     -- swap
     , ((modShiftMask,       xK_Return), windows swapMaster)
@@ -82,16 +73,26 @@ keys' conf@(XConfig {modMask}) = M.fromList $
     , ((modShiftMask,       xK_h     ), sendMessage Shrink)
     , ((modShiftMask,       xK_l     ), sendMessage Expand)
 
-    -- tile
-    , ((modMask,            xK_t     ), withFocused $ windows . sink)
-
     -- increment/decrement master area
     , ((modShiftMask,       xK_comma ), sendMessage (IncMasterN 1))
     , ((modShiftMask,       xK_period), sendMessage (IncMasterN (-1)))
 
+    -- tile
+    , ((modMask,            xK_t     ), withFocused $ windows . sink)
+
     -- quit or restart
     , ((mod4ShiftMask,      xK_q     ), io (exitWith ExitSuccess))
     , ((mod4Mask,           xK_q     ), spawn "xmonad --recompile && xmonad --restart")
+
+    -- launch/kill
+    , ((modShiftMask,       xK_o     ), spawn (terminal conf))
+    , ((modMask,            xK_space ), spawn "dmenu_run -fn monospace:size=12 -l 16 -i -nb '#1c1c1c' -nf '#a5adb7' -sb '#1f1f1f' -sf '#c8f5ff'")
+    , ((modShiftMask,       xK_z     ), spawn "i3lock --color=1d1d1d")
+    , ((noModMask,          xK_Print ), spawn "screenshot")
+    , ((controlMask,        xK_Print ), spawn "screenshot -c")
+    , ((shiftMask,          xK_Print ), spawn "screenshot -a")
+    , ((controlShiftMask,   xK_Print ), spawn "screenshot -a -c")
+    , ((modShiftMask,       xK_d     ), kill)
 
     -- volume
     , ((noModMask, xF86XK_AudioRaiseVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@ +2%")
@@ -102,10 +103,9 @@ keys' conf@(XConfig {modMask}) = M.fromList $
     , ((noModMask, xF86XK_MonBrightnessUp  ), spawn "light -A 10")
     , ((noModMask, xF86XK_MonBrightnessDown), spawn "light -U 10")
 
-    -- workspaces
-    , ((modMask,            xK_period), moveTo Next NonEmptyWS)
-    , ((modMask,            xK_comma ), moveTo Prev NonEmptyWS)
-    , ((modMask,            xK_Tab   ), cycleRecentWS [xK_Alt_L] xK_Tab xK_grave)
+    -- copy/paste
+    , ((modMask,            xK_c     ), clipboard xK_c)
+    , ((modMask,            xK_v     ), clipboard xK_v)
     ]
     ++
     -- mod-[1..9], Switch to workspace N
