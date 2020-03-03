@@ -24,7 +24,7 @@ import XMonad.Util.Paste (sendKey)
 import Graphics.X11
     (KeyMask, KeySym, Window, controlMask, mod4Mask, noModMask, shiftMask, xK_1, xK_9, xK_b, xK_c, xK_d, xK_e, xK_h, xK_j,
      xK_k, xK_l, xK_m, xK_o, xK_r, xK_t, xK_w, xK_q, xK_v, xK_z, xK_Return, xK_comma, xK_period, xK_semicolon, xK_space,
-     xK_Print
+     xK_Print, xK_Tab, xK_Alt_L, xK_grave
     )
 import Graphics.X11.ExtraTypes
     (xF86XK_AudioRaiseVolume, xF86XK_AudioLowerVolume, xF86XK_AudioMute, xF86XK_MonBrightnessUp, xF86XK_MonBrightnessDown
@@ -67,7 +67,7 @@ keys' conf@(XConfig {modMask}) = M.fromList $
     , ((modMask,            xK_j     ), windows focusDown)
     , ((modMask,            xK_k     ), windows focusUp  )
     , ((modMask,            xK_m     ), windows focusMaster)
-    , ((controlMask,        xK_semicolon), nextMatch History (pure True))
+    , ((modMask,            xK_semicolon), nextMatch History (pure True))
 
     -- copy/paste
     , ((modMask,            xK_c     ), clipboard xK_c)
@@ -103,8 +103,9 @@ keys' conf@(XConfig {modMask}) = M.fromList $
     , ((noModMask, xF86XK_MonBrightnessDown), spawn "light -U 10")
 
     -- workspaces
-    , ((controlMask,        xK_period), moveTo Next NonEmptyWS)
-    , ((controlMask,        xK_comma ), moveTo Prev NonEmptyWS)
+    , ((modMask,            xK_period), moveTo Next NonEmptyWS)
+    , ((modMask,            xK_comma ), moveTo Prev NonEmptyWS)
+    , ((modMask,            xK_Tab   ), cycleRecentWS [xK_Alt_L] xK_Tab xK_grave)
     ]
     ++
     -- mod-[1..9], Switch to workspace N
