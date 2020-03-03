@@ -5,9 +5,10 @@ import XMonad
      Resize(Expand, Shrink), Tall, X, XConfig(XConfig), (=?), (-->), className, clickJustFocuses,
      composeAll, doFloat, doIgnore, focusedBorderColor, handleEventHook, io, keys, kill, layoutHook,
      logHook, manageHook, modMask, normalBorderColor, resource, screenWorkspace, sendMessage, spawn,
-     startupHook, terminal, whenJust, windows, withFocused, workspaces, xmonad, doF, withWindowSet, runQuery, WindowSet
+     startupHook, terminal, whenJust, windows, withFocused, workspaces, xmonad, doF, withWindowSet, runQuery, WindowSet, WorkspaceId
     )
 import XMonad.Actions.CycleWS (Direction1D(Next, Prev), WSType(NonEmptyWS), moveTo)
+import XMonad.Actions.CycleRecentWS (cycleWindowSets)
 import XMonad.Actions.GroupNavigation (Direction(History), historyHook, nextMatch)
 import XMonad.Hooks.DynamicLog (ppOutput, ppTitle, statusBar, xmobarColor, xmobarPP, ppCurrent, ppHidden, ppLayout, ppWsSep, wrap)
 import XMonad.Hooks.ManageDocks (AvoidStruts, avoidStruts, manageDocks)
@@ -18,7 +19,7 @@ import XMonad.Layout.NoBorders (SmartBorder, smartBorders)
 import XMonad.Layout.ToggleLayouts (ToggleLayouts, ToggleLayout(ToggleLayout), toggleLayouts)
 import XMonad.StackSet
     (focusDown, focusUp, focusMaster, shift, swapMaster, swapDown, swapUp,
-     sink, greedyView, view, focus, stack, workspace, current
+     sink, greedyView, view, focus, stack, workspace, current, tag, visible, hidden
     )
 import XMonad.Util.Paste (sendKey)
 import Graphics.X11
@@ -56,7 +57,7 @@ keys' conf@(XConfig {modMask}) = M.fromList $
     -- workspaces
     , ((modMask,            xK_period), moveTo Next NonEmptyWS)
     , ((modMask,            xK_comma ), moveTo Prev NonEmptyWS)
-    , ((modMask,            xK_Tab   ), cycleRecentWS [xK_Alt_L] xK_Tab xK_grave)
+    , ((modMask,            xK_Tab   ), cycleWindowSets recentWS [xK_Alt_L] xK_Tab xK_grave)
 
     -- focus
     , ((modMask,            xK_j     ), windows focusDown)
@@ -126,6 +127,16 @@ keys' conf@(XConfig {modMask}) = M.fromList $
     modShiftMask = modMask .|. shiftMask
     mod4ShiftMask = mod4Mask .|. shiftMask
     controlShiftMask = controlMask .|. shiftMask
+
+    recentWS :: WindowSet -> [WindowSet]
+    recentWS ws = map (`view` ws) (recentTags ws)
+
+    recentTags :: WindowSet -> [WorkspaceId]
+    recentTags ws = map tag
+      $ filter (not . null . stack)
+      $ map workspace (visible ws)
+        ++ hidden ws
+        ++ [workspace (current ws)]
 
     clipboard :: KeySym -> X ()
     clipboard k =
