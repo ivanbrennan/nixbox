@@ -7,7 +7,8 @@ import XMonad
      logHook, manageHook, modMask, normalBorderColor, resource, screenWorkspace, sendMessage, spawn,
      startupHook, terminal, whenJust, windows, withFocused, workspaces, xmonad, doF, withWindowSet, runQuery, WindowSet
     )
-import XMonad.Actions.CycleWS (Direction1D(Next, Prev), WSType(NonEmptyWS), moveTo, toggleWS)
+import XMonad.Actions.CycleWS (Direction1D(Next, Prev), WSType(NonEmptyWS), moveTo)
+import XMonad.Actions.GroupNavigation (Direction(History), historyHook, nextMatch)
 import XMonad.Hooks.DynamicLog (ppOutput, ppTitle, statusBar, xmobarColor, xmobarPP, ppCurrent, ppHidden, ppLayout, ppWsSep, wrap)
 import XMonad.Hooks.ManageDocks (AvoidStruts, avoidStruts, manageDocks)
 import XMonad.Hooks.ManageHelpers (composeOne, doCenterFloat, isDialog, (-?>))
@@ -43,6 +44,9 @@ import qualified Data.Map as M
 -- https://hackage.haskell.org/package/xmonad-contrib-0.16/docs/XMonad-Util-Paste.html
 -- https://stackoverflow.com/questions/6605399/how-can-i-set-an-action-to-occur-on-a-key-release-in-xmonad
 
+-- This looks really powerful:
+-- https://hackage.haskell.org/package/xmonad-contrib-0.16/docs/XMonad-Actions-GroupNavigation.html
+
 keys' :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 keys' conf@(XConfig {modMask}) = M.fromList $
     -- launch/kill
@@ -63,6 +67,7 @@ keys' conf@(XConfig {modMask}) = M.fromList $
     , ((modMask,            xK_j     ), windows focusDown)
     , ((modMask,            xK_k     ), windows focusUp  )
     , ((modMask,            xK_m     ), windows focusMaster)
+    , ((controlMask,        xK_semicolon), nextMatch History (pure True))
 
     -- copy/paste
     , ((modMask,            xK_c     ), clipboard xK_c)
@@ -98,9 +103,8 @@ keys' conf@(XConfig {modMask}) = M.fromList $
     , ((noModMask, xF86XK_MonBrightnessDown), spawn "light -U 10")
 
     -- workspaces
-    , ((modMask,            xK_period), moveTo Next NonEmptyWS)
-    , ((modMask,            xK_comma ), moveTo Prev NonEmptyWS)
-    , ((modMask,         xK_semicolon), toggleWS)
+    , ((controlMask,        xK_period), moveTo Next NonEmptyWS)
+    , ((controlMask,        xK_comma ), moveTo Prev NonEmptyWS)
     ]
     ++
     -- mod-[1..9], Switch to workspace N
@@ -181,7 +185,7 @@ eventHook = fullscreenEventHook
 -- See the 'XMonad.Hooks.DynamicLog' extension for examples.
 --
 logHook' :: X ()
-logHook' = pure ()
+logHook' = historyHook
 
 ------------------------------------------------------------------------
 -- Startup hook
