@@ -9,6 +9,8 @@
       udevmonConfig = ./udevmon.yaml;
     };
 
+    locate.enable = true;
+
     openvpn = import ./openvpn;
 
     redshift = {
