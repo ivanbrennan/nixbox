@@ -5,11 +5,11 @@ import XMonad
      Resize(Expand, Shrink), Tall, X, XConfig(XConfig), (=?), (-->), className, clickJustFocuses,
      composeAll, doFloat, doIgnore, focusedBorderColor, handleEventHook, io, keys, kill, layoutHook,
      logHook, manageHook, modMask, normalBorderColor, resource, screenWorkspace, sendMessage, spawn,
-     startupHook, terminal, whenJust, windows, withFocused, workspaces, xmonad, doF, withWindowSet, runQuery, WindowSet, WorkspaceId
+     startupHook, terminal, whenJust, windows, withFocused, workspaces, xmonad, doF, withWindowSet, runQuery, WindowSet, WorkspaceId,
+     gets, windowset
     )
 import XMonad.Actions.CycleWS (Direction1D(Next, Prev), WSType(NonEmptyWS), moveTo)
 import XMonad.Actions.CycleRecentWS (cycleWindowSets)
-import XMonad.Actions.GroupNavigation (Direction(History), historyHook, nextMatch)
 import XMonad.Hooks.DynamicLog (ppOutput, ppTitle, statusBar, xmobarColor, xmobarPP, ppCurrent, ppHidden, ppLayout, ppWsSep, wrap)
 import XMonad.Hooks.ManageDocks (AvoidStruts, avoidStruts, manageDocks)
 import XMonad.Hooks.ManageHelpers (composeOne, doCenterFloat, isDialog, (-?>))
@@ -57,13 +57,13 @@ keys' conf@(XConfig {modMask}) = M.fromList $
     -- workspaces
     , ((modMask,            xK_period), moveTo Next NonEmptyWS)
     , ((modMask,            xK_comma ), moveTo Prev NonEmptyWS)
+    , ((modMask,            xK_l     ), toggleRecentWS)
     , ((modMask,            xK_Tab   ), cycleWindowSets recentWS [xK_Alt_L, xK_Alt_R] xK_Tab xK_grave)
 
     -- focus
     , ((modMask,            xK_j     ), windows focusDown)
     , ((modMask,            xK_k     ), windows focusUp  )
     , ((modMask,            xK_m     ), windows focusMaster)
-    , ((modMask,            xK_l     ), nextMatch History (pure True))
 
     -- swap
     , ((modShiftMask,       xK_Return), windows swapMaster)
@@ -127,6 +127,10 @@ keys' conf@(XConfig {modMask}) = M.fromList $
     modShiftMask = modMask .|. shiftMask
     mod4ShiftMask = mod4Mask .|. shiftMask
     controlShiftMask = controlMask .|. shiftMask
+
+    toggleRecentWS :: X ()
+    toggleRecentWS =
+      gets (recentWS . windowset) >>= windows . const . head
 
     recentWS :: WindowSet -> [WindowSet]
     recentWS ws = map (`view` ws) (recentTags ws)
@@ -197,7 +201,7 @@ eventHook = fullscreenEventHook
 -- See the 'XMonad.Hooks.DynamicLog' extension for examples.
 --
 logHook' :: X ()
-logHook' = historyHook
+logHook' = pure ()
 
 ------------------------------------------------------------------------
 -- Startup hook
