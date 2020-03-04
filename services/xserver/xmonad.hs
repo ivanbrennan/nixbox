@@ -24,8 +24,8 @@ import XMonad.StackSet
 import XMonad.Util.Paste (sendKey)
 import Graphics.X11
     (KeyMask, KeySym, Window, controlMask, mod4Mask, noModMask, shiftMask, xK_1, xK_9, xK_b, xK_c, xK_d, xK_e, xK_h, xK_j,
-     xK_k, xK_l, xK_m, xK_o, xK_r, xK_t, xK_w, xK_q, xK_v, xK_z, xK_Return, xK_comma, xK_period, xK_semicolon, xK_space,
-     xK_Print, xK_Tab, xK_Alt_L, xK_grave
+     xK_k, xK_l, xK_m, xK_o, xK_r, xK_t, xK_w, xK_q, xK_v, xK_z, xK_Return, xK_comma, xK_period, xK_space,
+     xK_Print, xK_Tab, xK_Alt_L, xK_Alt_R, xK_grave
     )
 import Graphics.X11.ExtraTypes
     (xF86XK_AudioRaiseVolume, xF86XK_AudioLowerVolume, xF86XK_AudioMute, xF86XK_MonBrightnessUp, xF86XK_MonBrightnessDown
@@ -57,7 +57,7 @@ keys' conf@(XConfig {modMask}) = M.fromList $
     -- workspaces
     , ((modMask,            xK_period), moveTo Next NonEmptyWS)
     , ((modMask,            xK_comma ), moveTo Prev NonEmptyWS)
-    , ((modMask,            xK_Tab   ), cycleWindowSets recentWS [xK_Alt_L] xK_Tab xK_grave)
+    , ((modMask,            xK_Tab   ), cycleWindowSets recentWS [xK_Alt_L, xK_Alt_R] xK_Tab xK_grave)
 
     -- focus
     , ((modMask,            xK_j     ), windows focusDown)
