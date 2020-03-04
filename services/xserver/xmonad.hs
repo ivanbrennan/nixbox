@@ -63,7 +63,7 @@ keys' conf@(XConfig {modMask}) = M.fromList $
     , ((modMask,            xK_j     ), windows focusDown)
     , ((modMask,            xK_k     ), windows focusUp  )
     , ((modMask,            xK_m     ), windows focusMaster)
-    , ((modMask,            xK_semicolon), nextMatch History (pure True))
+    , ((modMask,            xK_l     ), nextMatch History (pure True))
 
     -- swap
     , ((modShiftMask,       xK_Return), windows swapMaster)
