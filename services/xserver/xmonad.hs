@@ -17,6 +17,8 @@ import XMonad.Layout.Fullscreen (FullscreenFloat, fullscreenFloat, fullscreenEve
 import XMonad.Layout.LayoutModifier (ModifiedLayout)
 import XMonad.Layout.NoBorders (SmartBorder, smartBorders)
 import XMonad.Layout.ToggleLayouts (ToggleLayouts, ToggleLayout(ToggleLayout), toggleLayouts)
+import XMonad.Prompt (XPConfig, XPPosition(Top), alwaysHighlight, bgColor, fgColor, font, height, position, promptBorderWidth)
+import XMonad.Prompt.ConfirmPrompt (confirmPrompt)
 import XMonad.StackSet
     (focusDown, focusUp, focusMaster, shift, swapMaster, swapDown, swapUp,
      sink, greedyView, view, focus, stack, workspace, current, tag, visible, hidden
@@ -36,7 +38,7 @@ import Data.Bits ((.|.))
 import Data.Default (def)
 import Data.List (intercalate)
 import Data.Monoid (All)
-import System.Exit (ExitCode(ExitSuccess), exitWith)
+import System.Exit (exitSuccess)
 
 import qualified Data.Map as M
 
@@ -82,7 +84,7 @@ keys' conf@(XConfig {modMask}) = M.fromList $
     , ((modMask,            xK_t     ), withFocused $ windows . sink)
 
     -- quit or restart
-    , ((mod4ShiftMask,      xK_q     ), io (exitWith ExitSuccess))
+    , ((mod4ShiftMask,      xK_q     ), confirmPrompt xPConfig "exit" (io exitSuccess))
     , ((mod4Mask,           xK_q     ), spawn "xmonad --recompile && xmonad --restart")
 
     -- launch/kill
@@ -152,6 +154,18 @@ keys' conf@(XConfig {modMask}) = M.fromList $
       case name of
         "Alacritty" -> pure (controlMask .|. modMask)
         _           -> pure controlMask
+
+
+xPConfig :: XPConfig
+xPConfig = def
+  { position          = Top
+  , height            = 22
+  , alwaysHighlight   = False
+  , promptBorderWidth = 0
+  , bgColor           = "#161616"
+  , fgColor           = "#b1e0e7"
+  , font              = "xft:monospace:size=11"
+  }
 
 ------------------------------------------------------------------------
 -- Window rules:
