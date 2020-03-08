@@ -39,6 +39,11 @@ complete -F _tmux t
 
 ghcWithPackages() {
     nix-shell \
+        --packages "haskellPackages.ghcWithPackages (p: with p; [${*}])"
+}
+
+ghciWithPackages() {
+    nix-shell \
         --packages "haskellPackages.ghcWithPackages (p: with p; [${*}])" \
         --run ghci
 }
