@@ -42,12 +42,6 @@ ghcWithPackages() {
         --packages "haskellPackages.ghcWithPackages (p: with p; [${*}])"
 }
 
-ghciWithPackages() {
-    nix-shell \
-        --packages "haskellPackages.ghcWithPackages (p: with p; [${*}])" \
-        --run ghci
-}
-
 nix-revision() {
     cat $(grep -oP '\bnixpkgs=\K[^:]+' <<< "$NIX_PATH")/.git-revision
 }
