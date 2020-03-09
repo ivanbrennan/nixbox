@@ -21,7 +21,7 @@ import XMonad.Prompt (XPConfig, XPPosition(Top), alwaysHighlight, bgColor, fgCol
 import XMonad.Prompt.ConfirmPrompt (confirmPrompt)
 import XMonad.StackSet
     (focusDown, focusUp, focusMaster, shift, swapMaster, swapDown, swapUp,
-     sink, greedyView, view, focus, stack, workspace, current, tag, visible, hidden
+     sink, view, focus, stack, workspace, current, tag, visible, hidden
     )
 import XMonad.Util.Paste (sendKey)
 import Graphics.X11
@@ -115,7 +115,7 @@ keys' conf@(XConfig {modMask}) = M.fromList $
     -- mod-shift-[1..9], Move client to workspace N
     [ ((m .|. modMask, k), windows $ f i)
       | (k, i) <- zip [xK_1..xK_9] (workspaces conf)
-      , (m, f) <- [(noModMask, greedyView), (shiftMask, shift)]
+      , (m, f) <- [(noModMask, view), (shiftMask, shift)]
     ]
     ++
     -- super-{w,e,r}, Switch to physical/Xinerama screens 1, 2, or 3
