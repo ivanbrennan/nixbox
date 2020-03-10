@@ -43,6 +43,7 @@ with pkgs; [
   highlight
   htop
   imagemagick
+  inkscape
   jq
   kitty
   kubectl
