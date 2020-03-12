@@ -26,7 +26,7 @@ import XMonad.StackSet
 import XMonad.Util.Paste (sendKey)
 import Graphics.X11
     (KeyMask, KeySym, Window, controlMask, mod4Mask, noModMask, shiftMask, xK_1, xK_9, xK_b, xK_c, xK_d, xK_e, xK_h, xK_j,
-     xK_k, xK_l, xK_m, xK_o, xK_r, xK_t, xK_w, xK_q, xK_v, xK_z, xK_Return, xK_comma, xK_period, xK_space,
+     xK_k, xK_l, xK_m, xK_o, xK_p, xK_r, xK_t, xK_w, xK_q, xK_v, xK_z, xK_Return, xK_comma, xK_period, xK_space,
      xK_Print, xK_Tab, xK_Alt_L, xK_Alt_R, xK_grave
     )
 import Graphics.X11.ExtraTypes
@@ -89,13 +89,14 @@ keys' conf@(XConfig {modMask}) = M.fromList $
 
     -- launch/kill
     , ((modShiftMask,       xK_o     ), spawn (terminal conf))
-    , ((modMask,            xK_space ), spawn "dmenu_run -fn monospace:size=12 -l 16 -i -nb '#1c1c1c' -nf '#a5adb7' -sb '#1f1f1f' -sf '#c8f5ff'")
+    , ((modMask,            xK_space ), spawn "dmenu_run -fn monospace:size=12 -l 24 -i -nb '#1c1c1c' -nf '#a5adb7' -sb '#222222' -sf '#ffffff'")
     , ((modShiftMask,       xK_z     ), spawn "i3lock --color=1d1d1d")
     , ((noModMask,          xK_Print ), spawn "screenshot")
     , ((controlMask,        xK_Print ), spawn "screenshot -c")
     , ((shiftMask,          xK_Print ), spawn "screenshot -a")
     , ((controlShiftMask,   xK_Print ), spawn "screenshot -a -c")
     , ((modShiftMask,       xK_d     ), kill)
+    , ((modShiftMask,       xK_p     ), spawn "passmenu -fn monospace:size=12 -l 24 -i -nb '#1c1c1c' -nf '#a5adb7' -sb '#222222' -sf '#ffffff'")
 
     -- volume
     , ((noModMask, xF86XK_AudioRaiseVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@ +2%")
@@ -159,12 +160,12 @@ keys' conf@(XConfig {modMask}) = M.fromList $
 xPConfig :: XPConfig
 xPConfig = def
   { position          = Top
-  , height            = 22
+  , height            = 25
   , alwaysHighlight   = False
   , promptBorderWidth = 0
-  , bgColor           = "#161616"
-  , fgColor           = "#b1e0e7"
-  , font              = "xft:monospace:size=11"
+  , bgColor           = "#1c1c1c"
+  , fgColor           = "#a5adb7"
+  , font              = "xft:monospace:size=12"
   }
 
 ------------------------------------------------------------------------
