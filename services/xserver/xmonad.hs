@@ -102,9 +102,9 @@ keys' conf@(XConfig {modMask}) = M.fromList $
     , ((noModMask, xF86XK_AudioRaiseVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@ +2%")
     , ((noModMask, xF86XK_AudioLowerVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@ -2%")
     , ((noModMask, xF86XK_AudioMute       ), spawn "pactl set-sink-mute @DEFAULT_SINK@ toggle")
-    , ((mod4Mask,  xF86XK_AudioMute       ), spawn "amixer -q set Capture toggle")
-    , ((mod4Mask,  xF86XK_AudioRaiseVolume), spawn "amixer -q set Capture,0 1000+")
-    , ((mod4Mask,  xF86XK_AudioLowerVolume), spawn "amixer -q set Capture,0 1000-")
+    , ((mod4Mask,  xF86XK_AudioMute       ), spawn "pactl set-source-mute @DEFAULT_SOURCE@ toggle")
+    , ((mod4Mask,  xF86XK_AudioRaiseVolume), spawn "pactl set-source-volume @DEFAULT_SOURCE@ +2%")
+    , ((mod4Mask,  xF86XK_AudioLowerVolume), spawn "pactl set-source-volume @DEFAULT_SOURCE@ -2%")
 
     -- brightness
     , ((noModMask, xF86XK_MonBrightnessUp  ), spawn "light -A 10")
