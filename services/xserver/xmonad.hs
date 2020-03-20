@@ -107,8 +107,8 @@ keys' conf@(XConfig {modMask}) = M.fromList $
     , ((mod4Mask,  xF86XK_AudioLowerVolume), spawn "pactl set-source-volume @DEFAULT_SOURCE@ -2%")
 
     -- brightness
-    , ((noModMask, xF86XK_MonBrightnessUp  ), spawn "light -A 10")
-    , ((noModMask, xF86XK_MonBrightnessDown), spawn "light -U 10")
+    , ((noModMask, xF86XK_MonBrightnessUp  ), spawn "light -A 20")
+    , ((noModMask, xF86XK_MonBrightnessDown), spawn "light -U 20")
 
     -- copy/paste
     , ((modMask,            xK_c     ), clipboard xK_c)
