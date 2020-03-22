@@ -46,6 +46,11 @@ nix-revision() {
     cat $(grep -oP '\bnixpkgs=\K[^:]+' <<< "$NIX_PATH")/.git-revision
 }
 
+quietphones() {
+    # https://unix.stackexchange.com/questions/336790/how-to-disable-white-noise-with-headphones-in-dell-xps
+    amixer --card 0 set 'Headphone Mic Boost' 10db
+}
+
 ppath() {
   col_bold="\033[30;01m"
   col_reset="\033[39;49;00m"
