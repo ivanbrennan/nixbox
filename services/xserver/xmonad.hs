@@ -99,11 +99,11 @@ keys' conf@(XConfig {modMask}) = M.fromList $
     , ((modShiftMask,       xK_p     ), spawn "passmenu -fn monospace:size=12 -l 24 -i -nb '#1c1c1c' -nf '#a5adb7' -sb '#222222' -sf '#ffffff'")
 
     -- volume
-    , ((noModMask, xF86XK_AudioRaiseVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@ +2%")
+    , ((noModMask, xF86XK_AudioRaiseVolume), spawn "pactl set-sink-mute @DEFAULT_SINK@ 0 && pactl set-sink-volume @DEFAULT_SINK@ +2%")
     , ((noModMask, xF86XK_AudioLowerVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@ -2%")
     , ((noModMask, xF86XK_AudioMute       ), spawn "pactl set-sink-mute @DEFAULT_SINK@ toggle")
     , ((mod4Mask,  xF86XK_AudioMute       ), spawn "pactl set-source-mute @DEFAULT_SOURCE@ toggle")
-    , ((mod4Mask,  xF86XK_AudioRaiseVolume), spawn "pactl set-source-volume @DEFAULT_SOURCE@ +2%")
+    , ((mod4Mask,  xF86XK_AudioRaiseVolume), spawn "pactl set-source-mute @DEFAULT_SOURCE@ 0 && pactl set-source-volume @DEFAULT_SOURCE@ +2%")
     , ((mod4Mask,  xF86XK_AudioLowerVolume), spawn "pactl set-source-volume @DEFAULT_SOURCE@ -2%")
 
     -- brightness
