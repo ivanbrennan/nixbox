@@ -12,7 +12,7 @@ import XMonad.Actions.CycleWS (Direction1D(Next, Prev), WSType(NonEmptyWS), move
 import XMonad.Actions.CycleRecentWS (cycleWindowSets)
 import XMonad.Hooks.DynamicLog (ppOutput, ppTitle, statusBar, xmobarColor, xmobarPP, ppCurrent, ppHidden, ppLayout, ppWsSep, wrap)
 import XMonad.Hooks.ManageDocks (AvoidStruts, avoidStruts, manageDocks)
-import XMonad.Hooks.ManageHelpers (composeOne, doCenterFloat, isDialog, (-?>))
+import XMonad.Hooks.ManageHelpers (composeOne, doCenterFloat, doFullFloat, isDialog, isFullscreen, (-?>))
 import XMonad.Layout.Fullscreen (FullscreenFloat, fullscreenFloat, fullscreenEventHook, fullscreenManageHook)
 import XMonad.Layout.LayoutModifier (ModifiedLayout)
 import XMonad.Layout.NoBorders (SmartBorder, smartBorders)
@@ -190,6 +190,7 @@ manageHook' :: ManageHook
 manageHook' = composeAll
     [ composeOne
       [ isDialog                      -?> doFloat
+      , isFullscreen                  -?> doFullFloat
       , className =? "Gcr-prompter"   -?> doCenterFloat
       , className =? "Xmessage"       -?> doCenterFloat
       , className =? "vlc"            -?> doFloat
