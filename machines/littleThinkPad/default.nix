@@ -9,13 +9,12 @@
     device = "/dev/sda";
   };
 
-  boot.initrd.luks.devices = [
-    {
-      name = "root";
+  boot.initrd.luks.devices = {
+    root = {
       device = "/dev/sda2";
       preLVM = true;
-    }
-  ];
+    };
+  };
 
   # This value determines the NixOS release with which your system is to be
   # compatible, in order to avoid breaking some software such as database

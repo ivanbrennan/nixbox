@@ -35,7 +35,6 @@ with pkgs; [
   gimp
   git
   global
-  gnomeExtensions.nohotcorner
   gnumake
   gnupg
   graphviz
@@ -64,7 +63,7 @@ with pkgs; [
   pass
   par
   psmisc
-  python36Packages.glances
+  glances
   pup
   qbittorrent
   redis
