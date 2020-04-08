@@ -15,8 +15,10 @@
       ./users
     ];
 
-  i18n.defaultLocale = "en_US.UTF-8";
-  console.useXkbConfig = true;
+  i18n = {
+    defaultLocale = "en_US.UTF-8";
+    consoleUseXkbConfig = true;
+  };
 
   # Allow timezone to be set imperatively using:
   # timedatectl set-timezone America/New_York
