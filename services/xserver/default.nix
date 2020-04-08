@@ -19,7 +19,6 @@ pkgs:
   # desktopManager
   desktopManager.gnome3.enable = true;
   desktopManager.xterm.enable = false;
-  desktopManager.default = "none";
 
   # windowManager
   windowManager = {
@@ -34,6 +33,8 @@ pkgs:
       config = ./xmonad.hs;
     };
   };
+
+  displayManager.defaultSession = "none+xmonad";
 
   displayManager.lightdm.background = ''
     ${pkgs.nice-backgrounds}/share/backgrounds/gnome/moscow-subway.jpg
