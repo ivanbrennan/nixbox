@@ -6,7 +6,7 @@ import XMonad
      composeAll, doFloat, doIgnore, focusedBorderColor, handleEventHook, io, keys, kill, layoutHook,
      logHook, manageHook, modMask, normalBorderColor, resource, screenWorkspace, sendMessage, spawn,
      startupHook, terminal, whenJust, windows, withFocused, workspaces, xmonad, doF, withWindowSet, runQuery, WindowSet, WorkspaceId,
-     gets, windowset
+     gets, windowset, setLayout
     )
 import XMonad.Actions.CycleWS (Direction1D(Next, Prev), WSType(NonEmptyWS), moveTo)
 import XMonad.Actions.CycleRecentWS (cycleWindowSets)
@@ -25,7 +25,7 @@ import XMonad.StackSet
     )
 import XMonad.Util.Paste (sendKey)
 import Graphics.X11
-    (KeyMask, KeySym, Window, controlMask, mod4Mask, noModMask, shiftMask, xK_1, xK_9, xK_b, xK_c, xK_d, xK_e, xK_h, xK_j,
+    (Button, KeyMask, KeySym, Window, controlMask, mod4Mask, noModMask, shiftMask, xK_1, xK_9, xK_b, xK_c, xK_d, xK_e, xK_h, xK_j,
      xK_k, xK_l, xK_m, xK_o, xK_p, xK_r, xK_t, xK_w, xK_q, xK_v, xK_z, xK_Return, xK_comma, xK_period, xK_space,
      xK_Print, xK_Tab, xK_Alt_L, xK_Alt_R, xK_grave
     )
@@ -79,6 +79,9 @@ keys' conf@(XConfig {modMask}) = M.fromList $
     -- increment/decrement master area
     , ((modShiftMask,       xK_comma ), sendMessage (IncMasterN 1))
     , ((modShiftMask,       xK_period), sendMessage (IncMasterN (-1)))
+
+    -- refresh
+    , ((modShiftMask,       xK_r     ), setLayout (layoutHook conf))
 
     -- tile
     , ((modMask,            xK_t     ), withFocused $ windows . sink)
