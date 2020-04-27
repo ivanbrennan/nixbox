@@ -4,7 +4,7 @@ import XMonad
     (ChangeLayout(NextLayout), Choose, Full(Full), IncMasterN(IncMasterN), Layout, ManageHook, Mirror,
      Resize(Expand, Shrink), Tall, X, XConfig(XConfig), (=?), (-->), className, clickJustFocuses,
      composeAll, doFloat, doIgnore, focusedBorderColor, handleEventHook, io, keys, kill, layoutHook,
-     logHook, manageHook, modMask, normalBorderColor, resource, screenWorkspace, sendMessage, spawn,
+     logHook, manageHook, modMask, mouseBindings, normalBorderColor, resource, screenWorkspace, sendMessage, spawn,
      startupHook, terminal, whenJust, windows, withFocused, workspaces, xmonad, doF, withWindowSet, runQuery, WindowSet, WorkspaceId,
      gets, windowset, setLayout
     )
@@ -163,6 +163,16 @@ keys' conf@(XConfig {modMask}) = M.fromList $
         _           -> pure controlMask
 
 
+mouseBindings' :: XConfig Layout -> M.Map (KeyMask, Button) (Window -> X ())
+mouseBindings' conf@(XConfig {modMask}) =
+    M.union bindings (mouseBindings def conf)
+  where
+    bindings :: M.Map (KeyMask, Button) (Window -> X ())
+    bindings = M.fromList $
+      [
+      ]
+
+
 xPConfig :: XPConfig
 xPConfig = def
   { position          = Top
@@ -270,6 +280,7 @@ main =
         , normalBorderColor  = "#212121"
         , focusedBorderColor = "#506068"
         , keys               = keys'
+        , mouseBindings      = mouseBindings'
         , manageHook         = manageHook'
         , handleEventHook    = eventHook
         , logHook            = logHook'
