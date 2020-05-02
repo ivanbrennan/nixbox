@@ -68,10 +68,11 @@ keys' conf@(XConfig {modMask}) = M.fromList $
     , ((modMask,            xK_j     ), windows focusDown)
     , ((modMask,            xK_k     ), windows focusUp  )
     , ((modMask,            xK_m     ), windows focusMaster)
-    , ((modMask,            xK_Right ), sendMessage (Go R))
-    , ((modMask,            xK_Left  ), sendMessage (Go L))
-    , ((modMask,            xK_Up    ), sendMessage (Go U))
-    , ((modMask,            xK_Down  ), sendMessage (Go D))
+    -- TODO: find some bindings that don't clobber application bindings
+    -- , ((modMask,            xK_Right ), sendMessage (Go R))
+    -- , ((modMask,            xK_Left  ), sendMessage (Go L))
+    -- , ((modMask,            xK_Up    ), sendMessage (Go U))
+    -- , ((modMask,            xK_Down  ), sendMessage (Go D))
 
     -- swap
     , ((modShiftMask,       xK_Return), windows swapMaster)
