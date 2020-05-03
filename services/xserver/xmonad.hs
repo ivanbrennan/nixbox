@@ -11,9 +11,11 @@ import XMonad
 import XMonad.Actions.CycleWS (Direction1D(Next, Prev), WSType(NonEmptyWS), moveTo)
 import XMonad.Actions.CycleRecentWS (cycleWindowSets)
 import XMonad.Hooks.DynamicLog (ppOutput, ppTitle, statusBar, xmobarColor, xmobarPP, ppCurrent, ppHidden, ppLayout, ppWsSep, wrap)
+import XMonad.Hooks.EwmhDesktops (ewmh, fullscreenEventHook)
 import XMonad.Hooks.ManageDocks (AvoidStruts, avoidStruts, manageDocks)
 import XMonad.Hooks.ManageHelpers (composeOne, doCenterFloat, doFullFloat, isDialog, isFullscreen, (-?>))
-import XMonad.Layout.Fullscreen (FullscreenFloat, fullscreenFloat, fullscreenEventHook, fullscreenManageHook)
+import XMonad.Layout.Fullscreen (FullscreenFloat, fullscreenFloat {-- , fullscreenManageHook --})
+import XMonad.Layout.Hidden ({- HiddenWindows, --} hiddenWindows, hideWindow, popNewestHiddenWindow)
 import XMonad.Layout.LayoutModifier (ModifiedLayout)
 import XMonad.Layout.NoBorders (SmartBorder, smartBorders)
 import XMonad.Layout.ToggleLayouts (ToggleLayouts, ToggleLayout(ToggleLayout), toggleLayouts)
@@ -29,13 +31,13 @@ import XMonad.Util.Types (Direction2D(R, L, U, D))
 import Graphics.X11
     (Button, KeyMask, KeySym, Window, controlMask, mod4Mask, noModMask, shiftMask, xK_1, xK_9, xK_b, xK_c, xK_d, xK_e, xK_h, xK_j,
      xK_k, xK_l, xK_m, xK_o, xK_p, xK_r, xK_t, xK_w, xK_q, xK_v, xK_z, xK_Return, xK_comma, xK_period, xK_space,
-     xK_Print, xK_Tab, xK_Alt_L, xK_Alt_R, xK_grave, xK_Right, xK_Left, xK_Up, xK_Down
+     xK_Print, xK_Tab, xK_Alt_L, xK_Alt_R, xK_grave, xK_Super_L, xK_Right, xK_Left, xK_Up, xK_Down
     )
 import Graphics.X11.ExtraTypes
     (xF86XK_AudioRaiseVolume, xF86XK_AudioLowerVolume, xF86XK_AudioMute, xF86XK_MonBrightnessUp, xF86XK_MonBrightnessDown
     )
 import Graphics.X11.Xlib.Extras (Event)
-import Control.Monad ((>=>))
+import Control.Monad ((>=>), unless)
 import Data.Bits ((.|.))
 import Data.Default (def)
 import Data.List (intercalate)
@@ -67,12 +69,15 @@ keys' conf@(XConfig {modMask}) = M.fromList $
     -- focus
     , ((modMask,            xK_j     ), windows focusDown)
     , ((modMask,            xK_k     ), windows focusUp  )
-    , ((modMask,            xK_m     ), windows focusMaster)
+    -- , ((modMask,            xK_m     ), windows focusMaster)
     -- TODO: find some bindings that don't clobber application bindings
     -- , ((modMask,            xK_Right ), sendMessage (Go R))
     -- , ((modMask,            xK_Left  ), sendMessage (Go L))
     -- , ((modMask,            xK_Up    ), sendMessage (Go U))
     -- , ((modMask,            xK_Down  ), sendMessage (Go D))
+
+    , ((modMask,            xK_m     ), withFocused hideWindow)
+    , ((modShiftMask,       xK_m     ), withFocused popHiddenWindow)
 
     -- swap
     , ((modShiftMask,       xK_Return), windows swapMaster)
@@ -169,6 +174,12 @@ keys' conf@(XConfig {modMask}) = M.fromList $
         "Alacritty" -> pure (controlMask .|. modMask)
         _           -> pure controlMask
 
+    popHiddenWindow :: Window -> X ()
+    popHiddenWindow w = do
+      popNewestHiddenWindow
+      withFocused $ \w' ->
+       unless (w == w') (windows swapDown)
+
 
 mouseBindings' :: XConfig Layout -> M.Map (KeyMask, Button) (Window -> X ())
 mouseBindings' conf@(XConfig {modMask}) =
@@ -210,14 +221,14 @@ manageHook' :: ManageHook
 manageHook' = composeAll
     [ composeOne
       [ isDialog                      -?> doFloat
-      , isFullscreen                  -?> doFullFloat
+      -- , isFullscreen                  -?> doFullFloat
       , className =? "Gcr-prompter"   -?> doCenterFloat
       , className =? "Xmessage"       -?> doCenterFloat
-      , className =? "vlc"            -?> doFloat
+      -- , className =? "vlc"            -?> doFloat
       , resource  =? "desktop_window" -?> doIgnore
       , pure True {- otherwise -}     -?> doF swapDown
       ]
-    , fullscreenManageHook
+    -- , fullscreenManageHook
     , manageDocks
     ]
 
@@ -255,26 +266,29 @@ startupHook' =
       ]
 
 
-layout
-    :: ModifiedLayout
-       WindowNavigation
-     ( ModifiedLayout
-       SmartBorder
-     ( ToggleLayouts
-       Full
-     ( ModifiedLayout
-       FullscreenFloat
-     ( ModifiedLayout
-       AvoidStruts
-       ( Choose Tall ( Choose (Mirror Tall) Full )
-       )
-     ))))
-       Window
+-- layout
+--     :: ModifiedLayout
+--        HiddenWindows -- not exported :O
+--      ( ModifiedLayout
+--        WindowNavigation
+--      ( ModifiedLayout
+--        SmartBorder
+--      ( ToggleLayouts
+--        Full
+--      -- ( ModifiedLayout
+--      --   FullscreenFloat
+--      ( ModifiedLayout
+--        AvoidStruts
+--        ( Choose Tall ( Choose (Mirror Tall) Full )
+--        )
+--      ))))
+--        Window
 layout = id
+    . hiddenWindows
     . windowNavigation
     . smartBorders
     . toggleLayouts Full
-    . fullscreenFloat
+    -- . fullscreenFloat
     . avoidStruts
     $ layoutHook def
 
@@ -283,7 +297,7 @@ main :: IO ()
 main =
     xmonad =<< statusBar "xmobar" barPP toggleStrutsKey config
   where
-    config = def
+    config = ewmh $ def
         { layoutHook         = layout
         , terminal           = "alacritty"
         , clickJustFocuses   = False
