@@ -1,8 +1,0 @@
-/machines/self.nix
-
-*.crt
-*.key
-*.pass
-*.pem
-*.private.conf
-*.private
