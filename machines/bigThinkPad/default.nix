@@ -16,12 +16,13 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  boot.initrd.luks.devices = {
-    root = {
+  boot.initrd.luks.devices = [
+    {
+      name = "root";
       device = "/dev/disk/by-uuid/c66379e1-3d77-409d-b190-842c6b91606f";
       preLVM = true;
-    };
-  };
+    }
+  ];
 
   hardware.cpu.intel.updateMicrocode = true;
 
