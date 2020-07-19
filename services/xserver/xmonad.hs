@@ -178,7 +178,7 @@ keys' conf@(XConfig {modMask}) = M.fromList $
     popHiddenWindow w = do
       popNewestHiddenWindow
       withFocused $ \w' ->
-       unless (w == w') (windows swapDown)
+        unless (w == w') (windows swapDown)
 
 
 mouseBindings' :: XConfig Layout -> M.Map (KeyMask, Button) (Window -> X ())
