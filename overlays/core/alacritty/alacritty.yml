@@ -186,24 +186,24 @@ draw_bold_text_with_bright_colors: true
 color_schemes:
   moot: &dark
     primary:
-      background: '0x181818'
-      foreground: '0xd5d8dc'
+      background: '#181818'
+      foreground: '#d5d8dc'
 
       # Bright and dim foreground colors
       #
       # The dimmed foreground color is calculated automatically if it is not present.
       # If the bright foreground color is not set, or `draw_bold_text_with_bright_colors`
       # is `false`, the normal foreground color will be used.
-      #dim_foreground: '0x9a9a9a'
-      #bright_foreground: '0xffffff'
+      #dim_foreground: '#9a9a9a'
+      #bright_foreground: '#ffffff'
 
     # Cursor colors
     #
     # Colors which should be used to draw the terminal cursor. If these are unset,
     # the cursor color will be the inverse of the cell color.
     cursor:
-      text:   '0x191e22'
-      cursor: '0xd2d8e3'
+      text:   '#191e22'
+      cursor: '#d2d8e3'
 
     # Selection colors
     #
@@ -211,44 +211,44 @@ color_schemes:
     # background is unset, selection color will be the inverse of the cell colors.
     # If only text is unset the cell text color will remain the same.
     selection:
-      text: '0xffffff'
-      background: '0x323848'
+      text: '#ffffff'
+      background: '#323848'
 
     # Normal colors
     normal:
-      black:   '0x181818'
-      red:     '0xde4d3a'
-      green:   '0xb8e068'
-      yellow:  '0xebcb8b'
-      blue:    '0x61b3c9'
-      magenta: '0x617fa0'
-      cyan:    '0x69d2e7'
-      white:   '0xd5d8dc'
+      black:   '#181818'
+      red:     '#de4d3a'
+      green:   '#b8e068'
+      yellow:  '#ebcb8b'
+      blue:    '#61b3c9'
+      magenta: '#617fa0'
+      cyan:    '#69d2e7'
+      white:   '#d5d8dc'
 
     # Bright colors
     bright:
-      black:   '0x303d4b'
-      red:     '0xf4718c'
-      green:   '0xd8e778'
-      yellow:  '0xf7c352'
-      blue:    '0xa1b3c9'
-      magenta: '0x53769d'
-      cyan:    '0x26a6a6'
-      white:   '0xffffff'
+      black:   '#303d4b'
+      red:     '#f4718c'
+      green:   '#d8e778'
+      yellow:  '#f7c352'
+      blue:    '#a1b3c9'
+      magenta: '#53769d'
+      cyan:    '#26a6a6'
+      white:   '#ffffff'
 
     # Dim colors
     #
     # If the dim colors are not set, they will be calculated automatically based
     # on the `normal` colors.
     dim:
-      black:   '0x14171d'
-      red:     '0x943326'
-      green:   '0x7b9545'
-      yellow:  '0xbda370'
-      blue:    '0x407786'
-      magenta: '0x40546b'
-      cyan:    '0x3b7681'
-      white:   '0x6a6c6e'
+      black:   '#14171d'
+      red:     '#943326'
+      green:   '#7b9545'
+      yellow:  '#bda370'
+      blue:    '#407786'
+      magenta: '#40546b'
+      cyan:    '#3b7681'
+      white:   '#6a6c6e'
 
     # Indexed Colors
     #
@@ -256,95 +256,95 @@ color_schemes:
     # When these are not set, they're filled with sensible defaults.
     #
     # Example:
-    #   `- { index: 16, color: '0xff00ff' }`
+    #   `- { index: 16, color: '#ff00ff' }`
     #
     indexed_colors: []
 
   blight: &light
     primary:
-      background: '0xf7f8f8'
-      foreground: '0x424242'
+      background: '#f7f8f8'
+      foreground: '#424242'
 
     # Colors the cursor will use if `custom_cursor_colors` is true
     cursor:
-      text:   '0xffffff'
-      cursor: '0x555753'
+      text:   '#ffffff'
+      cursor: '#555753'
 
     # Normal colors
     normal:
-      black:   '0x2e3436'
-      red:     '0xaa1100'
-      green:   '0x4e9a06'
-      yellow:  '0xc4a000'
-      blue:    '0x045060'
-      magenta: '0x75507b'
-      cyan:    '0x008482'
-      white:   '0x878a85'
+      black:   '#2e3436'
+      red:     '#aa1100'
+      green:   '#4e9a06'
+      yellow:  '#c4a000'
+      blue:    '#045060'
+      magenta: '#75507b'
+      cyan:    '#008482'
+      white:   '#878a85'
 
     # Bright colors
     bright:
-      black:   '0x555753'
-      red:     '0xf9251f'
-      green:   '0x138b59'
-      yellow:  '0xff4400'
-      blue:    '0x0479ba'
-      magenta: '0xa8006e'
-      cyan:    '0x009e9c'
-      white:   '0xa0a39d'
+      black:   '#555753'
+      red:     '#f9251f'
+      green:   '#138b59'
+      yellow:  '#ff4400'
+      blue:    '#0479ba'
+      magenta: '#a8006e'
+      cyan:    '#009e9c'
+      white:   '#a0a39d'
 
     # Dim colors (Optional)
     dim:
-      black:   '0xf7f8f8'
-      red:     '0xcc0000'
-      green:   '0x4e9a06'
-      yellow:  '0xc4a000'
-      blue:    '0x3465a4'
-      magenta: '0x75507b'
-      cyan:    '0x008482'
-      white:   '0x878a85'
+      black:   '#f7f8f8'
+      red:     '#cc0000'
+      green:   '#4e9a06'
+      yellow:  '#c4a000'
+      blue:    '#3465a4'
+      magenta: '#75507b'
+      cyan:    '#008482'
+      white:   '#878a85'
 
   nord: &nord
     primary:
-      background: '0x2E3440'
-      foreground: '0xD8DEE9'
+      background: '#2E3440'
+      foreground: '#D8DEE9'
 
     # Colors the cursor will use if `custom_cursor_colors` is true
     cursor:
-      text:   '0x3B4252'
-      cursor: '0xD8DEE9'
+      text:   '#3B4252'
+      cursor: '#D8DEE9'
 
     # Normal colors
     normal:
-      black:   '0x3B4252'
-      red:     '0xBF616A'
-      green:   '0xA3BE8C'
-      yellow:  '0xEBCB8B'
-      blue:    '0x81A1C1'
-      magenta: '0xB48EAD'
-      cyan:    '0x88C0D0'
-      white:   '0xE5E9F0'
+      black:   '#3B4252'
+      red:     '#BF616A'
+      green:   '#A3BE8C'
+      yellow:  '#EBCB8B'
+      blue:    '#81A1C1'
+      magenta: '#B48EAD'
+      cyan:    '#88C0D0'
+      white:   '#E5E9F0'
 
     # Bright colors
     bright:
-      black:   '0x4C566A'
-      red:     '0xBF616A'
-      green:   '0xA3BE8C'
-      yellow:  '0xEBCB8B'
-      blue:    '0x81A1C1'
-      magenta: '0xB48EAD'
-      cyan:    '0x8FBCBB'
-      white:   '0xECEFF4'
+      black:   '#4C566A'
+      red:     '#BF616A'
+      green:   '#A3BE8C'
+      yellow:  '#EBCB8B'
+      blue:    '#81A1C1'
+      magenta: '#B48EAD'
+      cyan:    '#8FBCBB'
+      white:   '#ECEFF4'
 
     # Dim colors (Optional)
     dim:
-      black:   '0x3B4252'
-      red:     '0xBF616A'
-      green:   '0xA3BE8C'
-      yellow:  '0xEBCB8B'
-      blue:    '0x81A1C1'
-      magenta: '0xB48EAD'
-      cyan:    '0x88C0D0'
-      white:   '0xE5E9F0'
+      black:   '#3B4252'
+      red:     '#BF616A'
+      green:   '#A3BE8C'
+      yellow:  '#EBCB8B'
+      blue:    '#81A1C1'
+      magenta: '#B48EAD'
+      cyan:    '#88C0D0'
+      white:   '#E5E9F0'
 
 colors: *dark
 
@@ -372,7 +372,7 @@ colors: *dark
 visual_bell:
   animation: EaseOutExpo
   duration: 0
-  color: '0xffffff'
+  color: '#ffffff'
 
 # Background opacity
 #
