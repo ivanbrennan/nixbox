@@ -20,7 +20,6 @@ with pkgs; [
   chromium
   cmus
   conky
-  credstash
   dmidecode
   docker
   easyrsa
