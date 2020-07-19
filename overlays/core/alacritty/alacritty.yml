@@ -430,30 +430,6 @@ working_directory: None
 # Send ESC (\x1b) before characters when alt is pressed.
 alt_send_esc: true
 
-debug:
-  # Display the time it takes to redraw each frame.
-  render_timer: false
-
-  # Keep the log file after quitting Alacritty.
-  persistent_logging: false
-
-  # Log level
-  #
-  # Values for `log_level`:
-  #   - None
-  #   - Error
-  #   - Warn
-  #   - Info
-  #   - Debug
-  #   - Trace
-  log_level: Warn
-
-  # Print all received window events.
-  print_events: false
-
-  # Record all characters and escape sequences as test data.
-  ref_test: false
-
 mouse:
   # Click settings
   #
@@ -743,3 +719,27 @@ key_bindings:
   - { key: Key5,      mods: Alt|Shift,     chars: "\x1b%"                    }
   - { key: Key6,      mods: Alt|Shift,     chars: "\x1b^"                    }
   - { key: Key8,      mods: Alt|Shift,     chars: "\x1b*"                    }
+
+debug:
+  # Display the time it takes to redraw each frame.
+  render_timer: false
+
+  # Keep the log file after quitting Alacritty.
+  persistent_logging: false
+
+  # Log level
+  #
+  # Values for `log_level`:
+  #   - None
+  #   - Error
+  #   - Warn
+  #   - Info
+  #   - Debug
+  #   - Trace
+  log_level: Warn
+
+  # Print all received window events.
+  print_events: false
+
+  # Record all characters and escape sequences as test data.
+  ref_test: false
