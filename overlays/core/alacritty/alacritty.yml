@@ -502,19 +502,26 @@ mouse:
 
 # Mouse bindings
 #
-# Available fields:
-#   - mouse
-#   - action
-#   - mods (optional)
+# Mouse bindings are specified as a list of objects, much like the key
+# bindings further below.
 #
-# Values for `mouse`:
+# To trigger mouse bindings when an application running within Alacritty captures the mouse, the
+# `Shift` modifier is automatically added as a requirement.
+#
+# Each mouse binding will specify a:
+#
+# - `mouse`:
+#
 #   - Middle
 #   - Left
 #   - Right
 #   - Numeric identifier such as `5`
 #
-# All available `mods` and `action` values are documented in the key binding
-# section.
+# - `action` (see key bindings)
+#
+# And optionally:
+#
+# - `mods` (see key bindings)
 mouse_bindings:
   - { mouse: Middle, action: PasteSelection }
 
