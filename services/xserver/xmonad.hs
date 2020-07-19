@@ -34,11 +34,12 @@ import Graphics.X11
      xK_Print, xK_Tab, xK_Alt_L, xK_Alt_R, xK_grave, xK_Super_L, xK_Right, xK_Left, xK_Up, xK_Down, xK_slash
     )
 import Graphics.X11.ExtraTypes
-    (xF86XK_AudioRaiseVolume, xF86XK_AudioLowerVolume, xF86XK_AudioMute, xF86XK_MonBrightnessUp, xF86XK_MonBrightnessDown
+    (xF86XK_AudioRaiseVolume, xF86XK_AudioLowerVolume, xF86XK_AudioMute, xF86XK_MonBrightnessUp, xF86XK_MonBrightnessDown, xF86XK_Paste, xF86XK_Copy
     )
 import Graphics.X11.Xlib.Extras (Event)
 import Control.Monad ((>=>), unless)
 import Data.Bits ((.|.))
+import Data.Bool (bool)
 import Data.Default (def)
 import Data.List (intercalate)
 import Data.Monoid (All)
@@ -126,8 +127,8 @@ keys' conf@(XConfig {modMask}) = M.fromList $
     , ((noModMask, xF86XK_MonBrightnessDown), spawn "light -U 20")
 
     -- copy/paste
-    , ((modMask,            xK_c     ), clipboard xK_c)
-    , ((modMask,            xK_v     ), clipboard xK_v)
+    , ((modMask,            xK_c     ), clipboardCopy)
+    , ((modMask,            xK_v     ), clipboardPaste)
     ]
     ++
     -- mod-[1..9], Switch to workspace N
@@ -173,6 +174,26 @@ keys' conf@(XConfig {modMask}) = M.fromList $
       case name of
         "Alacritty" -> pure (controlMask .|. modMask)
         _           -> pure controlMask
+
+    clipboardCopy :: X ()
+    clipboardCopy =
+      withFocused $
+        isTerminal
+          >=> bool
+            (sendKey controlMask xK_c)
+            (sendKey noModMask xF86XK_Copy)
+
+    clipboardPaste :: X ()
+    clipboardPaste =
+      withFocused $
+        isTerminal
+          >=> bool
+            (sendKey controlMask xK_v)
+            (sendKey noModMask xF86XK_Paste)
+
+    isTerminal :: Window -> X Bool
+    isTerminal =
+      fmap (== "Alacritty") . runQuery className
 
     popHiddenWindow :: Window -> X ()
     popHiddenWindow w = do
