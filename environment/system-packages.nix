@@ -59,6 +59,7 @@ with pkgs; [
   nix-prefetch-git
   neovim
   openssl
+  ormolu
   pass
   par
   psmisc
