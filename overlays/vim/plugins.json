@@ -220,8 +220,8 @@
     "src": {
       "owner": "tpope",
       "repo": "vim-projectionist",
-      "rev": "ea1347bc475bb58a3c6aa8da37e5a4a019efbf17",
-      "sha256": "1sw4vnb0w78vjaxgx3w4gx6j8jdcb1146fnf7wv497wa2grmi9n9"
+      "rev": "1d95458273a8ecdb678e65db918c045f9bb7e220",
+      "sha256": "1h5gb29rs64cfr55g12s1f0w0cqzqs2nhfw8qfbfch5jbh21p10p"
     }
   },
   "vim-racket": {
