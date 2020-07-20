@@ -157,8 +157,8 @@
     "src": {
       "owner": "AndrewRadev",
       "repo": "splitjoin.vim",
-      "rev": "13cf529dbd719365e9ec0dfa96dc1db50b957c85",
-      "sha256": "1smsyyp4xq9z8l488ahzxb8x4xwvqqqdnp3glnwndj3hka8c86a4"
+      "rev": "49a95399c37597c67bdc010054ddf52d1ebaf794",
+      "sha256": "1z9jr8xjv09w028i7jdwza1mk9zqg5axiiijclnml9w4nirpg4r4"
     }
   },
   "super-shell-indent": {
