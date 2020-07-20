@@ -265,8 +265,8 @@
     "src": {
       "owner": "christoomey",
       "repo": "vim-tmux-runner",
-      "rev": "31f2a8aaa74f839d4263b8e4e3e3e868b2eb2aa0",
-      "sha256": "0i1p0kl779qd33z848xis1x62rq2r1i9vy63v0xcbjxr24jgs7h0"
+      "rev": "1e8b1d5f7cf37c0f0dd1aa2007caf5b2bdc64b27",
+      "sha256": "09jpwbk7hmrwxq7f0r6kv4bbac1m778zyby4p4dwrbk2i288hh31"
     }
   },
   "vim-unimpaired": {
