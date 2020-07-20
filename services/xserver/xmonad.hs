@@ -175,21 +175,9 @@ keys' conf@(XConfig {modMask}) =
         "Alacritty" -> pure (controlMask .|. modMask)
         _           -> pure controlMask
 
-    clipboardCopy :: X ()
-    clipboardCopy =
-      withFocused $
-        isTerminal
-          >=> bool
-            (sendKey controlMask xK_c)
-            (sendKey noModMask xF86XK_Copy)
-
-    clipboardPaste :: X ()
-    clipboardPaste =
-      withFocused $
-        isTerminal
-          >=> bool
-            (sendKey controlMask xK_v)
-            (sendKey noModMask xF86XK_Paste)
+    ifTerminal :: X () -> X () -> X ()
+    ifTerminal thenX elseX =
+      withFocused $ isTerminal >=> bool elseX thenX
 
     isTerminal :: Window -> X Bool
     isTerminal =
