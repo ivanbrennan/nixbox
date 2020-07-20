@@ -184,8 +184,8 @@
     "src": {
       "owner": "markonm",
       "repo": "traces.vim",
-      "rev": "9520ed3837340028b871a9e497dd0d0b07cb4953",
-      "sha256": "0dfm04c4v0qk2f7fycpkwhbws0m5q383bizyaslflb1mmx3jnc48"
+      "rev": "d8ff43209d6464d5239db724207d588e4153767d",
+      "sha256": "0gf7jdisll5cz9myh67947xwh0v8513n64jxbsh2fbxh8rq5wb21"
     }
   },
   "vim-grepper": {
