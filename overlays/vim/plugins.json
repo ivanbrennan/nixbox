@@ -202,8 +202,8 @@
     "src": {
       "owner": "jelera",
       "repo": "vim-javascript-syntax",
-      "rev": "139ec9080f219536a94281aef7980654ab7c1a1c",
-      "sha256": "18468dljr9fqfy89jfs8ahcfj6a26cp5c4iqi526wwj25irbxf71"
+      "rev": "e65e4f01ba94761323450208c9bf7141428784db",
+      "sha256": "09561jf3cmzpm8jn8k34fd3av6i1mqi6n32bisri96jkabw8dpv7"
     }
   },
   "vim-matchit": {
