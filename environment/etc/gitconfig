@@ -34,3 +34,5 @@
 	submodule = log
 [fetch]
 	recurseSubmodules = on-demand
+[pull]
+	ff = only
