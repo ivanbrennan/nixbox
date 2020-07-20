@@ -8,8 +8,8 @@ stdenv.mkDerivation {
   src = fetchFromGitHub {
     owner = "ivanbrennan";
     repo = "dotfiles";
-    rev = "54f32cb7b5b69f0d87994f46b0d25dd01e66ab21";
-    sha256 = "0vq3w29vj5j64gx6phknq4nvp3vifpyl5jblk8ga4pqvr27fb07l";
+    rev = "6f40bdb924e50b1941760f13553fbfa18f2101d3";
+    sha256 = "1284hm053vy6sg8qwvl2s0izv77x3ribm478kv644jlr7bm65c1y";
   };
 
   phases = [
