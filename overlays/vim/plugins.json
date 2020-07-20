@@ -238,8 +238,8 @@
     "src": {
       "owner": "tpope",
       "repo": "vim-rails",
-      "rev": "cb188c6b73d490d3e9b2e3ada044e208aabdc647",
-      "sha256": "0r95a37d279l8x1nis9zkmx089kv6b0l0wysccj146ifzjlsc3a3"
+      "rev": "187742a3c18d93e6968f024d7db0f4fc5548408e",
+      "sha256": "132rvyn5pwg5xkm6q64k33vm6q9hfpng0wq25387l8l8a7hvj3az"
     }
   },
   "vim-rake": {
