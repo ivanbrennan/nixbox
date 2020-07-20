@@ -229,8 +229,8 @@
     "src": {
       "owner": "wlangstroth",
       "repo": "vim-racket",
-      "rev": "164d93736d5cee79c77d4a8a3f722ef31d8d2f4c",
-      "sha256": "0liyia6ysglzyqnhi4y40zsid6qhdadzmhylxx1bnbfz6lz1gyi7"
+      "rev": "4dc9840cdcddf4740553c920f56435b0e016abb0",
+      "sha256": "19ah9g8qi2gy1kfg7nh1cdjl7hyxk3pqd28in7jh5w760356zahg"
     }
   },
   "vim-rails": {
