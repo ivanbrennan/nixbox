@@ -265,17 +265,6 @@ keys' conf@(XConfig {modMask}) =
         ++ hidden ws
         ++ [workspace (current ws)]
 
-    clipboard :: KeySym -> X ()
-    clipboard k =
-      withFocused (clipMask >=> flip sendKey k)
-
-    clipMask :: Window -> X KeyMask
-    clipMask w = do
-      name <- runQuery className w
-      case name of
-        "Alacritty" -> pure (controlMask .|. modMask)
-        _           -> pure controlMask
-
     ifTerminal :: X () -> X () -> X ()
     ifTerminal thenX elseX =
       withFocused $ isTerminal >=> bool elseX thenX
