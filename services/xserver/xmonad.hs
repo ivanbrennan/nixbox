@@ -70,8 +70,8 @@ import XMonad.Util.Types (Direction2D (D, L, R, U))
 keys' :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 keys' conf@(XConfig {modMask}) =
   M.fromList $
-      -- layout algorithms
-    [ ( (mod4Mask, xK_space),
+    [ -- layout algorithms
+      ( (mod4Mask, xK_space),
         sendMessage NextLayout
       ),
       ( (modShiftMask, xK_space),
