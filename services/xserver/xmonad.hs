@@ -224,29 +224,32 @@ keys' conf@(XConfig {modMask}) =
         ifTerminal (sendKey noModMask xF86XK_Paste) (sendKey controlMask xK_v)
       )
     ]
-    ++
-    -- mod-[1..9], Switch to workspace N
-    -- mod-shift-[1..9], Move client to workspace N
-    [ ( (m .|. modMask, k),
-        windows $ f i
-      )
-      | (k, i) <- zip [xK_1..xK_9] (workspaces conf),
-        (m, f) <- [(noModMask, view), (shiftMask, shift)]
-    ]
-    ++
-    -- super-{w,e,r}, Switch to physical/Xinerama screens 1, 2, or 3
-    -- super-shift-{w,e,r}, Move client to screen 1, 2, or 3
-    --
-    [ ( (m .|. mod4Mask, key),
-        screenWorkspace sc >>= flip whenJust (windows . f)
-      )
-      | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..],
-        (f, m) <- [(view, noModMask), (shift, shiftMask)]
-    ]
+      ++ workspaceTagKeys
+      ++ screenKeys
   where
     modShiftMask = modMask .|. shiftMask
     mod4ShiftMask = mod4Mask .|. shiftMask
     controlShiftMask = controlMask .|. shiftMask
+
+    -- mod-[1..9], Switch to workspace N
+    -- mod-shift-[1..9], Move client to workspace N
+    workspaceTagKeys =
+      [ ( (m .|. modMask, k),
+          windows (f i)
+        )
+        | (k, i) <- zip [xK_1..xK_9] (workspaces conf),
+          (m, f) <- [(noModMask, view), (shiftMask, shift)]
+      ]
+
+    -- super-{w,e,r}, Switch to physical/Xinerama screens 1, 2, or 3
+    -- super-shift-{w,e,r}, Move client to screen 1, 2, or 3
+    screenKeys =
+      [ ( (m .|. mod4Mask, key),
+          screenWorkspace sc >>= flip whenJust (windows . f)
+        )
+        | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..],
+          (f, m) <- [(view, noModMask), (shift, shiftMask)]
+      ]
 
     toggleRecentWS :: X ()
     toggleRecentWS =
