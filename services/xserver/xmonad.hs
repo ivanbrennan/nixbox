@@ -71,69 +71,165 @@ keys' :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 keys' conf@(XConfig {modMask}) =
   M.fromList $
       -- layout algorithms
-    [ ((mod4Mask,     xK_space), sendMessage NextLayout),
-      ((modShiftMask, xK_space), sendMessage ToggleLayout),
+    [ ( (mod4Mask, xK_space),
+        sendMessage NextLayout
+      ),
+      ( (modShiftMask, xK_space),
+        sendMessage ToggleLayout
+      ),
       -- workspaces
-      ((modMask, xK_period), moveTo Next NonEmptyWS),
-      ((modMask, xK_comma ), moveTo Prev NonEmptyWS),
-      ((modMask, xK_l     ), toggleRecentWS),
-      ((modMask, xK_Tab   ), cycleWindowSets recentWS [xK_Alt_L, xK_Alt_R] xK_Tab xK_grave),
+      ( (modMask, xK_period),
+        moveTo Next NonEmptyWS
+      ),
+      ( (modMask, xK_comma),
+        moveTo Prev NonEmptyWS
+      ),
+      ( (modMask, xK_l),
+        toggleRecentWS
+      ),
+      ( (modMask, xK_Tab),
+        cycleWindowSets recentWS [xK_Alt_L, xK_Alt_R] xK_Tab xK_grave
+      ),
       -- focus
-      ((modMask,      xK_j    ), windows focusDown),
-      ((modMask,      xK_k    ), windows focusUp  ),
-      -- ((modMask,      xK_m    ), windows focusMaster),
+      ( (modMask, xK_j),
+        windows focusDown
+      ),
+      ( (modMask, xK_k),
+        windows focusUp
+      ),
+      -- ( (modMask, xK_m),
+      --   windows focusMaster
+      -- ),
       -- TODO: find some bindings that don't clobber application bindings
-      -- ((modMask,      xK_Right), sendMessage (Go R)),
-      -- ((modMask,      xK_Left ), sendMessage (Go L)),
-      -- ((modMask,      xK_Up   ), sendMessage (Go U)),
-      -- ((modMask,      xK_Down ), sendMessage (Go D)),
-      ((modMask,      xK_m    ), withFocused hideWindow),
-      ((modShiftMask, xK_m    ), withFocused popHiddenWindow),
+      -- ( (modMask, xK_Right),
+      --   sendMessage (Go R)
+      -- ),
+      -- ( (modMask, xK_Left),
+      --   sendMessage (Go L)
+      -- ),
+      -- ( (modMask, xK_Up),
+      --   sendMessage (Go U)
+      -- ),
+      -- ( (modMask, xK_Down),
+      --   sendMessage (Go D)
+      -- ),
+      -- TODO: figure out a good keybinding for this
+      -- ( (mod4Mask, xK_Tab),
+      --   cycleRecentWindows [xK_Super_L] xK_Tab xK_grave
+      -- ),
+      ( (modMask, xK_m),
+        withFocused hideWindow
+      ),
+      ( (modShiftMask, xK_m),
+        withFocused popHiddenWindow
+      ),
       -- swap
-      ((modShiftMask, xK_Return), windows swapMaster),
-      ((modShiftMask, xK_j     ), windows swapDown  ),
-      ((modShiftMask, xK_k     ), windows swapUp    ),
+      ( (modShiftMask, xK_Return),
+        windows swapMaster
+      ),
+      ( (modShiftMask, xK_j),
+        windows swapDown
+      ),
+      ( (modShiftMask, xK_k),
+        windows swapUp
+      ),
       -- resize
-      ((modShiftMask, xK_h), sendMessage Shrink),
-      ((modShiftMask, xK_l), sendMessage Expand),
+      ( (modShiftMask, xK_h),
+        sendMessage Shrink
+      ),
+      ( (modShiftMask, xK_l),
+        sendMessage Expand
+      ),
       -- increment/decrement master area
-      ((modShiftMask, xK_comma ), sendMessage (IncMasterN 1)),
-      ((modShiftMask, xK_period), sendMessage (IncMasterN (-1))),
+      ( (modShiftMask, xK_comma),
+        sendMessage (IncMasterN 1)
+      ),
+      ( (modShiftMask, xK_period),
+        sendMessage (IncMasterN (-1))
+      ),
       -- refresh
-      ((modShiftMask, xK_r), setLayout (layoutHook conf)),
+      ( (modShiftMask, xK_r),
+        setLayout (layoutHook conf)
+      ),
       -- tile
-      ((modMask, xK_t), withFocused $ windows . sink),
+      ( (modMask, xK_t),
+        withFocused $ windows . sink
+      ),
       -- quit or restart
-      ((mod4ShiftMask, xK_q), confirmPrompt xPConfig "exit" (io exitSuccess)),
-      ((mod4Mask,      xK_q), spawn "xmonad --recompile && xmonad --restart"),
+      ( (mod4ShiftMask, xK_q),
+        confirmPrompt xPConfig "exit" (io exitSuccess)
+      ),
+      ( (mod4Mask, xK_q),
+        spawn "xmonad --recompile && xmonad --restart"
+      ),
       -- launch/kill
-      ((modShiftMask,     xK_o    ), spawn (terminal conf)),
-      ((modMask,          xK_space), spawn "dmenu_run -fn monospace:size=12 -l 24 -i -nb '#1c1c1c' -nf '#a5adb7' -sb '#222222' -sf '#ffffff'"),
-      ((modShiftMask,     xK_z    ), spawn "i3lock --color=1d1d1d"),
-      ((noModMask,        xK_Print), spawn "screenshot"),
-      ((controlMask,      xK_Print), spawn "screenshot -c"),
-      ((shiftMask,        xK_Print), spawn "screenshot -a"),
-      ((controlShiftMask, xK_Print), spawn "screenshot -a -c"),
-      ((modShiftMask,     xK_d    ), kill),
-      ((modShiftMask,     xK_p    ), spawn "passmenu -fn monospace:size=12 -l 24 -i -nb '#1c1c1c' -nf '#a5adb7' -sb '#222222' -sf '#ffffff'"),
+      ( (modShiftMask, xK_o),
+        spawn (terminal conf)
+      ),
+      ( (modMask, xK_space),
+        spawn "dmenu_run -fn monospace:size=12 -l 24 -i -nb '#1c1c1c' -nf '#a5adb7' -sb '#222222' -sf '#ffffff'"
+      ),
+      ( (modShiftMask, xK_z),
+        spawn "i3lock --color=1d1d1d"
+      ),
+      ( (noModMask, xK_Print),
+        spawn "screenshot"
+      ),
+      ( (controlMask, xK_Print),
+        spawn "screenshot -c"
+      ),
+      ( (shiftMask, xK_Print),
+        spawn "screenshot -a"
+      ),
+      ( (controlShiftMask, xK_Print),
+        spawn "screenshot -a -c"
+      ),
+      ( (modShiftMask, xK_d),
+        kill
+      ),
+      ( (modShiftMask, xK_p),
+        spawn "passmenu -fn monospace:size=12 -l 24 -i -nb '#1c1c1c' -nf '#a5adb7' -sb '#222222' -sf '#ffffff'"
+      ),
       -- volume
-      ((noModMask, xF86XK_AudioRaiseVolume), spawn "pactl set-sink-mute @DEFAULT_SINK@ 0 && pactl set-sink-volume @DEFAULT_SINK@ +2%"),
-      ((noModMask, xF86XK_AudioLowerVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@ -2%"),
-      ((noModMask, xF86XK_AudioMute       ), spawn "pactl set-sink-mute @DEFAULT_SINK@ toggle"),
-      ((mod4Mask,  xF86XK_AudioMute       ), spawn "pactl set-source-mute @DEFAULT_SOURCE@ toggle"),
-      ((mod4Mask,  xF86XK_AudioRaiseVolume), spawn "pactl set-source-mute @DEFAULT_SOURCE@ 0 && pactl set-source-volume @DEFAULT_SOURCE@ +2%"),
-      ((mod4Mask,  xF86XK_AudioLowerVolume), spawn "pactl set-source-volume @DEFAULT_SOURCE@ -2%"),
+      ( (noModMask, xF86XK_AudioRaiseVolume),
+        spawn "pactl set-sink-mute @DEFAULT_SINK@ 0 && pactl set-sink-volume @DEFAULT_SINK@ +2%"
+      ),
+      ( (noModMask, xF86XK_AudioLowerVolume),
+        spawn "pactl set-sink-volume @DEFAULT_SINK@ -2%"
+      ),
+      ( (noModMask, xF86XK_AudioMute),
+        spawn "pactl set-sink-mute @DEFAULT_SINK@ toggle"
+      ),
+      ( (mod4Mask, xF86XK_AudioMute),
+        spawn "pactl set-source-mute @DEFAULT_SOURCE@ toggle"
+      ),
+      ( (mod4Mask, xF86XK_AudioRaiseVolume),
+        spawn "pactl set-source-mute @DEFAULT_SOURCE@ 0 && pactl set-source-volume @DEFAULT_SOURCE@ +2%"
+      ),
+      ( (mod4Mask, xF86XK_AudioLowerVolume),
+        spawn "pactl set-source-volume @DEFAULT_SOURCE@ -2%"
+      ),
       -- brightness
-      ((noModMask, xF86XK_MonBrightnessUp  ), spawn "light -A 20"),
-      ((noModMask, xF86XK_MonBrightnessDown), spawn "light -U 20"),
+      ( (noModMask, xF86XK_MonBrightnessUp),
+        spawn "light -A 20"
+      ),
+      ( (noModMask, xF86XK_MonBrightnessDown),
+        spawn "light -U 20"
+      ),
       -- copy/paste
-      ((modMask, xK_c), ifTerminal (sendKey noModMask xF86XK_Copy)  (sendKey controlMask xK_c)),
-      ((modMask, xK_v), ifTerminal (sendKey noModMask xF86XK_Paste) (sendKey controlMask xK_v))
+      ( (modMask, xK_c),
+        ifTerminal (sendKey noModMask xF86XK_Copy)  (sendKey controlMask xK_c)
+      ),
+      ( (modMask, xK_v),
+        ifTerminal (sendKey noModMask xF86XK_Paste) (sendKey controlMask xK_v)
+      )
     ]
     ++
     -- mod-[1..9], Switch to workspace N
     -- mod-shift-[1..9], Move client to workspace N
-    [ ((m .|. modMask, k), windows $ f i)
+    [ ( (m .|. modMask, k),
+        windows $ f i
+      )
       | (k, i) <- zip [xK_1..xK_9] (workspaces conf),
         (m, f) <- [(noModMask, view), (shiftMask, shift)]
     ]
@@ -141,7 +237,9 @@ keys' conf@(XConfig {modMask}) =
     -- super-{w,e,r}, Switch to physical/Xinerama screens 1, 2, or 3
     -- super-shift-{w,e,r}, Move client to screen 1, 2, or 3
     --
-    [ ((m .|. mod4Mask, key), screenWorkspace sc >>= flip whenJust (windows . f))
+    [ ( (m .|. mod4Mask, key),
+        screenWorkspace sc >>= flip whenJust (windows . f)
+      )
       | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..],
         (f, m) <- [(view, noModMask), (shift, shiftMask)]
     ]
