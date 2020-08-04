@@ -92,5 +92,6 @@ with pkgs; [
   xclip
   xmobar
   xsel
+  zathura
   zip
 ]
