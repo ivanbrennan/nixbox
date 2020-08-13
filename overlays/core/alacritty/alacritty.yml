@@ -179,28 +179,48 @@ color_schemes:
 
     # Cursor colors
     #
-    # Colors which should be used to draw the terminal cursor. If these are
-    # unset, the cursor color will be the inverse of the cell color.
+    # Colors which should be used to draw the terminal cursor.
+    #
+    # Allowed values are CellForeground and CellBackground, which reference the
+    # affected cell, or hexadecimal colors like #ff00ff.
     cursor:
       text:   '#191e22'
       cursor: '#d2d8e3'
 
     # Vi mode cursor colors
     #
-    # Colors for the cursor when the vi mode is active. If these are unset, the
-    # cursor color will be the inverse of the cell color.
+    # Colors for the cursor when the vi mode is active.
+    #
+    # Allowed values are CellForeground and CellBackground, which reference the
+    # affected cell, or hexadecimal colors like #ff00ff.
     vi_mode_cursor:
       text: '#181818'
       cursor: '#d5d8dc'
 
     # Selection colors
     #
-    # Colors which should be used to draw the selection area. If selection
-    # background is unset, selection color will be the inverse of the cell colors.
-    # If only text is unset the cell text color will remain the same.
+    # Colors which should be used to draw the selection area.
+    #
+    # Allowed values are CellForeground and CellBackground, which reference the
+    # affected cell, or hexadecimal colors like #ff00ff.
     selection:
       text: '#ffffff'
       background: '#323848'
+
+    # Search colors
+    #
+    # Colors used for the search bar and match highlighting.
+    #
+    # Allowed values are CellForeground and CellBackground, which reference the
+    # affected cell, or hexadecimal colors like #ff00ff.
+    search:
+      matches:
+        foreground: '#f8bb39'
+        background: '#181818'
+
+      bar:
+        background: '#181818'
+        foreground: '#d8e778'
 
     # Normal colors
     normal:
@@ -537,6 +557,8 @@ mouse_bindings:
 # - `action`: Execute a predefined action
 #
 #   - ToggleViMode
+#   - Search
+#   - SearchReverse
 #   - Copy
 #   - Paste
 #   - PasteSelection
@@ -587,6 +609,10 @@ mouse_bindings:
 #   - ToggleLineSelection
 #   - ToggleBlockSelection
 #   - ToggleSemanticSelection
+#   - SearchNext
+#   - SearchPrevious
+#   - SearchEndNext
+#   - SearchEndPrevious
 #
 #   (macOS only):
 #   - ToggleSimpleFullscreen: Enters fullscreen without occupying another space
@@ -690,6 +716,10 @@ key_bindings:
   - { key: W,      mods: Shift,         mode: Vi, action: WordRight               }
   - { key: E,      mods: Shift,         mode: Vi, action: WordRightEnd            }
   - { key: Key5,   mods: Shift,         mode: Vi, action: Bracket                 }
+  # - { key: Slash,                       mode: Vi, action: Search                  }
+  # - { key: Slash,  mods: Shift,         mode: Vi, action: SearchReverse           }
+  - { key: N,                           mode: Vi, action: SearchNext              }
+  - { key: N,      mods: Shift,         mode: Vi, action: SearchPrevious          }
 
   # (Windows, Linux, and BSD only)
   #- { key: V,        mods: Control|Shift,           action: Paste            }
