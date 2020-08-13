@@ -197,8 +197,8 @@ color_schemes:
     # Allowed values are CellForeground and CellBackground, which reference the
     # affected cell, or hexadecimal colors like #ff00ff.
     vi_mode_cursor:
-      text: '#181818'
-      cursor: '#f8bb59'
+      text: '#ffffff'
+      cursor: '#404656'
 
     # Selection colors
     #
