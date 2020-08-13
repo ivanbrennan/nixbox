@@ -706,6 +706,12 @@ key_bindings:
   - { key: Y,                           mode: Vi, action: ClearSelection          }
   - { key: Y,                           mode: Vi, action: ScrollToBottom          }
   - { key: Y,                           mode: Vi, action: ToggleViMode            }
+  - { key: Y,      mods: Shift,         mode: Vi, action: ToggleNormalSelection   }
+  - { key: Y,      mods: Shift,         mode: Vi, action: Last                    }
+  - { key: Y,      mods: Shift,         mode: Vi, action: Copy                    }
+  - { key: Y,      mods: Shift,         mode: Vi, action: ClearSelection          }
+  - { key: Y,      mods: Shift,         mode: Vi, action: ScrollToBottom          }
+  - { key: Y,      mods: Shift,         mode: Vi, action: ToggleViMode            }
   - { key: Copy,                        mode: Vi, action: ClearSelection          }
   - { key: V,                           mode: Vi, action: ToggleNormalSelection   }
   - { key: V,      mods: Shift,         mode: Vi, action: ToggleLineSelection     }
@@ -742,8 +748,8 @@ key_bindings:
 
   # NOTE: Slash with modifiers isn't being recognized, so we use the scancode
   # (53) directly here as a workaround.
-  - { key: 53,    mods: Control|Shift,  mode: ~Vi, action: ToggleViMode }
-  - { key: 53,    mods: Control|Shift,  mode:  Vi, action: SearchBackward }
+  - { key: 53,       mods: Control,  mode: ~Vi,      action: ToggleViMode    }
+  - { key: 53,       mods: Control,  mode:  Vi,      action: SearchBackward  }
 
   # (Windows, Linux, and BSD only)
   #- { key: V,        mods: Control|Shift,           action: Paste            }
