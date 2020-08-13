@@ -596,7 +596,7 @@ mouse_bindings:
 #   (macOS only):
 #   - ToggleSimpleFullscreen: Enters fullscreen without occupying another space
 #
-# - `command`: Fork and execute a specified command plus arguments
+#   - `command`: Fork and execute a specified command plus arguments
 #
 #    The `command` field must be a map containing a `program` string and an
 #    `args` array of command line parameter strings. For example:
