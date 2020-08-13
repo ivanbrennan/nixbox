@@ -740,6 +740,3 @@ debug:
 
   # Print all received window events.
   print_events: false
-
-  # Record all characters and escape sequences as test data.
-  ref_test: false
