@@ -198,7 +198,7 @@ color_schemes:
     # affected cell, or hexadecimal colors like #ff00ff.
     vi_mode_cursor:
       text: '#181818'
-      cursor: '#d5d8dc'
+      cursor: '#f8bb59'
 
     # Selection colors
     #
@@ -221,8 +221,8 @@ color_schemes:
         background: '#181818'
 
       bar:
-        background: '#181818'
-        foreground: '#d8e778'
+        background: '#272727'
+        foreground: '#c4d5e5'
 
     # Normal colors
     normal:
@@ -689,10 +689,13 @@ key_bindings:
   - { key: Space,  mods: Shift|Control, mode: Vi, action: ScrollToBottom          }
   - { key: Space,  mods: Shift|Control,           action: ToggleViMode            }
   - { key: Escape,                      mode: Vi, action: ClearSelection          }
-  - { key: I,                           mode: Vi, action: ScrollToBottom          }
-  - { key: I,                           mode: Vi, action: ToggleViMode            }
+  - { key: Escape,                      mode: Vi, action: ScrollToBottom          }
+  - { key: Escape,                      mode: Vi, action: ToggleViMode            }
+  - { key: Q,                           mode: Vi, action: ClearSelection          }
   - { key: Q,                           mode: Vi, action: ScrollToBottom          }
   - { key: Q,                           mode: Vi, action: ToggleViMode            }
+  - { key: I,                           mode: Vi, action: ScrollToBottom          }
+  - { key: I,                           mode: Vi, action: ToggleViMode            }
   - { key: K,      mods: Control,       mode: Vi, action: ScrollLineUp            }
   - { key: J,      mods: Control,       mode: Vi, action: ScrollLineDown          }
   - { key: G,                           mode: Vi, action: ScrollToTop             }
@@ -701,6 +704,8 @@ key_bindings:
   - { key: F,      mods: Control,       mode: Vi, action: ScrollPageDown          }
   - { key: Y,                           mode: Vi, action: Copy                    }
   - { key: Y,                           mode: Vi, action: ClearSelection          }
+  - { key: Y,                           mode: Vi, action: ScrollToBottom          }
+  - { key: Y,                           mode: Vi, action: ToggleViMode            }
   - { key: Copy,                        mode: Vi, action: ClearSelection          }
   - { key: V,                           mode: Vi, action: ToggleNormalSelection   }
   - { key: V,      mods: Shift,         mode: Vi, action: ToggleLineSelection     }
@@ -731,15 +736,21 @@ key_bindings:
   - { key: E,      mods: Shift,         mode: Vi, action: WordRightEnd            }
   - { key: Key5,   mods: Shift,         mode: Vi, action: Bracket                 }
   - { key: Slash,                       mode: Vi, action: SearchForward           }
-  - { key: Slash,  mods: Shift,         mode: Vi, action: SearchBackward          }
+  - { key: 53,     mods: Shift,         mode: Vi, action: SearchBackward          }
   - { key: N,                           mode: Vi, action: SearchNext              }
   - { key: N,      mods: Shift,         mode: Vi, action: SearchPrevious          }
+
+  # NOTE: Slash with modifiers isn't being recognized, so we use the scancode
+  # (53) directly here as a workaround.
+  - { key: 53,    mods: Control|Shift,  mode: ~Vi, action: ToggleViMode }
+  - { key: 53,    mods: Control|Shift,  mode:  Vi, action: SearchBackward }
 
   # (Windows, Linux, and BSD only)
   #- { key: V,        mods: Control|Shift,           action: Paste            }
   #- { key: C,        mods: Control|Shift,           action: Copy             }
   #- { key: F,        mods: Control|Shift,           action: SearchForward    }
   #- { key: B,        mods: Control|Shift,           action: SearchBackward   }
+  - { key: R,        mods: Control|Shift,           action: SearchBackward   }
   #- { key: C,        mods: Control|Shift, mode: Vi, action: ClearSelection   }
   #- { key: Insert,   mods: Shift,                   action: PasteSelection   }
   #- { key: Key0,     mods: Control,                 action: ResetFontSize    }
