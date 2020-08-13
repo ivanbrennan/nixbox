@@ -68,6 +68,9 @@ window:
   # Window title
   #title: Alacritty
 
+  # Allow terminal applications to change Alacritty's window title.
+  dynamic_title: true
+
   # Window class (Linux/BSD only):
   class:
     # Application instance name
@@ -210,10 +213,9 @@ color_schemes:
     # Search colors
     #
     # Colors used for the search bar and match highlighting.
-    #
-    # Allowed values are CellForeground and CellBackground, which reference the
-    # affected cell, or hexadecimal colors like #ff00ff.
     search:
+      # Allowed values are CellForeground and CellBackground, which reference the
+      # affected cell, or hexadecimal colors like #ff00ff.
       matches:
         foreground: '#f8bb39'
         background: '#181818'
@@ -408,9 +410,6 @@ selection:
 
   # When set to `true`, selected text will be copied to the primary clipboard.
   save_to_clipboard: false
-
-# Allow terminal applications to change Alacritty's window title.
-dynamic_title: true
 
 cursor:
   # Cursor style
