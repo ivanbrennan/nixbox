@@ -626,8 +626,8 @@ mouse_bindings:
 #   - ToggleSemanticSelection
 #   - SearchNext
 #   - SearchPrevious
-#   - SearchEndNext
-#   - SearchEndPrevious
+#   - SearchStart
+#   - SearchEnd
 #
 #   (macOS only):
 #   - ToggleSimpleFullscreen: Enters fullscreen without occupying another space
