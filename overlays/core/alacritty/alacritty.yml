@@ -200,9 +200,9 @@ color_schemes:
     #
     # Colors for the cursor when the vi mode is active. If these are unset, the
     # cursor color will be the inverse of the cell color.
-    #vi_mode_cursor:
-    #  text: '#000000'
-    #  cursor: '#ffffff'
+    vi_mode_cursor:
+      text: '#181818'
+      cursor: '#d5d8dc'
 
     # Selection colors
     #
