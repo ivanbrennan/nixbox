@@ -148,7 +148,7 @@ font:
 
   # Glyph offset determines the locations of the glyphs within their cells with
   # the default being at the bottom. Increasing `x` moves the glyph to the right,
-  # increasing `y` moves the glyph upwards.
+  # increasing `y` moves the glyph upward.
   glyph_offset:
     x: 0
     y: 0
@@ -572,8 +572,8 @@ mouse_bindings:
 # - `action`: Execute a predefined action
 #
 #   - ToggleViMode
-#   - Search
-#   - SearchReverse
+#   - SearchForward
+#   - SearchBackward
 #   - Copy
 #   - Paste
 #   - PasteSelection
@@ -731,14 +731,16 @@ key_bindings:
   - { key: W,      mods: Shift,         mode: Vi, action: WordRight               }
   - { key: E,      mods: Shift,         mode: Vi, action: WordRightEnd            }
   - { key: Key5,   mods: Shift,         mode: Vi, action: Bracket                 }
-  # - { key: Slash,                       mode: Vi, action: Search                  }
-  # - { key: Slash,  mods: Shift,         mode: Vi, action: SearchReverse           }
+  - { key: Slash,                       mode: Vi, action: SearchForward           }
+  - { key: Slash,  mods: Shift,         mode: Vi, action: SearchBackward          }
   - { key: N,                           mode: Vi, action: SearchNext              }
   - { key: N,      mods: Shift,         mode: Vi, action: SearchPrevious          }
 
   # (Windows, Linux, and BSD only)
   #- { key: V,        mods: Control|Shift,           action: Paste            }
   #- { key: C,        mods: Control|Shift,           action: Copy             }
+  #- { key: F,        mods: Control|Shift,           action: SearchForward    }
+  #- { key: B,        mods: Control|Shift,           action: SearchBackward   }
   #- { key: C,        mods: Control|Shift, mode: Vi, action: ClearSelection   }
   #- { key: Insert,   mods: Shift,                   action: PasteSelection   }
   #- { key: Key0,     mods: Control,                 action: ResetFontSize    }
@@ -766,6 +768,8 @@ key_bindings:
   #- { key: W,      mods: Command,            action: Quit             }
   #- { key: N,      mods: Command,            action: SpawnNewInstance }
   #- { key: F,      mods: Command|Control,    action: ToggleFullscreen }
+  #- { key: F,      mods: Command,            action: SearchForward    }
+  #- { key: B,      mods: Command,            action: SearchBackward   }
 
   # (Custom)
   - { key: V,         mods: Control|Alt,           action: Paste               }
