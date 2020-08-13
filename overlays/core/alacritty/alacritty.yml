@@ -637,6 +637,16 @@ mouse_bindings:
 # If the same trigger is assigned to multiple actions, all of them are executed
 # at once.
 key_bindings:
+  - { key: Paste,                   action: Paste                      }
+  - { key: Copy,                    action: Copy                       }
+  - { key: L,        mods: Control, action: ClearLogNotice             }
+  - { key: L,        mods: Control, chars: "\x0c"                      }
+  - { key: PageUp,   mods: Shift,   action: ScrollPageUp,   mode: ~Alt }
+  - { key: PageDown, mods: Shift,   action: ScrollPageDown, mode: ~Alt }
+  - { key: Home,     mods: Shift,   action: ScrollToTop,    mode: ~Alt }
+  - { key: End,      mods: Shift,   action: ScrollToBottom, mode: ~Alt }
+  - { key: Tab,      mods: Shift,   chars: "\x1b[Z"                    }
+
   # Vi Mode
   - { key: Space,  mods: Shift|Control, mode: Vi, action: ScrollToBottom          }
   - { key: Space,  mods: Shift|Control,           action: ToggleViMode            }
@@ -709,16 +719,6 @@ key_bindings:
   #- { key: W,      mods: Command,         action: Quit             }
   #- { key: N,      mods: Command,         action: SpawnNewInstance }
   #- { key: F,      mods: Command|Control, action: ToggleFullscreen }
-
-  - { key: Paste,                   action: Paste                      }
-  - { key: Copy,                    action: Copy                       }
-  - { key: L,        mods: Control, action: ClearLogNotice             }
-  - { key: L,        mods: Control, chars: "\x0c"                      }
-  - { key: PageUp,   mods: Shift,   action: ScrollPageUp,   mode: ~Alt }
-  - { key: PageDown, mods: Shift,   action: ScrollPageDown, mode: ~Alt }
-  - { key: Home,     mods: Shift,   action: ScrollToTop,    mode: ~Alt }
-  - { key: End,      mods: Shift,   action: ScrollToBottom, mode: ~Alt }
-  - { key: Tab,      mods: Shift,   chars: "\x1b[Z"                    }
 
   # (Custom)
   - { key: V,         mods: Control|Alt,   action: Paste               }
