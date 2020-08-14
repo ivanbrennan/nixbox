@@ -191,10 +191,10 @@
   "vim-grepper": {
     "name": "vim-grepper",
     "src": {
-      "owner": "ivanbrennan",
+      "owner": "mhinz",
       "repo": "vim-grepper",
-      "rev": "0eb743e8fc1ad8514b5e56526059061609874f0d",
-      "sha256": "021nzwhh4ac2c95blz7xnggmmmmvq9v4wrlvmrcisfws3mvijw6f"
+      "rev": "e9004ce564891412cfe433cfbb97295cccd06b39",
+      "sha256": "1cs72x3wv4i11x7ch3gna1sxqn5zj3bd34smchfd00g4mf201lhs"
     }
   },
   "vim-javascript-syntax": {
