@@ -1,6 +1,6 @@
 {-# LANGUAGE NamedFieldPuns #-}
 
-import Control.Monad (unless, (>=>))
+import Control.Monad ((>=>))
 import Data.Bits ((.|.))
 import Data.Bool (bool)
 import Data.Default (def)
@@ -8,27 +8,27 @@ import Data.List (intercalate)
 import qualified Data.Map as M
 import Data.Monoid (All)
 import Graphics.X11
-  ( Button, KeyMask, KeySym, Window, controlMask, mod4Mask, noModMask,
-    shiftMask, xK_1, xK_9, xK_Alt_L, xK_Alt_R, xK_Down, xK_Left, xK_Print,
-    xK_Return, xK_Right, xK_Super_L, xK_Tab, xK_Up, xK_b, xK_c, xK_comma,
-    xK_d, xK_e, xK_grave, xK_h, xK_j, xK_k, xK_l, xK_m, xK_o, xK_p, xK_period,
-    xK_q, xK_r, xK_slash, xK_space, xK_t, xK_v, xK_w, xK_z,
+  ( Button, KeyMask, KeySym, Window, controlMask, mod4Mask, noModMask, shiftMask,
+    xK_1, xK_9, xK_Alt_L, xK_Alt_R, xK_Down, xK_Left, xK_Print, xK_Return, xK_Right,
+    xK_Tab, xK_Up, xK_b, xK_c, xK_comma, xK_d, xK_e, xK_grave, xK_h, xK_j, xK_k,
+    xK_l, xK_m, xK_o, xK_p, xK_period, xK_q, xK_r, xK_slash, xK_space, xK_t, xK_u,
+    xK_v, xK_w, xK_z,
   )
 import Graphics.X11.ExtraTypes
-  ( xF86XK_AudioLowerVolume, xF86XK_AudioMute, xF86XK_AudioRaiseVolume,
-    xF86XK_Copy, xF86XK_MonBrightnessDown, xF86XK_MonBrightnessUp, xF86XK_Paste,
+  ( xF86XK_AudioLowerVolume, xF86XK_AudioMute, xF86XK_AudioRaiseVolume, xF86XK_Copy,
+    xF86XK_MonBrightnessDown, xF86XK_MonBrightnessUp, xF86XK_Paste,
   )
 import Graphics.X11.Xlib.Extras (Event)
 import System.Exit (exitSuccess)
 import XMonad
-  ( ChangeLayout (NextLayout), Choose, Full (Full), IncMasterN (IncMasterN),
-    Layout, ManageHook, Mirror, Resize (Expand, Shrink), Tall, WindowSet,
-    WorkspaceId, X, XConfig (XConfig), className, clickJustFocuses, composeAll,
-    doF, doFloat, doIgnore, focusedBorderColor, gets, handleEventHook, io, keys,
-    kill, layoutHook, logHook, manageHook, modMask, mouseBindings,
-    normalBorderColor, resource, runQuery, screenWorkspace, sendMessage,
-    setLayout, spawn, startupHook, terminal, whenJust, windows, windowset,
-    withFocused, withWindowSet, workspaces, xmonad, (-->), (=?),
+  ( ChangeLayout (NextLayout), Choose, Full (Full), IncMasterN (IncMasterN), Layout,
+    ManageHook, Mirror, Resize (Expand, Shrink), Tall, WindowSet, WorkspaceId, X,
+    XConfig (XConfig), className, clickJustFocuses, composeAll, doF, doFloat, doIgnore,
+    focusedBorderColor, gets, handleEventHook, io, keys, kill, layoutHook, logHook,
+    manageHook, modMask, mouseBindings, normalBorderColor, resource, runQuery,
+    screenWorkspace, sendMessage, setLayout, spawn, startupHook, terminal, whenJust,
+    windows, windowset, withFocused, withWindowSet, workspaces, xmonad, (-->), (=?),
+    (|||),
   )
 import XMonad.Actions.CycleRecentWS (cycleWindowSets)
 import XMonad.Actions.CycleWS (Direction1D (Next, Prev), WSType (NonEmptyWS), moveTo)
@@ -41,20 +41,30 @@ import XMonad.Hooks.ManageDocks (AvoidStruts, avoidStruts, manageDocks)
 import XMonad.Hooks.ManageHelpers
   ( composeOne, doCenterFloat, doFullFloat, isDialog, isFullscreen, (-?>),
   )
+import XMonad.Layout.BoringWindows (BoringWindows, boringWindows, focusDown, focusUp)
+import XMonad.Layout.Decoration
+  ( Decoration, DefaultShrinker, Theme, activeBorderColor, activeColor, activeTextColor,
+    decoHeight, decoWidth, fontName, inactiveBorderColor, inactiveColor, inactiveTextColor,
+    urgentBorderColor, urgentColor, urgentTextColor,
+  )
 import XMonad.Layout.Fullscreen (FullscreenFloat, fullscreenFloat {-- , fullscreenManageHook --})
-import XMonad.Layout.Hidden ({- HiddenWindows, --} hideWindow, hiddenWindows, popNewestHiddenWindow)
 import XMonad.Layout.LayoutModifier (ModifiedLayout)
 import XMonad.Layout.NoBorders (SmartBorder, smartBorders)
+import XMonad.Layout.Simplest (Simplest (Simplest))
+import XMonad.Layout.SubLayouts
+  ( GroupMsg (MergeAll, UnMerge, UnMergeAll), Sublayout, onGroup, pullGroup, subLayout, toSubl,
+  )
+import XMonad.Layout.Tabbed (TabbedDecoration, addTabs, shrinkText)
 import XMonad.Layout.ToggleLayouts (ToggleLayout (ToggleLayout), ToggleLayouts, toggleLayouts)
 import XMonad.Layout.WindowNavigation (Navigate (Go), WindowNavigation, windowNavigation)
 import XMonad.Prompt
-  ( XPConfig, XPPosition (Top), alwaysHighlight, bgColor, fgColor, font, height,
-    position, promptBorderWidth,
+  ( XPConfig, XPPosition (Top), alwaysHighlight, bgColor, fgColor, font, height, position,
+    promptBorderWidth,
   )
 import XMonad.Prompt.ConfirmPrompt (confirmPrompt)
 import XMonad.StackSet
-  ( current, focus, focusDown, focusMaster, focusUp, hidden, shift, sink, stack,
-    swapDown, swapMaster, swapUp, tag, view, visible, workspace,
+  ( current, focus, focusDown', focusUp', hidden, shift, sink, stack, swapDown,
+    swapMaster, swapUp, tag, view, visible, workspace,
   )
 import XMonad.Util.Paste (sendKey)
 import XMonad.Util.Types (Direction2D (D, L, R, U))
@@ -74,7 +84,7 @@ keys' conf@(XConfig {modMask}) =
       ( (mod4Mask, xK_space),
         sendMessage NextLayout
       ),
-      ( (modShiftMask, xK_space),
+      ( (modMask .|. controlMask, xK_space),
         sendMessage ToggleLayout
       ),
       -- workspaces
@@ -90,65 +100,85 @@ keys' conf@(XConfig {modMask}) =
       ( (modMask, xK_Tab),
         cycleWindowSets recentWS [xK_Alt_L, xK_Alt_R] xK_Tab xK_grave
       ),
+      -- sublayouts
+      ( (mod4Mask .|. modMask, xK_h),
+        sendMessage (pullGroup L)
+      ),
+      ( (mod4Mask .|. modMask, xK_l),
+        sendMessage (pullGroup R)
+      ),
+      ( (mod4Mask .|. modMask, xK_k),
+        sendMessage (pullGroup U)
+      ),
+      ( (mod4Mask .|. modMask, xK_j),
+        sendMessage (pullGroup D)
+      ),
+      ( (mod4Mask .|. modMask .|. shiftMask, xK_m),
+        withFocused (sendMessage . MergeAll)
+      ),
+      ( (mod4Mask .|. modMask .|. shiftMask, xK_u),
+        withFocused (sendMessage . UnMergeAll)
+      ),
+      ( (mod4Mask .|. modMask, xK_u),
+        withFocused (sendMessage . UnMerge)
+      ),
+      ( (mod4Mask, xK_Tab),
+        onGroup focusDown'
+      ),
+      ( (mod4Mask .|. modMask, xK_period),
+        onGroup focusDown'
+      ),
+      ( (mod4Mask .|. modMask, xK_comma),
+        onGroup focusUp'
+      ),
+      ( (mod4Mask .|. modMask, xK_space),
+        toSubl NextLayout
+      ),
       -- focus
       ( (modMask, xK_j),
-        windows focusDown
+        focusDown
       ),
       ( (modMask, xK_k),
-        windows focusUp
+        focusUp
       ),
-      -- ( (modMask, xK_m),
-      --   windows focusMaster
-      -- ),
-      -- TODO: find some bindings that don't clobber application bindings
-      -- ( (modMask, xK_Right),
-      --   sendMessage (Go R)
-      -- ),
-      -- ( (modMask, xK_Left),
-      --   sendMessage (Go L)
-      -- ),
-      -- ( (modMask, xK_Up),
-      --   sendMessage (Go U)
-      -- ),
-      -- ( (modMask, xK_Down),
-      --   sendMessage (Go D)
-      -- ),
-      -- TODO: figure out a good keybinding for this
-      -- ( (mod4Mask, xK_Tab),
-      --   cycleRecentWindows [xK_Super_L] xK_Tab xK_grave
-      -- ),
-      ( (modMask, xK_m),
-        withFocused hideWindow
+      ( (mod4Mask, xK_Right),
+        sendMessage (Go R)
       ),
-      ( (modShiftMask, xK_m),
-        withFocused popHiddenWindow
+      ( (mod4Mask, xK_Left),
+        sendMessage (Go L)
+      ),
+      ( (mod4Mask, xK_Up),
+        sendMessage (Go U)
+      ),
+      ( (mod4Mask, xK_Down),
+        sendMessage (Go D)
       ),
       -- swap
-      ( (modShiftMask, xK_Return),
+      ( (mod4Mask .|. shiftMask, xK_Return),
         windows swapMaster
       ),
-      ( (modShiftMask, xK_j),
+      ( (mod4Mask .|. shiftMask, xK_j),
         windows swapDown
       ),
-      ( (modShiftMask, xK_k),
+      ( (mod4Mask .|. shiftMask, xK_k),
         windows swapUp
       ),
       -- resize
-      ( (modShiftMask, xK_h),
+      ( (modMask .|. controlMask .|. shiftMask, xK_h),
         sendMessage Shrink
       ),
-      ( (modShiftMask, xK_l),
+      ( (modMask .|. controlMask .|. shiftMask, xK_l),
         sendMessage Expand
       ),
       -- increment/decrement master area
-      ( (modShiftMask, xK_comma),
+      ( (modMask .|. controlMask .|. shiftMask, xK_comma),
         sendMessage (IncMasterN 1)
       ),
-      ( (modShiftMask, xK_period),
+      ( (modMask .|. controlMask .|. shiftMask, xK_period),
         sendMessage (IncMasterN (-1))
       ),
       -- refresh
-      ( (modShiftMask, xK_r),
+      ( (modMask .|. shiftMask, xK_r),
         setLayout (layoutHook conf)
       ),
       -- tile
@@ -156,20 +186,20 @@ keys' conf@(XConfig {modMask}) =
         withFocused $ windows . sink
       ),
       -- quit or restart
-      ( (mod4ShiftMask, xK_q),
+      ( (mod4Mask .|. shiftMask, xK_q),
         confirmPrompt xPConfig "exit" (io exitSuccess)
       ),
       ( (mod4Mask, xK_q),
         spawn "xmonad --recompile && xmonad --restart"
       ),
       -- launch/kill
-      ( (modShiftMask, xK_o),
+      ( (modMask .|. controlMask, xK_o),
         spawn (terminal conf)
       ),
       ( (modMask, xK_space),
         spawn "dmenu_run -fn monospace:size=12 -l 24 -i -nb '#1c1c1c' -nf '#a5adb7' -sb '#222222' -sf '#ffffff'"
       ),
-      ( (modShiftMask, xK_z),
+      ( (modMask .|. shiftMask, xK_z),
         spawn "i3lock --color=1d1d1d"
       ),
       ( (noModMask, xK_Print),
@@ -181,13 +211,13 @@ keys' conf@(XConfig {modMask}) =
       ( (shiftMask, xK_Print),
         spawn "screenshot -a"
       ),
-      ( (controlShiftMask, xK_Print),
+      ( (controlMask .|. shiftMask, xK_Print),
         spawn "screenshot -a -c"
       ),
-      ( (modShiftMask, xK_d),
+      ( (modMask .|. shiftMask, xK_d),
         kill
       ),
-      ( (modShiftMask, xK_p),
+      ( (modMask .|. shiftMask, xK_p),
         spawn "passmenu -fn monospace:size=12 -l 24 -i -nb '#1c1c1c' -nf '#a5adb7' -sb '#222222' -sf '#ffffff'"
       ),
       -- volume
@@ -227,10 +257,6 @@ keys' conf@(XConfig {modMask}) =
       ++ workspaceTagKeys
       ++ screenKeys
   where
-    modShiftMask = modMask .|. shiftMask
-    mod4ShiftMask = mod4Mask .|. shiftMask
-    controlShiftMask = controlMask .|. shiftMask
-
     -- mod-[1..9], Switch to workspace N
     -- mod-shift-[1..9], Move client to workspace N
     workspaceTagKeys =
@@ -272,12 +298,6 @@ keys' conf@(XConfig {modMask}) =
     isTerminal :: Window -> X Bool
     isTerminal =
       fmap (== "Alacritty") . runQuery className
-
-    popHiddenWindow :: Window -> X ()
-    popHiddenWindow w = do
-      popNewestHiddenWindow
-      withFocused $ \w' ->
-        unless (w == w') (windows swapDown)
 
 
 mouseBindings' :: XConfig Layout -> M.Map (KeyMask, Button) (Window -> X ())
@@ -369,35 +389,59 @@ startupHook' =
       ]
 
 
--- layout ::
---   ModifiedLayout
---     HiddenWindows -- not exported :O
---     ( ModifiedLayout
---         WindowNavigation
---         ( ModifiedLayout
---             SmartBorder
---             ( ToggleLayouts
---                 -- Full
---                 -- ( ModifiedLayout
---                 --     FullscreenFloat
---                     ( ModifiedLayout
---                         AvoidStruts
---                         (Choose Tall (Choose (Mirror Tall) Full))
---                     )
---                 -- )
---             )
---         )
---     )
---     Window
+layout ::
+  ModifiedLayout
+    WindowNavigation
+    ( ModifiedLayout
+        (Decoration TabbedDecoration DefaultShrinker)
+        ( ModifiedLayout
+            ( Sublayout
+                (Choose Full Simplest)
+            )
+            ( ModifiedLayout
+                BoringWindows
+                ( ModifiedLayout
+                    SmartBorder
+                    ( ToggleLayouts
+                        Full
+                        ( ModifiedLayout
+                            AvoidStruts
+                            (Choose Tall (Choose (Mirror Tall) Full))
+                        )
+                    )
+                )
+            )
+        )
+    )
+    Window
 layout =
   id
-    . hiddenWindows
     . windowNavigation
+    . addTabs shrinkText theme
+    . subLayout [0, 1] (Full ||| Simplest)
+    . boringWindows
     . smartBorders
     . toggleLayouts Full
     -- . fullscreenFloat
     . avoidStruts
     $ layoutHook def
+  where
+    theme :: Theme
+    theme =
+      def
+        { activeColor         = "#2d2d2d",
+          inactiveColor       = "#353535",
+          urgentColor         = "#15539e",
+          activeBorderColor   = "#070707",
+          inactiveBorderColor = "#1c1c1c",
+          urgentBorderColor   = "#030c17",
+          activeTextColor     = "#eeeeec",
+          inactiveTextColor   = "#929291",
+          urgentTextColor     = "#ffffff",
+          fontName            = "xft:Cantarell:bold:size=10",
+          decoWidth           = 200,
+          decoHeight          = 22
+        }
 
 
 main :: IO ()
