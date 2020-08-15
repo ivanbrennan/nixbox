@@ -71,7 +71,6 @@ import XMonad.Util.Types (Direction2D (D, L, R, U))
 
 
 -- https://github.com/xmonad/X11/blob/6e5ef8019a0cc49e18410a335dbdeea87b7c4aac/Graphics/X11/Types.hsc
--- https://hackage.haskell.org/package/xmonad-contrib-0.16/docs/XMonad-Util-Paste.html
 -- https://stackoverflow.com/questions/6605399/how-can-i-set-an-action-to-occur-on-a-key-release-in-xmonad
 
 keys' :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
