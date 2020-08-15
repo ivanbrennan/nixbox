@@ -389,15 +389,15 @@ layout ::
   ModifiedLayout
     WindowNavigation
     ( ModifiedLayout
-        (Decoration TabbedDecoration DefaultShrinker)
+        SmartBorder
         ( ModifiedLayout
-            ( Sublayout
-                (Choose Full Simplest)
-            )
+            (Decoration TabbedDecoration DefaultShrinker)
             ( ModifiedLayout
-                BoringWindows
+                ( Sublayout
+                    (Choose Full Simplest)
+                )
                 ( ModifiedLayout
-                    SmartBorder
+                    BoringWindows
                     ( ToggleLayouts
                         Full
                         ( ModifiedLayout
@@ -413,10 +413,10 @@ layout ::
 layout =
   id
     . windowNavigation
+    . smartBorders
     . addTabs shrinkText theme
     . subLayout [0, 1] (Full ||| Simplest)
     . boringWindows
-    . smartBorders
     . toggleLayouts Full
     -- . fullscreenFloat
     . avoidStruts
