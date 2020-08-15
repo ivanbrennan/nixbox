@@ -160,33 +160,33 @@ keys' conf@(XConfig {modMask}) =
         windows swapUp
       ),
       -- resize
-      ( (modMask .|. controlMask .|. shiftMask, xK_h),
+      ( (mod4Mask .|. controlMask, xK_h),
         sendMessage Shrink
       ),
-      ( (modMask .|. controlMask .|. shiftMask, xK_l),
+      ( (mod4Mask .|. controlMask, xK_l),
         sendMessage Expand
       ),
       -- increment/decrement master area
-      ( (modMask .|. controlMask .|. shiftMask, xK_comma),
+      ( (mod4Mask .|. shiftMask, xK_comma),
         sendMessage (IncMasterN 1)
       ),
-      ( (modMask .|. controlMask .|. shiftMask, xK_period),
+      ( (mod4Mask .|. shiftMask, xK_period),
         sendMessage (IncMasterN (-1))
       ),
       -- refresh
-      ( (modMask .|. shiftMask, xK_r),
+      ( (mod4Mask .|. shiftMask, xK_r),
         setLayout (layoutHook conf)
       ),
       -- tile
-      ( (modMask, xK_t),
+      ( (mod4Mask, xK_t),
         withFocused $ windows . sink
       ),
       -- quit or restart
-      ( (mod4Mask .|. shiftMask, xK_q),
-        confirmPrompt xPConfig "exit" (io exitSuccess)
-      ),
       ( (mod4Mask, xK_q),
         spawn "xmonad --recompile && xmonad --restart"
+      ),
+      ( (mod4Mask .|. shiftMask, xK_q),
+        confirmPrompt xPConfig "exit" (io exitSuccess)
       ),
       -- launch/kill
       ( (modMask .|. controlMask, xK_o),
@@ -195,7 +195,7 @@ keys' conf@(XConfig {modMask}) =
       ( (modMask, xK_space),
         spawn "dmenu_run -fn monospace:size=12 -l 24 -i -nb '#1c1c1c' -nf '#a5adb7' -sb '#222222' -sf '#ffffff'"
       ),
-      ( (modMask .|. shiftMask, xK_z),
+      ( (mod4Mask, xK_z),
         spawn "i3lock --color=1d1d1d"
       ),
       ( (noModMask, xK_Print),
@@ -210,10 +210,10 @@ keys' conf@(XConfig {modMask}) =
       ( (controlMask .|. shiftMask, xK_Print),
         spawn "screenshot -a -c"
       ),
-      ( (modMask .|. shiftMask, xK_d),
+      ( (mod4Mask .|. shiftMask, xK_d),
         kill
       ),
-      ( (modMask .|. shiftMask, xK_p),
+      ( (mod4Mask, xK_p),
         spawn "passmenu -fn monospace:size=12 -l 24 -i -nb '#1c1c1c' -nf '#a5adb7' -sb '#222222' -sf '#ffffff'"
       ),
       -- volume
