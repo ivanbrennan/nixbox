@@ -74,9 +74,6 @@ import XMonad.Util.Types (Direction2D (D, L, R, U))
 -- https://hackage.haskell.org/package/xmonad-contrib-0.16/docs/XMonad-Util-Paste.html
 -- https://stackoverflow.com/questions/6605399/how-can-i-set-an-action-to-occur-on-a-key-release-in-xmonad
 
--- This looks really powerful:
--- https://hackage.haskell.org/package/xmonad-contrib-0.16/docs/XMonad-Actions-GroupNavigation.html
-
 keys' :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 keys' conf@(XConfig {modMask}) =
   M.fromList $
