@@ -85,6 +85,9 @@ keys' conf@(XConfig {modMask}) =
       ( (modMask .|. controlMask, xK_space),
         sendMessage ToggleLayout
       ),
+      ( (modMask .|. controlMask, xK_Return),
+        sendMessage ToggleLayout
+      ),
       -- workspaces
       ( (modMask, xK_period),
         moveTo Next NonEmptyWS
@@ -152,7 +155,7 @@ keys' conf@(XConfig {modMask}) =
         sendMessage (Go D)
       ),
       -- swap
-      ( (mod4Mask .|. shiftMask, xK_Return),
+      ( (mod4Mask .|. shiftMask, xK_m),
         windows swapMaster
       ),
       ( (mod4Mask .|. shiftMask, xK_j),
