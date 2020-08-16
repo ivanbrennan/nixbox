@@ -22,7 +22,7 @@ import Graphics.X11.Xlib.Extras (Event)
 import System.Exit (exitSuccess)
 import XMonad
   ( ChangeLayout (NextLayout), Choose, Full (Full), IncMasterN (IncMasterN), Layout,
-    ManageHook, Mirror, Resize (Expand, Shrink), Tall, WindowSet, WorkspaceId, X,
+    ManageHook, Mirror (Mirror), Resize (Expand, Shrink), WindowSet, WorkspaceId, X,
     XConfig (XConfig), className, clickJustFocuses, composeAll, doF, doFloat, doIgnore,
     focusedBorderColor, gets, handleEventHook, io, keys, kill, layoutHook, logHook,
     manageHook, modMask, mouseBindings, normalBorderColor, resource, runQuery,
@@ -50,6 +50,9 @@ import XMonad.Layout.Decoration
 import XMonad.Layout.Fullscreen (FullscreenFloat, fullscreenFloat {-- , fullscreenManageHook --})
 import XMonad.Layout.LayoutModifier (ModifiedLayout)
 import XMonad.Layout.NoBorders (SmartBorder, smartBorders)
+import XMonad.Layout.ResizableTile
+  ( ResizableTall (ResizableTall), MirrorResize (MirrorShrink, MirrorExpand),
+  )
 import XMonad.Layout.Simplest (Simplest (Simplest))
 import XMonad.Layout.SubLayouts
   ( GroupMsg (MergeAll, UnMerge, UnMergeAll), Sublayout, onGroup, pullGroup, subLayout, toSubl,
@@ -170,6 +173,12 @@ keys' conf@(XConfig {modMask}) =
       ),
       ( (mod4Mask .|. controlMask, xK_l),
         sendMessage Expand
+      ),
+      ( (mod4Mask .|. controlMask, xK_j),
+        sendMessage MirrorShrink
+      ),
+      ( (mod4Mask .|. controlMask, xK_k),
+        sendMessage MirrorExpand
       ),
       -- increment/decrement master area
       ( (mod4Mask .|. shiftMask, xK_comma),
@@ -407,7 +416,7 @@ layout ::
                         Full
                         ( ModifiedLayout
                             AvoidStruts
-                            (Choose Tall (Choose (Mirror Tall) Full))
+                            (Choose ResizableTall (Choose (Mirror ResizableTall) Full))
                         )
                     )
                 )
@@ -425,7 +434,7 @@ layout =
     . toggleLayouts Full
     -- . fullscreenFloat
     . avoidStruts
-    $ layoutHook def
+    $ tiled ||| Mirror tiled ||| Full
   where
     theme :: Theme
     theme =
@@ -443,6 +452,9 @@ layout =
           decoWidth           = 200,
           decoHeight          = 22
         }
+
+    tiled :: ResizableTall a
+    tiled = ResizableTall 1 (3/100) (1/2) []
 
 
 main :: IO ()
