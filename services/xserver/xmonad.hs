@@ -56,7 +56,9 @@ import XMonad.Layout.SubLayouts
   )
 import XMonad.Layout.Tabbed (TabbedDecoration, addTabs, shrinkText)
 import XMonad.Layout.ToggleLayouts (ToggleLayout (ToggleLayout), ToggleLayouts, toggleLayouts)
-import XMonad.Layout.WindowNavigation (Navigate (Go), WindowNavigation, windowNavigation)
+import XMonad.Layout.WindowNavigation
+  ( Navigate (Go), WindowNavigation, configurableNavigation, noNavigateBorders,
+  )
 import XMonad.Prompt
   ( XPConfig, XPPosition (Top), alwaysHighlight, bgColor, fgColor, font, height, position,
     promptBorderWidth,
@@ -412,7 +414,7 @@ layout ::
     Window
 layout =
   id
-    . windowNavigation
+    . configurableNavigation noNavigateBorders
     . smartBorders
     . addTabs shrinkText theme
     . subLayout [0, 1] (Full ||| Simplest)
