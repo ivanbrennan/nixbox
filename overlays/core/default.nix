@@ -28,11 +28,11 @@ self: super: {
       sha256 = "1siqklf863181fqk19d0x5cd0xzxf1w0zh08lv0l0dmjc8xic64a";
     }) { }).stack;
 
-  _1password-0_9_2 = super._1password.overrideAttrs (old: rec {
-    version = "0.9.2";
+  _1password-1_4_0 = super._1password.overrideAttrs (old: rec {
+    version = "1.4.0";
     src = super.fetchzip {
       url = "https://cache.agilebits.com/dist/1P/op/pkg/v${version}/op_linux_amd64_v${version}.zip";
-      sha256 = "1rb2d2ajdnwiz1civiyjhdrk63g680crgb1c238dnnz7fg8rd03y";
+      sha256 = "1r4wm48ichbq208xzfp86ykspfsizxay06nvsyj2rm789km296fl";
       stripRoot = false;
     };
   });
