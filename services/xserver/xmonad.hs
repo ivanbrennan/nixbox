@@ -1,12 +1,20 @@
 {-# LANGUAGE NamedFieldPuns #-}
 
+{- base -}
 import Control.Monad ((>=>))
 import Data.Bits ((.|.))
 import Data.Bool (bool)
-import Data.Default (def)
 import Data.List (intercalate)
-import qualified Data.Map as M
 import Data.Monoid (All)
+import System.Exit (exitSuccess)
+
+{- containers -}
+import qualified Data.Map as M
+
+{- data-default -}
+import Data.Default (def)
+
+{- X11 -}
 import Graphics.X11
   ( Button, KeyMask, KeySym, Window, controlMask, mod4Mask, noModMask, shiftMask,
     xK_1, xK_9, xK_Alt_L, xK_Alt_R, xK_Down, xK_Left, xK_Print, xK_Return, xK_Right,
@@ -19,7 +27,8 @@ import Graphics.X11.ExtraTypes
     xF86XK_MonBrightnessDown, xF86XK_MonBrightnessUp, xF86XK_Paste,
   )
 import Graphics.X11.Xlib.Extras (Event)
-import System.Exit (exitSuccess)
+
+{- xmonad -}
 import XMonad
   ( ChangeLayout (NextLayout), Choose, Full (Full), IncMasterN (IncMasterN), Layout,
     ManageHook, Mirror (Mirror), Resize (Expand, Shrink), WindowSet, WorkspaceId, X,
@@ -30,6 +39,12 @@ import XMonad
     windows, windowset, withFocused, withWindowSet, workspaces, xmonad, (-->), (=?),
     (|||),
   )
+import XMonad.StackSet
+  ( current, focus, focusDown', focusUp', hidden, shift, sink, stack, swapDown,
+    swapMaster, swapUp, tag, view, visible, workspace,
+  )
+
+{- xmonad-contrib -}
 import XMonad.Actions.CycleRecentWS (cycleWindowSets)
 import XMonad.Actions.CycleWS (Direction1D (Next, Prev), WSType (NonEmptyWS), moveTo)
 import XMonad.Hooks.DynamicLog
@@ -67,10 +82,6 @@ import XMonad.Prompt
     promptBorderWidth,
   )
 import XMonad.Prompt.ConfirmPrompt (confirmPrompt)
-import XMonad.StackSet
-  ( current, focus, focusDown', focusUp', hidden, shift, sink, stack, swapDown,
-    swapMaster, swapUp, tag, view, visible, workspace,
-  )
 import XMonad.Util.Paste (sendKey)
 import XMonad.Util.Types (Direction2D (D, L, R, U))
 
