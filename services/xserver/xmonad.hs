@@ -1,4 +1,5 @@
 {-# LANGUAGE NamedFieldPuns #-}
+{-# OPTIONS_GHC -Wall -Werror #-}
 
 {- base -}
 import Control.Monad ((>=>))
@@ -18,9 +19,9 @@ import Data.Default (def)
 import Graphics.X11
   ( Button, KeyMask, KeySym, Window, controlMask, mod4Mask, noModMask, shiftMask,
     xK_1, xK_9, xK_Alt_L, xK_Alt_R, xK_Down, xK_Left, xK_Print, xK_Return, xK_Right,
-    xK_Tab, xK_Up, xK_b, xK_c, xK_comma, xK_d, xK_e, xK_grave, xK_h, xK_j, xK_k,
-    xK_l, xK_m, xK_o, xK_p, xK_period, xK_q, xK_r, xK_slash, xK_space, xK_t, xK_u,
-    xK_v, xK_w, xK_z,
+    xK_Tab, xK_Up, xK_c, xK_comma, xK_d, xK_e, xK_grave, xK_h, xK_j, xK_k, xK_l,
+    xK_m, xK_o, xK_p, xK_period, xK_q, xK_r, xK_slash, xK_space, xK_t, xK_u, xK_v,
+    xK_w, xK_z,
   )
 import Graphics.X11.ExtraTypes
   ( xF86XK_AudioLowerVolume, xF86XK_AudioMute, xF86XK_AudioRaiseVolume, xF86XK_Copy,
@@ -36,11 +37,10 @@ import XMonad
     focusedBorderColor, gets, handleEventHook, io, keys, kill, layoutHook, logHook,
     manageHook, modMask, mouseBindings, normalBorderColor, resource, runQuery,
     screenWorkspace, sendMessage, setLayout, spawn, startupHook, terminal, whenJust,
-    windows, windowset, withFocused, withWindowSet, workspaces, xmonad, (-->), (=?),
-    (|||),
+    windows, windowset, withFocused, workspaces, xmonad, (=?), (|||),
   )
 import XMonad.StackSet
-  ( current, focus, focusDown', focusUp', hidden, shift, sink, stack, swapDown,
+  ( current, focusDown', focusUp', hidden, shift, sink, stack, swapDown,
     swapMaster, swapUp, tag, view, visible, workspace,
   )
 
@@ -48,21 +48,18 @@ import XMonad.StackSet
 import XMonad.Actions.CycleRecentWS (cycleWindowSets)
 import XMonad.Actions.CycleWS (Direction1D (Next, Prev), WSType (NonEmptyWS), moveTo)
 import XMonad.Hooks.DynamicLog
-  ( ppCurrent, ppHidden, ppLayout, ppOutput, ppTitle, ppWsSep, statusBar, wrap,
-    xmobarColor, xmobarPP,
+  ( ppCurrent, ppHidden, ppLayout, ppTitle, ppWsSep, statusBar, wrap, xmobarColor,
+    xmobarPP,
   )
 import XMonad.Hooks.EwmhDesktops (ewmh, fullscreenEventHook)
 import XMonad.Hooks.ManageDocks (AvoidStruts, avoidStruts, manageDocks)
-import XMonad.Hooks.ManageHelpers
-  ( composeOne, doCenterFloat, doFullFloat, isDialog, isFullscreen, (-?>),
-  )
+import XMonad.Hooks.ManageHelpers (composeOne, doCenterFloat, isDialog, (-?>))
 import XMonad.Layout.BoringWindows (BoringWindows, boringWindows, focusDown, focusUp)
 import XMonad.Layout.Decoration
   ( Decoration, DefaultShrinker, Theme, activeBorderColor, activeColor, activeTextColor,
     decoHeight, decoWidth, fontName, inactiveBorderColor, inactiveColor, inactiveTextColor,
     urgentBorderColor, urgentColor, urgentTextColor,
   )
-import XMonad.Layout.Fullscreen (FullscreenFloat, fullscreenFloat {-- , fullscreenManageHook --})
 import XMonad.Layout.LayoutModifier (ModifiedLayout)
 import XMonad.Layout.NoBorders (SmartBorder, smartBorders)
 import XMonad.Layout.ResizableTile
@@ -70,7 +67,7 @@ import XMonad.Layout.ResizableTile
   )
 import XMonad.Layout.Simplest (Simplest (Simplest))
 import XMonad.Layout.SubLayouts
-  ( GroupMsg (MergeAll, UnMerge, UnMergeAll), Sublayout, onGroup, pullGroup, subLayout, toSubl,
+  ( GroupMsg (MergeAll, UnMerge, UnMergeAll), Sublayout, onGroup, pullGroup, subLayout,
   )
 import XMonad.Layout.Tabbed (TabbedDecoration, addTabs, shrinkText)
 import XMonad.Layout.ToggleLayouts (ToggleLayout (ToggleLayout), ToggleLayouts, toggleLayouts)
@@ -78,8 +75,8 @@ import XMonad.Layout.WindowNavigation
   ( Navigate (Go), WindowNavigation, configurableNavigation, noNavigateBorders,
   )
 import XMonad.Prompt
-  ( XPConfig, XPPosition (Top), alwaysHighlight, bgColor, fgColor, font, height, position,
-    promptBorderWidth,
+  ( XPConfig, XPPosition (Top), alwaysHighlight, bgColor, fgColor, font, height,
+    position, promptBorderWidth,
   )
 import XMonad.Prompt.ConfirmPrompt (confirmPrompt)
 import XMonad.Util.Paste (sendKey)
@@ -320,7 +317,7 @@ keys' conf@(XConfig {modMask}) =
 
 
 mouseBindings' :: XConfig Layout -> M.Map (KeyMask, Button) (Window -> X ())
-mouseBindings' conf@(XConfig {modMask}) =
+mouseBindings' conf@(XConfig {}) =
   M.union bindings (mouseBindings def conf)
   where
     bindings :: M.Map (KeyMask, Button) (Window -> X ())
@@ -416,16 +413,14 @@ layout ::
         ( ModifiedLayout
             (Decoration TabbedDecoration DefaultShrinker)
             ( ModifiedLayout
-                ( Sublayout
-                    (Choose Full Simplest)
-                )
+                (Sublayout Simplest)
                 ( ModifiedLayout
                     BoringWindows
                     ( ToggleLayouts
                         Full
                         ( ModifiedLayout
                             AvoidStruts
-                            (Choose ResizableTall (Choose (Mirror ResizableTall) Full))
+                            (Choose ResizableTall (Mirror ResizableTall))
                         )
                     )
                 )
@@ -438,28 +433,28 @@ layout =
     . configurableNavigation noNavigateBorders
     . smartBorders
     . addTabs shrinkText theme
-    . subLayout [0, 1] (Full ||| Simplest)
+    . subLayout [] Simplest
     . boringWindows
     . toggleLayouts Full
     -- . fullscreenFloat
     . avoidStruts
-    $ tiled ||| Mirror tiled ||| Full
+    $ tiled ||| Mirror tiled
   where
     theme :: Theme
     theme =
       def
-        { activeColor         = "#2d2d2d",
-          inactiveColor       = "#353535",
+        { activeColor         = "#1f1f1f",
+          inactiveColor       = "#1f1f1f",
           urgentColor         = "#15539e",
-          activeBorderColor   = "#070707",
-          inactiveBorderColor = "#1c1c1c",
+          activeBorderColor   = "#161616",
+          inactiveBorderColor = "#1f1f1f",
           urgentBorderColor   = "#030c17",
-          activeTextColor     = "#eeeeec",
-          inactiveTextColor   = "#929291",
+          activeTextColor     = "#d3d3d3",
+          inactiveTextColor   = "#757d80",
           urgentTextColor     = "#ffffff",
           fontName            = "xft:Cantarell:bold:size=10",
           decoWidth           = 200,
-          decoHeight          = 22
+          decoHeight          = 20
         }
 
     tiled :: ResizableTall a
@@ -474,7 +469,7 @@ main =
       ewmh $
         def
           { layoutHook         = layout,
-            terminal           = "alacritty",
+            terminal           = "alacritty -v",
             clickJustFocuses   = False,
             normalBorderColor  = "#212121",
             focusedBorderColor = "#586870",
