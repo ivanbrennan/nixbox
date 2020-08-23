@@ -33,11 +33,11 @@ import Graphics.X11.Xlib.Extras (Event)
 import XMonad
   ( ChangeLayout (NextLayout), Choose, Full (Full), IncMasterN (IncMasterN), Layout,
     ManageHook, Mirror (Mirror), Resize (Expand, Shrink), WindowSet, WorkspaceId, X,
-    XConfig (XConfig), appName, className, clickJustFocuses, composeAll, doF, doFloat,
-    doIgnore, focusedBorderColor, gets, handleEventHook, io, keys, kill, layoutHook,
-    logHook, manageHook, modMask, mouseBindings, normalBorderColor, runQuery,
-    screenWorkspace, sendMessage, setLayout, spawn, startupHook, terminal, whenJust,
-    windows, windowset, withFocused, workspaces, xmonad, (=?), (|||),
+    XConf, XConfig (XConfig), appName, className, clickJustFocuses, composeAll, config,
+    doF, doFloat, doIgnore, focusedBorderColor, gets, handleEventHook, io, keys, kill,
+    layoutHook, local, logHook, manageHook, modMask, mouseBindings, normalBorderColor,
+    runQuery, screenWorkspace, sendMessage, setLayout, spawn, startupHook, terminal,
+    whenJust, windows, windowset, withFocused, workspaces, xmonad, (=?), (|||),
   )
 import XMonad.StackSet
   ( RationalRect (RationalRect), current, focusDown', focusUp', hidden, shift, sink,
@@ -79,6 +79,7 @@ import XMonad.Prompt
     position, promptBorderWidth,
   )
 import XMonad.Prompt.ConfirmPrompt (confirmPrompt)
+import XMonad.Prompt.Man (manPrompt)
 import XMonad.Util.Paste (sendKey)
 import XMonad.Util.NamedScratchpad
   ( NamedScratchpad (NS), namedScratchpadAction, namedScratchpadFilterOutWorkspace,
@@ -223,6 +224,9 @@ keys' conf@(XConfig {modMask}) =
       ( (modMask .|. controlMask, xK_Return),
         namedScratchpadAction scratchpads (NS.name scratchTerminal)
       ),
+      ( (modMask .|. shiftMask, xK_slash),
+        local (setTerminal "alacritty --class=manpage") (manPrompt xPConfig)
+      ),
       ( (mod4Mask, xK_z),
         spawn "i3lock --color=1d1d1d"
       ),
@@ -317,6 +321,10 @@ keys' conf@(XConfig {modMask}) =
           ++ hidden ws
           ++ [workspace (current ws)]
 
+    setTerminal :: String -> XConf -> XConf
+    setTerminal t xc =
+      xc {config = (config xc) {terminal = t}}
+
     ifTerminal :: X () -> X () -> X ()
     ifTerminal thenX elseX =
       withFocused $ isTerminal >=> bool elseX thenX
@@ -398,6 +406,7 @@ manageHook' =
           className =? "Xmessage" -?> doCenterFloat,
           -- className =? "vlc" -?> doFloat,
           appName =? "desktop_window" -?> doIgnore,
+          appName =? "manpage" -?> centeredFloat 0.6 0.6,
           pure True {- otherwise -} -?> doF swapDown
         ],
       -- fullscreenManageHook,
@@ -499,9 +508,9 @@ layout =
 
 main :: IO ()
 main =
-  xmonad =<< statusBar "xmobar" barPP toggleStrutsKey config
+  xmonad =<< statusBar "xmobar" barPP toggleStrutsKey xconfig
   where
-    config =
+    xconfig =
       ewmh $
         def
           { layoutHook         = layout,
