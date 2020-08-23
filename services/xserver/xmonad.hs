@@ -7,7 +7,10 @@ import Data.Bits ((.|.))
 import Data.Bool (bool)
 import Data.List (intercalate)
 import Data.Monoid (All)
+import Data.Time (ZonedTime, defaultTimeLocale, formatTime, getZonedTime)
+import System.Directory (getHomeDirectory)
 import System.Exit (exitSuccess)
+import System.FilePath ((</>))
 
 {- containers -}
 import qualified Data.Map as M
@@ -47,6 +50,7 @@ import XMonad.StackSet
 {- xmonad-contrib -}
 import XMonad.Actions.CycleRecentWS (cycleWindowSets)
 import XMonad.Actions.CycleWS (Direction1D (Next, Prev), WSType (NonEmptyWS), moveTo)
+import XMonad.Actions.Submap (submap)
 import XMonad.Hooks.DynamicLog
   ( PP, ppCurrent, ppHidden, ppLayout, ppTitle, ppWsSep, statusBar, wrap, xmobarColor,
     xmobarPP,
@@ -78,6 +82,7 @@ import XMonad.Prompt
   ( XPConfig, XPPosition (Top), alwaysHighlight, autoComplete, bgColor, fgColor, font,
     height, position, promptBorderWidth,
   )
+import XMonad.Prompt.AppendFile (appendFilePrompt')
 import XMonad.Prompt.ConfirmPrompt (confirmPrompt)
 import XMonad.Prompt.Man (manPrompt)
 import XMonad.Util.Paste (sendKey)
@@ -228,6 +233,13 @@ keys' conf@(XConfig {modMask}) =
         local (setTerminal "alacritty --class=manpage") $
           manPrompt (xPConfig {autoComplete = Just 0})
       ),
+      ( (modMask, xK_slash),
+        submap . M.fromList $
+          [ ( (noModMask, xK_space),
+              appendThoughtPrompt
+            )
+          ]
+      ),
       ( (mod4Mask, xK_z),
         spawn "i3lock --color=1d1d1d"
       ),
@@ -333,6 +345,15 @@ keys' conf@(XConfig {modMask}) =
     isTerminal :: Window -> X Bool
     isTerminal =
       fmap (== "Alacritty") . runQuery className
+
+    appendThoughtPrompt :: X ()
+    appendThoughtPrompt = do
+      home <- io getHomeDirectory
+      time <- io (fmap timestamp getZonedTime)
+      appendFilePrompt' xPConfig (time ++) (home </> "thoughts")
+
+    timestamp :: ZonedTime -> String
+    timestamp = formatTime defaultTimeLocale "[%FT%T%Ez] "
 
 
 mouseBindings' :: XConfig Layout -> M.Map (KeyMask, Button) (Window -> X ())
@@ -538,4 +559,4 @@ main =
             ppLayout  = const ""
           }
 
-    toggleStrutsKey XConfig {modMask} = (modMask, xK_slash)
+    toggleStrutsKey = const (mod4Mask, xK_slash)
