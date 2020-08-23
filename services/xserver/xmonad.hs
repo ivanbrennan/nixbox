@@ -96,10 +96,7 @@ keys' conf@(XConfig {modMask}) =
       ( (mod4Mask, xK_space),
         sendMessage NextLayout
       ),
-      ( (modMask .|. controlMask, xK_space),
-        sendMessage ToggleLayout
-      ),
-      ( (modMask .|. controlMask, xK_Return),
+      ( (modMask, xK_Return),
         sendMessage ToggleLayout
       ),
       -- workspaces
@@ -140,14 +137,15 @@ keys' conf@(XConfig {modMask}) =
       ( (mod4Mask, xK_Tab),
         onGroup focusDown'
       ),
-      ( (mod4Mask .|. modMask, xK_period),
+      ( (mod4Mask, xK_period),
         onGroup focusDown'
       ),
-      ( (mod4Mask .|. modMask, xK_comma),
+      ( (mod4Mask, xK_comma),
         onGroup focusUp'
       ),
-      ( (mod4Mask .|. modMask, xK_space),
-        toSubl NextLayout
+      -- TODO: get this working
+      ( (mod4Mask .|. modMask, xK_o),
+        spawn (terminal conf) >> sendMessage (pullGroup U)
       ),
       -- focus
       ( (modMask, xK_j),
@@ -214,7 +212,7 @@ keys' conf@(XConfig {modMask}) =
         confirmPrompt xPConfig "exit" (io exitSuccess)
       ),
       -- launch/kill
-      ( (modMask .|. controlMask, xK_o),
+      ( (modMask .|. shiftMask, xK_Return),
         spawn (terminal conf)
       ),
       ( (modMask, xK_space),
