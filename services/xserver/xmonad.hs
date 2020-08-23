@@ -213,7 +213,7 @@ keys' conf@(XConfig {modMask}) =
         confirmPrompt xPConfig "exit" (io exitSuccess)
       ),
       -- launch/kill
-      ( (modMask .|. shiftMask, xK_Return),
+      ( (modMask .|. shiftMask, xK_o),
         spawn (terminal conf)
       ),
       ( (modMask, xK_space),
