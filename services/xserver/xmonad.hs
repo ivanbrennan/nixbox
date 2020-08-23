@@ -75,8 +75,8 @@ import XMonad.Layout.WindowNavigation
   ( Navigate (Go), WindowNavigation, configurableNavigation, noNavigateBorders,
   )
 import XMonad.Prompt
-  ( XPConfig, XPPosition (Top), alwaysHighlight, bgColor, fgColor, font, height,
-    position, promptBorderWidth,
+  ( XPConfig, XPPosition (Top), alwaysHighlight, autoComplete, bgColor, fgColor, font,
+    height, position, promptBorderWidth,
   )
 import XMonad.Prompt.ConfirmPrompt (confirmPrompt)
 import XMonad.Prompt.Man (manPrompt)
@@ -225,7 +225,8 @@ keys' conf@(XConfig {modMask}) =
         namedScratchpadAction scratchpads (NS.name scratchTerminal)
       ),
       ( (modMask .|. shiftMask, xK_slash),
-        local (setTerminal "alacritty --class=manpage") (manPrompt xPConfig)
+        local (setTerminal "alacritty --class=manpage") $
+          manPrompt (xPConfig {autoComplete = Just 0})
       ),
       ( (mod4Mask, xK_z),
         spawn "i3lock --color=1d1d1d"
