@@ -81,8 +81,8 @@ import XMonad.Prompt
 import XMonad.Prompt.ConfirmPrompt (confirmPrompt)
 import XMonad.Util.Paste (sendKey)
 import XMonad.Util.NamedScratchpad
-  ( NamedScratchpad (NS), namedScratchpadAction, namedScratchpadFilterOutWorkspacePP,
-    namedScratchpadManageHook,
+  ( NamedScratchpad (NS), namedScratchpadAction, namedScratchpadFilterOutWorkspace,
+    namedScratchpadFilterOutWorkspacePP, namedScratchpadManageHook
   )
 import XMonad.Util.Types (Direction2D (D, L, R, U))
 
@@ -308,11 +308,13 @@ keys' conf@(XConfig {modMask}) =
     recentWS ws = map (`view` ws) (recentTags ws)
 
     recentTags :: WindowSet -> [WorkspaceId]
-    recentTags ws = map tag
-      $ filter (not . null . stack)
-      $ map workspace (visible ws)
-        ++ hidden ws
-        ++ [workspace (current ws)]
+    recentTags ws =
+      map tag
+        . filter (not . null . stack)
+        . namedScratchpadFilterOutWorkspace
+        $ map workspace (visible ws)
+          ++ hidden ws
+          ++ [workspace (current ws)]
 
     ifTerminal :: X () -> X () -> X ()
     ifTerminal thenX elseX =
