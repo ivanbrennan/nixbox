@@ -33,27 +33,27 @@ import Graphics.X11.Xlib.Extras (Event)
 import XMonad
   ( ChangeLayout (NextLayout), Choose, Full (Full), IncMasterN (IncMasterN), Layout,
     ManageHook, Mirror (Mirror), Resize (Expand, Shrink), WindowSet, WorkspaceId, X,
-    XConfig (XConfig), className, clickJustFocuses, composeAll, doF, doFloat, doIgnore,
-    focusedBorderColor, gets, handleEventHook, io, keys, kill, layoutHook, logHook,
-    manageHook, modMask, mouseBindings, normalBorderColor, resource, runQuery,
+    XConfig (XConfig), appName, className, clickJustFocuses, composeAll, doF, doFloat,
+    doIgnore, focusedBorderColor, gets, handleEventHook, io, keys, kill, layoutHook,
+    logHook, manageHook, modMask, mouseBindings, normalBorderColor, runQuery,
     screenWorkspace, sendMessage, setLayout, spawn, startupHook, terminal, whenJust,
     windows, windowset, withFocused, workspaces, xmonad, (=?), (|||),
   )
 import XMonad.StackSet
-  ( current, focusDown', focusUp', hidden, shift, sink, stack, swapDown,
-    swapMaster, swapUp, tag, view, visible, workspace,
+  ( RationalRect (RationalRect), current, focusDown', focusUp', hidden, shift, sink,
+    stack, swapDown, swapMaster, swapUp, tag, view, visible, workspace,
   )
 
 {- xmonad-contrib -}
 import XMonad.Actions.CycleRecentWS (cycleWindowSets)
 import XMonad.Actions.CycleWS (Direction1D (Next, Prev), WSType (NonEmptyWS), moveTo)
 import XMonad.Hooks.DynamicLog
-  ( ppCurrent, ppHidden, ppLayout, ppTitle, ppWsSep, statusBar, wrap, xmobarColor,
+  ( PP, ppCurrent, ppHidden, ppLayout, ppTitle, ppWsSep, statusBar, wrap, xmobarColor,
     xmobarPP,
   )
 import XMonad.Hooks.EwmhDesktops (ewmh, fullscreenEventHook)
 import XMonad.Hooks.ManageDocks (AvoidStruts, avoidStruts, manageDocks)
-import XMonad.Hooks.ManageHelpers (composeOne, doCenterFloat, isDialog, (-?>))
+import XMonad.Hooks.ManageHelpers (composeOne, doCenterFloat, doRectFloat, isDialog, (-?>))
 import XMonad.Layout.BoringWindows (BoringWindows, boringWindows, focusDown, focusUp)
 import XMonad.Layout.Decoration
   ( Decoration, DefaultShrinker, Theme, activeBorderColor, activeColor, activeTextColor,
@@ -80,6 +80,10 @@ import XMonad.Prompt
   )
 import XMonad.Prompt.ConfirmPrompt (confirmPrompt)
 import XMonad.Util.Paste (sendKey)
+import XMonad.Util.NamedScratchpad
+  ( NamedScratchpad (NS), namedScratchpadAction, namedScratchpadFilterOutWorkspacePP,
+    namedScratchpadManageHook,
+  )
 import XMonad.Util.Types (Direction2D (D, L, R, U))
 
 
@@ -215,6 +219,9 @@ keys' conf@(XConfig {modMask}) =
       ( (modMask, xK_space),
         spawn "dmenu_run -fn monospace:size=12 -l 24 -i -nb '#1c1c1c' -nf '#a5adb7' -sb '#222222' -sf '#ffffff'"
       ),
+      ( (modMask .|. controlMask, xK_Return),
+        namedScratchpadAction scratchpads "scratchpad"
+      ),
       ( (mod4Mask, xK_z),
         spawn "i3lock --color=1d1d1d"
       ),
@@ -338,6 +345,14 @@ xPConfig =
       font              = "xft:monospace:size=12"
     }
 
+scratchpads :: [NamedScratchpad]
+scratchpads =
+  [ NS "scratchpad" "alacritty --class scratchpad" (appName =? "scratchpad") (doRectFloat rect)
+  ]
+  where
+    rect :: RationalRect
+    rect = RationalRect 0.25 0.25 0.5 0.5
+
 ------------------------------------------------------------------------
 -- Window rules:
 
@@ -351,7 +366,7 @@ xPConfig =
 -- and click on the client you're interested in.
 --
 -- To match on the WM_NAME, you can use 'title' in the same way that
--- 'className' and 'resource' are used below.
+-- 'className' and 'appName' are used below.
 --
 manageHook' :: ManageHook
 manageHook' =
@@ -362,10 +377,11 @@ manageHook' =
           className =? "Gcr-prompter" -?> doCenterFloat,
           className =? "Xmessage" -?> doCenterFloat,
           -- className =? "vlc" -?> doFloat,
-          resource =? "desktop_window" -?> doIgnore,
+          appName =? "desktop_window" -?> doIgnore,
           pure True {- otherwise -} -?> doF swapDown
         ],
       -- fullscreenManageHook,
+      namedScratchpadManageHook scratchpads,
       manageDocks
     ]
 
@@ -481,13 +497,15 @@ main =
             startupHook        = startupHook'
           }
 
+    barPP :: PP
     barPP =
-      xmobarPP
-        { ppCurrent = xmobarColor "#dddddd" "#004466" . wrap " " " ",
-          ppHidden  = xmobarColor "#888888" "#222222" . wrap " " " ",
-          ppWsSep   = "",
-          ppTitle   = const "",
-          ppLayout  = const ""
-        }
+      namedScratchpadFilterOutWorkspacePP $
+        xmobarPP
+          { ppCurrent = xmobarColor "#dddddd" "#004466" . wrap " " " ",
+            ppHidden  = xmobarColor "#888888" "#222222" . wrap " " " ",
+            ppWsSep   = "",
+            ppTitle   = const "",
+            ppLayout  = const ""
+          }
 
     toggleStrutsKey XConfig {modMask} = (modMask, xK_slash)
