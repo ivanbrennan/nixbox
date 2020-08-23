@@ -1,6 +1,7 @@
 pkgs:
 
 {
+  ABDUCO_CMD = "bash";
   DOTFILES = "$HOME/Development/resources/dotfiles";
   EDITOR = "vim";
   GIT_EDITOR = "vim";
