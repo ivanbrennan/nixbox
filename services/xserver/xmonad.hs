@@ -84,6 +84,7 @@ import XMonad.Util.NamedScratchpad
   ( NamedScratchpad (NS), namedScratchpadAction, namedScratchpadFilterOutWorkspace,
     namedScratchpadFilterOutWorkspacePP, namedScratchpadManageHook
   )
+import qualified XMonad.Util.NamedScratchpad as NS
 import XMonad.Util.Types (Direction2D (D, L, R, U))
 
 
@@ -220,7 +221,7 @@ keys' conf@(XConfig {modMask}) =
         spawn "dmenu_run -fn monospace:size=12 -l 24 -i -nb '#1c1c1c' -nf '#a5adb7' -sb '#222222' -sf '#ffffff'"
       ),
       ( (modMask .|. controlMask, xK_Return),
-        namedScratchpadAction scratchpads "scratchpad"
+        namedScratchpadAction scratchpads (NS.name scratchTerminal)
       ),
       ( (mod4Mask, xK_z),
         spawn "i3lock --color=1d1d1d"
@@ -349,11 +350,28 @@ xPConfig =
 
 scratchpads :: [NamedScratchpad]
 scratchpads =
-  [ NS "scratchpad" "alacritty --class scratchpad" (appName =? "scratchpad") (doRectFloat rect)
+  [ scratchTerminal
   ]
+
+scratchTerminal :: NamedScratchpad
+scratchTerminal =
+  NS name command (appName =? name) (centeredFloat 0.5 0.5)
   where
-    rect :: RationalRect
-    rect = RationalRect 0.25 0.25 0.5 0.5
+    name :: String
+    name = "scratchpad"
+
+    command :: String
+    command = "alacritty-transparent --class " ++ name
+
+centeredFloat :: Rational -> Rational -> ManageHook
+centeredFloat width height =
+  doRectFloat (RationalRect x y width height)
+  where
+    x :: Rational
+    x = (1 - width) / 2
+
+    y :: Rational
+    y = (1 - height) / 2
 
 ------------------------------------------------------------------------
 -- Window rules:
