@@ -3,6 +3,7 @@ pkgs:
 with pkgs; [
   _1password-1_4_0
   abcde
+  abduco
   ag
   alacritty-wrapped
   aspell
