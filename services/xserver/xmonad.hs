@@ -355,7 +355,7 @@ scratchpads =
 
 scratchTerminal :: NamedScratchpad
 scratchTerminal =
-  NS name command (appName =? name) (centeredFloat 0.5 0.5)
+  NS name command (appName =? name) (centeredFloat 0.8 0.7)
   where
     name :: String
     name = "scratchpad"
