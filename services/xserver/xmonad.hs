@@ -22,9 +22,9 @@ import Data.Default (def)
 import Graphics.X11
   ( Button, KeyMask, KeySym, Window, controlMask, mod4Mask, noModMask, shiftMask,
     xK_1, xK_9, xK_Alt_L, xK_Alt_R, xK_Down, xK_Left, xK_Print, xK_Return, xK_Right,
-    xK_Tab, xK_Up, xK_c, xK_comma, xK_d, xK_e, xK_grave, xK_h, xK_j, xK_k, xK_l,
+    xK_Tab, xK_Up, xK_c, xK_comma, xK_d, xK_e, xK_g, xK_grave, xK_h, xK_j, xK_k, xK_l,
     xK_m, xK_o, xK_p, xK_period, xK_q, xK_r, xK_slash, xK_space, xK_t, xK_u, xK_v,
-    xK_w, xK_z,
+    xK_w, xK_x, xK_z,
   )
 import Graphics.X11.ExtraTypes
   ( xF86XK_AudioLowerVolume, xF86XK_AudioMute, xF86XK_AudioRaiseVolume, xF86XK_Copy,
@@ -39,7 +39,7 @@ import XMonad
     XConf, XConfig (XConfig), appName, className, clickJustFocuses, composeAll, config,
     doF, doFloat, doIgnore, focusedBorderColor, gets, handleEventHook, io, keys, kill,
     layoutHook, local, logHook, manageHook, modMask, mouseBindings, normalBorderColor,
-    runQuery, screenWorkspace, sendMessage, setLayout, spawn, startupHook, terminal,
+    refresh, runQuery, screenWorkspace, sendMessage, spawn, startupHook, terminal,
     whenJust, windows, windowset, withFocused, workspaces, xmonad, (=?), (|||),
   )
 import XMonad.StackSet
@@ -85,6 +85,9 @@ import XMonad.Prompt
 import XMonad.Prompt.AppendFile (appendFilePrompt')
 import XMonad.Prompt.ConfirmPrompt (confirmPrompt)
 import XMonad.Prompt.Man (manPrompt)
+import XMonad.Prompt.RunOrRaise (runOrRaisePrompt)
+import XMonad.Prompt.Window (WindowPrompt (Goto), windowPrompt, allWindows)
+import XMonad.Prompt.XMonad (xmonadPromptC)
 import XMonad.Util.Paste (sendKey)
 import XMonad.Util.NamedScratchpad
   ( NamedScratchpad (NS), namedScratchpadAction, namedScratchpadFilterOutWorkspace,
@@ -206,11 +209,11 @@ keys' conf@(XConfig {modMask}) =
       ),
       -- refresh
       ( (mod4Mask .|. shiftMask, xK_r),
-        setLayout (layoutHook conf)
+        refresh
       ),
       -- tile
       ( (mod4Mask, xK_t),
-        withFocused $ windows . sink
+        withFocused (windows . sink)
       ),
       -- quit or restart
       ( (mod4Mask, xK_q),
@@ -236,7 +239,16 @@ keys' conf@(XConfig {modMask}) =
       ( (modMask, xK_slash),
         submap . M.fromList $
           [ ( (noModMask, xK_space),
-              appendThoughtPrompt
+              appendThoughtPrompt xPConfig
+            ),
+            ( (modMask, xK_slash),
+              runOrRaisePrompt xPConfig
+            ),
+            ( (noModMask, xK_g),
+              windowPrompt xPConfig Goto allWindows
+            ),
+            ( (noModMask, xK_x),
+              xmonadPromptC commands xPConfig
             )
           ]
       ),
@@ -346,14 +358,21 @@ keys' conf@(XConfig {modMask}) =
     isTerminal =
       fmap (== "Alacritty") . runQuery className
 
-    appendThoughtPrompt :: X ()
-    appendThoughtPrompt = do
+    appendThoughtPrompt :: XPConfig -> X ()
+    appendThoughtPrompt xP = do
       home <- io getHomeDirectory
       time <- io (fmap timestamp getZonedTime)
-      appendFilePrompt' xPConfig (time ++) (home </> "thoughts")
+      appendFilePrompt' xP (time ++) (home </> "thoughts")
 
     timestamp :: ZonedTime -> String
     timestamp = formatTime defaultTimeLocale "[%FT%T%Ez] "
+
+    commands :: [(String, X ())]
+    commands =
+      [ ("shrink", sendMessage Shrink),
+        ("expand", sendMessage Expand),
+        ("refresh", refresh)
+      ]
 
 
 mouseBindings' :: XConfig Layout -> M.Map (KeyMask, Button) (Window -> X ())
