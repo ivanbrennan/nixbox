@@ -87,6 +87,7 @@
 
   fonts.fonts = [
     pkgs.emacs-all-the-icons-fonts
+    pkgs.mononoki
     pkgs.open-sans
     pkgs.source-code-pro
   ];
