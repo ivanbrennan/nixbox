@@ -22,9 +22,9 @@ import Data.Default (def)
 import Graphics.X11
   ( Button, KeyMask, KeySym, Window, controlMask, mod4Mask, noModMask, shiftMask,
     xK_1, xK_9, xK_Alt_L, xK_Alt_R, xK_Down, xK_Left, xK_Print, xK_Return, xK_Right,
-    xK_Tab, xK_Up, xK_c, xK_comma, xK_d, xK_e, xK_g, xK_grave, xK_h, xK_j, xK_k, xK_l,
-    xK_m, xK_o, xK_p, xK_period, xK_q, xK_r, xK_slash, xK_space, xK_t, xK_u, xK_v,
-    xK_w, xK_x, xK_z,
+    xK_Tab, xK_Up, xK_a, xK_c, xK_comma, xK_d, xK_e, xK_g, xK_grave, xK_h, xK_j, xK_k,
+    xK_l, xK_m, xK_o, xK_p, xK_period, xK_q, xK_r, xK_slash, xK_space, xK_t, xK_u,
+    xK_v, xK_w, xK_x, xK_z,
   )
 import Graphics.X11.ExtraTypes
   ( xF86XK_AudioLowerVolume, xF86XK_AudioMute, xF86XK_AudioRaiseVolume, xF86XK_Copy,
@@ -229,26 +229,30 @@ keys' conf@(XConfig {modMask}) =
       ( (modMask, xK_space),
         spawn "dmenu_run -fn monospace:size=12 -l 24 -i -nb '#1c1c1c' -nf '#a5adb7' -sb '#222222' -sf '#ffffff'"
       ),
-      ( (modMask .|. controlMask, xK_Return),
+      ( (controlMask .|. shiftMask, xK_space),
         namedScratchpadAction scratchpads (NS.name scratchTerminal)
-      ),
-      ( (modMask .|. shiftMask, xK_slash),
-        local (setTerminal "alacritty --class=manpage") $
-          manPrompt (xPConfig {autoComplete = Just 0})
       ),
       ( (modMask, xK_slash),
         submap . M.fromList $
-          [ ( (noModMask, xK_space),
-              appendThoughtPrompt xPConfig
+          [ ( (modMask, xK_slash),
+              local (setTerminal "alacritty --class=manpage") $
+                manPrompt (xPConfig {autoComplete = Just 0})
             ),
-            ( (modMask, xK_slash),
-              runOrRaisePrompt xPConfig
+            ( (noModMask, xK_a),
+              appendThoughtPrompt xPConfig
             ),
             ( (noModMask, xK_g),
               windowPrompt xPConfig Goto allWindows
             ),
             ( (noModMask, xK_x),
               xmonadPromptC commands xPConfig
+            )
+          ]
+      ),
+      ( (controlMask, xK_space),
+        submap . M.fromList $
+          [ ( (noModMask, xK_r),
+              runOrRaisePrompt xPConfig
             )
           ]
       ),
