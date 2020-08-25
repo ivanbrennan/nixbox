@@ -794,7 +794,6 @@ key_bindings:
   - { key: Return,    mods: Shift,                 chars: "\x1b[13;2u"         }
   - { key: Return,    mods: Alt|Shift,             chars: "\x1b[13;4u"         }
   - { key: Return,    mods: Control,               chars: "\x1b[13;5u"         }
-  - { key: Space,     mods: Shift,                 chars: "\x1b[32;2u"         }
   - { key: Space,     mods: Alt|Shift,             chars: "\x1b[32;4u"         }
   - { key: Space,     mods: Control|Shift,         chars: "\x1b[32;6u"         }
   - { key: Space,     mods: Control,               chars: "\x00"               }
