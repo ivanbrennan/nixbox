@@ -23,7 +23,7 @@ import Graphics.X11
   ( Button, KeyMask, KeySym, Window, controlMask, mod4Mask, noModMask, shiftMask,
     xK_1, xK_9, xK_Alt_L, xK_Alt_R, xK_Down, xK_Left, xK_Print, xK_Return, xK_Right,
     xK_Tab, xK_Up, xK_a, xK_c, xK_comma, xK_d, xK_e, xK_g, xK_grave, xK_h, xK_j, xK_k,
-    xK_l, xK_m, xK_o, xK_p, xK_period, xK_q, xK_r, xK_slash, xK_space, xK_t, xK_u,
+    xK_l, xK_m, xK_n, xK_p, xK_period, xK_q, xK_r, xK_slash, xK_space, xK_t, xK_u,
     xK_v, xK_w, xK_x, xK_z,
   )
 import Graphics.X11.ExtraTypes
@@ -155,9 +155,9 @@ keys' conf@(XConfig {modMask}) =
         onGroup focusUp'
       ),
       -- TODO: get this working
-      ( (mod4Mask .|. modMask, xK_o),
-        spawn (terminal conf) >> sendMessage (pullGroup U)
-      ),
+      -- ( (mod4Mask .|. modMask, xK_o),
+      --   spawn (terminal conf) >> sendMessage (pullGroup U)
+      -- ),
       -- focus
       ( (modMask, xK_j),
         focusDown
@@ -223,7 +223,7 @@ keys' conf@(XConfig {modMask}) =
         confirmPrompt xPConfig "exit" (io exitSuccess)
       ),
       -- launch/kill
-      ( (modMask .|. shiftMask, xK_o),
+      ( (modMask .|. shiftMask, xK_n),
         spawn (terminal conf)
       ),
       ( (modMask, xK_space),
