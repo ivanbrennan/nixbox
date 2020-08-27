@@ -686,8 +686,9 @@ key_bindings:
   - { key: Tab,       mods: Shift,               chars: "\x1b[Z"        }
 
   # Vi Mode
-  - { key: Space,  mods: Shift,         mode: Vi, action: ScrollToBottom          }
-  - { key: Space,  mods: Shift,                   action: ToggleViMode            }
+  - { key: Space,  mods: Shift,         mode: Vi, action: ScrollPageUp            }
+  - { key: Space,                       mode: Vi, action: ScrollPageDown          }
+  - { key: Space,  mods: Shift,         mode: ~Vi, action: ToggleViMode           }
   - { key: Escape,                      mode: Vi, action: ClearSelection          }
   - { key: Escape,                      mode: Vi, action: ScrollToBottom          }
   - { key: Escape,                      mode: Vi, action: ToggleViMode            }
