@@ -68,6 +68,7 @@ with pkgs; [
   pup
   qbittorrent
   redis
+  reptyr
   ripgrep
   rxvt_unicode-with-plugins
   screenshot
