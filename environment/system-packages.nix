@@ -47,7 +47,6 @@ with pkgs; [
   kitty
   kubectl
   kubernetes-helm-2_11
-  lastpass-cli
   lshw
   lsof
   lsscsi
