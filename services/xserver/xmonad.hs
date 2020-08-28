@@ -13,6 +13,7 @@ import System.Exit (exitSuccess)
 import System.FilePath ((</>))
 
 {- containers -}
+import Data.Map (Map)
 import qualified Data.Map as M
 
 {- data-default -}
@@ -23,7 +24,7 @@ import Graphics.X11
   ( Button, KeyMask, KeySym, Window, controlMask, mod4Mask, noModMask, shiftMask,
     xK_1, xK_9, xK_Alt_L, xK_Alt_R, xK_Down, xK_Left, xK_Print, xK_Return, xK_Right,
     xK_Tab, xK_Up, xK_a, xK_c, xK_comma, xK_d, xK_e, xK_g, xK_grave, xK_h, xK_j, xK_k,
-    xK_l, xK_m, xK_n, xK_p, xK_period, xK_q, xK_r, xK_slash, xK_space, xK_t, xK_u,
+    xK_l, xK_m, xK_o, xK_p, xK_period, xK_q, xK_r, xK_slash, xK_space, xK_t, xK_u,
     xK_v, xK_w, xK_x, xK_z,
   )
 import Graphics.X11.ExtraTypes
@@ -37,7 +38,7 @@ import XMonad
   ( ChangeLayout (NextLayout), Choose, Full (Full), IncMasterN (IncMasterN), Layout,
     ManageHook, Mirror (Mirror), Resize (Expand, Shrink), WindowSet, WorkspaceId, X,
     XConf, XConfig (XConfig), appName, className, clickJustFocuses, composeAll, config,
-    doF, doFloat, doIgnore, focusedBorderColor, gets, handleEventHook, io, keys, kill,
+    doFloat, doIgnore, focusedBorderColor, gets, handleEventHook, io, keys, kill,
     layoutHook, local, logHook, manageHook, modMask, mouseBindings, normalBorderColor,
     refresh, runQuery, screenWorkspace, sendMessage, spawn, startupHook, terminal,
     whenJust, windows, windowset, withFocused, workspaces, xmonad, (=?), (|||),
@@ -88,19 +89,19 @@ import XMonad.Prompt.Man (manPrompt)
 import XMonad.Prompt.RunOrRaise (runOrRaisePrompt)
 import XMonad.Prompt.Window (WindowPrompt (Goto), windowPrompt, allWindows)
 import XMonad.Prompt.XMonad (xmonadPromptC)
-import XMonad.Util.Paste (sendKey)
 import XMonad.Util.NamedScratchpad
   ( NamedScratchpad (NS), namedScratchpadAction, namedScratchpadFilterOutWorkspace,
     namedScratchpadFilterOutWorkspacePP, namedScratchpadManageHook
   )
 import qualified XMonad.Util.NamedScratchpad as NS
+import XMonad.Util.Paste (sendKey)
 import XMonad.Util.Types (Direction2D (D, L, R, U))
 
 
 -- https://github.com/xmonad/X11/blob/6e5ef8019a0cc49e18410a335dbdeea87b7c4aac/Graphics/X11/Types.hsc
 -- https://stackoverflow.com/questions/6605399/how-can-i-set-an-action-to-occur-on-a-key-release-in-xmonad
 
-keys' :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
+keys' :: XConfig Layout -> Map (KeyMask, KeySym) (X ())
 keys' conf@(XConfig {modMask}) =
   M.fromList $
     [ -- layout algorithms
@@ -223,7 +224,7 @@ keys' conf@(XConfig {modMask}) =
         confirmPrompt xPConfig "exit" (io exitSuccess)
       ),
       -- launch/kill
-      ( (modMask .|. shiftMask, xK_n),
+      ( (modMask .|. shiftMask, xK_o),
         spawn (terminal conf)
       ),
       ( (modMask, xK_space),
@@ -379,11 +380,11 @@ keys' conf@(XConfig {modMask}) =
       ]
 
 
-mouseBindings' :: XConfig Layout -> M.Map (KeyMask, Button) (Window -> X ())
+mouseBindings' :: XConfig Layout -> Map (KeyMask, Button) (Window -> X ())
 mouseBindings' conf@(XConfig {}) =
   M.union bindings (mouseBindings def conf)
   where
-    bindings :: M.Map (KeyMask, Button) (Window -> X ())
+    bindings :: Map (KeyMask, Button) (Window -> X ())
     bindings = M.fromList $
       [
       ]
@@ -451,8 +452,7 @@ manageHook' =
           className =? "Xmessage" -?> doCenterFloat,
           -- className =? "vlc" -?> doFloat,
           appName =? "desktop_window" -?> doIgnore,
-          appName =? "manpage" -?> centeredFloat 0.6 0.6,
-          pure True {- otherwise -} -?> doF swapDown
+          appName =? "manpage" -?> centeredFloat 0.6 0.6
         ],
       -- fullscreenManageHook,
       namedScratchpadManageHook scratchpads,
