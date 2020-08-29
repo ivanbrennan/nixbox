@@ -559,7 +559,7 @@ main =
       ewmh $
         def
           { layoutHook         = layout,
-            terminal           = "alacritty -v",
+            terminal           = "alacritty",
             clickJustFocuses   = False,
             normalBorderColor  = "#212121",
             focusedBorderColor = "#586870",
