@@ -150,10 +150,10 @@ keys' conf@(XConfig {modMask}) =
       ( (mod4Mask, xK_Tab),
         onGroup focusDown'
       ),
-      ( (mod4Mask, xK_period),
+      ( (modMask .|. controlMask, xK_period),
         onGroup focusDown'
       ),
-      ( (mod4Mask, xK_comma),
+      ( (modMask .|. controlMask, xK_comma),
         onGroup focusUp'
       ),
       -- TODO: get this working
