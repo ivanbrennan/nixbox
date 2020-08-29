@@ -24,8 +24,8 @@ import Graphics.X11
   ( Button, KeyMask, KeySym, Window, button1, controlMask, mod4Mask, noModMask, shiftMask,
     xK_1, xK_9, xK_Alt_L, xK_Alt_R, xK_Down, xK_Left, xK_Print, xK_Return, xK_Right,
     xK_Tab, xK_Up, xK_a, xK_c, xK_comma, xK_d, xK_e, xK_g, xK_grave, xK_h, xK_j, xK_k,
-    xK_l, xK_m, xK_o, xK_p, xK_period, xK_q, xK_r, xK_slash, xK_space, xK_t, xK_u,
-    xK_v, xK_w, xK_x, xK_z,
+    xK_l, xK_m, xK_n, xK_o, xK_p, xK_period, xK_q, xK_r, xK_slash, xK_space, xK_t,
+    xK_u, xK_v, xK_w, xK_x, xK_z,
   )
 import Graphics.X11.ExtraTypes
   ( xF86XK_AudioLowerVolume, xF86XK_AudioMute, xF86XK_AudioRaiseVolume, xF86XK_Copy,
@@ -126,34 +126,34 @@ keys' conf@(XConfig {modMask}) =
         cycleWindowSets recentWS [xK_Alt_L, xK_Alt_R] xK_Tab xK_grave
       ),
       -- sublayouts
-      ( (mod4Mask .|. modMask, xK_h),
+      ( (controlMask .|. shiftMask, xK_h),
         sendMessage (pullGroup L)
       ),
-      ( (mod4Mask .|. modMask, xK_l),
+      ( (controlMask .|. shiftMask, xK_l),
         sendMessage (pullGroup R)
       ),
-      ( (mod4Mask .|. modMask, xK_k),
+      ( (controlMask .|. shiftMask, xK_k),
         sendMessage (pullGroup U)
       ),
-      ( (mod4Mask .|. modMask, xK_j),
+      ( (controlMask .|. shiftMask, xK_j),
         sendMessage (pullGroup D)
       ),
-      ( (mod4Mask .|. modMask .|. shiftMask, xK_m),
+      ( (mod4Mask .|. controlMask .|. shiftMask, xK_m),
         withFocused (sendMessage . MergeAll)
       ),
-      ( (mod4Mask .|. modMask .|. shiftMask, xK_u),
+      ( (mod4Mask .|. controlMask .|. shiftMask, xK_u),
         withFocused (sendMessage . UnMergeAll)
       ),
-      ( (mod4Mask .|. modMask, xK_u),
+      ( (controlMask .|. shiftMask, xK_u),
         withFocused (sendMessage . UnMerge)
       ),
       ( (mod4Mask, xK_Tab),
         onGroup focusDown'
       ),
-      ( (mod4Mask, xK_period),
+      ( (controlMask .|. shiftMask, xK_n),
         onGroup focusDown'
       ),
-      ( (mod4Mask, xK_comma),
+      ( (controlMask .|. shiftMask, xK_p),
         onGroup focusUp'
       ),
       -- TODO: get this working
