@@ -22,13 +22,14 @@
 
     xserver = (import ./xserver) pkgs;
 
-    compton = {
+    picom = {
       enable = true;
+      fade = false;
+      shadow = false;
       backend = "glx";
       vSync = true;
       settings = {
         glx-no-stencil = true;
-        paint-on-overlay = true;
       };
     };
   };

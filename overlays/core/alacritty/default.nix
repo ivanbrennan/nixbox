@@ -8,7 +8,7 @@ let
   transparentConfig = runCommand "alacritty-transparent.yml" {
     buildInputs = [ gnused ];
   } ''
-    sed 's/background_opacity: .*/background_opacity: 0.7/' ${./alacritty.yml} \
+    sed 's/background_opacity: .*/background_opacity: 0.9/' ${./alacritty.yml} \
       > $out
   '';
 in
