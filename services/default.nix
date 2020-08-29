@@ -26,11 +26,8 @@
       enable = true;
       fade = false;
       shadow = false;
-      backend = "glx";
+      backend = "xrender";
       vSync = true;
-      settings = {
-        glx-no-stencil = true;
-      };
     };
   };
 }
