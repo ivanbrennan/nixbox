@@ -180,14 +180,14 @@ keys' conf@(XConfig {modMask}) =
         sendMessage (Go D)
       ),
       -- swap
-      ( (mod4Mask .|. shiftMask, xK_m),
+      ( (mod4Mask, xK_m),
         windows swapMaster
       ),
-      ( (mod4Mask .|. shiftMask, xK_j),
-        windows swapDown
+      ( (mod4Mask, xK_j),
+        windows swapDown -- TODO: swap subgroups
       ),
-      ( (mod4Mask .|. shiftMask, xK_k),
-        windows swapUp
+      ( (mod4Mask, xK_k),
+        windows swapUp -- TODO: swap subgroups
       ),
       -- resize
       ( (mod4Mask .|. controlMask, xK_h),
