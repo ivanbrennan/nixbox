@@ -21,7 +21,7 @@ import Data.Default (def)
 
 {- X11 -}
 import Graphics.X11
-  ( Button, KeyMask, KeySym, Window, controlMask, mod4Mask, noModMask, shiftMask,
+  ( Button, KeyMask, KeySym, Window, button1, controlMask, mod4Mask, noModMask, shiftMask,
     xK_1, xK_9, xK_Alt_L, xK_Alt_R, xK_Down, xK_Left, xK_Print, xK_Return, xK_Right,
     xK_Tab, xK_Up, xK_a, xK_c, xK_comma, xK_d, xK_e, xK_g, xK_grave, xK_h, xK_j, xK_k,
     xK_l, xK_m, xK_o, xK_p, xK_period, xK_q, xK_r, xK_slash, xK_space, xK_t, xK_u,
@@ -38,19 +38,20 @@ import XMonad
   ( ChangeLayout (NextLayout), Choose, Full (Full), IncMasterN (IncMasterN), Layout,
     ManageHook, Mirror (Mirror), Resize (Expand, Shrink), WindowSet, WorkspaceId, X,
     XConf, XConfig (XConfig), appName, className, clickJustFocuses, composeAll, config,
-    doFloat, doIgnore, focusedBorderColor, gets, handleEventHook, io, keys, kill,
-    layoutHook, local, logHook, manageHook, modMask, mouseBindings, normalBorderColor,
-    refresh, runQuery, screenWorkspace, sendMessage, spawn, startupHook, terminal,
-    whenJust, windows, windowset, withFocused, workspaces, xmonad, (=?), (|||),
+    doFloat, doIgnore, focus, focusedBorderColor, gets, handleEventHook, io, keys, kill,
+    layoutHook, local, logHook, manageHook, modMask, mouseBindings, mouseMoveWindow,
+    normalBorderColor, refresh, runQuery, screenWorkspace, sendMessage, spawn, startupHook,
+    terminal, whenJust, windows, windowset, withFocused, workspaces, xmonad, (=?), (|||),
   )
 import XMonad.StackSet
-  ( RationalRect (RationalRect), current, focusDown', focusUp', hidden, shift, sink,
-    stack, swapDown, swapMaster, swapUp, tag, view, visible, workspace,
+  ( RationalRect (RationalRect), current, focusDown', focusUp', hidden, shift, shiftMaster,
+    sink, stack, swapDown, swapMaster, swapUp, tag, view, visible, workspace,
   )
 
 {- xmonad-contrib -}
 import XMonad.Actions.CycleRecentWS (cycleWindowSets)
 import XMonad.Actions.CycleWS (Direction1D (Next, Prev), WSType (NonEmptyWS), moveTo)
+import XMonad.Actions.FlexibleResize (mouseResizeEdgeWindow)
 import XMonad.Actions.Submap (submap)
 import XMonad.Hooks.DynamicLog
   ( PP, ppCurrent, ppHidden, ppLayout, ppTitle, ppWsSep, statusBar, wrap, xmobarColor,
@@ -381,13 +382,21 @@ keys' conf@(XConfig {modMask}) =
 
 
 mouseBindings' :: XConfig Layout -> Map (KeyMask, Button) (Window -> X ())
-mouseBindings' conf@(XConfig {}) =
-  M.union bindings (mouseBindings def conf)
-  where
-    bindings :: Map (KeyMask, Button) (Window -> X ())
-    bindings = M.fromList $
-      [
-      ]
+mouseBindings' XConfig {modMask} =
+  M.fromList $
+    [ ( (modMask, button1),
+        \w ->
+          focus w
+            >> mouseMoveWindow w
+            >> windows shiftMaster
+      ),
+      ( (mod4Mask, button1),
+        \w ->
+          focus w
+            >> mouseResizeEdgeWindow (3/4) w
+            >> windows shiftMaster
+      )
+    ]
 
 
 xPConfig :: XPConfig
