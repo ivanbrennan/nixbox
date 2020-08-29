@@ -58,7 +58,6 @@ import XMonad.Hooks.DynamicLog
     xmobarPP,
   )
 import XMonad.Hooks.EwmhDesktops (ewmh, fullscreenEventHook)
-import XMonad.Hooks.ManageDocks (AvoidStruts, avoidStruts, manageDocks)
 import XMonad.Hooks.ManageHelpers (composeOne, doCenterFloat, doRectFloat, isDialog, (-?>))
 import XMonad.Layout.BoringWindows (BoringWindows, boringWindows, focusDown, focusUp)
 import XMonad.Layout.Decoration
@@ -464,8 +463,7 @@ manageHook' =
           appName =? "manpage" -?> centeredFloat 0.6 0.6
         ],
       -- fullscreenManageHook,
-      namedScratchpadManageHook scratchpads,
-      manageDocks
+      namedScratchpadManageHook scratchpads
     ]
 
 ------------------------------------------------------------------------
@@ -517,10 +515,7 @@ layout ::
                     BoringWindows
                     ( ToggleLayouts
                         Full
-                        ( ModifiedLayout
-                            AvoidStruts
-                            (Choose ResizableTall (Mirror ResizableTall))
-                        )
+                        (Choose ResizableTall (Mirror ResizableTall))
                     )
                 )
             )
@@ -536,7 +531,6 @@ layout =
     . boringWindows
     . toggleLayouts Full
     -- . fullscreenFloat
-    . avoidStruts
     $ tiled ||| Mirror tiled
   where
     theme :: Theme
