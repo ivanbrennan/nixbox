@@ -37,9 +37,9 @@ import Graphics.X11.Xlib.Extras (Event)
 import XMonad
   ( ChangeLayout (NextLayout), Choose, Full (Full), IncMasterN (IncMasterN), Layout,
     ManageHook, Mirror (Mirror), Resize (Expand, Shrink), WindowSet, WorkspaceId, X,
-    XConf, XConfig (XConfig), appName, className, clickJustFocuses, composeAll, config,
-    doFloat, doIgnore, focus, focusedBorderColor, gets, handleEventHook, io, keys, kill,
-    layoutHook, local, logHook, manageHook, modMask, mouseBindings, mouseMoveWindow,
+    XConf, XConfig (XConfig), WindowSpace, appName, className, clickJustFocuses, composeAll,
+    config, doFloat, doIgnore, focus, focusedBorderColor, gets, handleEventHook, io, keys,
+    kill, layoutHook, local, logHook, manageHook, modMask, mouseBindings, mouseMoveWindow,
     normalBorderColor, refresh, runQuery, screenWorkspace, sendMessage, spawn, startupHook,
     terminal, whenJust, windows, windowset, withFocused, workspaces, xmonad, (=?), (|||),
   )
@@ -50,7 +50,7 @@ import XMonad.StackSet
 
 {- xmonad-contrib -}
 import XMonad.Actions.CycleRecentWS (cycleWindowSets)
-import XMonad.Actions.CycleWS (Direction1D (Next, Prev), WSType (NonEmptyWS), moveTo)
+import XMonad.Actions.CycleWS (Direction1D (Next, Prev), WSType (WSIs), moveTo)
 import XMonad.Actions.FlexibleResize (mouseResizeEdgeWindow)
 import XMonad.Actions.Submap (submap)
 import XMonad.Hooks.DynamicLog
@@ -113,10 +113,10 @@ keys' conf@(XConfig {modMask}) =
       ),
       -- workspaces
       ( (modMask, xK_period),
-        moveTo Next NonEmptyWS
+        moveTo Next cycledWorkspace
       ),
       ( (modMask, xK_comma),
-        moveTo Prev NonEmptyWS
+        moveTo Prev cycledWorkspace
       ),
       ( (modMask, xK_l),
         toggleRecentWS
@@ -334,6 +334,18 @@ keys' conf@(XConfig {modMask}) =
         | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..],
           (f, m) <- [(view, noModMask), (shift, shiftMask)]
       ]
+
+    cycledWorkspace :: WSType
+    cycledWorkspace = WSIs $ pure (not . boringWorkspace)
+
+    boringWorkspace :: WindowSpace -> Bool
+    boringWorkspace ws = emptyWorkspace ws || scratchpadWorkspace ws
+
+    emptyWorkspace :: WindowSpace -> Bool
+    emptyWorkspace = null . stack
+
+    scratchpadWorkspace :: WindowSpace -> Bool
+    scratchpadWorkspace = null . namedScratchpadFilterOutWorkspace . (:[])
 
     toggleRecentWS :: X ()
     toggleRecentWS =
