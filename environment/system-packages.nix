@@ -41,6 +41,7 @@ with pkgs; [
   haskellPackages.hasktags
   highlight
   htop
+  i3lock
   imagemagick
   inkscape
   jq

@@ -22,11 +22,6 @@ pkgs:
 
   # windowManager
   windowManager = {
-    i3 = {
-      enable = true;
-      configFile = i3/config;
-    };
-
     xmonad = {
       enable = true;
       enableContribAndExtras = true;
