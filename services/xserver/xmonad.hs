@@ -2,10 +2,13 @@
 {-# OPTIONS_GHC -Wall -Werror #-}
 
 {- base -}
-import Control.Monad ((>=>))
+import Control.Monad (filterM, unless, (>=>))
 import Data.Bits ((.|.))
 import Data.Bool (bool)
 import Data.List (intercalate)
+import Data.List.NonEmpty (NonEmpty, nonEmpty)
+import qualified Data.List.NonEmpty as NE
+import Data.Maybe (listToMaybe)
 import Data.Monoid (All)
 import Data.Time (ZonedTime, defaultTimeLocale, formatTime, getZonedTime)
 import System.Directory (getHomeDirectory)
@@ -24,8 +27,8 @@ import Graphics.X11
   ( Button, KeyMask, KeySym, Window, button1, controlMask, mod4Mask, noModMask, shiftMask,
     xK_1, xK_9, xK_Alt_L, xK_Alt_R, xK_Down, xK_Left, xK_Print, xK_Return, xK_Right,
     xK_Tab, xK_Up, xK_a, xK_c, xK_comma, xK_d, xK_e, xK_g, xK_grave, xK_h, xK_j, xK_k,
-    xK_l, xK_m, xK_o, xK_p, xK_period, xK_q, xK_r, xK_slash, xK_space, xK_t, xK_u, xK_v,
-    xK_w, xK_x, xK_z,
+    xK_l, xK_m, xK_o, xK_p, xK_period, xK_q, xK_r, xK_semicolon, xK_slash, xK_space, xK_t,
+    xK_u, xK_v, xK_w, xK_x, xK_z,
   )
 import Graphics.X11.ExtraTypes
   ( xF86XK_AudioLowerVolume, xF86XK_AudioMute, xF86XK_AudioRaiseVolume, xF86XK_Copy,
@@ -36,21 +39,25 @@ import Graphics.X11.Xlib.Extras (Event)
 {- xmonad -}
 import XMonad
   ( ChangeLayout (NextLayout), Choose, Full (Full), IncMasterN (IncMasterN), Layout,
-    ManageHook, Mirror (Mirror), Resize (Expand, Shrink), WindowSet, WorkspaceId, X,
-    XConf, XConfig (XConfig), WindowSpace, appName, className, clickJustFocuses, composeAll,
-    config, doFloat, doIgnore, focus, focusedBorderColor, gets, handleEventHook, io, keys,
-    kill, layoutHook, local, logHook, manageHook, modMask, mouseBindings, mouseMoveWindow,
-    normalBorderColor, refresh, runQuery, screenWorkspace, sendMessage, spawn, startupHook,
-    terminal, whenJust, windows, windowset, withFocused, workspaces, xmonad, (=?), (|||),
+    ManageHook, Mirror (Mirror), Query, Resize (Expand, Shrink), WindowSet, WorkspaceId,
+    X, XConf, XConfig (XConfig), WindowSpace, appName, className, clickJustFocuses,
+    composeAll, config, doFloat, doIgnore, focus, focusedBorderColor, gets, handleEventHook,
+    io, keys, kill, layoutHook, local, logHook, manageHook, modMask, mouseBindings,
+    mouseMoveWindow, normalBorderColor, refresh, runQuery, screenWorkspace, sendMessage,
+    spawn, startupHook, terminal, whenJust, windows, windowset, withFocused, withWindowSet,
+    workspaces, xmonad, (=?), (|||),
   )
 import XMonad.StackSet
-  ( RationalRect (RationalRect), current, focusDown', focusUp', hidden, shift, shiftMaster,
-    sink, stack, swapDown, swapMaster, swapUp, tag, view, visible, workspace,
+  ( RationalRect (RationalRect), allWindows, current, currentTag, findTag, focusDown',
+    focusUp', hidden, integrate, shiftMaster, shiftWin, sink, stack, swapDown, swapMaster,
+    swapUp, tag, tagMember, view, visible, workspace,
   )
+import qualified XMonad.StackSet as W
 
 {- xmonad-contrib -}
 import XMonad.Actions.CycleRecentWS (cycleWindowSets)
 import XMonad.Actions.CycleWS (Direction1D (Next, Prev), WSType (WSIs), moveTo)
+import XMonad.Actions.DynamicWorkspaces (addHiddenWorkspace)
 import XMonad.Actions.FlexibleResize (mouseResizeEdgeWindow)
 import XMonad.Actions.Submap (submap)
 import XMonad.Hooks.DynamicLog
@@ -59,6 +66,10 @@ import XMonad.Hooks.DynamicLog
   )
 import XMonad.Hooks.EwmhDesktops (ewmh, fullscreenEventHook)
 import XMonad.Hooks.ManageHelpers (composeOne, doCenterFloat, doRectFloat, isDialog, (-?>))
+import XMonad.Hooks.RefocusLast
+  ( RefocusLastLayoutHook, isFloat, refocusLastLayoutHook, refocusLastWhen, refocusWhen,
+    shiftRLWhen, swapWithLast, toggleFocus,
+  )
 import XMonad.Layout.BoringWindows (BoringWindows, boringWindows, focusDown, focusUp)
 import XMonad.Layout.Decoration
   ( Decoration, DefaultShrinker, Theme, activeBorderColor, activeColor, activeTextColor,
@@ -87,11 +98,12 @@ import XMonad.Prompt.AppendFile (appendFilePrompt')
 import XMonad.Prompt.ConfirmPrompt (confirmPrompt)
 import XMonad.Prompt.Man (manPrompt)
 import XMonad.Prompt.RunOrRaise (runOrRaisePrompt)
-import XMonad.Prompt.Window (WindowPrompt (Goto), windowPrompt, allWindows)
+import XMonad.Prompt.Window (WindowPrompt (Goto), windowPrompt)
+import qualified XMonad.Prompt.Window as P
 import XMonad.Prompt.XMonad (xmonadPromptC)
 import XMonad.Util.NamedScratchpad
-  ( NamedScratchpad (NS), namedScratchpadAction, namedScratchpadFilterOutWorkspace,
-    namedScratchpadFilterOutWorkspacePP, namedScratchpadManageHook
+  ( NamedScratchpad (NS), NamedScratchpads, namedScratchpadFilterOutWorkspace,
+    namedScratchpadFilterOutWorkspacePP, namedScratchpadManageHook,
   )
 import qualified XMonad.Util.NamedScratchpad as NS
 import XMonad.Util.Paste (sendKey)
@@ -178,6 +190,12 @@ keys' conf@(XConfig {modMask}) =
       ( (mod4Mask, xK_Down),
         sendMessage (Go D)
       ),
+      ( (modMask, xK_semicolon),
+        toggleFocus
+      ),
+      ( (mod4Mask, xK_semicolon),
+        swapWithLast
+      ),
       -- swap
       ( (mod4Mask, xK_m),
         windows swapMaster
@@ -243,7 +261,7 @@ keys' conf@(XConfig {modMask}) =
               appendThoughtPrompt xPConfig
             ),
             ( (noModMask, xK_g),
-              windowPrompt xPConfig Goto allWindows
+              windowPrompt xPConfig Goto P.allWindows
             ),
             ( (noModMask, xK_x),
               xmonadPromptC commands xPConfig
@@ -319,20 +337,24 @@ keys' conf@(XConfig {modMask}) =
     -- mod-shift-[1..9], Move client to workspace N
     workspaceTagKeys =
       [ ( (m .|. modMask, k),
-          windows (f i)
+          windows =<< f i
         )
         | (k, i) <- zip [xK_1..xK_9] (workspaces conf),
-          (m, f) <- [(noModMask, view), (shiftMask, shift)]
+          (m, f) <- [ (noModMask, pure . view),
+                      (shiftMask, shiftRLWhen isFloat)
+                    ]
       ]
 
     -- super-{w,e,r}, Switch to physical/Xinerama screens 1, 2, or 3
     -- super-shift-{w,e,r}, Move client to screen 1, 2, or 3
     screenKeys =
       [ ( (m .|. mod4Mask, key),
-          screenWorkspace sc >>= flip whenJust (windows . f)
+          screenWorkspace sc >>= flip whenJust (f >=> windows)
         )
         | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..],
-          (f, m) <- [(view, noModMask), (shift, shiftMask)]
+          (f, m) <- [ (pure . view, noModMask),
+                      (shiftRLWhen isFloat, shiftMask)
+                    ]
       ]
 
     cycledWorkspace :: WSType
@@ -390,6 +412,69 @@ keys' conf@(XConfig {modMask}) =
         ("expand", sendMessage Expand),
         ("refresh", refresh)
       ]
+
+
+-- Reimplement to apply RefocusLast when removing a scratchpad from a workspace.
+namedScratchpadAction :: NamedScratchpads -- ^ Named scratchpads configuration
+                      -> String           -- ^ Scratchpad name
+                      -> X ()
+namedScratchpadAction = customRunNamedScratchpadAction runApplication
+
+-- | Action to pop up specified named scratchpad, given a custom way to initially start the application.
+customRunNamedScratchpadAction :: (NamedScratchpad -> X ())  -- ^ Function initially running the application, given the configured @scratchpad@ cmd
+                               -> NamedScratchpads           -- ^ Named scratchpads configuration
+                               -> String                     -- ^ Scratchpad name
+                               -> X ()
+customRunNamedScratchpadAction = someNamedScratchpadAction (\f ws -> f $ NE.head ws)
+
+-- | execute some action on a named scratchpad
+someNamedScratchpadAction :: ((Window -> X ()) -> NonEmpty Window -> X ())
+                          -> (NamedScratchpad -> X ())
+                          -> NamedScratchpads
+                          -> String
+                          -> X ()
+someNamedScratchpadAction f runApp scratchpadConfig scratchpadName =
+    case findByName scratchpadConfig scratchpadName of
+        Just conf -> withWindowSet $ \winSet -> do
+            let focusedWspWindows = maybe [] integrate (stack . workspace . current $ winSet)
+                allWindows'       = allWindows winSet
+            matchingOnCurrent <- filterM (runQuery (NS.query conf)) focusedWspWindows
+            matchingOnAll     <- filterM (runQuery (NS.query conf)) allWindows'
+
+            case nonEmpty matchingOnCurrent of
+                -- no matching window on the current workspace -> scratchpad not running or in background
+                Nothing -> case nonEmpty matchingOnAll of
+                    Nothing   -> runApp conf
+                    Just wins -> f (shiftWinRLWhen isFloat (currentTag winSet) >=> windows) wins
+
+                -- matching window running on current workspace -> window should be shifted to scratchpad workspace
+                Just wins -> do
+                    unless (any (\wsp -> scratchpadWorkspaceTag == tag wsp) (W.workspaces winSet))
+                        (addHiddenWorkspace scratchpadWorkspaceTag)
+                    f (const (windows =<< shiftRLWhen isFloat scratchpadWorkspaceTag)) wins
+
+        Nothing -> return ()
+
+-- | Runs application which should appear in specified scratchpad
+runApplication :: NamedScratchpad -> X ()
+runApplication = spawn . NS.cmd
+
+-- | Finds named scratchpad configuration by name
+findByName :: NamedScratchpads -> String -> Maybe NamedScratchpad
+findByName c s = listToMaybe $ filter ((s ==) . NS.name) c
+
+-- tag of the scratchpad workspace
+scratchpadWorkspaceTag :: String
+scratchpadWorkspaceTag = "NSP"
+
+shiftWinRLWhen :: Query Bool -> WorkspaceId -> Window -> X (WindowSet -> WindowSet)
+shiftWinRLWhen p to w = withWindowSet $ \ws ->
+  case findTag w ws of
+    Just from | to `tagMember` ws && to /= from -> do
+      refocus <- refocusWhen p from
+      let shift' = shiftWin to w
+      pure (refocus . shift')
+    _ -> pure id
 
 
 mouseBindings' :: XConfig Layout -> Map (KeyMask, Button) (Window -> X ())
@@ -488,7 +573,8 @@ manageHook' =
 -- combine event hooks use mappend or mconcat from Data.Monoid.
 --
 eventHook :: Event -> X All
-eventHook = fullscreenEventHook
+eventHook =
+  refocusLastWhen isFloat <> fullscreenEventHook
 
 ------------------------------------------------------------------------
 -- Status bars and logging
@@ -520,14 +606,17 @@ layout ::
     ( ModifiedLayout
         SmartBorder
         ( ModifiedLayout
-            (Decoration TabbedDecoration DefaultShrinker)
+            RefocusLastLayoutHook
             ( ModifiedLayout
-                (Sublayout Simplest)
+                (Decoration TabbedDecoration DefaultShrinker)
                 ( ModifiedLayout
-                    BoringWindows
-                    ( ToggleLayouts
-                        Full
-                        (Choose ResizableTall (Mirror ResizableTall))
+                    (Sublayout Simplest)
+                    ( ModifiedLayout
+                        BoringWindows
+                        ( ToggleLayouts
+                            Full
+                            (Choose ResizableTall (Mirror ResizableTall))
+                        )
                     )
                 )
             )
@@ -538,6 +627,7 @@ layout =
   id
     . configurableNavigation noNavigateBorders
     . smartBorders
+    . refocusLastLayoutHook
     . addTabs shrinkText theme
     . subLayout [] Simplest
     . boringWindows
