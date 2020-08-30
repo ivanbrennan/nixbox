@@ -9,6 +9,7 @@ self: super: {
   alacritty-wrapped = super.callPackage ./alacritty { };
 
   bleep = super.callPackage ./bleep { };
+  bloop = super.callPackage ./bloop { };
 
   etcdots = super.callPackage ./etcdots { };
 
