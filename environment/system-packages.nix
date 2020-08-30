@@ -79,6 +79,7 @@ with pkgs; [
   st
   stack-1_9_3
   stow
+  sxiv
   tcpdump
   tmux
   tree
