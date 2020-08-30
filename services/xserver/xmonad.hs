@@ -60,11 +60,13 @@ import XMonad.Actions.CycleWS (Direction1D (Next, Prev), WSType (WSIs), moveTo)
 import XMonad.Actions.DynamicWorkspaces (addHiddenWorkspace)
 import XMonad.Actions.FlexibleResize (mouseResizeEdgeWindow)
 import XMonad.Actions.Submap (submap)
+import XMonad.Hooks.DebugStack (debugStack)
 import XMonad.Hooks.DynamicLog
   ( PP, ppCurrent, ppHidden, ppLayout, ppTitle, ppWsSep, statusBar, wrap, xmobarColor,
     xmobarPP,
   )
 import XMonad.Hooks.EwmhDesktops (ewmh, fullscreenEventHook)
+import XMonad.Hooks.ManageDebug (debugManageHookOn)
 import XMonad.Hooks.ManageHelpers (composeOne, doCenterFloat, doRectFloat, isDialog, (-?>))
 import XMonad.Hooks.RefocusLast
   ( RefocusLastLayoutHook, isFloat, refocusLastLayoutHook, refocusLastWhen, refocusWhen,
@@ -250,6 +252,9 @@ keys' conf@(XConfig {modMask}) =
       ),
       ( (controlMask .|. shiftMask, xK_space),
         namedScratchpadAction scratchpads (NS.name scratchTerminal)
+      ),
+      ( (mod4Mask .|. modMask, xK_p),
+        debugStack
       ),
       ( (modMask, xK_slash),
         submap . M.fromList $
@@ -661,6 +666,7 @@ main =
   xmonad =<< statusBar "xmobar" barPP toggleStrutsKey xconfig
   where
     xconfig =
+      debugManageHookOn "M1-M4-v" $
       ewmh $
         def
           { layoutHook         = layout,
