@@ -519,7 +519,7 @@ scratchpads =
 
 scratchTerminal :: NamedScratchpad
 scratchTerminal =
-  NS name command (appName =? name) (centeredFloat 0.8 0.7)
+  NS name command (appName =? name) (doCenteredFloat 0.8 0.7)
   where
     name :: String
     name = "scratchpad"
@@ -527,8 +527,8 @@ scratchTerminal =
     command :: String
     command = "alacritty-transparent --class " ++ name
 
-centeredFloat :: Rational -> Rational -> ManageHook
-centeredFloat width height =
+doCenteredFloat :: Rational -> Rational -> ManageHook
+doCenteredFloat width height =
   doRectFloat (RationalRect x y width height)
   where
     x :: Rational
@@ -562,7 +562,7 @@ manageHook' =
           className =? "Xmessage" -?> doCenterFloat,
           -- className =? "vlc" -?> doFloat,
           appName =? "desktop_window" -?> doIgnore,
-          appName =? "manpage" -?> centeredFloat 0.6 0.6
+          appName =? "manpage" -?> doCenteredFloat 0.6 0.6
         ],
       -- fullscreenManageHook,
       namedScratchpadManageHook scratchpads
