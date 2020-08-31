@@ -600,7 +600,7 @@ startupHook' =
       intercalate
       " | "
       [ "ps axo pid,s,command",
-        "awk '/alsactl monitor default$/'",
+        "awk '/alsactl monitor default$/{print $1}'",
         "xargs --no-run-if-empty kill"
       ]
 
