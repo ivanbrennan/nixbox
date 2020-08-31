@@ -21,6 +21,7 @@ with pkgs; [
   chromium
   cmus
   conky
+  dmenu
   dmidecode
   docker
   easyrsa
