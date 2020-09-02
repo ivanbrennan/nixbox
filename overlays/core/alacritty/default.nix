@@ -22,7 +22,7 @@ runCommand "alacritty" {
   rm $out/bin
   mkdir $out/bin
   ln -s ${alacritty}/bin/* $out/bin
-  rm $out/bin/alacritty
+  mv $out/bin/alacritty $out/bin/alacritty-unwrapped
 
   makeWrapper ${alacritty}/bin/alacritty $out/bin/alacritty \
     --add-flags "--config-file ${./alacritty.yml}"
