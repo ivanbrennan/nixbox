@@ -50,7 +50,7 @@ import XMonad
 import XMonad.StackSet
   ( RationalRect (RationalRect), allWindows, current, currentTag, findTag, focusDown',
     focusUp', hidden, integrate, shiftMaster, shiftWin, sink, stack, swapDown, swapMaster,
-    swapUp, tag, tagMember, view, visible, workspace,
+    swapUp, tag, view, visible, workspace,
   )
 import qualified XMonad.StackSet as W
 
@@ -199,13 +199,13 @@ keys' conf@(XConfig {modMask}) =
         swapWithLast
       ),
       -- swap
-      ( (mod4Mask, xK_m),
+      ( (modMask .|. shiftMask, xK_m),
         windows swapMaster
       ),
-      ( (mod4Mask, xK_j),
+      ( (modMask .|. shiftMask, xK_j),
         windows swapDown -- TODO: swap subgroups
       ),
-      ( (mod4Mask, xK_k),
+      ( (modMask .|. shiftMask, xK_k),
         windows swapUp -- TODO: swap subgroups
       ),
       -- resize
