@@ -439,26 +439,45 @@ someNamedScratchpadAction :: ((Window -> X ()) -> NonEmpty Window -> X ())
                           -> String
                           -> X ()
 someNamedScratchpadAction f runApp scratchpadConfig scratchpadName =
+    someNamedScratchpadAction' f launchTo dismissTo runApp scratchpadConfig scratchpadName
+    where
+        launchTo :: WorkspaceId -> Window -> X ()
+        launchTo i = (shiftWinRLWhen isFloat i >=> windows)
+
+        dismissTo :: WorkspaceId -> Window -> X ()
+        dismissTo i = const (shiftRLWhen isFloat i >>= windows)
+
+someNamedScratchpadAction' :: ((Window -> X ()) -> NonEmpty Window -> X ())
+                           -> (WorkspaceId -> Window -> X ())
+                           -> (WorkspaceId -> Window -> X ())
+                           -> (NamedScratchpad -> X ())
+                           -> NamedScratchpads
+                           -> String
+                           -> X ()
+someNamedScratchpadAction' f launchTo dismissTo runApp scratchpadConfig scratchpadName =
     case findByName scratchpadConfig scratchpadName of
+        Nothing -> return ()
+
         Just conf -> withWindowSet $ \winSet -> do
             let focusedWspWindows = maybe [] integrate (stack . workspace . current $ winSet)
-                allWindows'       = allWindows winSet
             matchingOnCurrent <- filterM (runQuery (NS.query conf)) focusedWspWindows
-            matchingOnAll     <- filterM (runQuery (NS.query conf)) allWindows'
 
             case nonEmpty matchingOnCurrent of
                 -- no matching window on the current workspace -> scratchpad not running or in background
-                Nothing -> case nonEmpty matchingOnAll of
-                    Nothing   -> runApp conf
-                    Just wins -> f (shiftWinRLWhen isFloat (currentTag winSet) >=> windows) wins
-
+                Nothing -> launch conf winSet
                 -- matching window running on current workspace -> window should be shifted to scratchpad workspace
-                Just wins -> do
-                    unless (any (\wsp -> scratchpadWorkspaceTag == tag wsp) (W.workspaces winSet))
-                        (addHiddenWorkspace scratchpadWorkspaceTag)
-                    f (const (windows =<< shiftRLWhen isFloat scratchpadWorkspaceTag)) wins
+                Just wins -> dismiss winSet wins
+    where
+        launch conf winSet = do
+            matchingOnAll <- filterM (runQuery (NS.query conf)) (allWindows winSet)
+            case nonEmpty matchingOnAll of
+                Nothing   -> runApp conf
+                Just wins -> f (launchTo (currentTag winSet)) wins
 
-        Nothing -> return ()
+        dismiss winSet wins = do
+            unless (any (\wsp -> scratchpadWorkspaceTag == tag wsp) (W.workspaces winSet))
+                (addHiddenWorkspace scratchpadWorkspaceTag)
+            f (dismissTo scratchpadWorkspaceTag) wins
 
 -- | Runs application which should appear in specified scratchpad
 runApplication :: NamedScratchpad -> X ()
@@ -475,7 +494,7 @@ scratchpadWorkspaceTag = "NSP"
 shiftWinRLWhen :: Query Bool -> WorkspaceId -> Window -> X (WindowSet -> WindowSet)
 shiftWinRLWhen p to w = withWindowSet $ \ws ->
   case findTag w ws of
-    Just from | to `tagMember` ws && to /= from -> do
+    Just from -> do
       refocus <- refocusWhen p from
       let shift' = shiftWin to w
       pure (refocus . shift')
