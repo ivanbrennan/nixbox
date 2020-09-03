@@ -125,7 +125,7 @@ keys' conf@(XConfig {modMask}) =
       ( (mod4Mask, xK_space),
         sendMessage NextLayout
       ),
-      ( (modMask, xK_Shift_R),
+      ( (modMask, xK_space),
         sendMessage ToggleLayout
       ),
       -- workspaces
@@ -254,41 +254,14 @@ keys' conf@(XConfig {modMask}) =
       ( (modMask, xK_i),
         spawn (terminal conf)
       ),
-      ( (modMask, xK_space),
-        spawn "dmenu_run -fn monospace:size=12 -l 24 -i -nb '#1c1c1c' -nf '#a5adb7' -sb '#222222' -sf '#ffffff'"
+      ( (controlMask, xK_space),
+        spawn dmenu
       ),
       ( (controlMask, xK_Shift_R),
         namedScratchpadAction scratchpads (NS.name scratchTerminal)
       ),
       ( (mod4Mask .|. modMask, xK_p),
         debugStack
-      ),
-      ( (modMask, xK_slash),
-        submap . M.fromList $
-          [ ( (modMask, xK_slash),
-              local (setTerminal "alacritty --class=manpage") $
-                manPrompt (xPConfig {autoComplete = Just 0})
-            )
-          ]
-      ),
-      ( (controlMask, xK_space),
-        submap . M.fromList $
-          [ ( (noModMask, xK_a),
-              appendThoughtPrompt xPConfig
-            ),
-            ( (noModMask, xK_g),
-              windowPrompt xPConfig Goto P.allWindows
-            ),
-            ( (noModMask, xK_r),
-              runOrRaisePrompt xPConfig
-            ),
-            ( (noModMask, xK_x),
-              xmonadPromptC commands xPConfig
-            ),
-            ( (noModMask, xK_z),
-              spawn "i3lock --color=1d1d1d"
-            )
-          ]
       ),
       ( (noModMask, xK_Print),
         spawn "screenshot"
@@ -344,6 +317,36 @@ keys' conf@(XConfig {modMask}) =
     ]
       ++ workspaceTagKeys
       ++ screenKeys
+      ++ [ ( (modMask, xK_slash),
+             submap . M.fromList $
+               [ ( (modMask, xK_slash),
+                   local (setTerminal "alacritty --class=manpage") $
+                     manPrompt (xPConfig {autoComplete = Just 0})
+                 )
+               ]
+           )
+         ]
+      ++ [ ( (modMask, k),
+             submap . M.fromList $
+               [ ( (noModMask, xK_a),
+                   appendThoughtPrompt xPConfig
+                 ),
+                 ( (noModMask, xK_g),
+                   windowPrompt xPConfig Goto P.allWindows
+                 ),
+                 ( (noModMask, xK_r),
+                   runOrRaisePrompt xPConfig
+                 ),
+                 ( (noModMask, xK_x),
+                   xmonadPromptC commands xPConfig
+                 ),
+                 ( (noModMask, xK_z),
+                   spawn "i3lock --color=1d1d1d"
+                 )
+               ]
+           )
+           | k <- [xK_Alt_L, xK_Alt_R]
+         ]
   where
     -- mod-[1..9], Switch to workspace N
     -- mod-shift-[1..9], Move client to workspace N
@@ -417,6 +420,18 @@ keys' conf@(XConfig {modMask}) =
 
     timestamp :: ZonedTime -> String
     timestamp = formatTime defaultTimeLocale "[%FT%T%Ez] "
+
+    dmenu :: String
+    dmenu = intercalate " "
+      [ "dmenu_run",
+        "-fn monospace:size=12",
+        "-l 24",
+        "-i",
+        "-nb '#1c1c1c'",
+        "-nf '#a5adb7'",
+        "-sb '#222222'",
+        "-sf '#ffffff'"
+      ]
 
     commands :: [(String, X ())]
     commands =
