@@ -84,6 +84,7 @@ import XMonad.Layout.ResizableTile
   ( ResizableTall (ResizableTall), MirrorResize (MirrorShrink, MirrorExpand),
   )
 import XMonad.Layout.Simplest (Simplest (Simplest))
+import XMonad.Layout.StateFull (FocusTracking, focusTracking)
 import XMonad.Layout.SubLayouts
   ( GroupMsg (MergeAll, UnMerge, UnMergeAll), Sublayout, onGroup, pullGroup, subLayout,
   )
@@ -634,15 +635,17 @@ layout ::
         SmartBorder
         ( ModifiedLayout
             RefocusLastLayoutHook
-            ( ModifiedLayout
-                (Decoration TabbedDecoration DefaultShrinker)
+            ( FocusTracking
                 ( ModifiedLayout
-                    (Sublayout Simplest)
+                    (Decoration TabbedDecoration DefaultShrinker)
                     ( ModifiedLayout
-                        BoringWindows
-                        ( ToggleLayouts
-                            Full
-                            (Choose ResizableTall (Mirror ResizableTall))
+                        (Sublayout Simplest)
+                        ( ModifiedLayout
+                            BoringWindows
+                            ( ToggleLayouts
+                                Full
+                                (Choose ResizableTall (Mirror ResizableTall))
+                            )
                         )
                     )
                 )
@@ -655,6 +658,7 @@ layout =
     . configurableNavigation noNavigateBorders
     . smartBorders
     . refocusLastLayoutHook
+    . focusTracking
     . addTabs shrinkText theme
     . subLayout [] Simplest
     . boringWindows
