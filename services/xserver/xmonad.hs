@@ -66,6 +66,7 @@ import XMonad.Hooks.DynamicLog
     xmobarPP,
   )
 import XMonad.Hooks.EwmhDesktops (ewmh, fullscreenEventHook)
+import XMonad.Hooks.InsertPosition (Focus (Newer), Position (Above), insertPosition)
 import XMonad.Hooks.ManageDebug (debugManageHookOn)
 import XMonad.Hooks.ManageHelpers (composeOne, doCenterFloat, doRectFloat, isDialog, (-?>))
 import XMonad.Hooks.RefocusLast
@@ -578,7 +579,8 @@ doCenteredFloat width height =
 manageHook' :: ManageHook
 manageHook' =
   composeAll
-    [ composeOne
+    [ insertPosition Above Newer,
+      composeOne
         [ isDialog -?> doFloat,
           -- isFullscreen -?> doFullFloat,
           className =? "Gcr-prompter" -?> doCenterFloat,
