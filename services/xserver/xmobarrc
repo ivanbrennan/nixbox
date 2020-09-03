@@ -43,7 +43,7 @@ Config
           , "--onc" , "#a8b8b8"
           , "--off" , "<fn=1>\xf026</fn> <volume>%"
           , "--offc", "#585868" ]
-      , Run Date "%b %-d <fc=#c1f0f7>%l:%M</fc>" "date" 50
+      , Run Date "%a %b %-d <fc=#c1f0f7>%l:%M</fc>" "date" 50
       , Run StdinReader
       ]
   , sepChar = "%"
