@@ -25,7 +25,7 @@ import Data.Default (def)
 {- X11 -}
 import Graphics.X11
   ( Button, KeyMask, KeySym, Window, button1, controlMask, mod4Mask, noModMask, shiftMask,
-    xK_1, xK_9, xK_Alt_L, xK_Alt_R, xK_Down, xK_Left, xK_Print, xK_Return, xK_Right,
+    xK_1, xK_9, xK_Alt_L, xK_Alt_R, xK_Down, xK_Left, xK_Print, xK_Right, xK_Shift_R,
     xK_Tab, xK_Up, xK_a, xK_c, xK_comma, xK_d, xK_e, xK_g, xK_grave, xK_h, xK_i, xK_j,
     xK_k, xK_l, xK_m, xK_n, xK_p, xK_period, xK_q, xK_r, xK_semicolon, xK_slash, xK_space,
     xK_t, xK_u, xK_v, xK_w, xK_x, xK_z,
@@ -122,7 +122,7 @@ keys' conf@(XConfig {modMask}) =
       ( (mod4Mask, xK_space),
         sendMessage NextLayout
       ),
-      ( (modMask, xK_Return),
+      ( (modMask, xK_Shift_R),
         sendMessage ToggleLayout
       ),
       -- workspaces
@@ -253,7 +253,7 @@ keys' conf@(XConfig {modMask}) =
       ( (modMask, xK_space),
         spawn "dmenu_run -fn monospace:size=12 -l 24 -i -nb '#1c1c1c' -nf '#a5adb7' -sb '#222222' -sf '#ffffff'"
       ),
-      ( (controlMask .|. shiftMask, xK_space),
+      ( (controlMask, xK_Shift_R),
         namedScratchpadAction scratchpads (NS.name scratchTerminal)
       ),
       ( (mod4Mask .|. modMask, xK_p),
