@@ -38,14 +38,14 @@ import Graphics.X11.Xlib.Extras (Event)
 
 {- xmonad -}
 import XMonad
-  ( ChangeLayout (NextLayout), Choose, Full (Full), IncMasterN (IncMasterN), Layout,
-    ManageHook, Mirror (Mirror), Query, Resize (Expand, Shrink), WindowSet, WorkspaceId,
-    X, XConf, XConfig (XConfig), WindowSpace, appName, className, clickJustFocuses,
-    composeAll, config, doFloat, doIgnore, focus, focusedBorderColor, gets, handleEventHook,
-    io, keys, kill, layoutHook, local, logHook, manageHook, modMask, mouseBindings,
-    mouseMoveWindow, normalBorderColor, refresh, runQuery, screenWorkspace, sendMessage,
-    spawn, startupHook, terminal, whenJust, windows, windowset, withFocused, withWindowSet,
-    workspaces, xmonad, (=?), (|||),
+  ( ChangeLayout (NextLayout), Choose, ExtensionClass, Full (Full), IncMasterN (IncMasterN),
+    Layout, ManageHook, Mirror (Mirror), Query, Resize (Expand, Shrink), Typeable,
+    WindowSet, WindowSpace, WorkspaceId, X, XConf, XConfig (XConfig), appName, className,
+    clickJustFocuses, composeAll, config, doFloat, doIgnore, focus, focusedBorderColor,
+    gets, handleEventHook, initialValue, io, keys, kill, layoutHook, liftX, local, logHook,
+    manageHook, modMask, mouseBindings, mouseMoveWindow, normalBorderColor, refresh,
+    runQuery, screenWorkspace, sendMessage, spawn, startupHook, terminal, whenJust, windows,
+    windowset, withFocused, withWindowSet, workspaces, xmonad, (=?), (|||),
   )
 import XMonad.StackSet
   ( RationalRect (RationalRect), allWindows, current, currentTag, findTag, focusDown',
@@ -66,7 +66,7 @@ import XMonad.Hooks.DynamicLog
     xmobarPP,
   )
 import XMonad.Hooks.EwmhDesktops (ewmh, fullscreenEventHook)
-import XMonad.Hooks.InsertPosition (Focus (Newer), Position (Above), insertPosition)
+import XMonad.Hooks.InsertPosition (Focus (Newer), Position (Above, Below), insertPosition)
 import XMonad.Hooks.ManageDebug (debugManageHookOn)
 import XMonad.Hooks.ManageHelpers (composeOne, doCenterFloat, doRectFloat, isDialog, (-?>))
 import XMonad.Hooks.RefocusLast
@@ -105,6 +105,7 @@ import XMonad.Prompt.RunOrRaise (runOrRaisePrompt)
 import XMonad.Prompt.Window (WindowPrompt (Goto), windowPrompt)
 import qualified XMonad.Prompt.Window as P
 import XMonad.Prompt.XMonad (xmonadPromptC)
+import qualified XMonad.Util.ExtensibleState as XS
 import XMonad.Util.NamedScratchpad
   ( NamedScratchpad (NS), NamedScratchpads, namedScratchpadFilterOutWorkspace,
     namedScratchpadFilterOutWorkspacePP, namedScratchpadManageHook,
@@ -174,10 +175,11 @@ keys' conf@(XConfig {modMask}) =
       ( (modMask .|. controlMask, xK_n),
         onGroup focusDown'
       ),
-      -- TODO: get this working
-      -- ( (mod4Mask .|. modMask, xK_o),
-      --   spawn (terminal conf) >> sendMessage (pullGroup U)
-      -- ),
+      -- TODO: translate 'sendMessage (pullGroup U)' into a ManageHook.
+      -- Figure out why the state toggling isn't behaving consistently.
+      ( (mod4Mask, xK_i),
+        mergeNext >> spawn (terminal conf) -- >> sendMessage (pullGroup U)
+      ),
       -- focus
       ( (modMask, xK_j),
         focusDown
@@ -581,7 +583,10 @@ manageHook' =
   composeAll
     [ insertPosition Above Newer,
       composeOne
-        [ isDialog -?> doFloat,
+        [ -- TODO: replace 'insertPosition Below Newer' with a ManageHook
+          -- that merges the new window into a sublayout group.
+          isMerging -?> insertPosition Below Newer,
+          isDialog -?> doFloat,
           -- isFullscreen -?> doFullFloat,
           className =? "Gcr-prompter" -?> doCenterFloat,
           className =? "Xmessage" -?> doCenterFloat,
@@ -592,6 +597,17 @@ manageHook' =
       -- fullscreenManageHook,
       namedScratchpadManageHook scratchpads
     ]
+  where
+    isMerging :: Query Bool
+    isMerging = (liftX . XS.modified) $ const (MergeNext False)
+
+newtype MergeNext = MergeNext Bool deriving (Eq, Typeable)
+
+instance ExtensionClass MergeNext where
+  initialValue  = MergeNext False
+
+mergeNext :: X ()
+mergeNext = XS.put (MergeNext True)
 
 ------------------------------------------------------------------------
 -- Event handling
