@@ -646,7 +646,7 @@ startupHook' =
       ]
 
 
-layout ::
+layout' ::
   ModifiedLayout
     WindowNavigation
     ( ModifiedLayout
@@ -671,7 +671,7 @@ layout ::
         )
     )
     Window
-layout =
+layout' =
   id
     . configurableNavigation noNavigateBorders
     . smartBorders
@@ -713,7 +713,7 @@ main =
       debugManageHookOn "M1-M4-v" $
       ewmh $
         def
-          { layoutHook         = layout,
+          { layoutHook         = layout',
             terminal           = "alacritty",
             clickJustFocuses   = False,
             normalBorderColor  = "#212121",
