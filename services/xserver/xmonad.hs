@@ -26,9 +26,9 @@ import Data.Default (def)
 import Graphics.X11
   ( Button, KeyMask, KeySym, Window, button1, controlMask, mod4Mask, noModMask, shiftMask,
     xK_1, xK_9, xK_Alt_L, xK_Alt_R, xK_Down, xK_Left, xK_Print, xK_Return, xK_Right,
-    xK_Tab, xK_Up, xK_a, xK_c, xK_comma, xK_d, xK_e, xK_g, xK_grave, xK_h, xK_j, xK_k,
-    xK_l, xK_m, xK_o, xK_p, xK_period, xK_q, xK_r, xK_semicolon, xK_slash, xK_space, xK_t,
-    xK_u, xK_v, xK_w, xK_x, xK_z,
+    xK_Tab, xK_Up, xK_a, xK_c, xK_comma, xK_d, xK_e, xK_g, xK_grave, xK_h, xK_i, xK_j,
+    xK_k, xK_l, xK_m, xK_n, xK_p, xK_period, xK_q, xK_r, xK_semicolon, xK_slash, xK_space,
+    xK_t, xK_u, xK_v, xK_w, xK_x, xK_z,
   )
 import Graphics.X11.ExtraTypes
   ( xF86XK_AudioLowerVolume, xF86XK_AudioMute, xF86XK_AudioRaiseVolume, xF86XK_Copy,
@@ -139,16 +139,16 @@ keys' conf@(XConfig {modMask}) =
         cycleWindowSets recentWS [xK_Alt_L, xK_Alt_R] xK_Tab xK_grave
       ),
       -- sublayouts
-      ( (controlMask .|. shiftMask, xK_h),
+      ( (mod4Mask .|. shiftMask, xK_h),
         sendMessage (pullGroup L)
       ),
-      ( (controlMask .|. shiftMask, xK_l),
+      ( (mod4Mask .|. shiftMask, xK_l),
         sendMessage (pullGroup R)
       ),
-      ( (controlMask .|. shiftMask, xK_k),
+      ( (mod4Mask .|. shiftMask, xK_k),
         sendMessage (pullGroup U)
       ),
-      ( (controlMask .|. shiftMask, xK_j),
+      ( (mod4Mask .|. shiftMask, xK_j),
         sendMessage (pullGroup D)
       ),
       ( (mod4Mask .|. controlMask .|. shiftMask, xK_m),
@@ -157,17 +157,20 @@ keys' conf@(XConfig {modMask}) =
       ( (mod4Mask .|. controlMask .|. shiftMask, xK_u),
         withFocused (sendMessage . UnMergeAll)
       ),
-      ( (controlMask .|. shiftMask, xK_u),
+      ( (mod4Mask .|. shiftMask, xK_u),
         withFocused (sendMessage . UnMerge)
       ),
-      ( (mod4Mask, xK_Tab),
+      ( (mod4Mask, xK_n),
         onGroup focusDown'
       ),
-      ( (modMask .|. controlMask, xK_period),
-        onGroup focusDown'
-      ),
-      ( (modMask .|. controlMask, xK_comma),
+      ( (mod4Mask, xK_p),
         onGroup focusUp'
+      ),
+      ( (modMask .|. controlMask, xK_p),
+        onGroup focusUp'
+      ),
+      ( (modMask .|. controlMask, xK_n),
+        onGroup focusDown'
       ),
       -- TODO: get this working
       -- ( (mod4Mask .|. modMask, xK_o),
@@ -209,23 +212,23 @@ keys' conf@(XConfig {modMask}) =
         windows swapUp -- TODO: swap subgroups
       ),
       -- resize
-      ( (mod4Mask .|. controlMask, xK_h),
+      ( (modMask .|. controlMask, xK_h),
         sendMessage Shrink
       ),
-      ( (mod4Mask .|. controlMask, xK_l),
+      ( (modMask .|. controlMask, xK_l),
         sendMessage Expand
       ),
-      ( (mod4Mask .|. controlMask, xK_j),
+      ( (modMask .|. controlMask, xK_j),
         sendMessage MirrorShrink
       ),
-      ( (mod4Mask .|. controlMask, xK_k),
+      ( (modMask .|. controlMask, xK_k),
         sendMessage MirrorExpand
       ),
       -- increment/decrement master area
-      ( (mod4Mask .|. shiftMask, xK_comma),
+      ( (modMask .|. shiftMask, xK_comma),
         sendMessage (IncMasterN 1)
       ),
-      ( (mod4Mask .|. shiftMask, xK_period),
+      ( (modMask .|. shiftMask, xK_period),
         sendMessage (IncMasterN (-1))
       ),
       -- refresh
@@ -244,7 +247,7 @@ keys' conf@(XConfig {modMask}) =
         confirmPrompt xPConfig "exit" (io exitSuccess)
       ),
       -- launch/kill
-      ( (modMask .|. shiftMask, xK_o),
+      ( (modMask, xK_i),
         spawn (terminal conf)
       ),
       ( (modMask, xK_space),
@@ -261,27 +264,27 @@ keys' conf@(XConfig {modMask}) =
           [ ( (modMask, xK_slash),
               local (setTerminal "alacritty --class=manpage") $
                 manPrompt (xPConfig {autoComplete = Just 0})
-            ),
-            ( (noModMask, xK_a),
-              appendThoughtPrompt xPConfig
-            ),
-            ( (noModMask, xK_g),
-              windowPrompt xPConfig Goto P.allWindows
-            ),
-            ( (noModMask, xK_x),
-              xmonadPromptC commands xPConfig
             )
           ]
       ),
       ( (controlMask, xK_space),
         submap . M.fromList $
-          [ ( (noModMask, xK_r),
+          [ ( (noModMask, xK_a),
+              appendThoughtPrompt xPConfig
+            ),
+            ( (noModMask, xK_g),
+              windowPrompt xPConfig Goto P.allWindows
+            ),
+            ( (noModMask, xK_r),
               runOrRaisePrompt xPConfig
+            ),
+            ( (noModMask, xK_x),
+              xmonadPromptC commands xPConfig
+            ),
+            ( (noModMask, xK_z),
+              spawn "i3lock --color=1d1d1d"
             )
           ]
-      ),
-      ( (mod4Mask, xK_z),
-        spawn "i3lock --color=1d1d1d"
       ),
       ( (noModMask, xK_Print),
         spawn "screenshot"
@@ -298,7 +301,7 @@ keys' conf@(XConfig {modMask}) =
       ( (mod4Mask .|. shiftMask, xK_d),
         kill
       ),
-      ( (mod4Mask, xK_p),
+      ( (modMask .|. shiftMask, xK_space),
         spawn "passmenu -fn monospace:size=12 -l 24 -i -nb '#1c1c1c' -nf '#a5adb7' -sb '#222222' -sf '#ffffff'"
       ),
       -- volume
