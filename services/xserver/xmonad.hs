@@ -455,10 +455,10 @@ someNamedScratchpadAction :: ((Window -> X ()) -> NonEmpty Window -> X ())
                           -> String
                           -> X ()
 someNamedScratchpadAction f runApp scratchpadConfig scratchpadName =
-    someNamedScratchpadAction' f shiftWin' runApp scratchpadConfig scratchpadName
+    someNamedScratchpadAction' f shift' runApp scratchpadConfig scratchpadName
     where
-        shiftWin' :: WorkspaceId -> Window -> X ()
-        shiftWin' i = (shiftWinRLWhen isFloat i >=> windows)
+        shift' :: WorkspaceId -> Window -> X ()
+        shift' i = (shiftWinRLWhen isFloat i >=> windows)
 
 someNamedScratchpadAction' :: ((Window -> X ()) -> NonEmpty Window -> X ())
                            -> (WorkspaceId -> Window -> X ())
@@ -466,7 +466,7 @@ someNamedScratchpadAction' :: ((Window -> X ()) -> NonEmpty Window -> X ())
                            -> NamedScratchpads
                            -> String
                            -> X ()
-someNamedScratchpadAction' f shiftWin' runApp scratchpadConfig scratchpadName =
+someNamedScratchpadAction' f shift' runApp scratchpadConfig scratchpadName =
     case findByName scratchpadConfig scratchpadName of
         Nothing -> return ()
 
@@ -484,12 +484,12 @@ someNamedScratchpadAction' f shiftWin' runApp scratchpadConfig scratchpadName =
             matchingOnAll <- filterM (runQuery (NS.query conf)) (W.allWindows winSet)
             case nonEmpty matchingOnAll of
                 Nothing   -> runApp conf
-                Just wins -> f (shiftWin' (W.currentTag winSet)) wins
+                Just wins -> f (shift' (W.currentTag winSet)) wins
 
         dismiss winSet wins = do
             unless (any (\wsp -> scratchpadWorkspaceTag == W.tag wsp) (W.workspaces winSet))
                 (addHiddenWorkspace scratchpadWorkspaceTag)
-            f (shiftWin' scratchpadWorkspaceTag) wins
+            f (shift' scratchpadWorkspaceTag) wins
 
 -- | Runs application which should appear in specified scratchpad
 runApplication :: NamedScratchpad -> X ()
