@@ -47,11 +47,6 @@ import XMonad
     runQuery, screenWorkspace, sendMessage, spawn, startupHook, terminal, whenJust, windows,
     windowset, withFocused, withWindowSet, workspaces, xmonad, (=?), (|||),
   )
-import XMonad.StackSet
-  ( RationalRect (RationalRect), allWindows, current, currentTag, findTag, focusDown',
-    focusUp', hidden, integrate, shiftMaster, shiftWin, sink, stack, swapDown, swapMaster,
-    swapUp, tag, view, visible, workspace,
-  )
 import qualified XMonad.StackSet as W
 
 {- xmonad-contrib -}
@@ -163,16 +158,16 @@ keys' conf@(XConfig {modMask}) =
         withFocused (sendMessage . UnMerge)
       ),
       ( (mod4Mask, xK_n),
-        onGroup focusDown'
+        onGroup W.focusDown'
       ),
       ( (mod4Mask, xK_p),
-        onGroup focusUp'
+        onGroup W.focusUp'
       ),
       ( (modMask .|. controlMask, xK_p),
-        onGroup focusUp'
+        onGroup W.focusUp'
       ),
       ( (modMask .|. controlMask, xK_n),
-        onGroup focusDown'
+        onGroup W.focusDown'
       ),
       -- TODO: translate 'sendMessage (pullGroup U)' into a ManageHook.
       -- Figure out why the state toggling isn't behaving consistently.
@@ -206,13 +201,13 @@ keys' conf@(XConfig {modMask}) =
       ),
       -- swap
       ( (modMask .|. shiftMask, xK_m),
-        windows swapMaster
+        windows W.swapMaster
       ),
       ( (modMask .|. shiftMask, xK_j),
-        windows swapDown -- TODO: swap subgroups
+        windows W.swapDown -- TODO: swap subgroups
       ),
       ( (modMask .|. shiftMask, xK_k),
-        windows swapUp -- TODO: swap subgroups
+        windows W.swapUp -- TODO: swap subgroups
       ),
       -- resize
       ( (modMask .|. controlMask, xK_h),
@@ -240,7 +235,7 @@ keys' conf@(XConfig {modMask}) =
       ),
       -- tile
       ( (mod4Mask, xK_t),
-        withFocused (windows . sink)
+        withFocused (windows . W.sink)
       ),
       -- quit or restart
       ( (mod4Mask, xK_q),
@@ -354,7 +349,7 @@ keys' conf@(XConfig {modMask}) =
           windows =<< f i
         )
         | (k, i) <- zip [xK_1..xK_9] (workspaces conf),
-          (m, f) <- [ (noModMask, pure . view),
+          (m, f) <- [ (noModMask, pure . W.view),
                       (shiftMask, shiftRLWhen isFloat)
                     ]
       ]
@@ -366,7 +361,7 @@ keys' conf@(XConfig {modMask}) =
           screenWorkspace sc >>= flip whenJust (f >=> windows)
         )
         | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..],
-          (f, m) <- [ (pure . view, noModMask),
+          (f, m) <- [ (pure . W.view, noModMask),
                       (shiftRLWhen isFloat, shiftMask)
                     ]
       ]
@@ -378,7 +373,7 @@ keys' conf@(XConfig {modMask}) =
     boringWorkspace ws = emptyWorkspace ws || scratchpadWorkspace ws
 
     emptyWorkspace :: WindowSpace -> Bool
-    emptyWorkspace = null . stack
+    emptyWorkspace = null . W.stack
 
     scratchpadWorkspace :: WindowSpace -> Bool
     scratchpadWorkspace = null . namedScratchpadFilterOutWorkspace . (:[])
@@ -388,16 +383,16 @@ keys' conf@(XConfig {modMask}) =
       gets (recentWS . windowset) >>= windows . const . head
 
     recentWS :: WindowSet -> [WindowSet]
-    recentWS ws = map (`view` ws) (recentTags ws)
+    recentWS ws = map (`W.view` ws) (recentTags ws)
 
     recentTags :: WindowSet -> [WorkspaceId]
     recentTags ws =
-      map tag
-        . filter (not . null . stack)
+      map W.tag
+        . filter (not . null . W.stack)
         . namedScratchpadFilterOutWorkspace
-        $ map workspace (visible ws)
-          ++ hidden ws
-          ++ [workspace (current ws)]
+        $ map W.workspace (W.visible ws)
+          ++ W.hidden ws
+          ++ [W.workspace (W.current ws)]
 
     setTerminal :: String -> XConf -> XConf
     setTerminal t xc =
@@ -476,7 +471,7 @@ someNamedScratchpadAction' f shiftWin' runApp scratchpadConfig scratchpadName =
         Nothing -> return ()
 
         Just conf -> withWindowSet $ \winSet -> do
-            let focusedWspWindows = maybe [] integrate (stack . workspace . current $ winSet)
+            let focusedWspWindows = maybe [] W.integrate (W.stack . W.workspace . W.current $ winSet)
             matchingOnCurrent <- filterM (runQuery (NS.query conf)) focusedWspWindows
 
             case nonEmpty matchingOnCurrent of
@@ -486,13 +481,13 @@ someNamedScratchpadAction' f shiftWin' runApp scratchpadConfig scratchpadName =
                 Just wins -> dismiss winSet wins
     where
         launch conf winSet = do
-            matchingOnAll <- filterM (runQuery (NS.query conf)) (allWindows winSet)
+            matchingOnAll <- filterM (runQuery (NS.query conf)) (W.allWindows winSet)
             case nonEmpty matchingOnAll of
                 Nothing   -> runApp conf
-                Just wins -> f (shiftWin' (currentTag winSet)) wins
+                Just wins -> f (shiftWin' (W.currentTag winSet)) wins
 
         dismiss winSet wins = do
-            unless (any (\wsp -> scratchpadWorkspaceTag == tag wsp) (W.workspaces winSet))
+            unless (any (\wsp -> scratchpadWorkspaceTag == W.tag wsp) (W.workspaces winSet))
                 (addHiddenWorkspace scratchpadWorkspaceTag)
             f (shiftWin' scratchpadWorkspaceTag) wins
 
@@ -510,10 +505,10 @@ scratchpadWorkspaceTag = "NSP"
 
 shiftWinRLWhen :: Query Bool -> WorkspaceId -> Window -> X (WindowSet -> WindowSet)
 shiftWinRLWhen p to w = withWindowSet $ \ws ->
-  case findTag w ws of
+  case W.findTag w ws of
     Just from -> do
       refocus <- refocusWhen p from
-      let shift' = shiftWin to w
+      let shift' = W.shiftWin to w
       pure (refocus . shift')
     _ -> pure id
 
@@ -525,13 +520,13 @@ mouseBindings' XConfig {modMask} =
         \w ->
           focus w
             >> mouseMoveWindow w
-            >> windows shiftMaster
+            >> windows W.shiftMaster
       ),
       ( (mod4Mask, button1),
         \w ->
           focus w
             >> mouseResizeEdgeWindow (3/4) w
-            >> windows shiftMaster
+            >> windows W.shiftMaster
       )
     ]
 
@@ -565,7 +560,7 @@ scratchTerminal =
 
 doCenteredFloat :: Rational -> Rational -> ManageHook
 doCenteredFloat width height =
-  doRectFloat (RationalRect x y width height)
+  doRectFloat (W.RationalRect x y width height)
   where
     x :: Rational
     x = (1 - width) / 2
