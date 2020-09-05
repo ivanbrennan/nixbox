@@ -5,7 +5,7 @@
 import Control.Monad (filterM, unless, (>=>))
 import Data.Bits ((.|.))
 import Data.Bool (bool)
-import Data.List (intercalate)
+import Data.List (intercalate, isInfixOf)
 import Data.List.NonEmpty (NonEmpty, nonEmpty)
 import qualified Data.List.NonEmpty as NE
 import Data.Maybe (listToMaybe)
@@ -56,8 +56,8 @@ import XMonad.Actions.FlexibleResize (mouseResizeEdgeWindow)
 import XMonad.Actions.Submap (submap)
 import XMonad.Hooks.DebugStack (debugStack)
 import XMonad.Hooks.DynamicLog
-  ( PP, ppCurrent, ppHidden, ppLayout, ppTitle, ppWsSep, statusBar, wrap, xmobarColor,
-    xmobarPP,
+  ( PP, ppCurrent, ppHidden, ppLayout, ppSep, ppTitle, ppWsSep, statusBar, wrap,
+    xmobarColor, xmobarPP,
   )
 import XMonad.Hooks.EwmhDesktops (ewmh, fullscreenEventHook)
 import XMonad.Hooks.InsertPosition (Focus (Newer), Position (Above, Below), insertPosition)
@@ -737,9 +737,12 @@ main =
         xmobarPP
           { ppCurrent = xmobarColor "#dddddd" "#004466" . wrap " " " ",
             ppHidden  = xmobarColor "#888888" "#222222" . wrap " " " ",
+            ppSep     = " ",
             ppWsSep   = "",
             ppTitle   = const "",
-            ppLayout  = const ""
+            ppLayout  = \s -> if "Full" `isInfixOf` s
+                                then xmobarColor "#9bd4ff" "" "-"
+                                else ""
           }
 
     toggleStrutsKey = const (mod4Mask, xK_slash)
