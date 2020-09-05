@@ -460,22 +460,18 @@ someNamedScratchpadAction :: ((Window -> X ()) -> NonEmpty Window -> X ())
                           -> String
                           -> X ()
 someNamedScratchpadAction f runApp scratchpadConfig scratchpadName =
-    someNamedScratchpadAction' f launchTo dismissTo runApp scratchpadConfig scratchpadName
+    someNamedScratchpadAction' f shiftWin' runApp scratchpadConfig scratchpadName
     where
-        launchTo :: WorkspaceId -> Window -> X ()
-        launchTo i = (shiftWinRLWhen isFloat i >=> windows)
-
-        dismissTo :: WorkspaceId -> Window -> X ()
-        dismissTo i = const (shiftRLWhen isFloat i >>= windows)
+        shiftWin' :: WorkspaceId -> Window -> X ()
+        shiftWin' i = (shiftWinRLWhen isFloat i >=> windows)
 
 someNamedScratchpadAction' :: ((Window -> X ()) -> NonEmpty Window -> X ())
-                           -> (WorkspaceId -> Window -> X ())
                            -> (WorkspaceId -> Window -> X ())
                            -> (NamedScratchpad -> X ())
                            -> NamedScratchpads
                            -> String
                            -> X ()
-someNamedScratchpadAction' f launchTo dismissTo runApp scratchpadConfig scratchpadName =
+someNamedScratchpadAction' f shiftWin' runApp scratchpadConfig scratchpadName =
     case findByName scratchpadConfig scratchpadName of
         Nothing -> return ()
 
@@ -493,12 +489,12 @@ someNamedScratchpadAction' f launchTo dismissTo runApp scratchpadConfig scratchp
             matchingOnAll <- filterM (runQuery (NS.query conf)) (allWindows winSet)
             case nonEmpty matchingOnAll of
                 Nothing   -> runApp conf
-                Just wins -> f (launchTo (currentTag winSet)) wins
+                Just wins -> f (shiftWin' (currentTag winSet)) wins
 
         dismiss winSet wins = do
             unless (any (\wsp -> scratchpadWorkspaceTag == tag wsp) (W.workspaces winSet))
                 (addHiddenWorkspace scratchpadWorkspaceTag)
-            f (dismissTo scratchpadWorkspaceTag) wins
+            f (shiftWin' scratchpadWorkspaceTag) wins
 
 -- | Runs application which should appear in specified scratchpad
 runApplication :: NamedScratchpad -> X ()
