@@ -688,7 +688,7 @@ main =
             ppWsSep   = "",
             ppTitle   = const "",
             ppLayout  = \s -> if "Full" `isInfixOf` s
-                                then xmobarColor "#9bd4ff" "" "-"
+                                then xmobarColor "#9bd4ff" "" "_"
                                 else ""
           }
 
