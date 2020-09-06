@@ -38,14 +38,15 @@ import Graphics.X11.Xlib.Extras (Event)
 
 {- xmonad -}
 import XMonad
-  ( ChangeLayout (NextLayout), Choose, Full (Full), Layout, ManageHook,
-    Mirror (Mirror), Query, Resize (Expand, Shrink), WindowSet, WindowSpace,
-    WorkspaceId, X, XConf, XConfig (XConfig), appName, className, clickJustFocuses,
-    composeAll, config, doFloat, doIgnore, focus, focusedBorderColor, gets,
-    handleEventHook, io, keys, kill, layoutHook, local, logHook, manageHook,
-    modMask, mouseBindings, mouseMoveWindow, normalBorderColor, refresh, runQuery,
-    screenWorkspace, sendMessage, spawn, startupHook, terminal, whenJust, windows,
-    windowset, withFocused, withWindowSet, workspaces, xmonad, (=?), (|||),
+  ( ChangeLayout (NextLayout), Choose, Full (Full), IncMasterN (IncMasterN),
+    Layout, ManageHook, Mirror (Mirror), Query, Resize (Expand, Shrink),
+    WindowSet, WindowSpace, WorkspaceId, X, XConf, XConfig (XConfig), appName,
+    className, clickJustFocuses, composeAll, config, description, doFloat,
+    doIgnore, focus, focusedBorderColor, gets, handleEventHook, io, keys, kill,
+    layoutHook, local, logHook, manageHook, modMask, mouseBindings,
+    mouseMoveWindow, normalBorderColor, refresh, runQuery, screenWorkspace,
+    sendMessage, spawn, startupHook, terminal, whenJust, windows, windowset,
+    withFocused, withWindowSet, workspaces, xmonad, (=?), (|||),
   )
 import qualified XMonad.StackSet as W
 
@@ -77,7 +78,7 @@ import XMonad.Hooks.RefocusLast
 import XMonad.Layout.BoringWindows (BoringWindows, boringAuto, focusDown, focusUp)
 import XMonad.Layout.LayoutModifier (ModifiedLayout)
 import XMonad.Layout.LimitWindows
-  ( LimitWindows, limitWindows, decreaseLimit, increaseLimit,
+  ( Selection, limitSelect, decreaseLimit, increaseLimit,
   )
 import XMonad.Layout.NoBorders (SmartBorder, smartBorders)
 import XMonad.Layout.ResizableTile
@@ -134,16 +135,21 @@ keys' conf@(XConfig {modMask}) =
       ),
       -- focus
       ( (modMask, xK_j),
-        focusDown
+        do
+          lt <- layoutDescription
+          if "Full" `isInfixOf` lt
+            then windows W.focusDown
+            else focusDown
       ),
       ( (modMask, xK_k),
-        focusUp
+        do
+          lt <- layoutDescription
+          if "Full" `isInfixOf` lt
+            then windows W.focusUp
+            else focusUp
       ),
-      ( (mod4Mask, xK_j),
-        windows W.focusDown
-      ),
-      ( (mod4Mask, xK_k),
-        windows W.focusUp
+      ( (modMask, xK_m),
+        windows W.focusMaster
       ),
       ( (modMask, xK_semicolon),
         toggleFocus
@@ -163,6 +169,12 @@ keys' conf@(XConfig {modMask}) =
       ),
       ( (modMask .|. controlMask, xK_period),
         decreaseLimit
+      ),
+      ( (mod4Mask .|. controlMask, xK_comma),
+        sendMessage (IncMasterN 1)
+      ),
+      ( (mod4Mask .|. controlMask, xK_period),
+        sendMessage (IncMasterN (-1))
       ),
       -- swap
       ( (modMask .|. shiftMask, xK_m),
@@ -198,6 +210,14 @@ keys' conf@(XConfig {modMask}) =
       -- quit or restart
       ( (mod4Mask, xK_q),
         spawn "xmonad --recompile && xmonad --restart"
+      ),
+      ( (mod4Mask .|. modMask, xK_q),
+        spawn $
+          intercalate
+            ";"
+            [ "ln -s /dev/null ~/.xmonad/xmonad.state || true",
+              "xmonad --recompile && xmonad --restart"
+            ]
       ),
       ( (mod4Mask .|. shiftMask, xK_q),
         confirmPrompt xPConfig "exit" (io exitSuccess)
@@ -324,6 +344,10 @@ keys' conf@(XConfig {modMask}) =
                     ]
       ]
 
+    layoutDescription :: X String
+    layoutDescription =
+      gets (description . W.layout . W.workspace . W.current . windowset)
+
     cycledWorkspace :: WSType
     cycledWorkspace = WSIs $ pure (not . boringWorkspace)
 
@@ -374,16 +398,18 @@ keys' conf@(XConfig {modMask}) =
     timestamp = formatTime defaultTimeLocale "[%FT%T%Ez] "
 
     dmenu :: String
-    dmenu = intercalate " "
-      [ "dmenu_run",
-        "-fn monospace:size=12",
-        "-l 24",
-        "-i",
-        "-nb '#1c1c1c'",
-        "-nf '#a5adb7'",
-        "-sb '#222222'",
-        "-sf '#ffffff'"
-      ]
+    dmenu =
+      intercalate
+        " "
+        [ "dmenu_run",
+          "-fn monospace:size=12",
+          "-l 24",
+          "-i",
+          "-nb '#1c1c1c'",
+          "-nf '#a5adb7'",
+          "-sb '#222222'",
+          "-sf '#ffffff'"
+        ]
 
     commands :: [(String, X ())]
     commands =
@@ -601,14 +627,14 @@ layoutHook' ::
     ( ModifiedLayout
         RefocusLastLayoutHook
         ( FocusTracking
-            ( ToggleLayouts
-                Full
-                ( ModifiedLayout
-                    BoringWindows
+            ( ModifiedLayout
+                BoringWindows
+                ( ToggleLayouts
+                    Full
                     ( Choose
                         ResizableTall
                         ( Choose
-                            (ModifiedLayout LimitWindows ResizableTall)
+                            (ModifiedLayout Selection ResizableTall)
                             (Mirror ResizableTall)
                         )
                     )
@@ -622,13 +648,13 @@ layoutHook' =
     . smartBorders
     . refocusLastLayoutHook
     . focusTracking
-    . toggleLayouts Full
     . boringAuto
+    . toggleLayouts Full
     -- . fullscreenFloat
-    $ tiled ||| limitWindows 2 tiled ||| Mirror tiled
+    $ tall ||| limitSelect 1 1 tall ||| Mirror tall
   where
-    tiled :: ResizableTall Window
-    tiled = ResizableTall 1 (3/100) (1/2) []
+    tall :: ResizableTall Window
+    tall = ResizableTall 1 (3/100) (1/2) []
 
 
 main :: IO ()
