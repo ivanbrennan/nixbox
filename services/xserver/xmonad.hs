@@ -24,35 +24,38 @@ import Data.Default (def)
 
 {- X11 -}
 import Graphics.X11
-  ( Button, KeyMask, KeySym, Window, button1, controlMask, mod4Mask, noModMask, shiftMask,
-    xK_1, xK_9, xK_Alt_L, xK_Alt_R, xK_Down, xK_Left, xK_Print, xK_Right, xK_Tab, xK_Up,
-    xK_a, xK_c, xK_comma, xK_d, xK_e, xK_g, xK_h, xK_i, xK_j, xK_k, xK_l, xK_m, xK_n, xK_p,
-    xK_period, xK_q, xK_r, xK_semicolon, xK_slash, xK_space, xK_t, xK_u, xK_v, xK_w, xK_x,
-    xK_z,
+  ( Button, KeyMask, KeySym, Window, button1, controlMask, mod4Mask, noModMask,
+    shiftMask, xK_1, xK_9, xK_Alt_L, xK_Alt_R, xK_Print, xK_Tab, xK_a, xK_c,
+    xK_comma, xK_d, xK_e, xK_g, xK_h, xK_i, xK_j, xK_k, xK_l, xK_m, xK_n, xK_p,
+    xK_period, xK_q, xK_r, xK_semicolon, xK_slash, xK_space, xK_t, xK_v, xK_w,
+    xK_x, xK_z,
   )
 import Graphics.X11.ExtraTypes
-  ( xF86XK_AudioLowerVolume, xF86XK_AudioMute, xF86XK_AudioRaiseVolume, xF86XK_Copy,
-    xF86XK_MonBrightnessDown, xF86XK_MonBrightnessUp, xF86XK_Paste,
+  ( xF86XK_AudioLowerVolume, xF86XK_AudioMute, xF86XK_AudioRaiseVolume,
+    xF86XK_Copy, xF86XK_MonBrightnessDown, xF86XK_MonBrightnessUp, xF86XK_Paste,
   )
 import Graphics.X11.Xlib.Extras (Event)
 
 {- xmonad -}
 import XMonad
-  ( ChangeLayout (NextLayout), Choose, ExtensionClass, Full (Full), IncMasterN (IncMasterN),
-    Layout, ManageHook, Mirror (Mirror), Query, Resize (Expand, Shrink), Typeable,
-    WindowSet, WindowSpace, WorkspaceId, X, XConf, XConfig (XConfig), appName, className,
-    clickJustFocuses, composeAll, config, doFloat, doIgnore, focus, focusedBorderColor,
-    gets, handleEventHook, initialValue, io, keys, kill, layoutHook, liftX, local, logHook,
-    manageHook, modMask, mouseBindings, mouseMoveWindow, normalBorderColor, refresh,
-    runQuery, screenWorkspace, sendMessage, spawn, startupHook, terminal, whenJust, windows,
+  ( ChangeLayout (NextLayout), Choose, Full (Full), Layout, ManageHook,
+    Mirror (Mirror), Query, Resize (Expand, Shrink), WindowSet, WindowSpace,
+    WorkspaceId, X, XConf, XConfig (XConfig), appName, className, clickJustFocuses,
+    composeAll, config, doFloat, doIgnore, focus, focusedBorderColor, gets,
+    handleEventHook, io, keys, kill, layoutHook, local, logHook, manageHook,
+    modMask, mouseBindings, mouseMoveWindow, normalBorderColor, refresh, runQuery,
+    screenWorkspace, sendMessage, spawn, startupHook, terminal, whenJust, windows,
     windowset, withFocused, withWindowSet, workspaces, xmonad, (=?), (|||),
   )
 import qualified XMonad.StackSet as W
 
 {- xmonad-contrib -}
-import XMonad.Actions.CycleWS (Direction1D (Next, Prev), WSType (WSIs, NonEmptyWS), moveTo)
+import XMonad.Actions.CycleWS
+  ( Direction1D (Next, Prev), WSType (WSIs, NonEmptyWS), moveTo,
+  )
 import XMonad.Actions.DynamicWorkspaces (addHiddenWorkspace)
 import XMonad.Actions.FlexibleResize (mouseResizeEdgeWindow)
+import XMonad.Actions.RotSlaves (rotSlavesDown, rotSlavesUp)
 import XMonad.Actions.Submap (submap)
 import XMonad.Hooks.DebugStack (debugStack)
 import XMonad.Hooks.DynamicLog
@@ -60,37 +63,33 @@ import XMonad.Hooks.DynamicLog
     xmobarColor, xmobarPP,
   )
 import XMonad.Hooks.EwmhDesktops (ewmh, fullscreenEventHook)
-import XMonad.Hooks.InsertPosition (Focus (Newer), Position (Above, Below), insertPosition)
+import XMonad.Hooks.InsertPosition
+  ( Focus (Newer), Position (Above), insertPosition,
+  )
 import XMonad.Hooks.ManageDebug (debugManageHookOn)
-import XMonad.Hooks.ManageHelpers (composeOne, doCenterFloat, doRectFloat, isDialog, (-?>))
+import XMonad.Hooks.ManageHelpers
+  ( composeOne, doCenterFloat, doRectFloat, isDialog, (-?>),
+  )
 import XMonad.Hooks.RefocusLast
-  ( RefocusLastLayoutHook, isFloat, refocusLastLayoutHook, refocusLastWhen, refocusWhen,
-    shiftRLWhen, swapWithLast, toggleFocus,
+  ( RefocusLastLayoutHook, isFloat, refocusLastLayoutHook, refocusLastWhen,
+    refocusWhen, shiftRLWhen, swapWithLast, toggleFocus,
   )
-import XMonad.Layout.BoringWindows (BoringWindows, boringWindows, focusDown, focusUp)
-import XMonad.Layout.Decoration
-  ( Decoration, DefaultShrinker, Theme, activeBorderColor, activeColor, activeTextColor,
-    decoHeight, decoWidth, fontName, inactiveBorderColor, inactiveColor, inactiveTextColor,
-    urgentBorderColor, urgentColor, urgentTextColor,
-  )
+import XMonad.Layout.BoringWindows (BoringWindows, boringAuto, focusDown, focusUp)
 import XMonad.Layout.LayoutModifier (ModifiedLayout)
+import XMonad.Layout.LimitWindows
+  ( LimitWindows, limitWindows, decreaseLimit, increaseLimit,
+  )
 import XMonad.Layout.NoBorders (SmartBorder, smartBorders)
 import XMonad.Layout.ResizableTile
   ( ResizableTall (ResizableTall), MirrorResize (MirrorShrink, MirrorExpand),
   )
-import XMonad.Layout.Simplest (Simplest (Simplest))
 import XMonad.Layout.StateFull (FocusTracking, focusTracking)
-import XMonad.Layout.SubLayouts
-  ( GroupMsg (MergeAll, UnMerge, UnMergeAll), Sublayout, onGroup, pullGroup, subLayout,
-  )
-import XMonad.Layout.Tabbed (TabbedDecoration, addTabs, shrinkText)
-import XMonad.Layout.ToggleLayouts (ToggleLayout (ToggleLayout), ToggleLayouts, toggleLayouts)
-import XMonad.Layout.WindowNavigation
-  ( Navigate (Go), WindowNavigation, configurableNavigation, noNavigateBorders,
+import XMonad.Layout.ToggleLayouts
+  ( ToggleLayout (ToggleLayout), ToggleLayouts, toggleLayouts,
   )
 import XMonad.Prompt
-  ( XPConfig, XPPosition (Top), alwaysHighlight, autoComplete, bgColor, fgColor, font,
-    height, position, promptBorderWidth,
+  ( XPConfig, XPPosition (Top), alwaysHighlight, autoComplete, bgColor, fgColor,
+    font, height, position, promptBorderWidth,
   )
 import XMonad.Prompt.AppendFile (appendFilePrompt')
 import XMonad.Prompt.ConfirmPrompt (confirmPrompt)
@@ -99,14 +98,12 @@ import XMonad.Prompt.RunOrRaise (runOrRaisePrompt)
 import XMonad.Prompt.Window (WindowPrompt (Goto), windowPrompt)
 import qualified XMonad.Prompt.Window as P
 import XMonad.Prompt.XMonad (xmonadPromptC)
-import qualified XMonad.Util.ExtensibleState as XS
 import XMonad.Util.NamedScratchpad
   ( NamedScratchpad (NS), NamedScratchpads, namedScratchpadFilterOutWorkspace,
     namedScratchpadFilterOutWorkspacePP, namedScratchpadManageHook,
   )
 import qualified XMonad.Util.NamedScratchpad as NS
 import XMonad.Util.Paste (sendKey)
-import XMonad.Util.Types (Direction2D (D, L, R, U))
 
 
 -- https://github.com/xmonad/X11/blob/6e5ef8019a0cc49e18410a335dbdeea87b7c4aac/Graphics/X11/Types.hsc
@@ -135,45 +132,6 @@ keys' conf@(XConfig {modMask}) =
       ( (modMask, xK_Tab),
         moveTo Next NonEmptyWS
       ),
-      -- sublayouts
-      ( (mod4Mask .|. shiftMask, xK_h),
-        sendMessage (pullGroup L)
-      ),
-      ( (mod4Mask .|. shiftMask, xK_l),
-        sendMessage (pullGroup R)
-      ),
-      ( (mod4Mask .|. shiftMask, xK_k),
-        sendMessage (pullGroup U)
-      ),
-      ( (mod4Mask .|. shiftMask, xK_j),
-        sendMessage (pullGroup D)
-      ),
-      ( (mod4Mask .|. controlMask .|. shiftMask, xK_m),
-        withFocused (sendMessage . MergeAll)
-      ),
-      ( (mod4Mask .|. controlMask .|. shiftMask, xK_u),
-        withFocused (sendMessage . UnMergeAll)
-      ),
-      ( (mod4Mask .|. shiftMask, xK_u),
-        withFocused (sendMessage . UnMerge)
-      ),
-      ( (mod4Mask, xK_n),
-        onGroup W.focusDown'
-      ),
-      ( (mod4Mask, xK_p),
-        onGroup W.focusUp'
-      ),
-      ( (modMask .|. controlMask, xK_p),
-        onGroup W.focusUp'
-      ),
-      ( (modMask .|. controlMask, xK_n),
-        onGroup W.focusDown'
-      ),
-      -- TODO: translate 'sendMessage (pullGroup U)' into a ManageHook.
-      -- Figure out why the state toggling isn't behaving consistently.
-      ( (mod4Mask, xK_i),
-        mergeNext >> spawn (terminal conf) -- >> sendMessage (pullGroup U)
-      ),
       -- focus
       ( (modMask, xK_j),
         focusDown
@@ -181,17 +139,11 @@ keys' conf@(XConfig {modMask}) =
       ( (modMask, xK_k),
         focusUp
       ),
-      ( (mod4Mask, xK_Right),
-        sendMessage (Go R)
+      ( (mod4Mask, xK_j),
+        windows W.focusDown
       ),
-      ( (mod4Mask, xK_Left),
-        sendMessage (Go L)
-      ),
-      ( (mod4Mask, xK_Up),
-        sendMessage (Go U)
-      ),
-      ( (mod4Mask, xK_Down),
-        sendMessage (Go D)
+      ( (mod4Mask, xK_k),
+        windows W.focusUp
       ),
       ( (modMask, xK_semicolon),
         toggleFocus
@@ -199,15 +151,28 @@ keys' conf@(XConfig {modMask}) =
       ( (mod4Mask, xK_semicolon),
         swapWithLast
       ),
+      -- rotation
+      ( (modMask .|. controlMask, xK_p),
+        rotSlavesDown
+      ),
+      ( (modMask .|. controlMask, xK_n),
+        rotSlavesUp
+      ),
+      ( (modMask .|. controlMask, xK_comma),
+        increaseLimit
+      ),
+      ( (modMask .|. controlMask, xK_period),
+        decreaseLimit
+      ),
       -- swap
       ( (modMask .|. shiftMask, xK_m),
         windows W.swapMaster
       ),
       ( (modMask .|. shiftMask, xK_j),
-        windows W.swapDown -- TODO: swap subgroups
+        windows W.swapDown -- TODO: boring-aware
       ),
       ( (modMask .|. shiftMask, xK_k),
-        windows W.swapUp -- TODO: swap subgroups
+        windows W.swapUp -- TODO: boring-aware
       ),
       -- resize
       ( (modMask .|. controlMask, xK_h),
@@ -221,13 +186,6 @@ keys' conf@(XConfig {modMask}) =
       ),
       ( (modMask .|. controlMask, xK_k),
         sendMessage MirrorExpand
-      ),
-      -- increment/decrement master area
-      ( (modMask .|. shiftMask, xK_comma),
-        sendMessage (IncMasterN 1)
-      ),
-      ( (modMask .|. shiftMask, xK_period),
-        sendMessage (IncMasterN (-1))
       ),
       -- refresh
       ( (mod4Mask .|. shiftMask, xK_r),
@@ -588,10 +546,7 @@ manageHook' =
   composeAll
     [ insertPosition Above Newer,
       composeOne
-        [ -- TODO: replace 'insertPosition Below Newer' with a ManageHook
-          -- that merges the new window into a sublayout group.
-          isMerging -?> insertPosition Below Newer,
-          isDialog -?> doFloat,
+        [ isDialog -?> doFloat,
           -- isFullscreen -?> doFullFloat,
           className =? "Gcr-prompter" -?> doCenterFloat,
           className =? "Xmessage" -?> doCenterFloat,
@@ -602,17 +557,6 @@ manageHook' =
       -- fullscreenManageHook,
       namedScratchpadManageHook scratchpads
     ]
-  where
-    isMerging :: Query Bool
-    isMerging = (liftX . XS.modified) $ const (MergeNext False)
-
-newtype MergeNext = MergeNext Bool deriving (Eq, Typeable)
-
-instance ExtensionClass MergeNext where
-  initialValue  = MergeNext False
-
-mergeNext :: X ()
-mergeNext = XS.put (MergeNext True)
 
 ------------------------------------------------------------------------
 -- Event handling
@@ -653,22 +597,19 @@ startupHook' =
 
 layoutHook' ::
   ModifiedLayout
-    WindowNavigation
+    SmartBorder
     ( ModifiedLayout
-        SmartBorder
-        ( ModifiedLayout
-            RefocusLastLayoutHook
-            ( FocusTracking
+        RefocusLastLayoutHook
+        ( FocusTracking
+            ( ToggleLayouts
+                Full
                 ( ModifiedLayout
-                    (Decoration TabbedDecoration DefaultShrinker)
-                    ( ModifiedLayout
-                        (Sublayout Simplest)
-                        ( ModifiedLayout
-                            BoringWindows
-                            ( ToggleLayouts
-                                Full
-                                (Choose ResizableTall (Mirror ResizableTall))
-                            )
+                    BoringWindows
+                    ( Choose
+                        ResizableTall
+                        ( Choose
+                            (ModifiedLayout LimitWindows ResizableTall)
+                            (Mirror ResizableTall)
                         )
                     )
                 )
@@ -678,35 +619,15 @@ layoutHook' ::
     Window
 layoutHook' =
   id
-    . configurableNavigation noNavigateBorders
     . smartBorders
     . refocusLastLayoutHook
     . focusTracking
-    . addTabs shrinkText theme
-    . subLayout [] Simplest
-    . boringWindows
     . toggleLayouts Full
+    . boringAuto
     -- . fullscreenFloat
-    $ tiled ||| Mirror tiled
+    $ tiled ||| limitWindows 2 tiled ||| Mirror tiled
   where
-    theme :: Theme
-    theme =
-      def
-        { activeColor         = "#1f1f1f",
-          inactiveColor       = "#1f1f1f",
-          urgentColor         = "#15539e",
-          activeBorderColor   = "#161616",
-          inactiveBorderColor = "#1f1f1f",
-          urgentBorderColor   = "#030c17",
-          activeTextColor     = "#d3d3d3",
-          inactiveTextColor   = "#757d80",
-          urgentTextColor     = "#ffffff",
-          fontName            = "xft:Cantarell:bold:size=10",
-          decoWidth           = 200,
-          decoHeight          = 20
-        }
-
-    tiled :: ResizableTall a
+    tiled :: ResizableTall Window
     tiled = ResizableTall 1 (3/100) (1/2) []
 
 
