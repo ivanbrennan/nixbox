@@ -2,13 +2,10 @@
 {-# OPTIONS_GHC -Wall -Werror #-}
 
 {- base -}
-import Control.Monad (filterM, unless, (>=>))
+import Control.Monad ((>=>))
 import Data.Bits ((.|.))
 import Data.Bool (bool)
 import Data.List (intercalate, isInfixOf)
-import Data.List.NonEmpty (NonEmpty, nonEmpty)
-import qualified Data.List.NonEmpty as NE
-import Data.Maybe (listToMaybe)
 import Data.Monoid (All)
 import Data.Time (ZonedTime, defaultTimeLocale, formatTime, getZonedTime)
 import System.Directory (getHomeDirectory)
@@ -39,14 +36,14 @@ import Graphics.X11.Xlib.Extras (Event)
 {- xmonad -}
 import XMonad
   ( ChangeLayout (NextLayout), Choose, Full (Full), IncMasterN (IncMasterN),
-    Layout, ManageHook, Mirror (Mirror), Query, Resize (Expand, Shrink),
-    WindowSet, WindowSpace, WorkspaceId, X, XConf, XConfig (XConfig), appName,
-    className, clickJustFocuses, composeAll, config, description, doFloat,
-    doIgnore, focus, focusedBorderColor, gets, handleEventHook, io, keys, kill,
-    layoutHook, local, logHook, manageHook, modMask, mouseBindings,
-    mouseMoveWindow, normalBorderColor, refresh, runQuery, screenWorkspace,
-    sendMessage, spawn, startupHook, terminal, whenJust, windows, windowset,
-    withFocused, withWindowSet, workspaces, xmonad, (=?), (|||),
+    Layout, ManageHook, Mirror (Mirror), Resize (Expand, Shrink), WindowSet,
+    WindowSpace, WorkspaceId, X, XConf, XConfig (XConfig), appName, className,
+    clickJustFocuses, composeAll, config, description, doFloat, doIgnore, focus,
+    focusedBorderColor, gets, handleEventHook, io, keys, kill, layoutHook, local,
+    logHook, manageHook, modMask, mouseBindings, mouseMoveWindow,
+    normalBorderColor, refresh, runQuery, screenWorkspace, sendMessage, spawn,
+    startupHook, terminal, whenJust, windows, windowset, withFocused, workspaces,
+    xmonad, (=?), (|||),
   )
 import qualified XMonad.StackSet as W
 
@@ -54,7 +51,6 @@ import qualified XMonad.StackSet as W
 import XMonad.Actions.CycleWS
   ( Direction1D (Next, Prev), WSType (WSIs, NonEmptyWS), moveTo,
   )
-import XMonad.Actions.DynamicWorkspaces (addHiddenWorkspace)
 import XMonad.Actions.FlexibleResize (mouseResizeEdgeWindow)
 import XMonad.Actions.RotSlaves (rotSlavesDown, rotSlavesUp)
 import XMonad.Actions.Submap (submap)
@@ -73,7 +69,7 @@ import XMonad.Hooks.ManageHelpers
   )
 import XMonad.Hooks.RefocusLast
   ( RefocusLastLayoutHook, isFloat, refocusLastLayoutHook, refocusLastWhen,
-    refocusWhen, shiftRLWhen, swapWithLast, toggleFocus,
+    shiftRLWhen, swapWithLast, toggleFocus,
   )
 import XMonad.Layout.BoringWindows (BoringWindows, boringAuto, focusDown, focusUp)
 import XMonad.Layout.LayoutModifier (ModifiedLayout)
@@ -100,8 +96,9 @@ import XMonad.Prompt.Window (WindowPrompt (Goto), windowPrompt)
 import qualified XMonad.Prompt.Window as P
 import XMonad.Prompt.XMonad (xmonadPromptC)
 import XMonad.Util.NamedScratchpad
-  ( NamedScratchpad (NS), NamedScratchpads, namedScratchpadFilterOutWorkspace,
-    namedScratchpadFilterOutWorkspacePP, namedScratchpadManageHook,
+  ( NamedScratchpad (NS), namedScratchpadAction,
+    namedScratchpadFilterOutWorkspace, namedScratchpadFilterOutWorkspacePP,
+    namedScratchpadManageHook,
   )
 import qualified XMonad.Util.NamedScratchpad as NS
 import XMonad.Util.Paste (sendKey)
@@ -417,84 +414,6 @@ keys' conf@(XConfig {modMask}) =
         ("expand", sendMessage Expand),
         ("refresh", refresh)
       ]
-
-
--- Reimplement to apply RefocusLast when removing a scratchpad from a workspace.
-namedScratchpadAction :: NamedScratchpads -- ^ Named scratchpads configuration
-                      -> String           -- ^ Scratchpad name
-                      -> X ()
-namedScratchpadAction = customRunNamedScratchpadAction runApplication
-
--- | Action to pop up specified named scratchpad, given a custom way to initially start the application.
-customRunNamedScratchpadAction :: (NamedScratchpad -> X ())  -- ^ Function initially running the application, given the configured @scratchpad@ cmd
-                               -> NamedScratchpads           -- ^ Named scratchpads configuration
-                               -> String                     -- ^ Scratchpad name
-                               -> X ()
-customRunNamedScratchpadAction = someNamedScratchpadAction (\f ws -> f $ NE.head ws)
-
--- | execute some action on a named scratchpad
-someNamedScratchpadAction :: ((Window -> X ()) -> NonEmpty Window -> X ())
-                          -> (NamedScratchpad -> X ())
-                          -> NamedScratchpads
-                          -> String
-                          -> X ()
-someNamedScratchpadAction f runApp scratchpadConfig scratchpadName =
-    someNamedScratchpadAction' f shift' runApp scratchpadConfig scratchpadName
-    where
-        shift' :: WorkspaceId -> Window -> X ()
-        shift' i = (shiftWinRLWhen isFloat i >=> windows)
-
-someNamedScratchpadAction' :: ((Window -> X ()) -> NonEmpty Window -> X ())
-                           -> (WorkspaceId -> Window -> X ())
-                           -> (NamedScratchpad -> X ())
-                           -> NamedScratchpads
-                           -> String
-                           -> X ()
-someNamedScratchpadAction' f shift' runApp scratchpadConfig scratchpadName =
-    case findByName scratchpadConfig scratchpadName of
-        Nothing -> return ()
-
-        Just conf -> withWindowSet $ \winSet -> do
-            let focusedWspWindows = maybe [] W.integrate (W.stack . W.workspace . W.current $ winSet)
-            matchingOnCurrent <- filterM (runQuery (NS.query conf)) focusedWspWindows
-
-            case nonEmpty matchingOnCurrent of
-                -- no matching window on the current workspace -> scratchpad not running or in background
-                Nothing -> launch conf winSet
-                -- matching window running on current workspace -> window should be shifted to scratchpad workspace
-                Just wins -> dismiss winSet wins
-    where
-        launch conf winSet = do
-            matchingOnAll <- filterM (runQuery (NS.query conf)) (W.allWindows winSet)
-            case nonEmpty matchingOnAll of
-                Nothing   -> runApp conf
-                Just wins -> f (shift' (W.currentTag winSet)) wins
-
-        dismiss winSet wins = do
-            unless (any (\wsp -> scratchpadWorkspaceTag == W.tag wsp) (W.workspaces winSet))
-                (addHiddenWorkspace scratchpadWorkspaceTag)
-            f (shift' scratchpadWorkspaceTag) wins
-
--- | Runs application which should appear in specified scratchpad
-runApplication :: NamedScratchpad -> X ()
-runApplication = spawn . NS.cmd
-
--- | Finds named scratchpad configuration by name
-findByName :: NamedScratchpads -> String -> Maybe NamedScratchpad
-findByName c s = listToMaybe $ filter ((s ==) . NS.name) c
-
--- tag of the scratchpad workspace
-scratchpadWorkspaceTag :: String
-scratchpadWorkspaceTag = "NSP"
-
-shiftWinRLWhen :: Query Bool -> WorkspaceId -> Window -> X (WindowSet -> WindowSet)
-shiftWinRLWhen p to w = withWindowSet $ \ws ->
-  case W.findTag w ws of
-    Just from -> do
-      refocus <- refocusWhen p from
-      let shift' = W.shiftWin to w
-      pure (refocus . shift')
-    _ -> pure id
 
 
 mouseBindings' :: XConfig Layout -> Map (KeyMask, Button) (Window -> X ())
