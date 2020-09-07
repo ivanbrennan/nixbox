@@ -130,7 +130,7 @@ keys' conf@(XConfig {modMask}) =
       ( (modMask, xK_l),
         toggleRecentWS
       ),
-      ( (modMask, xK_Tab),
+      ( (mod4Mask, xK_Tab),
         moveTo Next NonEmptyWS
       ),
       -- focus
