@@ -54,6 +54,7 @@ import XMonad.Actions.CycleWS
 import XMonad.Actions.FlexibleResize (mouseResizeEdgeWindow)
 import XMonad.Actions.RotSlaves (rotSlavesDown, rotSlavesUp)
 import XMonad.Actions.Submap (submap)
+import XMonad.Actions.WindowBringer (gotoMenuArgs)
 import XMonad.Hooks.DebugStack (debugStack)
 import XMonad.Hooks.DynamicLog
   ( PP, ppCurrent, ppHidden, ppLayout, ppSep, ppTitle, ppWsSep, statusBar, wrap,
@@ -92,8 +93,6 @@ import XMonad.Prompt.AppendFile (appendFilePrompt')
 import XMonad.Prompt.ConfirmPrompt (confirmPrompt)
 import XMonad.Prompt.Man (manPrompt)
 import XMonad.Prompt.RunOrRaise (runOrRaisePrompt)
-import XMonad.Prompt.Window (WindowPrompt (Goto), windowPrompt)
-import qualified XMonad.Prompt.Window as P
 import XMonad.Prompt.XMonad (xmonadPromptC)
 import XMonad.Util.NamedScratchpad
   ( NamedScratchpad (NS), namedScratchpadAction,
@@ -304,13 +303,14 @@ keys' conf@(XConfig {modMask}) =
                ]
            )
          ]
-      ++ [ ( (modMask, k),
+      ++ [ ( (modMask, alt),
              submap . M.fromList $
                [ ( (noModMask, xK_a),
                    appendThoughtPrompt xPConfig
                  ),
                  ( (noModMask, xK_g),
-                   windowPrompt xPConfig Goto P.allWindows
+                   gotoMenuArgs $
+                     filter (not . (== '\'')) <$> dmenuArgs
                  ),
                  ( (noModMask, xK_r),
                    runOrRaisePrompt xPConfig
@@ -323,7 +323,7 @@ keys' conf@(XConfig {modMask}) =
                  )
                ]
            )
-           | k <- [xK_Alt_L, xK_Alt_R]
+           | alt <- [xK_Alt_L, xK_Alt_R]
          ]
   where
     -- mod-[1..9], Switch to workspace N
@@ -420,17 +420,18 @@ keys' conf@(XConfig {modMask}) =
 
     dmenu :: String
     dmenu =
-      intercalate
-        " "
-        [ "dmenu_run",
-          "-fn monospace:size=12",
-          "-l 24",
-          "-i",
-          "-nb '#1c1c1c'",
-          "-nf '#a5adb7'",
-          "-sb '#222222'",
-          "-sf '#ffffff'"
-        ]
+      intercalate " " ("dmenu_run" : dmenuArgs)
+
+    dmenuArgs :: [String]
+    dmenuArgs =
+      [ "-fn", "monospace:size=12",
+        "-l", "24",
+        "-i",
+        "-nb", "'#1c1c1c'",
+        "-nf", "'#a5adb7'",
+        "-sb", "'#222222'",
+        "-sf", "'#ffffff'"
+      ]
 
     commands :: [(String, X ())]
     commands =
