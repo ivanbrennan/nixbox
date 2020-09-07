@@ -35,15 +35,15 @@ import Graphics.X11.Xlib.Extras (Event)
 
 {- xmonad -}
 import XMonad
-  ( ChangeLayout (NextLayout), Choose, Full (Full), IncMasterN (IncMasterN),
-    Layout, ManageHook, Mirror (Mirror), Resize (Expand, Shrink), WindowSet,
-    WindowSpace, WorkspaceId, X, XConf, XConfig (XConfig), appName, className,
-    clickJustFocuses, composeAll, config, description, doFloat, doIgnore, focus,
-    focusedBorderColor, gets, handleEventHook, io, keys, kill, layoutHook, local,
-    logHook, manageHook, modMask, mouseBindings, mouseMoveWindow,
-    normalBorderColor, refresh, runQuery, screenWorkspace, sendMessage, spawn,
-    startupHook, terminal, whenJust, windows, windowset, withFocused, workspaces,
-    xmonad, (=?), (|||),
+  ( ChangeLayout (FirstLayout, NextLayout), Choose, Full (Full),
+    IncMasterN (IncMasterN), Layout, ManageHook, Mirror (Mirror),
+    Resize (Expand, Shrink), WindowSet, WindowSpace, WorkspaceId, X, XConf,
+    XConfig (XConfig), appName, className, clickJustFocuses, composeAll, config,
+    description, doFloat, doIgnore, focus, focusedBorderColor, gets,
+    handleEventHook, io, keys, kill, layoutHook, local, logHook, manageHook,
+    modMask, mouseBindings, mouseMoveWindow, normalBorderColor, refresh, runQuery,
+    screenWorkspace, sendMessage, spawn, startupHook, terminal, whenJust, windows,
+    windowset, withFocused, workspaces, xmonad, (=?), (|||),
   )
 import qualified XMonad.StackSet as W
 
@@ -114,6 +114,9 @@ keys' conf@(XConfig {modMask}) =
       ( (mod4Mask, xK_space),
         sendMessage NextLayout
       ),
+      ( (mod4Mask .|. shiftMask, xK_space),
+        sendMessage FirstLayout
+      ),
       ( (modMask, xK_space),
         sendMessage ToggleLayout
       ),
@@ -160,6 +163,12 @@ keys' conf@(XConfig {modMask}) =
       ),
       ( (modMask .|. controlMask, xK_n),
         rotSlavesUp
+      ),
+      ( (mod4Mask, xK_n),
+        rotTailUp
+      ),
+      ( (mod4Mask, xK_p),
+        rotTailDown
       ),
       ( (modMask .|. controlMask, xK_comma),
         increaseLimit
@@ -372,6 +381,21 @@ keys' conf@(XConfig {modMask}) =
         $ map W.workspace (W.visible ws)
           ++ W.hidden ws
           ++ [W.workspace (W.current ws)]
+
+    rotTailUp :: X ()
+    rotTailUp =
+      windows $ W.modify' rotTailUp'
+
+    rotTailDown :: X ()
+    rotTailDown =
+      windows $ W.modify' (reverseRights . rotTailUp' . reverseRights)
+
+    rotTailUp' :: W.Stack Window -> W.Stack Window
+    rotTailUp' (W.Stack t ls (r:rs)) = W.Stack r ls (rs ++ [t])
+    rotTailUp' (W.Stack t ls     []) = W.Stack t ls []
+
+    reverseRights :: W.Stack Window -> W.Stack Window
+    reverseRights (W.Stack t ls rs) = W.Stack t ls (reverse rs)
 
     setTerminal :: String -> XConf -> XConf
     setTerminal t xc =
