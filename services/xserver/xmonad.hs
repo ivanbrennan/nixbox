@@ -581,28 +581,21 @@ startupHook' =
       ]
 
 
-layoutHook' ::
-  ModifiedLayout
-    SmartBorder
-    ( ModifiedLayout
-        RefocusLastLayoutHook
-        ( FocusTracking
-            ( ModifiedLayout
-                BoringWindows
-                ( ToggleLayouts
-                    Full
-                    ( Choose
-                        ResizableTall
-                        ( Choose
-                            (ModifiedLayout Selection ResizableTall)
-                            (Mirror (ModifiedLayout Selection ResizableTall))
-                        )
-                    )
-                )
-            )
-        )
-    )
-    Window
+type SmartBorders a = ModifiedLayout SmartBorder a
+type Refocus      a = ModifiedLayout RefocusLastLayoutHook (FocusTracking a)
+type Boring       a = ModifiedLayout BoringWindows a
+type ToggleFull   a = ToggleLayouts Full a
+type LimitSelect  a = ModifiedLayout Selection a
+
+type Layouts
+  = Choose
+      ResizableTall
+      ( Choose
+          (LimitSelect ResizableTall)
+          (Mirror (LimitSelect ResizableTall))
+      )
+
+layoutHook' :: SmartBorders (Refocus (Boring (ToggleFull Layouts))) Window
 layoutHook' =
   id
     . smartBorders
@@ -613,7 +606,7 @@ layoutHook' =
     -- . fullscreenFloat
     $ tall ||| limit tall ||| Mirror (limit tall)
   where
-    limit :: l Window -> ModifiedLayout Selection l Window
+    limit :: l Window -> LimitSelect l Window
     limit = limitSelect 1 1
 
     tall :: ResizableTall Window
