@@ -157,16 +157,16 @@ keys' conf@(XConfig {modMask}) =
         swapWithLast
       ),
       -- rotation
-      ( (modMask .|. controlMask, xK_p),
+      ( (modMask .|. controlMask, xK_k),
         rotSlavesDown
       ),
-      ( (modMask .|. controlMask, xK_n),
+      ( (modMask .|. controlMask, xK_j),
         rotSlavesUp
       ),
-      ( (mod4Mask, xK_n),
+      ( (modMask .|. controlMask, xK_n),
         rotTailUp
       ),
-      ( (mod4Mask, xK_p),
+      ( (modMask .|. controlMask, xK_p),
         rotTailDown
       ),
       ( (modMask .|. controlMask, xK_comma),
@@ -192,16 +192,16 @@ keys' conf@(XConfig {modMask}) =
         windows siftUp -- TODO: boring-aware
       ),
       -- resize
-      ( (modMask .|. controlMask, xK_h),
+      ( (mod4Mask, xK_h),
         sendMessage Shrink
       ),
-      ( (modMask .|. controlMask, xK_l),
+      ( (mod4Mask, xK_l),
         sendMessage Expand
       ),
-      ( (modMask .|. controlMask, xK_j),
+      ( (mod4Mask, xK_j),
         sendMessage MirrorShrink
       ),
-      ( (modMask .|. controlMask, xK_k),
+      ( (mod4Mask, xK_k),
         sendMessage MirrorExpand
       ),
       -- refresh
