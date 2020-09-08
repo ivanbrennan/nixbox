@@ -595,7 +595,7 @@ layoutHook' ::
                         ResizableTall
                         ( Choose
                             (ModifiedLayout Selection ResizableTall)
-                            (Mirror ResizableTall)
+                            (Mirror (ModifiedLayout Selection ResizableTall))
                         )
                     )
                 )
@@ -611,8 +611,11 @@ layoutHook' =
     . boringAuto
     . toggleLayouts Full
     -- . fullscreenFloat
-    $ tall ||| limitSelect 1 1 tall ||| Mirror tall
+    $ tall ||| limit tall ||| Mirror (limit tall)
   where
+    limit :: l Window -> ModifiedLayout Selection l Window
+    limit = limitSelect 1 1
+
     tall :: ResizableTall Window
     tall = ResizableTall 1 (3/100) (1/2) []
 
