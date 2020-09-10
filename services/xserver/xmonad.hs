@@ -2,6 +2,7 @@
 {-# OPTIONS_GHC -Wall -Werror #-}
 
 {- base -}
+import Control.Arrow (second)
 import Control.Monad ((>=>))
 import Data.Bits ((.|.))
 import Data.Bool (bool)
@@ -42,8 +43,8 @@ import XMonad
     description, doFloat, doIgnore, focus, focusedBorderColor, gets,
     handleEventHook, io, keys, kill, layoutHook, local, logHook, manageHook,
     modMask, mouseBindings, mouseMoveWindow, normalBorderColor, refresh, runQuery,
-    screenWorkspace, sendMessage, spawn, startupHook, terminal, whenJust, windows,
-    windowset, withFocused, workspaces, xmonad, (=?), (|||),
+    screenWorkspace, sendMessage, spawn, startupHook, terminal, trace, whenJust,
+    windows, windowset, withFocused, workspaces, xmonad, (=?), (|||),
   )
 import qualified XMonad.StackSet as W
 
@@ -55,7 +56,7 @@ import XMonad.Actions.FlexibleResize (mouseResizeEdgeWindow)
 import XMonad.Actions.RotSlaves (rotSlavesDown, rotSlavesUp)
 import XMonad.Actions.Submap (submap)
 import XMonad.Actions.WindowBringer (gotoMenuArgs)
-import XMonad.Hooks.DebugStack (debugStack)
+import XMonad.Hooks.DebugStack (debugStackString)
 import XMonad.Hooks.DynamicLog
   ( PP, ppCurrent, ppHidden, ppLayout, ppSep, ppTitle, ppWsSep, statusBar, wrap,
     xmobarColor, xmobarPP,
@@ -238,7 +239,8 @@ keys' conf@(XConfig {modMask}) =
         namedScratchpadAction scratchpads (NS.name scratchTerminal)
       ),
       ( (mod4Mask .|. modMask, xK_p),
-        debugStack
+        debugStackString
+          >>= trace . unlines . uncurry (++) . second reverse . splitAt 1 . lines
       ),
       ( (noModMask, xK_Print),
         spawn "screenshot"
