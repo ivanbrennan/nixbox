@@ -24,9 +24,9 @@ import Data.Default (def)
 import Graphics.X11
   ( Button, KeyMask, KeySym, Window, button1, controlMask, mod4Mask, noModMask,
     shiftMask, xK_1, xK_9, xK_Alt_L, xK_Alt_R, xK_Print, xK_Tab, xK_a, xK_c,
-    xK_comma, xK_d, xK_e, xK_g, xK_h, xK_i, xK_j, xK_k, xK_l, xK_m, xK_n, xK_p,
-    xK_period, xK_q, xK_r, xK_semicolon, xK_slash, xK_space, xK_t, xK_v, xK_w,
-    xK_x, xK_z,
+    xK_comma, xK_d, xK_e, xK_g, xK_h, xK_i, xK_j, xK_k, xK_l, xK_m, xK_n, xK_o,
+    xK_p, xK_period, xK_q, xK_r, xK_semicolon, xK_slash, xK_space, xK_t, xK_v,
+    xK_w, xK_x, xK_z,
   )
 import Graphics.X11.ExtraTypes
   ( xF86XK_AudioLowerVolume, xF86XK_AudioMute, xF86XK_AudioRaiseVolume,
@@ -53,7 +53,7 @@ import XMonad.Actions.CycleWS
   ( Direction1D (Next, Prev), WSType (WSIs, NonEmptyWS), moveTo,
   )
 import XMonad.Actions.FlexibleResize (mouseResizeEdgeWindow)
-import XMonad.Actions.RotSlaves (rotSlavesDown, rotSlavesUp)
+import XMonad.Actions.RotSlaves (rotAllDown, rotAllUp, rotSlavesDown, rotSlavesUp)
 import XMonad.Actions.Submap (submap)
 import XMonad.Actions.WindowBringer (gotoMenuArgs)
 import XMonad.Hooks.DebugStack (debugStackString)
@@ -163,6 +163,12 @@ keys' conf@(XConfig {modMask}) =
       ),
       ( (modMask .|. controlMask, xK_j),
         rotSlavesUp
+      ),
+      ( (modMask .|. controlMask, xK_i),
+        rotAllDown
+      ),
+      ( (modMask .|. controlMask, xK_o),
+        rotAllUp
       ),
       ( (modMask .|. controlMask, xK_n),
         rotTailUp
