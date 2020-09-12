@@ -88,8 +88,8 @@ import XMonad.Layout.ToggleLayouts
   ( ToggleLayout (ToggleLayout), ToggleLayouts, toggleLayouts,
   )
 import XMonad.Prompt
-  ( XPConfig, XPPosition (Top), alwaysHighlight, autoComplete, bgColor, fgColor,
-    font, height, position, promptBorderWidth,
+  ( XPConfig, XPPosition (Top), alwaysHighlight, bgColor, bgHLight, fgColor,
+    fgHLight, font, height, position, promptBorderWidth,
   )
 import XMonad.Prompt.AppendFile (appendFilePrompt')
 import XMonad.Prompt.ConfirmPrompt (confirmPrompt)
@@ -306,8 +306,9 @@ keys' conf@(XConfig {modMask}) =
       ++ [ ( (modMask, xK_slash),
              submap . M.fromList $
                [ ( (modMask, xK_slash),
-                   local (setTerminal "alacritty --class=manpage") $
-                     manPrompt (xPConfig {autoComplete = Just 0})
+                   local
+                     (setTerminal "alacritty --class=manpage")
+                     (manPrompt xPConfig)
                  )
                ]
            )
@@ -476,7 +477,9 @@ xPConfig =
       alwaysHighlight   = False,
       promptBorderWidth = 0,
       bgColor           = "#1c1c1c",
-      fgColor           = "#a5adb7",
+      fgColor           = "#c8d8d8",
+      bgHLight          = "#c8d8d8",
+      fgHLight          = "#1c1c1c",
       font              = "xft:monospace:size=12"
     }
 
