@@ -54,6 +54,7 @@ import XMonad.Actions.CycleWS
   )
 import XMonad.Actions.FlexibleResize (mouseResizeEdgeWindow)
 import XMonad.Actions.RotSlaves (rotAllDown, rotAllUp, rotSlavesDown, rotSlavesUp)
+import XMonad.Actions.Sift (siftDown, siftUp)
 import XMonad.Actions.Submap (submap)
 import XMonad.Actions.WindowBringer (gotoMenuArgs)
 import XMonad.Hooks.DebugStack (debugStackString)
@@ -389,22 +390,6 @@ keys' conf@(XConfig {modMask}) =
         $ map W.workspace (W.visible ws)
           ++ W.hidden ws
           ++ [W.workspace (W.current ws)]
-
-    siftUp :: WindowSet -> WindowSet
-    siftUp = W.modify' siftUp'
-
-    siftDown :: WindowSet -> WindowSet
-    siftDown = W.modify' (reverseStack . siftUp' . reverseStack)
-
-    siftUp' :: W.Stack Window -> W.Stack Window
-    siftUp' (W.Stack t (l:ls) rs) = W.Stack t ls (l:rs)
-    siftUp' (W.Stack t []     rs) =
-      case reverse rs of
-        []      -> W.Stack t []           []
-        (r:rs') -> W.Stack t (rs' ++ [r]) []
-
-    reverseStack :: W.Stack Window -> W.Stack Window
-    reverseStack (W.Stack t ls rs) = W.Stack t rs ls
 
     rotTailUp :: X ()
     rotTailUp =
