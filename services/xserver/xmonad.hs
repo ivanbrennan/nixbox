@@ -5,7 +5,6 @@
 import Control.Arrow (second)
 import Control.Monad ((>=>))
 import Data.Bits ((.|.))
-import Data.Bool (bool)
 import Data.List (intercalate, isInfixOf)
 import Data.Monoid (All)
 import Data.Time (ZonedTime, defaultTimeLocale, formatTime, getZonedTime)
@@ -37,12 +36,12 @@ import Graphics.X11.Xlib.Extras (Event)
 {- xmonad -}
 import XMonad
   ( ChangeLayout (FirstLayout, NextLayout), Choose, Full (Full),
-    IncMasterN (IncMasterN), Layout, ManageHook, Mirror (Mirror),
+    IncMasterN (IncMasterN), Layout, ManageHook, Mirror (Mirror), Query,
     Resize (Expand, Shrink), WindowSet, WindowSpace, WorkspaceId, X, XConf,
     XConfig (XConfig), appName, className, clickJustFocuses, composeAll, config,
     description, doFloat, doIgnore, focus, focusedBorderColor, gets,
     handleEventHook, io, keys, kill, layoutHook, local, logHook, manageHook,
-    modMask, mouseBindings, mouseMoveWindow, normalBorderColor, refresh, runQuery,
+    modMask, mouseBindings, mouseMoveWindow, normalBorderColor, refresh,
     screenWorkspace, sendMessage, spawn, startupHook, terminal, trace, whenJust,
     windows, windowset, withFocused, workspaces, xmonad, (=?), (|||),
   )
@@ -53,6 +52,7 @@ import XMonad.Actions.CycleWS
   ( Direction1D (Next, Prev), WSType (WSIs, NonEmptyWS), moveTo,
   )
 import XMonad.Actions.FlexibleResize (mouseResizeEdgeWindow)
+import XMonad.Actions.PerWindowKeys (bindFirst)
 import XMonad.Actions.RotSlaves (rotAllDown, rotAllUp, rotSlavesDown, rotSlavesUp)
 import XMonad.Actions.Sift (siftDown, siftUp)
 import XMonad.Actions.Submap (submap)
@@ -295,10 +295,14 @@ keys' conf@(XConfig {modMask}) =
       ),
       -- copy/paste
       ( (modMask, xK_c),
-        ifTerminal (sendKey noModMask xF86XK_Copy)  (sendKey controlMask xK_c)
+        ifTerminal
+          (sendKey noModMask xF86XK_Copy)
+          (sendKey controlMask xK_c)
       ),
       ( (modMask, xK_v),
-        ifTerminal (sendKey noModMask xF86XK_Paste) (sendKey controlMask xK_v)
+        ifTerminal
+          (sendKey noModMask xF86XK_Paste)
+          (sendKey controlMask xK_v)
       )
     ]
       ++ workspaceTagKeys
@@ -413,11 +417,10 @@ keys' conf@(XConfig {modMask}) =
 
     ifTerminal :: X () -> X () -> X ()
     ifTerminal thenX elseX =
-      withFocused $ isTerminal >=> bool elseX thenX
+      bindFirst [(isTerminal, thenX), (pure True, elseX)]
 
-    isTerminal :: Window -> X Bool
-    isTerminal =
-      fmap (== "Alacritty") . runQuery className
+    isTerminal :: Query Bool
+    isTerminal = className =? "Alacritty"
 
     appendThoughtPrompt :: XPConfig -> X ()
     appendThoughtPrompt xP = do
