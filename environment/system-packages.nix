@@ -94,6 +94,7 @@ with pkgs; [
   weechat
   wget
   xclip
+  xorg.xmessage
   xmobar
   xsel
   zathura
