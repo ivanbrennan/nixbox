@@ -54,7 +54,6 @@ import XMonad.Actions.CycleWS
 import XMonad.Actions.FlexibleResize (mouseResizeEdgeWindow)
 import XMonad.Actions.PerWindowKeys (bindFirst)
 import XMonad.Actions.RotSlaves (rotAllDown, rotAllUp, rotSlavesDown, rotSlavesUp)
-import XMonad.Actions.Sift (siftDown, siftUp)
 import XMonad.Actions.Submap (submap)
 import XMonad.Actions.WindowBringer (gotoMenuArgs)
 import XMonad.Hooks.DebugStack (debugStackString)
@@ -74,7 +73,9 @@ import XMonad.Hooks.RefocusLast
   ( RefocusLastLayoutHook, isFloat, refocusLastLayoutHook, refocusLastWhen,
     shiftRLWhen, swapWithLast, toggleFocus,
   )
-import XMonad.Layout.BoringWindows (BoringWindows, boringAuto, focusDown, focusUp)
+import XMonad.Layout.BoringWindows
+  ( BoringWindows, boringAuto, focusDown, focusUp, siftDown, siftUp,
+  )
 import XMonad.Layout.LayoutModifier (ModifiedLayout)
 import XMonad.Layout.LimitWindows
   ( Selection, limitSelect, decreaseLimit, increaseLimit,
@@ -194,10 +195,10 @@ keys' conf@(XConfig {modMask}) =
         windows W.swapMaster
       ),
       ( (modMask .|. shiftMask, xK_j),
-        windows siftDown -- TODO: boring-aware
+        siftDown
       ),
       ( (modMask .|. shiftMask, xK_k),
-        windows siftUp -- TODO: boring-aware
+        siftUp
       ),
       -- resize
       ( (mod4Mask, xK_h),
