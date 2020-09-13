@@ -51,6 +51,7 @@ import qualified XMonad.StackSet as W
 import XMonad.Actions.CycleWS
   ( Direction1D (Next, Prev), WSType (WSIs, NonEmptyWS), moveTo,
   )
+import XMonad.Actions.DynamicProjects (dynamicProjects, changeProjectDirPrompt)
 import XMonad.Actions.FlexibleResize (mouseResizeEdgeWindow)
 import XMonad.Actions.PerWindowKeys (bindFirst)
 import XMonad.Actions.RotSlaves (rotAllDown, rotAllUp, rotSlavesDown, rotSlavesUp)
@@ -134,6 +135,9 @@ keys' conf@(XConfig {modMask}) =
       ),
       ( (mod4Mask, xK_Tab),
         moveTo Next NonEmptyWS
+      ),
+      ( (modMask .|. shiftMask, xK_semicolon),
+        changeWorkspaceDir
       ),
       -- focus
       ( (modMask, xK_j),
@@ -397,6 +401,10 @@ keys' conf@(XConfig {modMask}) =
           ++ W.hidden ws
           ++ [W.workspace (W.current ws)]
 
+    changeWorkspaceDir :: X ()
+    changeWorkspaceDir =
+      changeProjectDirPrompt xPConfig
+
     rotTailUp :: X ()
     rotTailUp =
       windows $ W.modify' rotTailUp'
@@ -619,6 +627,7 @@ main =
   where
     xconfig =
       debugManageHookOn "M1-M4-v" $
+      dynamicProjects [] $
       ewmh $
         def
           { layoutHook         = layoutHook',
