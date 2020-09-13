@@ -480,7 +480,7 @@ xPConfig =
       alwaysHighlight   = False,
       promptBorderWidth = 0,
       bgColor           = "#161616",
-      fgColor           = "#888888",
+      fgColor           = "#aaaaaa",
       bgHLight          = "#dddddd",
       fgHLight          = "#222222",
       font              = "xft:monospace:size=12"
