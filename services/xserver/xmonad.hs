@@ -3,19 +3,18 @@
 
 {- base -}
 import Control.Arrow (second)
-import Control.Monad (unless, (>=>))
+import Control.Monad ((>=>))
 import Data.Bits ((.|.))
 import Data.List (intercalate, isInfixOf)
 import Data.Monoid (All)
 import Data.Time (ZonedTime, defaultTimeLocale, formatTime, getZonedTime)
-import System.Directory (getHomeDirectory, getCurrentDirectory, setCurrentDirectory, makeAbsolute)
+import System.Directory (getHomeDirectory)
 import System.Exit (exitSuccess)
 import System.FilePath ((</>))
 
 {- containers -}
 import Data.Map (Map)
 import qualified Data.Map as M
-import qualified Data.Map.Strict as MS
 
 {- data-default -}
 import Data.Default (def)
@@ -45,7 +44,6 @@ import XMonad
     modMask, mouseBindings, mouseMoveWindow, normalBorderColor, refresh,
     screenWorkspace, sendMessage, spawn, startupHook, terminal, trace, whenJust,
     windows, windowset, withFocused, workspaces, xmonad, (=?), (|||),
-    ExtensionClass, Typeable, initialValue, extensionType, StateExtension (PersistentExtension), catchIO,
   )
 import qualified XMonad.StackSet as W
 
@@ -53,7 +51,7 @@ import qualified XMonad.StackSet as W
 import XMonad.Actions.CycleWS
   ( Direction1D (Next, Prev), WSType (WSIs, NonEmptyWS), moveTo,
   )
--- import XMonad.Actions.DynamicProjects (dynamicProjects, changeProjectDirPrompt)
+import XMonad.Actions.DynamicProjects (dynamicProjects, changeProjectDirPrompt)
 import XMonad.Actions.FlexibleResize (mouseResizeEdgeWindow)
 import XMonad.Actions.PerWindowKeys (bindFirst)
 import XMonad.Actions.RotSlaves (rotAllDown, rotAllUp, rotSlavesDown, rotSlavesUp)
@@ -97,11 +95,9 @@ import XMonad.Prompt
   )
 import XMonad.Prompt.AppendFile (appendFilePrompt')
 import XMonad.Prompt.ConfirmPrompt (confirmPrompt)
-import XMonad.Prompt.Directory (directoryPrompt)
 import XMonad.Prompt.Man (manPrompt)
 import XMonad.Prompt.RunOrRaise (runOrRaisePrompt)
 import XMonad.Prompt.XMonad (xmonadPromptC)
-import qualified XMonad.Util.ExtensibleState as XS
 import XMonad.Util.NamedScratchpad
   ( NamedScratchpad (NS), namedScratchpadAction,
     namedScratchpadFilterOutWorkspace, namedScratchpadFilterOutWorkspacePP,
@@ -113,57 +109,6 @@ import XMonad.Util.Paste (sendKey)
 
 -- https://github.com/xmonad/X11/blob/6e5ef8019a0cc49e18410a335dbdeea87b7c4aac/Graphics/X11/Types.hsc
 -- https://stackoverflow.com/questions/6605399/how-can-i-set-an-action-to-occur-on-a-key-release-in-xmonad
-
--- | Newtype wrapper for a workspace's @FilePath@.
-newtype WorkspaceDir = WorkspaceDir { unWorkspaceDir :: FilePath }
-  deriving (Show, Read, Eq)
-
-data WorkspaceDirState = WorkspaceDirState
-  { workspaceDirMap :: !(MS.Map WorkspaceId WorkspaceDir),
-    workspaceDirTag :: !(Maybe WorkspaceId)
-  } deriving (Show, Read, Eq, Typeable)
-
-instance ExtensionClass WorkspaceDirState where
-  initialValue = WorkspaceDirState MS.empty Nothing
-  extensionType = PersistentExtension
-
--- | A log hook recording workspace directory changes into extensible state.
-workspaceDirLogHook :: X ()
-workspaceDirLogHook = do
-  tag <- gets (W.currentTag . windowset)
-  xstate <- XS.get
-
-  unless (Just tag == workspaceDirTag xstate) $ do
-    let mp = workspaceDirMap xstate
-        dir = maybe "~/" unWorkspaceDir (MS.lookup tag mp)
-
-    catchIO $ do
-      home <- getHomeDirectory
-      dir' <- if null dir
-                then pure home
-                else makeAbsolute (expandHome home dir)
-      setCurrentDirectory dir'
-    d <- io getCurrentDirectory
-
-    XS.put $ xstate
-      { workspaceDirMap = MS.insert tag (WorkspaceDir d) mp,
-        workspaceDirTag = Just tag
-      }
-  where
-    expandHome :: FilePath -> FilePath -> FilePath
-    expandHome home ('~' : path) = home ++ path
-    expandHome _           path  =         path
-
-changeWorkspaceDir :: XPConfig -> X ()
-changeWorkspaceDir xpc =
-  directoryPrompt xpc "cd " $ \dir -> do
-    tag <- gets (W.currentTag . windowset)
-    xstate <- XS.get
-
-    XS.put $ xstate
-      { workspaceDirMap = MS.insert tag (WorkspaceDir dir) (workspaceDirMap xstate),
-        workspaceDirTag = Nothing
-      }
 
 keys' :: XConfig Layout -> Map (KeyMask, KeySym) (X ())
 keys' conf@(XConfig {modMask}) =
@@ -192,7 +137,7 @@ keys' conf@(XConfig {modMask}) =
         moveTo Next NonEmptyWS
       ),
       ( (modMask .|. shiftMask, xK_semicolon),
-        changeWorkspaceDir xPConfig
+        changeWorkspaceDir
       ),
       -- focus
       ( (modMask, xK_j),
@@ -456,6 +401,10 @@ keys' conf@(XConfig {modMask}) =
           ++ W.hidden ws
           ++ [W.workspace (W.current ws)]
 
+    changeWorkspaceDir :: X ()
+    changeWorkspaceDir =
+      changeProjectDirPrompt xPConfig
+
     rotTailUp :: X ()
     rotTailUp =
       windows $ W.modify' rotTailUp'
@@ -623,7 +572,7 @@ eventHook =
 -- See the 'XMonad.Hooks.DynamicLog' extension for examples.
 --
 logHook' :: X ()
-logHook' = workspaceDirLogHook
+logHook' = pure ()
 
 ------------------------------------------------------------------------
 -- Startup hook
@@ -678,6 +627,7 @@ main =
   where
     xconfig =
       debugManageHookOn "M1-M4-v" $
+      dynamicProjects [] $
       ewmh $
         def
           { layoutHook         = layoutHook',
