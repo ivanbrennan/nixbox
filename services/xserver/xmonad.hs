@@ -3,7 +3,7 @@
 
 {- base -}
 import Control.Arrow (second)
-import Control.Monad ((>=>))
+import Control.Monad (when, (>=>))
 import Data.Bits ((.|.))
 import Data.List (intercalate, isInfixOf)
 import Data.Monoid (All)
@@ -117,10 +117,10 @@ keys' conf@(XConfig {modMask}) =
   M.fromList $
     [ -- layout algorithms
       ( (mod4Mask, xK_space),
-        sendMessage NextLayout
+        fullToggleOff >> sendMessage NextLayout
       ),
       ( (mod4Mask .|. shiftMask, xK_space),
-        sendMessage FirstLayout
+        fullToggleOff >> sendMessage FirstLayout
       ),
       ( (modMask, xK_space),
         sendMessage ToggleLayout
@@ -144,17 +144,13 @@ keys' conf@(XConfig {modMask}) =
       -- focus
       ( (modMask, xK_j),
         do
-          lt <- layoutDescription
-          if "Full" `isInfixOf` lt
-            then windows W.focusDown
-            else focusDown
+          t <- isFullToggleOn
+          if t then windows W.focusDown else focusDown
       ),
       ( (modMask, xK_k),
         do
-          lt <- layoutDescription
-          if "Full" `isInfixOf` lt
-            then windows W.focusUp
-            else focusUp
+          t <- isFullToggleOn
+          if t then windows W.focusUp else focusUp
       ),
       ( (modMask, xK_m),
         windows W.focusMaster
@@ -372,6 +368,15 @@ keys' conf@(XConfig {modMask}) =
                       (shiftRLWhen isFloat, shiftMask)
                     ]
       ]
+
+    fullToggleOff :: X ()
+    fullToggleOff = do
+      t <- isFullToggleOn
+      when t (sendMessage ToggleLayout)
+
+    isFullToggleOn :: X Bool
+    isFullToggleOn =
+      fmap ("Full" `isInfixOf`) layoutDescription
 
     layoutDescription :: X String
     layoutDescription =
