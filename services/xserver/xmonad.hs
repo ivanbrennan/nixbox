@@ -51,7 +51,7 @@ import qualified XMonad.StackSet as W
 import XMonad.Actions.CycleWS
   ( Direction1D (Next, Prev), WSType (WSIs, NonEmptyWS), moveTo,
   )
-import XMonad.Actions.DynamicProjects (dynamicProjects, changeProjectDirPrompt)
+import XMonad.Actions.DynamicProjects (dynamicProjects, changeProjectDirPrompt')
 import XMonad.Actions.FlexibleResize (mouseResizeEdgeWindow)
 import XMonad.Actions.PerWindowKeys (bindFirst)
 import XMonad.Actions.RotSlaves (rotAllDown, rotAllUp, rotSlavesDown, rotSlavesUp)
@@ -90,8 +90,9 @@ import XMonad.Layout.ToggleLayouts
   ( ToggleLayout (ToggleLayout), ToggleLayouts, toggleLayouts,
   )
 import XMonad.Prompt
-  ( XPConfig, XPPosition (Top), alwaysHighlight, bgColor, bgHLight, fgColor,
-    fgHLight, font, height, position, promptBorderWidth,
+  ( ComplCaseSensitivity (ComplCaseSensitive), XPConfig, XPPosition (Top),
+    alwaysHighlight, bgColor, bgHLight, fgColor, fgHLight, font, height,
+    position, promptBorderWidth,
   )
 import XMonad.Prompt.AppendFile (appendFilePrompt')
 import XMonad.Prompt.ConfirmPrompt (confirmPrompt)
@@ -403,7 +404,7 @@ keys' conf@(XConfig {modMask}) =
 
     changeWorkspaceDir :: X ()
     changeWorkspaceDir =
-      changeProjectDirPrompt xPConfig
+      changeProjectDirPrompt' (ComplCaseSensitive False) xPConfig
 
     rotTailUp :: X ()
     rotTailUp =
