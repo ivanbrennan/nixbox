@@ -57,9 +57,10 @@ import XMonad.Actions.PerWindowKeys (bindFirst)
 import XMonad.Actions.RotSlaves (rotAllDown, rotAllUp, rotSlavesDown, rotSlavesUp)
 import XMonad.Actions.Submap (submap)
 import XMonad.Actions.WindowBringer (gotoMenuArgs)
+import XMonad.Actions.WorkspaceNames (renameWorkspace, workspaceNamesPP)
 import XMonad.Hooks.DebugStack (debugStackString)
 import XMonad.Hooks.DynamicLog
-  ( PP, ppCurrent, ppHidden, ppLayout, ppSep, ppTitle, ppWsSep, statusBar, wrap,
+  ( PP, ppCurrent, ppHidden, ppLayout, ppSep, ppTitle, ppWsSep, statusBar', wrap,
     xmobarColor, xmobarPP,
   )
 import XMonad.Hooks.EwmhDesktops (ewmh, fullscreenEventHook)
@@ -329,8 +330,10 @@ keys' conf@(XConfig {modMask}) =
                    appendThoughtPrompt xPConfig
                  ),
                  ( (noModMask, xK_g),
-                   gotoMenuArgs $
-                     filter (not . (== '\'')) <$> dmenuArgs
+                   gotoMenuArgs $ filter (not . (== '\'')) <$> dmenuArgs
+                 ),
+                 ( (noModMask, xK_m),
+                   renameWorkspace xPConfig
                  ),
                  ( (noModMask, xK_r),
                    runOrRaisePrompt xPConfig
@@ -624,7 +627,7 @@ layoutHook' =
 
 main :: IO ()
 main =
-  xmonad =<< statusBar "xmobar" barPP toggleStrutsKey xconfig
+  xmonad =<< statusBar' "xmobar" (workspaceNamesPP barPP) toggleStrutsKey xconfig
   where
     xconfig =
       debugManageHookOn "M1-M4-v" $
