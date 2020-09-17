@@ -100,6 +100,7 @@ import XMonad.Prompt.AppendFile (appendFilePrompt')
 import XMonad.Prompt.ConfirmPrompt (confirmPrompt)
 import XMonad.Prompt.Man (manPrompt)
 import XMonad.Prompt.RunOrRaise (runOrRaisePrompt)
+import XMonad.Prompt.Workspace (workspacePrompt)
 import XMonad.Prompt.XMonad (xmonadPromptC)
 import XMonad.Util.NamedScratchpad
   ( NamedScratchpad (NS), namedScratchpadAction,
@@ -334,6 +335,9 @@ keys' conf@(XConfig {modMask}) =
                  ),
                  ( (noModMask, xK_r),
                    runOrRaisePrompt xPConfig
+                 ),
+                 ( (noModMask, xK_w),
+                   workspacePrompt xPConfig (windows . W.view)
                  ),
                  ( (noModMask, xK_x),
                    xmonadPromptC commands xPConfig
