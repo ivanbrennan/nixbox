@@ -2,10 +2,10 @@
 {-# OPTIONS_GHC -Wall -Werror #-}
 
 {- base -}
-import Control.Arrow (second)
+import Control.Arrow (second, (***))
 import Control.Monad (when, (>=>))
 import Data.Bits ((.|.))
-import Data.List (intercalate, isInfixOf)
+import Data.List (intercalate, isInfixOf, partition, sortOn, (\\))
 import Data.Monoid (All)
 import Data.Time (ZonedTime, defaultTimeLocale, formatTime, getZonedTime)
 import System.Directory (getHomeDirectory)
@@ -42,8 +42,9 @@ import XMonad
     description, doFloat, doIgnore, focus, focusedBorderColor, gets,
     handleEventHook, io, keys, kill, layoutHook, local, logHook, manageHook,
     modMask, mouseBindings, mouseMoveWindow, normalBorderColor, refresh,
-    screenWorkspace, sendMessage, spawn, startupHook, terminal, trace, whenJust,
-    windows, windowset, withFocused, workspaces, xmonad, (=?), (|||),
+    runLayout, screenRect, screenWorkspace, sendMessage, spawn, startupHook,
+    terminal, trace, whenJust, windows, windowset, withFocused, withWindowSet,
+    workspaces, xmonad, (=?), (|||),
   )
 import qualified XMonad.StackSet as W
 
@@ -175,10 +176,10 @@ keys' conf@(XConfig {modMask}) =
         rotAllUp
       ),
       ( (modMask .|. controlMask, xK_n),
-        rotTailUp
+        surfaceNext
       ),
       ( (modMask .|. controlMask, xK_p),
-        rotTailDown
+        surfacePrev
       ),
       ( (modMask .|. controlMask, xK_comma),
         increaseLimit
@@ -414,20 +415,50 @@ keys' conf@(XConfig {modMask}) =
     changeWorkspaceDir =
       changeProjectDirPrompt' (ComplCaseSensitive False) xPConfig
 
-    rotTailUp :: X ()
-    rotTailUp =
-      windows $ W.modify' rotTailUp'
+    surfaceNext :: X ()
+    surfaceNext =
+      windows . W.modify' . surfaceNext' =<< unshown
 
-    rotTailDown :: X ()
-    rotTailDown =
-      windows $ W.modify' (reverseRights . rotTailUp' . reverseRights)
+    surfacePrev :: X ()
+    surfacePrev =
+      windows . W.modify' . surfacePrev' =<< unshown
 
-    rotTailUp' :: W.Stack Window -> W.Stack Window
-    rotTailUp' (W.Stack t ls (r:rs)) = W.Stack r ls (rs ++ [t])
-    rotTailUp' (W.Stack t ls     []) = W.Stack t ls []
+    unshown :: X [Window]
+    unshown = withWindowSet $ \ws -> do
+      let scr = W.current ws
+          wrk = W.workspace scr
+          stk = W.stack wrk
+      (shown, _) <- runLayout wrk $ screenRect (W.screenDetail scr)
+      pure (W.integrate' stk \\ map fst shown)
 
-    reverseRights :: W.Stack Window -> W.Stack Window
-    reverseRights (W.Stack t ls rs) = W.Stack t ls (reverse rs)
+    surfacePrev' :: [Window] -> W.Stack Window -> W.Stack Window
+    surfacePrev' xs =
+      reverseStack . surfaceNext' xs . reverseStack
+
+    surfaceNext' :: [Window] -> W.Stack Window -> W.Stack Window
+    surfaceNext' xs (W.Stack t ls rs) =
+      let
+        (els, notEls) =
+          partition ((`elem` t:xs) . snd) $
+            zip
+              [negate (length ls)..]
+              (reverse ls ++ t : rs)
+
+        (ls', t':rs') =
+          (map snd *** map snd)
+            . span ((< 0) . fst)
+            . sortOn fst
+            . (++) notEls
+            . map (fst *** snd)
+            $ zip els (rotate 1 els)
+      in
+        W.Stack t' (reverse ls') rs'
+
+    rotate :: Int -> [a] -> [a]
+    rotate n = uncurry (flip (++)) . splitAt n
+
+    reverseStack :: W.Stack Window -> W.Stack Window
+    reverseStack (W.Stack t ls rs) = W.Stack t rs ls
 
     setTerminal :: String -> XConf -> XConf
     setTerminal t xc =
