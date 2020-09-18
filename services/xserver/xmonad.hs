@@ -2,10 +2,10 @@
 {-# OPTIONS_GHC -Wall -Werror #-}
 
 {- base -}
-import Control.Arrow (second, (***))
+import Control.Arrow (second)
 import Control.Monad (when, (>=>))
 import Data.Bits ((.|.))
-import Data.List (intercalate, isInfixOf, partition, sortOn, (\\))
+import Data.List (intercalate, isInfixOf)
 import Data.Monoid (All)
 import Data.Time (ZonedTime, defaultTimeLocale, formatTime, getZonedTime)
 import System.Directory (getHomeDirectory)
@@ -42,9 +42,8 @@ import XMonad
     description, doFloat, doIgnore, focus, focusedBorderColor, gets,
     handleEventHook, io, keys, kill, layoutHook, local, logHook, manageHook,
     modMask, mouseBindings, mouseMoveWindow, normalBorderColor, refresh,
-    runLayout, screenRect, screenWorkspace, sendMessage, spawn, startupHook,
-    terminal, trace, whenJust, windows, windowset, withFocused, withWindowSet,
-    workspaces, xmonad, (=?), (|||),
+    screenWorkspace, sendMessage, spawn, startupHook, terminal, trace, whenJust,
+    windows, windowset, withFocused, workspaces, xmonad, (=?), (|||),
   )
 import qualified XMonad.StackSet as W
 
@@ -55,6 +54,7 @@ import XMonad.Actions.CycleWS
 import XMonad.Actions.DynamicProjects (dynamicProjects, changeProjectDirPrompt')
 import XMonad.Actions.FlexibleResize (mouseResizeEdgeWindow)
 import XMonad.Actions.PerWindowKeys (bindFirst)
+import XMonad.Actions.RotateSome (surfaceNext, surfacePrev)
 import XMonad.Actions.RotSlaves (rotAllDown, rotAllUp, rotSlavesDown, rotSlavesUp)
 import XMonad.Actions.Submap (submap)
 import XMonad.Actions.WindowBringer (gotoMenuArgs)
@@ -418,51 +418,6 @@ keys' conf@(XConfig {modMask}) =
     changeWorkspaceDir :: X ()
     changeWorkspaceDir =
       changeProjectDirPrompt' (ComplCaseSensitive False) xPConfig
-
-    surfaceNext :: X ()
-    surfaceNext =
-      windows . W.modify' . surfaceNext' =<< unshown
-
-    surfacePrev :: X ()
-    surfacePrev =
-      windows . W.modify' . surfacePrev' =<< unshown
-
-    unshown :: X [Window]
-    unshown = withWindowSet $ \ws -> do
-      let scr = W.current ws
-          wrk = W.workspace scr
-          stk = W.stack wrk
-      (shown, _) <- runLayout wrk $ screenRect (W.screenDetail scr)
-      pure (W.integrate' stk \\ map fst shown)
-
-    surfacePrev' :: [Window] -> W.Stack Window -> W.Stack Window
-    surfacePrev' xs =
-      reverseStack . surfaceNext' xs . reverseStack
-
-    surfaceNext' :: [Window] -> W.Stack Window -> W.Stack Window
-    surfaceNext' xs (W.Stack t ls rs) =
-      let
-        (els, notEls) =
-          partition ((`elem` t:xs) . snd) $
-            zip
-              [negate (length ls)..]
-              (reverse ls ++ t : rs)
-
-        (ls', t':rs') =
-          (map snd *** map snd)
-            . span ((< 0) . fst)
-            . sortOn fst
-            . (++) notEls
-            . map (fst *** snd)
-            $ zip els (rotate 1 els)
-      in
-        W.Stack t' (reverse ls') rs'
-
-    rotate :: Int -> [a] -> [a]
-    rotate n = uncurry (flip (++)) . splitAt n
-
-    reverseStack :: W.Stack Window -> W.Stack Window
-    reverseStack (W.Stack t ls rs) = W.Stack t rs ls
 
     setTerminal :: String -> XConf -> XConf
     setTerminal t xc =
