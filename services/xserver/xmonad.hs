@@ -25,7 +25,7 @@ import Graphics.X11
     shiftMask, xK_1, xK_9, xK_Alt_L, xK_Alt_R, xK_Print, xK_Tab, xK_a, xK_c,
     xK_comma, xK_d, xK_e, xK_g, xK_h, xK_i, xK_j, xK_k, xK_l, xK_m, xK_n, xK_o,
     xK_p, xK_period, xK_q, xK_r, xK_semicolon, xK_slash, xK_space, xK_t, xK_v,
-    xK_w, xK_x, xK_z,
+    xK_w, xK_x, xK_y, xK_z,
   )
 import Graphics.X11.ExtraTypes
   ( xF86XK_AudioLowerVolume, xF86XK_AudioMute, xF86XK_AudioRaiseVolume,
@@ -84,6 +84,7 @@ import XMonad.Layout.LimitWindows
   ( Selection, limitSelect, decreaseLimit, increaseLimit,
   )
 import XMonad.Layout.NoBorders (SmartBorder, smartBorders)
+import XMonad.Layout.Renamed (Rename (Append, Prepend), renamed)
 import XMonad.Layout.ResizableTile
   ( ResizableTall (ResizableTall), MirrorResize (MirrorShrink, MirrorExpand),
   )
@@ -342,6 +343,9 @@ keys' conf@(XConfig {modMask}) =
                  ( (noModMask, xK_x),
                    xmonadPromptC commands xPConfig
                  ),
+                 ( (noModMask, xK_y),
+                   layoutDescription >>= trace
+                 ),
                  ( (noModMask, xK_z),
                    spawn "i3lock --color=1d1d1d"
                  )
@@ -592,13 +596,14 @@ type SmartBorders a = ModifiedLayout SmartBorder a
 type Refocus      a = ModifiedLayout RefocusLastLayoutHook (FocusTracking a)
 type Boring       a = ModifiedLayout BoringWindows a
 type ToggleFull   a = ToggleLayouts Full a
+type Renamed      a = ModifiedLayout Rename a
 type LimitSelect  a = ModifiedLayout Selection a
 
 type Layouts
   = Choose
       ResizableTall
       ( Choose
-          (LimitSelect ResizableTall)
+          (Renamed (LimitSelect ResizableTall))
           (Mirror (LimitSelect ResizableTall))
       )
 
@@ -611,10 +616,13 @@ layoutHook' =
     . boringAuto
     . toggleLayouts Full
     -- . fullscreenFloat
-    $ tall ||| limit tall ||| Mirror (limit tall)
+    $ tall ||| rename (limit tall) ||| Mirror (limit tall)
   where
     limit :: l Window -> LimitSelect l Window
     limit = limitSelect 1 1
+
+    rename :: l Window -> Renamed l Window
+    rename = renamed [Prepend "Limit (", Append ")"]
 
     tall :: ResizableTall Window
     tall = ResizableTall 1 (3/100) (1/2) []
@@ -651,9 +659,13 @@ main =
             ppSep     = " ",
             ppWsSep   = "",
             ppTitle   = const "",
-            ppLayout  = \s -> if "Full" `isInfixOf` s
-                                then xmobarColor "#9bd4ff" "" "·"
-                                else ""
+            ppLayout  = ppLayout'
           }
+
+    ppLayout' :: String -> String
+    ppLayout' s
+      | "Full"  `isInfixOf` s = xmobarColor "#9bd4ff" "" "·"
+      | "Limit" `isInfixOf` s = xmobarColor "#9bd4ff" "" "··"
+      | otherwise             = ""
 
     toggleStrutsKey = const (mod4Mask, xK_slash)
