@@ -665,7 +665,7 @@ main =
     ppLayout' :: String -> String
     ppLayout' s
       | "Full"  `isInfixOf` s = xmobarColor "#9bd4ff" "" "·"
-      | "Limit" `isInfixOf` s = xmobarColor "#9bd4ff" "" "··"
+      | "Limit" `isInfixOf` s = xmobarColor "#585868" "" "··"
       | otherwise             = ""
 
     toggleStrutsKey = const (mod4Mask, xK_slash)
