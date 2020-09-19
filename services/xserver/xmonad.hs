@@ -21,11 +21,11 @@ import Data.Default (def)
 
 {- X11 -}
 import Graphics.X11
-  ( Button, KeyMask, KeySym, Window, button1, controlMask, mod4Mask, noModMask,
-    shiftMask, xK_1, xK_9, xK_Alt_L, xK_Alt_R, xK_Print, xK_Tab, xK_a, xK_c,
-    xK_comma, xK_d, xK_e, xK_g, xK_h, xK_i, xK_j, xK_k, xK_l, xK_m, xK_n, xK_o,
-    xK_p, xK_period, xK_q, xK_r, xK_semicolon, xK_slash, xK_space, xK_t, xK_v,
-    xK_w, xK_x, xK_y, xK_z,
+  ( Button, KeyMask, KeySym, Window, button1, controlMask, mod1Mask, mod4Mask,
+    noModMask, shiftMask, xK_1, xK_9, xK_Alt_L, xK_Alt_R, xK_Print, xK_Tab, xK_a,
+    xK_c, xK_comma, xK_d, xK_e, xK_g, xK_h, xK_i, xK_j, xK_k, xK_l, xK_m, xK_n,
+    xK_o, xK_p, xK_period, xK_q, xK_r, xK_semicolon, xK_slash, xK_space, xK_t,
+    xK_v, xK_w, xK_x, xK_y, xK_z,
   )
 import Graphics.X11.ExtraTypes
   ( xF86XK_AudioLowerVolume, xF86XK_AudioMute, xF86XK_AudioRaiseVolume,
@@ -94,8 +94,8 @@ import XMonad.Layout.ToggleLayouts
   )
 import XMonad.Prompt
   ( ComplCaseSensitivity (ComplCaseSensitive), XPConfig, XPPosition (Top),
-    alwaysHighlight, bgColor, bgHLight, fgColor, fgHLight, font, height,
-    position, promptBorderWidth,
+    alwaysHighlight, bgColor, bgHLight, defaultXPKeymap, fgColor, fgHLight, font,
+    height, moveHistory, position, promptBorderWidth, promptKeymap,
   )
 import XMonad.Prompt.AppendFile (appendFilePrompt')
 import XMonad.Prompt.ConfirmPrompt (confirmPrompt)
@@ -491,12 +491,20 @@ xPConfig =
       height            = 25,
       alwaysHighlight   = False,
       promptBorderWidth = 0,
+      promptKeymap      = keymap `M.union` defaultXPKeymap,
       bgColor           = "#161616",
       fgColor           = "#aaaaaa",
       bgHLight          = "#dddddd",
       fgHLight          = "#222222",
       font              = "xft:monospace:size=12"
     }
+  where
+    keymap = M.fromList $
+      [ ((controlMask, xK_p), moveHistory W.focusUp'),
+        ((mod1Mask,    xK_p), moveHistory W.focusUp'),
+        ((controlMask, xK_n), moveHistory W.focusDown'),
+        ((mod1Mask,    xK_n), moveHistory W.focusDown')
+      ]
 
 scratchpads :: [NamedScratchpad]
 scratchpads =
