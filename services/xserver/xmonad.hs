@@ -87,7 +87,7 @@ import XMonad.Layout.BoringWindows
   )
 import XMonad.Layout.IndependentScreens
   ( PhysicalWorkspace, VirtualWorkspace, countScreens, marshall, marshallPP,
-    withScreens, workspaces',
+    unmarshallS, withScreens, workspaces',
   )
 import XMonad.Layout.LayoutModifier (ModifiedLayout)
 import XMonad.Layout.LimitWindows
@@ -407,16 +407,26 @@ keys' conf@(XConfig {modMask}) =
       pure . description . W.layout . W.workspace . W.current
 
     cycledWorkspace :: WSType
-    cycledWorkspace = WSIs $ pure (not . boringWorkspace)
+    cycledWorkspace =
+      WSIs $ withCurrentScreen (pure . cycledWorkspaceOnScreen)
 
-    boringWorkspace :: WindowSpace -> Bool
-    boringWorkspace ws = emptyWorkspace ws || scratchpadWorkspace ws
+    cycledWorkspaceOnScreen :: ScreenId -> WindowSpace -> Bool
+    cycledWorkspaceOnScreen sid wsp =
+      all
+        ($ wsp)
+        [ (not . scratchpadWorkspace),
+          (not . emptyWorkspace),
+          isOnScreen sid
+        ]
 
     emptyWorkspace :: WindowSpace -> Bool
     emptyWorkspace = null . W.stack
 
     scratchpadWorkspace :: WindowSpace -> Bool
     scratchpadWorkspace = null . namedScratchpadFilterOutWorkspace . (:[])
+
+    isOnScreen :: ScreenId -> WindowSpace -> Bool
+    isOnScreen s = (s ==) . unmarshallS . W.tag
 
     toggleRecentWS :: X ()
     toggleRecentWS =
