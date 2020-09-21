@@ -11,6 +11,7 @@ import Data.Time (ZonedTime, defaultTimeLocale, formatTime, getZonedTime)
 import System.Directory (getHomeDirectory)
 import System.Exit (exitSuccess)
 import System.FilePath ((</>))
+import System.IO (Handle)
 
 {- containers -}
 import Data.Map (Map)
@@ -36,14 +37,15 @@ import Graphics.X11.Xlib.Extras (Event)
 {- xmonad -}
 import XMonad
   ( ChangeLayout (FirstLayout, NextLayout), Choose, Full (Full),
-    IncMasterN (IncMasterN), Layout, ManageHook, Mirror (Mirror), Query,
-    Resize (Expand, Shrink), WindowSet, WindowSpace, WorkspaceId, X, XConf,
-    XConfig (XConfig), appName, className, clickJustFocuses, composeAll, config,
-    description, doFloat, doIgnore, focus, focusedBorderColor, gets,
-    handleEventHook, io, keys, kill, layoutHook, local, logHook, manageHook,
-    modMask, mouseBindings, mouseMoveWindow, normalBorderColor, refresh,
-    screenWorkspace, sendMessage, spawn, startupHook, terminal, trace, whenJust,
-    windows, windowset, withFocused, workspaces, xmonad, (=?), (|||),
+    IncMasterN (IncMasterN), Layout, ManageHook, Mirror (Mirror), MonadIO, Query,
+    Resize (Expand, Shrink), ScreenId (S), WindowSet, WindowSpace, WorkspaceId,
+    X, XConf, XConfig (XConfig), appName, className, clickJustFocuses,
+    composeAll, config, description, doFloat, doIgnore, focus,
+    focusedBorderColor, handleEventHook, io, keys, kill, layoutHook, local,
+    logHook, manageHook, modMask, mouseBindings, mouseMoveWindow,
+    normalBorderColor, refresh, screenWorkspace, sendMessage, spawn, startupHook,
+    terminal, trace, whenJust, windows, withFocused, withWindowSet, workspaces,
+    xmonad, (=?), (|||),
   )
 import qualified XMonad.StackSet as W
 
@@ -60,15 +62,19 @@ import XMonad.Actions.Submap (submap)
 import XMonad.Actions.WindowBringer (gotoMenuArgs)
 import XMonad.Actions.WorkspaceNames (renameWorkspace, workspaceNamesPP)
 import XMonad.Hooks.DebugStack (debugStackString)
+import XMonad.Hooks.DynamicBars
+  ( dynStatusBarEventHook, dynStatusBarStartup, multiPPFormat,
+  )
 import XMonad.Hooks.DynamicLog
-  ( PP, ppCurrent, ppHidden, ppLayout, ppSep, ppTitle, ppWsSep, statusBar', wrap,
-    xmobarColor, xmobarPP,
+  ( PP, dynamicLogString, ppCurrent, ppHidden, ppLayout, ppSep, ppTitle, ppWsSep,
+    wrap, xmobarColor, xmobarPP,
   )
 import XMonad.Hooks.EwmhDesktops (ewmh, fullscreenEventHook)
 import XMonad.Hooks.InsertPosition
   ( Focus (Newer), Position (Above), insertPosition,
   )
 import XMonad.Hooks.ManageDebug (debugManageHookOn)
+import XMonad.Hooks.ManageDocks (ToggleStruts (ToggleStruts), avoidStruts, docks)
 import XMonad.Hooks.ManageHelpers
   ( composeOne, doCenterFloat, doRectFloat, isDialog, (-?>),
   )
@@ -78,6 +84,10 @@ import XMonad.Hooks.RefocusLast
   )
 import XMonad.Layout.BoringWindows
   ( BoringWindows, boringAuto, focusDown, focusUp, siftDown, siftUp,
+  )
+import XMonad.Layout.IndependentScreens
+  ( PhysicalWorkspace, VirtualWorkspace, countScreens, marshall, marshallPP,
+    withScreens, workspaces',
   )
 import XMonad.Layout.LayoutModifier (ModifiedLayout)
 import XMonad.Layout.LimitWindows
@@ -110,6 +120,7 @@ import XMonad.Util.NamedScratchpad
   )
 import qualified XMonad.Util.NamedScratchpad as NS
 import XMonad.Util.Paste (sendKey)
+import XMonad.Util.Run (spawnPipe)
 
 
 -- https://github.com/xmonad/X11/blob/6e5ef8019a0cc49e18410a335dbdeea87b7c4aac/Graphics/X11/Types.hsc
@@ -127,6 +138,9 @@ keys' conf@(XConfig {modMask}) =
       ),
       ( (modMask, xK_space),
         sendMessage ToggleLayout
+      ),
+      ( (mod4Mask, xK_slash),
+        sendMessage ToggleStruts
       ),
       -- workspaces
       ( (modMask, xK_period),
@@ -251,7 +265,7 @@ keys' conf@(XConfig {modMask}) =
       ( (controlMask .|. shiftMask, xK_space),
         namedScratchpadAction scratchpads (NS.name scratchTerminal)
       ),
-      ( (mod4Mask .|. modMask, xK_p),
+      ( (mod4Mask .|. modMask, xK_y),
         debugStackString
           >>= trace . unlines . uncurry (++) . second reverse . splitAt 1 . lines
       ),
@@ -343,9 +357,6 @@ keys' conf@(XConfig {modMask}) =
                  ( (noModMask, xK_x),
                    xmonadPromptC commands xPConfig
                  ),
-                 ( (noModMask, xK_y),
-                   layoutDescription >>= trace
-                 ),
                  ( (noModMask, xK_z),
                    spawn "i3lock --color=1d1d1d"
                  )
@@ -358,9 +369,9 @@ keys' conf@(XConfig {modMask}) =
     -- mod-shift-[1..9], Move client to workspace N
     workspaceTagKeys =
       [ ( (m .|. modMask, k),
-          windows =<< f i
+          windows =<< onCurrentScreenX f i
         )
-        | (k, i) <- zip [xK_1..xK_9] (workspaces conf),
+        | (k, i) <- zip [xK_1..xK_9] (workspaces' conf),
           (m, f) <- [ (noModMask, pure . W.view),
                       (shiftMask, shiftRLWhen isFloat)
                     ]
@@ -378,6 +389,10 @@ keys' conf@(XConfig {modMask}) =
                     ]
       ]
 
+    onCurrentScreenX :: (PhysicalWorkspace -> X a) -> (VirtualWorkspace -> X a)
+    onCurrentScreenX f vwsp =
+      withCurrentScreen (f . flip marshall vwsp)
+
     fullToggleOff :: X ()
     fullToggleOff = do
       t <- isFullToggleOn
@@ -388,8 +403,8 @@ keys' conf@(XConfig {modMask}) =
       fmap ("Full" `isInfixOf`) layoutDescription
 
     layoutDescription :: X String
-    layoutDescription =
-      gets (description . W.layout . W.workspace . W.current . windowset)
+    layoutDescription = withWindowSet $
+      pure . description . W.layout . W.workspace . W.current
 
     cycledWorkspace :: WSType
     cycledWorkspace = WSIs $ pure (not . boringWorkspace)
@@ -405,7 +420,7 @@ keys' conf@(XConfig {modMask}) =
 
     toggleRecentWS :: X ()
     toggleRecentWS =
-      gets (recentWS . windowset) >>= windows . const . head
+      withWindowSet (windows . const . head . recentWS)
 
     recentWS :: WindowSet -> [WindowSet]
     recentWS ws = map (`W.view` ws) (recentTags ws)
@@ -531,6 +546,10 @@ doCenteredFloat width height =
     y :: Rational
     y = (1 - height) / 2
 
+withCurrentScreen :: (ScreenId -> X a) -> X a
+withCurrentScreen f =
+  withWindowSet (f . W.screen . W.current)
+
 ------------------------------------------------------------------------
 -- Window rules:
 
@@ -574,7 +593,9 @@ manageHook' =
 --
 eventHook :: Event -> X All
 eventHook =
-  refocusLastWhen isFloat <> fullscreenEventHook
+  dynStatusBarEventHook xmobar killAlsactl
+    <> refocusLastWhen isFloat
+    <> fullscreenEventHook
 
 ------------------------------------------------------------------------
 -- Status bars and logging
@@ -583,21 +604,62 @@ eventHook =
 -- See the 'XMonad.Hooks.DynamicLog' extension for examples.
 --
 logHook' :: X ()
-logHook' = pure ()
+logHook' = multiPP currentScreenPP nonCurrentScreenPP
+  where
+    multiPP :: PP -> PP -> X ()
+    multiPP =
+      multiPPFormat (workspaceNamesPP >=> withCurrentScreen . logString)
+
+    logString :: PP -> ScreenId -> X String
+    logString pp =
+      dynamicLogString
+        . namedScratchpadFilterOutWorkspacePP
+        . flip marshallPP pp
+
+    currentScreenPP :: PP
+    currentScreenPP = barPP
+
+    nonCurrentScreenPP :: PP
+    nonCurrentScreenPP = barPP
+
+    barPP :: PP
+    barPP =
+      xmobarPP
+        { ppCurrent = xmobarColor "#dddddd" "#004466" . wrap " " " ",
+          ppHidden  = xmobarColor "#888888" "#222222" . wrap " " " ",
+          ppSep     = " ",
+          ppWsSep   = "",
+          ppTitle   = const "",
+          ppLayout  = ppLayout'
+        }
+
+    ppLayout' :: String -> String
+    ppLayout' s
+      | "Full"  `isInfixOf` s = xmobarColor "#9bd4ff" "" "·"
+      | "Limit" `isInfixOf` s = xmobarColor "#585868" "" "·"
+      | otherwise             = ""
 
 ------------------------------------------------------------------------
 -- Startup hook
 
 startupHook' :: X ()
-startupHook' =
-    -- https://github.com/jaor/xmobar/issues/432
-    spawn $
-      intercalate
-      " | "
-      [ "ps axo pid,s,command",
-        "awk '/alsactl monitor default$/{print $1}'",
-        "xargs --no-run-if-empty kill"
-      ]
+startupHook' = do
+  io killAlsactl
+  dynStatusBarStartup xmobar killAlsactl
+
+xmobar :: ScreenId -> IO Handle
+xmobar (S sid) = spawnPipe $
+  unwords ["xmobar", "-x", show sid]
+
+-- https://github.com/jaor/xmobar/issues/432
+killAlsactl :: MonadIO m => m ()
+killAlsactl = spawn $
+  intercalate
+    " | "
+    [ "ps axo pid,s,command",
+      "awk '/alsactl monitor default$/{print $1}'",
+      "xargs --no-run-if-empty kill"
+    ]
 
 
 type SmartBorders a = ModifiedLayout SmartBorder a
@@ -638,14 +700,15 @@ layoutHook' =
 
 main :: IO ()
 main =
-  xmonad =<< statusBar' "xmobar" (workspaceNamesPP barPP) toggleStrutsKey xconfig
+  xmonad . xconfig =<< countScreens
   where
-    xconfig =
+    xconfig nScreens =
+      docks $
       debugManageHookOn "M1-M4-v" $
       dynamicProjects [] $
       ewmh $
         def
-          { layoutHook         = layoutHook',
+          { layoutHook         = avoidStruts layoutHook',
             terminal           = "alacritty",
             clickJustFocuses   = False,
             normalBorderColor  = "#212121",
@@ -655,25 +718,6 @@ main =
             manageHook         = manageHook',
             handleEventHook    = eventHook,
             logHook            = logHook',
-            startupHook        = startupHook'
+            startupHook        = startupHook',
+            workspaces         = withScreens nScreens (workspaces def)
           }
-
-    barPP :: PP
-    barPP =
-      namedScratchpadFilterOutWorkspacePP $
-        xmobarPP
-          { ppCurrent = xmobarColor "#dddddd" "#004466" . wrap " " " ",
-            ppHidden  = xmobarColor "#888888" "#222222" . wrap " " " ",
-            ppSep     = " ",
-            ppWsSep   = "",
-            ppTitle   = const "",
-            ppLayout  = ppLayout'
-          }
-
-    ppLayout' :: String -> String
-    ppLayout' s
-      | "Full"  `isInfixOf` s = xmobarColor "#9bd4ff" "" "·"
-      | "Limit" `isInfixOf` s = xmobarColor "#585868" "" "·"
-      | otherwise             = ""
-
-    toggleStrutsKey = const (mod4Mask, xK_slash)
