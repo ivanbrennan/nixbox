@@ -607,12 +607,11 @@ logHook' :: X ()
 logHook' = multiPP currentScreenPP nonCurrentScreenPP
   where
     multiPP :: PP -> PP -> X ()
-    multiPP =
-      multiPPFormat (workspaceNamesPP >=> withCurrentScreen . logString)
+    multiPP = multiPPFormat (withCurrentScreen . logString)
 
     logString :: PP -> ScreenId -> X String
     logString pp =
-      dynamicLogString
+      (workspaceNamesPP >=> dynamicLogString)
         . namedScratchpadFilterOutWorkspacePP
         . flip marshallPP pp
 
