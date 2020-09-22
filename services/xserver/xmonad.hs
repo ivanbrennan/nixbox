@@ -696,26 +696,29 @@ xmobar s@(S i) = spawnPipe $
     ]
 
 xmobarTemplate :: ScreenId -> String
-xmobarTemplate (S 0) =
-  concat
-    [ cmdSep "StdinReader",
-      pad "}{",
-      cmdSep "disku",
-      " ",
-      xmobarColor cyan "" "·",
-      cmdSep "cpu",
-      "  ",
-      fontN 1 $ xmobarColor grey2 "" (cmdSep "vpn"),
-      pad (cmdSep "wlp58s0wi"),
-      pad (cmdSep "battery"),
-      pad (cmdSep "alsa:default:Master"),
-      pad (cmdSep "date")
-    ]
-xmobarTemplate _ =
-  concat
-    [ cmdSep "StdinReader",
-      pad "}{"
-    ]
+xmobarTemplate (S i) = concat $
+  if i == 0
+    then
+      [ cmd "StdinReader",
+        pad "}{",
+        cmd "disku",
+        " ",
+        xmobarColor cyan "" "·",
+        cmd "cpu",
+        "  ",
+        fontN 1 $ xmobarColor grey2 "" (cmd "vpn"),
+        pad (cmd "wlp58s0wi"),
+        pad (cmd "battery"),
+        pad (cmd "alsa:default:Master"),
+        pad (cmd "date")
+      ]
+    else
+      [ cmd "StdinReader",
+        pad "}{"
+      ]
+  where
+    cmd = wrap "%" "%"
+
 
 xmobarCommands :: ScreenId -> [String]
 xmobarCommands (S i) = map unwords $
@@ -785,13 +788,10 @@ xmobarCommands (S i) = map unwords $
     stdinReader = ["Run StdinReader"]
 
 list :: [String] -> String
-list = brackets . commas
+list = brackets . intercalate ","
 
 brackets :: String -> String
 brackets s = "[" ++ s ++ "]"
-
-commas :: [String] -> String
-commas = intercalate ","
 
 quote :: String -> String
 quote = wrap "\"" "\""
@@ -801,9 +801,6 @@ icon = wrap "<icon=" "/>"
 
 fontN :: Int -> String -> String
 fontN n = wrap ("<fn=" ++ show n ++ ">") "</fn>"
-
-cmdSep :: String -> String
-cmdSep = wrap "%" "%"
 
 -- https://github.com/jaor/xmobar/issues/432
 killAlsactl :: MonadIO m => m ()
