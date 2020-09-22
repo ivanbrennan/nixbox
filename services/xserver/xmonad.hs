@@ -682,7 +682,7 @@ startupHook' = do
   dynStatusBarStartup xmobar killAlsactl
 
 xmobar :: ScreenId -> IO Handle
-xmobar (S sid) = spawnPipe $
+xmobar s@(S i) = spawnPipe $
   unwords
     [ "xmobar",
       "-B", translate black,
@@ -690,19 +690,13 @@ xmobar (S sid) = spawnPipe $
       "-f", "xft:monospace:size=11",
       "-N", "xft:FontAwesome:size=11",
       "-i", "/run/current-system/sw/share/icons/xmobar",
-      "-x", show sid,
-      "-t", translate (template sid),
-      "-c", translate $ list (commands sid)
+      "-x", show i,
+      "-t", translate (xmobarTemplate s),
+      "-c", translate $ list (xmobarCommands s)
     ]
-  where
-    template 0 = xmobarMainTemplate
-    template _ = xmobarAuxTemplate
 
-    commands 0 = xmobarMainCommands
-    commands _ = xmobarAuxCommands
-
-xmobarMainTemplate :: String
-xmobarMainTemplate =
+xmobarTemplate :: ScreenId -> String
+xmobarTemplate (S 0) =
   concat
     [ cmdSep "StdinReader",
       pad "}{",
@@ -717,14 +711,17 @@ xmobarMainTemplate =
       pad (cmdSep "alsa:default:Master"),
       pad (cmdSep "date")
     ]
+xmobarTemplate _ =
+  concat
+    [ cmdSep "StdinReader",
+      pad "}{"
+    ]
 
-xmobarAuxTemplate :: String
-xmobarAuxTemplate =
-  xmobarMainTemplate
-
-xmobarMainCommands :: [String]
-xmobarMainCommands =
-  map unwords [disk, cpu, vpn, wireless, battery, volume, date', stdinReader]
+xmobarCommands :: ScreenId -> [String]
+xmobarCommands (S i) = map unwords $
+  if i == 0
+    then [disk, cpu, vpn, wireless, battery, volume, date', stdinReader]
+    else [stdinReader]
   where
     disk =
       [ "Run DiskU",
@@ -750,7 +747,7 @@ xmobarMainCommands =
         "--low"     , grey2
       ]
 
-    vpn = ["Run Com", quote "bleep", "[]", quote "vpn", "50"]
+    vpn = ["Run Com", quote "bleep", list [], quote "vpn", "50"]
 
     wireless =
       [ "Run Wireless",
@@ -787,14 +784,11 @@ xmobarMainCommands =
 
     stdinReader = ["Run StdinReader"]
 
-xmobarAuxCommands :: [String]
-xmobarAuxCommands = xmobarMainCommands
-
 list :: [String] -> String
 list = brackets . commas
 
 brackets :: String -> String
-brackets = wrap "[" "]"
+brackets s = "[" ++ s ++ "]"
 
 commas :: [String] -> String
 commas = intercalate ","
