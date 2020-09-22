@@ -1,5 +1,5 @@
 {-# LANGUAGE NamedFieldPuns #-}
-{-# OPTIONS_GHC -Wall -Werror #-}
+{-# OPTIONS_GHC -O2 -Wall -Werror #-}
 
 {- base -}
 import Control.Arrow (second)
@@ -7,7 +7,6 @@ import Control.Monad (when, (>=>))
 import Data.Bits ((.|.))
 import Data.List (intercalate, isInfixOf)
 import Data.Monoid (All)
-import Data.Time (ZonedTime, defaultTimeLocale, formatTime, getZonedTime)
 import System.Directory (getHomeDirectory)
 import System.Exit (exitSuccess)
 import System.FilePath ((</>))
@@ -19,6 +18,9 @@ import qualified Data.Map as M
 
 {- data-default -}
 import Data.Default (def)
+
+{- process -}
+import System.Process.Internals (translate)
 
 {- X11 -}
 import Graphics.X11
@@ -66,8 +68,8 @@ import XMonad.Hooks.DynamicBars
   ( dynStatusBarEventHook, dynStatusBarStartup, multiPPFormat,
   )
 import XMonad.Hooks.DynamicLog
-  ( PP, dynamicLogString, ppCurrent, ppHidden, ppLayout, ppSep, ppTitle, ppWsSep,
-    wrap, xmobarColor, xmobarPP,
+  ( PP, dynamicLogString, pad, ppCurrent, ppHidden, ppLayout, ppSep, ppTitle,
+    ppWsSep, wrap, xmobarColor, xmobarPP,
   )
 import XMonad.Hooks.EwmhDesktops (ewmh, fullscreenEventHook)
 import XMonad.Hooks.InsertPosition
@@ -113,6 +115,7 @@ import XMonad.Prompt.Man (manPrompt)
 import XMonad.Prompt.RunOrRaise (runOrRaisePrompt)
 import XMonad.Prompt.Workspace (workspacePrompt)
 import XMonad.Prompt.XMonad (xmonadPromptC)
+import XMonad.Util.Loggers (date)
 import XMonad.Util.NamedScratchpad
   ( NamedScratchpad (NS), namedScratchpadAction,
     namedScratchpadFilterOutWorkspace, namedScratchpadFilterOutWorkspacePP,
@@ -122,6 +125,30 @@ import qualified XMonad.Util.NamedScratchpad as NS
 import XMonad.Util.Paste (sendKey)
 import XMonad.Util.Run (spawnPipe)
 
+
+main :: IO ()
+main =
+  xmonad . xconfig =<< countScreens
+  where
+    xconfig nScreens =
+      docks $
+      debugManageHookOn "M1-M4-v" $
+      dynamicProjects [] $
+      ewmh $
+        def
+          { layoutHook         = avoidStruts layoutHook',
+            terminal           = "alacritty",
+            clickJustFocuses   = False,
+            normalBorderColor  = grey1,
+            focusedBorderColor = grey2,
+            keys               = keys',
+            mouseBindings      = mouseBindings',
+            manageHook         = manageHook',
+            handleEventHook    = eventHook,
+            logHook            = logHook',
+            startupHook        = startupHook',
+            workspaces         = withScreens nScreens (workspaces def)
+          }
 
 -- https://github.com/xmonad/X11/blob/6e5ef8019a0cc49e18410a335dbdeea87b7c4aac/Graphics/X11/Types.hsc
 -- https://stackoverflow.com/questions/6605399/how-can-i-set-an-action-to-occur-on-a-key-release-in-xmonad
@@ -285,7 +312,7 @@ keys' conf@(XConfig {modMask}) =
         kill
       ),
       ( (modMask .|. shiftMask, xK_space),
-        spawn "passmenu -fn monospace:size=12 -l 24 -i -nb '#1c1c1c' -nf '#a5adb7' -sb '#222222' -sf '#ffffff'"
+        spawn $ unwords ("passmenu" : dmenuArgs)
       ),
       -- volume
       ( (noModMask, xF86XK_AudioRaiseVolume),
@@ -357,8 +384,11 @@ keys' conf@(XConfig {modMask}) =
                  ( (noModMask, xK_x),
                    xmonadPromptC commands xPConfig
                  ),
+                 ( (noModMask, xK_y),
+                   withWindowSet (trace . show . map W.tag . W.workspaces)
+                 ),
                  ( (noModMask, xK_z),
-                   spawn "i3lock --color=1d1d1d"
+                   spawn ("i3lock --color=" ++ grey0)
                  )
                ]
            )
@@ -462,11 +492,8 @@ keys' conf@(XConfig {modMask}) =
     appendThoughtPrompt :: XPConfig -> X ()
     appendThoughtPrompt xP = do
       home <- io getHomeDirectory
-      time <- io (fmap timestamp getZonedTime)
+      time <- maybe "" id <$> date "[%Y-%m-%dT%T%Z] "
       appendFilePrompt' xP (time ++) (home </> "thoughts")
-
-    timestamp :: ZonedTime -> String
-    timestamp = formatTime defaultTimeLocale "[%FT%T%Ez] "
 
     dmenu :: String
     dmenu =
@@ -477,10 +504,10 @@ keys' conf@(XConfig {modMask}) =
       [ "-fn", "monospace:size=12",
         "-l", "24",
         "-i",
-        "-nb", "'#1c1c1c'",
-        "-nf", "'#a5adb7'",
-        "-sb", "'#222222'",
-        "-sf", "'#ffffff'"
+        "-nb", translate grey0,
+        "-nf", translate grey6,
+        "-sb", translate grey1,
+        "-sf", translate white
       ]
 
     commands :: [(String, X ())]
@@ -489,7 +516,6 @@ keys' conf@(XConfig {modMask}) =
         ("expand", sendMessage Expand),
         ("refresh", refresh)
       ]
-
 
 mouseBindings' :: XConfig Layout -> Map (KeyMask, Button) (Window -> X ())
 mouseBindings' XConfig {modMask} =
@@ -508,7 +534,6 @@ mouseBindings' XConfig {modMask} =
       )
     ]
 
-
 xPConfig :: XPConfig
 xPConfig =
   def
@@ -517,10 +542,10 @@ xPConfig =
       alwaysHighlight   = False,
       promptBorderWidth = 0,
       promptKeymap      = keymap `M.union` defaultXPKeymap,
-      bgColor           = "#161616",
-      fgColor           = "#aaaaaa",
-      bgHLight          = "#dddddd",
-      fgHLight          = "#222222",
+      bgColor           = grey0,
+      fgColor           = grey5,
+      bgHLight          = grey7,
+      fgHLight          = grey0,
       font              = "xft:monospace:size=12"
     }
   where
@@ -634,8 +659,8 @@ logHook' = multiPP currentScreenPP nonCurrentScreenPP
     barPP :: PP
     barPP =
       xmobarPP
-        { ppCurrent = xmobarColor "#dddddd" "#004466" . wrap " " " ",
-          ppHidden  = xmobarColor "#888888" "#222222" . wrap " " " ",
+        { ppCurrent = xmobarColor grey7 blue . pad,
+          ppHidden  = xmobarColor grey4 grey1 . pad,
           ppSep     = " ",
           ppWsSep   = "",
           ppTitle   = const "",
@@ -644,8 +669,8 @@ logHook' = multiPP currentScreenPP nonCurrentScreenPP
 
     ppLayout' :: String -> String
     ppLayout' s
-      | "Full"  `isInfixOf` s = xmobarColor "#9bd4ff" "" "·"
-      | "Limit" `isInfixOf` s = xmobarColor "#585868" "" "·"
+      | "Full"  `isInfixOf` s = xmobarColor cyan "" "·"
+      | "Limit" `isInfixOf` s = xmobarColor grey2 "" "·"
       | otherwise             = ""
 
 ------------------------------------------------------------------------
@@ -658,7 +683,133 @@ startupHook' = do
 
 xmobar :: ScreenId -> IO Handle
 xmobar (S sid) = spawnPipe $
-  unwords ["xmobar", "-x", show sid]
+  unwords
+    [ "xmobar",
+      "-B", translate black,
+      "-F", translate grey6,
+      "-f", "xft:monospace:size=11",
+      "-N", "xft:FontAwesome:size=11",
+      "-i", "/run/current-system/sw/share/icons/xmobar",
+      "-x", show sid,
+      "-t", translate (template sid),
+      "-c", translate $ list (commands sid)
+    ]
+  where
+    template 0 = xmobarMainTemplate
+    template _ = xmobarAuxTemplate
+
+    commands 0 = xmobarMainCommands
+    commands _ = xmobarAuxCommands
+
+xmobarMainTemplate :: String
+xmobarMainTemplate =
+  concat
+    [ cmdSep "StdinReader",
+      pad "}{",
+      cmdSep "disku",
+      " ",
+      xmobarColor cyan "" "·",
+      cmdSep "cpu",
+      "  ",
+      fontN 1 $ xmobarColor grey2 "" (cmdSep "vpn"),
+      pad (cmdSep "wlp58s0wi"),
+      pad (cmdSep "battery"),
+      pad (cmdSep "alsa:default:Master"),
+      pad (cmdSep "date")
+    ]
+
+xmobarAuxTemplate :: String
+xmobarAuxTemplate =
+  xmobarMainTemplate
+
+xmobarMainCommands :: [String]
+xmobarMainCommands =
+  map unwords [disk, cpu, vpn, wireless, battery, volume, date', stdinReader]
+  where
+    disk =
+      [ "Run DiskU",
+        brackets $ show ("/", "<free>"),
+        list (map quote diskArgs),
+        "50"
+      ]
+    diskArgs =
+      [ "--Low"   , "5",
+        "--high"  , grey3,
+        "--normal", grey3,
+        "--low"   , red
+      ]
+
+    cpu = ["Run Cpu", list (map quote cpuArgs), "50"]
+    cpuArgs =
+      [ "--template", "<total>",
+        "--ppad"    , "2",
+        "--High"    , "50",
+        "--Low"     , "3",
+        "--high"    , orange,
+        "--normal"  , grey2,
+        "--low"     , grey2
+      ]
+
+    vpn = ["Run Com", quote "bleep", "[]", quote "vpn", "50"]
+
+    wireless =
+      [ "Run Wireless",
+        quote "wlp58s0",
+        list $ map quote ["--template", "<essid>"],
+        "50"
+      ]
+
+    battery = ["Run Battery", list (map quote batteryArgs), "20"]
+    batteryArgs =
+      [ "--template", "<acstatus>",
+        "--",
+        "--on-icon-pattern"  , icon "battery/on/battery_on_%%.xpm",
+        "--idle-icon-pattern", icon "battery/idle/battery_idle_%%.xpm",
+        "--off-icon-pattern" , icon "battery/off/battery_off_%%.xpm",
+        "--on"               , "<leftipat>",
+        "--idle"             , "<leftipat>",
+        "--off"              , "<leftipat>"
+      ]
+
+    volume =
+      ["Run Alsa", quote "default", quote "Master", list (map quote volumeArgs)]
+    volumeArgs =
+      [ "--template", "<status>",
+        "--",
+        "--on"  , fontN 1 "\xf026" ++ "<volume>",
+        "--off" , fontN 1 "\xf026" ++ "<volume>",
+        "--onc" , grey6,
+        "--offc", grey2
+      ]
+
+    date' = ["Run Date", quote dateFormat, quote "date", "50"]
+    dateFormat = "%a %b %-d " ++ xmobarColor chalk "" "%l:%M"
+
+    stdinReader = ["Run StdinReader"]
+
+xmobarAuxCommands :: [String]
+xmobarAuxCommands = xmobarMainCommands
+
+list :: [String] -> String
+list = brackets . commas
+
+brackets :: String -> String
+brackets = wrap "[" "]"
+
+commas :: [String] -> String
+commas = intercalate ","
+
+quote :: String -> String
+quote = wrap "\"" "\""
+
+icon :: String -> String
+icon = wrap "<icon=" "/>"
+
+fontN :: Int -> String -> String
+fontN n = wrap ("<fn=" ++ show n ++ ">") "</fn>"
+
+cmdSep :: String -> String
+cmdSep = wrap "%" "%"
 
 -- https://github.com/jaor/xmobar/issues/432
 killAlsactl :: MonadIO m => m ()
@@ -667,9 +818,8 @@ killAlsactl = spawn $
     " | "
     [ "ps axo pid,s,command",
       "awk '/alsactl monitor default$/{print $1}'",
-      "xargs --no-run-if-empty kill"
+      "xargs --no-run-if-empty kill 2>/dev/null"
     ]
-
 
 type SmartBorders a = ModifiedLayout SmartBorder a
 type Refocus      a = ModifiedLayout RefocusLastLayoutHook (FocusTracking a)
@@ -706,27 +856,21 @@ layoutHook' =
     tall :: ResizableTall Window
     tall = ResizableTall 1 (3/100) (1/2) []
 
+black, grey0, grey1, grey2, grey3, grey4, grey6, grey5, grey7, white :: String
+black = "#161616"
+grey0 = "#1c1c1c"
+grey1 = "#212121"
+grey2 = "#525d6a"
+grey3 = "#787888"
+grey4 = "#888888"
+grey5 = "#aaaaaa"
+grey6 = "#a8b8b8"
+grey7 = "#dddddd"
+white = "#ffffff"
 
-main :: IO ()
-main =
-  xmonad . xconfig =<< countScreens
-  where
-    xconfig nScreens =
-      docks $
-      debugManageHookOn "M1-M4-v" $
-      dynamicProjects [] $
-      ewmh $
-        def
-          { layoutHook         = avoidStruts layoutHook',
-            terminal           = "alacritty",
-            clickJustFocuses   = False,
-            normalBorderColor  = "#212121",
-            focusedBorderColor = "#52626a",
-            keys               = keys',
-            mouseBindings      = mouseBindings',
-            manageHook         = manageHook',
-            handleEventHook    = eventHook,
-            logHook            = logHook',
-            startupHook        = startupHook',
-            workspaces         = withScreens nScreens (workspaces def)
-          }
+chalk, blue, cyan, orange, red :: String
+chalk  = "#c1f0f7"
+blue   = "#004466"
+cyan   = "#9bd4ff"
+orange = "#ffbb49"
+red    = "#fe3d2a"
