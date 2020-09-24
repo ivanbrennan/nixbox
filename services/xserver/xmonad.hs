@@ -38,11 +38,10 @@ import Graphics.X11.Xlib.Extras (Event)
 
 {- xmonad -}
 import XMonad
-  ( ChangeLayout (FirstLayout, NextLayout), Choose, Full (Full),
-    IncMasterN (IncMasterN), Layout, ManageHook, Mirror (Mirror), MonadIO, Query,
-    Resize (Expand, Shrink), ScreenId (S), WindowSet, WindowSpace, WorkspaceId,
-    X, XConf, XConfig (XConfig), appName, className, clickJustFocuses,
-    composeAll, config, description, doFloat, doIgnore, focus,
+  ( ChangeLayout (NextLayout), Choose, IncMasterN (IncMasterN), Layout,
+    ManageHook, MonadIO, Query, Resize (Expand, Shrink), ScreenId (S), WindowSet,
+    WindowSpace, WorkspaceId, X, XConf, XConfig (XConfig), appName, className,
+    clickJustFocuses, composeAll, config, description, doFloat, doIgnore, focus,
     focusedBorderColor, handleEventHook, io, keys, kill, layoutHook, local,
     logHook, manageHook, modMask, mouseBindings, mouseMoveWindow,
     normalBorderColor, refresh, screenWorkspace, sendMessage, spawn, startupHook,
@@ -95,15 +94,16 @@ import XMonad.Layout.LayoutModifier (ModifiedLayout)
 import XMonad.Layout.LimitWindows
   ( Selection, limitSelect, decreaseLimit, increaseLimit,
   )
+import XMonad.Layout.MultiToggle
+  ( EOT, HCons, MultiToggle, Toggle (Toggle), mkToggle1,
+  )
+import XMonad.Layout.MultiToggle.Instances (StdTransformers (FULL, MIRROR))
 import XMonad.Layout.NoBorders (SmartBorder, smartBorders)
 import XMonad.Layout.Renamed (Rename (Append, Prepend), renamed)
 import XMonad.Layout.ResizableTile
   ( ResizableTall (ResizableTall), MirrorResize (MirrorShrink, MirrorExpand),
   )
 import XMonad.Layout.StateFull (FocusTracking, focusTracking)
-import XMonad.Layout.ToggleLayouts
-  ( ToggleLayout (ToggleLayout), ToggleLayouts, toggleLayouts,
-  )
 import XMonad.Prompt
   ( ComplCaseSensitivity (ComplCaseSensitive), XPConfig, XPPosition (Top),
     alwaysHighlight, bgColor, bgHLight, defaultXPKeymap, fgColor, fgHLight, font,
@@ -154,27 +154,30 @@ main =
 type SmartBorders a = ModifiedLayout SmartBorder a
 type Refocus      a = ModifiedLayout RefocusLastLayoutHook (FocusTracking a)
 type Boring       a = ModifiedLayout BoringWindows a
-type ToggleFull   a = ToggleLayouts Full a
 type Renamed      a = ModifiedLayout Rename a
 type LimitSelect  a = ModifiedLayout Selection a
+type ToggleFull   a = MultiToggle (HCons StdTransformers EOT) a
+type ToggleMirror a = MultiToggle (HCons StdTransformers EOT) a
 
 type Layouts
-  = Choose
-      ResizableTall
-      ( Choose
-          (Renamed (LimitSelect ResizableTall))
-          (Mirror (LimitSelect ResizableTall))
+  = ToggleFull
+      ( ToggleMirror
+        ( Choose
+            ResizableTall
+            (Renamed (LimitSelect ResizableTall))
+        )
       )
 
-layoutHook' :: SmartBorders (Refocus (Boring (ToggleFull Layouts))) Window
+layoutHook' :: SmartBorders (Refocus (Boring Layouts)) Window
 layoutHook' =
   id
     . smartBorders
     . refocusLastLayoutHook
     . focusTracking
     . boringAuto
-    . toggleLayouts Full
-    $ tall ||| rename (limit tall) ||| Mirror (limit tall)
+    . mkToggle1 FULL
+    . mkToggle1 MIRROR
+    $ tall ||| rename (limit tall)
   where
     limit :: l Window -> LimitSelect l Window
     limit = limitSelect 1 1
@@ -422,10 +425,10 @@ keys' conf@(XConfig {modMask}) =
         fullToggleOff >> sendMessage NextLayout
       ),
       ( (mod4Mask .|. shiftMask, xK_space),
-        fullToggleOff >> sendMessage FirstLayout
+        fullToggleOff >> sendMessage (Toggle MIRROR)
       ),
       ( (modMask, xK_space),
-        sendMessage ToggleLayout
+        sendMessage (Toggle FULL)
       ),
       ( (mod4Mask, xK_slash),
         sendMessage ToggleStruts
@@ -449,13 +452,13 @@ keys' conf@(XConfig {modMask}) =
       -- focus
       ( (modMask, xK_j),
         do
-          t <- isFullToggleOn
-          if t then windows W.focusDown else focusDown
+          full <- isFullToggleOn
+          if full then windows W.focusDown else focusDown
       ),
       ( (modMask, xK_k),
         do
-          t <- isFullToggleOn
-          if t then windows W.focusUp else focusUp
+          full <- isFullToggleOn
+          if full then windows W.focusUp else focusUp
       ),
       ( (modMask, xK_m),
         windows W.focusMaster
@@ -658,7 +661,7 @@ keys' conf@(XConfig {modMask}) =
                    xmonadPromptC commands xPConfig
                  ),
                  ( (noModMask, xK_y),
-                   withWindowSet (trace . show . map W.tag . W.workspaces)
+                   layoutDescription >>= trace
                  ),
                  ( (noModMask, xK_z),
                    spawn ("i3lock --color=" ++ grey0)
@@ -698,8 +701,8 @@ keys' conf@(XConfig {modMask}) =
 
     fullToggleOff :: X ()
     fullToggleOff = do
-      t <- isFullToggleOn
-      when t (sendMessage ToggleLayout)
+      on <- isFullToggleOn
+      when on $ sendMessage (Toggle FULL)
 
     isFullToggleOn :: X Bool
     isFullToggleOn =
