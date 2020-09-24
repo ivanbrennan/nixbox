@@ -137,18 +137,279 @@ main =
       ewmh $
         def
           { layoutHook         = avoidStruts layoutHook',
+            workspaces         = withScreens nScreens (workspaces def),
+            startupHook        = startupHook',
+            logHook            = logHook',
+            handleEventHook    = handleEventHook',
+            manageHook         = manageHook',
+            keys               = keys',
+            mouseBindings      = mouseBindings',
             terminal           = "alacritty",
             clickJustFocuses   = False,
             normalBorderColor  = grey1,
-            focusedBorderColor = grey2,
-            keys               = keys',
-            mouseBindings      = mouseBindings',
-            manageHook         = manageHook',
-            handleEventHook    = eventHook,
-            logHook            = logHook',
-            startupHook        = startupHook',
-            workspaces         = withScreens nScreens (workspaces def)
+            focusedBorderColor = grey2
           }
+
+
+type SmartBorders a = ModifiedLayout SmartBorder a
+type Refocus      a = ModifiedLayout RefocusLastLayoutHook (FocusTracking a)
+type Boring       a = ModifiedLayout BoringWindows a
+type ToggleFull   a = ToggleLayouts Full a
+type Renamed      a = ModifiedLayout Rename a
+type LimitSelect  a = ModifiedLayout Selection a
+
+type Layouts
+  = Choose
+      ResizableTall
+      ( Choose
+          (Renamed (LimitSelect ResizableTall))
+          (Mirror (LimitSelect ResizableTall))
+      )
+
+layoutHook' :: SmartBorders (Refocus (Boring (ToggleFull Layouts))) Window
+layoutHook' =
+  id
+    . smartBorders
+    . refocusLastLayoutHook
+    . focusTracking
+    . boringAuto
+    . toggleLayouts Full
+    $ tall ||| rename (limit tall) ||| Mirror (limit tall)
+  where
+    limit :: l Window -> LimitSelect l Window
+    limit = limitSelect 1 1
+
+    rename :: l Window -> Renamed l Window
+    rename = renamed [Prepend "Limit (", Append ")"]
+
+    tall :: ResizableTall Window
+    tall = ResizableTall 1 (3/100) (1/2) []
+
+
+startupHook' :: X ()
+startupHook' = do
+  io killAlsactl
+  dynStatusBarStartup xmobar killAlsactl
+
+
+-- https://github.com/jaor/xmobar/issues/432
+killAlsactl :: MonadIO m => m ()
+killAlsactl = spawn $
+  intercalate
+    " | "
+    [ "ps axo pid,s,command",
+      "awk '/alsactl monitor default$/{print $1}'",
+      "xargs --no-run-if-empty kill 2>/dev/null"
+    ]
+
+
+xmobar :: ScreenId -> IO Handle
+xmobar s@(S i) = spawnPipe $
+  unwords
+    [ "xmobar",
+      "-B", translate black,
+      "-F", translate grey6,
+      "-f", "xft:monospace:size=11",
+      "-N", "xft:FontAwesome:size=11",
+      "-i", "/run/current-system/sw/share/icons/xmobar",
+      "-x", show i,
+      "-t", translate (xmobarTemplate s),
+      "-c", translate $ list (xmobarCommands s)
+    ]
+
+xmobarTemplate :: ScreenId -> String
+xmobarTemplate (S i) = concat $
+  if i == 0
+    then
+      [ cmd "StdinReader",
+        pad "}{",
+        cmd "disku",
+        " ",
+        xmobarColor cyan "" "·",
+        cmd "cpu",
+        "  ",
+        fontN 1 $ xmobarColor grey2 "" (cmd "vpn"),
+        pad (cmd "wlp58s0wi"),
+        pad (cmd "battery"),
+        pad (cmd "alsa:default:Master"),
+        pad (cmd "date")
+      ]
+    else
+      [ cmd "StdinReader",
+        pad "}{"
+      ]
+  where
+    cmd = wrap "%" "%"
+
+xmobarCommands :: ScreenId -> [String]
+xmobarCommands (S i) = map unwords $
+  if i == 0
+    then [disk, cpu, vpn, wireless, battery, volume, date', stdinReader]
+    else [stdinReader]
+  where
+    disk =
+      [ "Run DiskU",
+        brackets $ show ("/", "<free>"),
+        list (map quote diskArgs),
+        "50"
+      ]
+    diskArgs =
+      [ "--Low"   , "5",
+        "--high"  , grey3,
+        "--normal", grey3,
+        "--low"   , red
+      ]
+
+    cpu = ["Run Cpu", list (map quote cpuArgs), "50"]
+    cpuArgs =
+      [ "--template", "<total>",
+        "--ppad"    , "2",
+        "--High"    , "50",
+        "--Low"     , "3",
+        "--high"    , orange,
+        "--normal"  , grey2,
+        "--low"     , grey2
+      ]
+
+    vpn = ["Run Com", quote "bleep", list [], quote "vpn", "50"]
+
+    wireless =
+      [ "Run Wireless",
+        quote "wlp58s0",
+        list $ map quote ["--template", "<essid>"],
+        "50"
+      ]
+
+    battery = ["Run Battery", list (map quote batteryArgs), "20"]
+    batteryArgs =
+      [ "--template", "<acstatus>",
+        "--",
+        "--on-icon-pattern"  , icon "battery/on/battery_on_%%.xpm",
+        "--idle-icon-pattern", icon "battery/idle/battery_idle_%%.xpm",
+        "--off-icon-pattern" , icon "battery/off/battery_off_%%.xpm",
+        "--on"               , "<leftipat>",
+        "--idle"             , "<leftipat>",
+        "--off"              , "<leftipat>"
+      ]
+
+    volume =
+      ["Run Alsa", quote "default", quote "Master", list (map quote volumeArgs)]
+    volumeArgs =
+      [ "--template", "<status>",
+        "--",
+        "--on"  , fontN 1 "\xf026" ++ "<volume>",
+        "--off" , fontN 1 "\xf026" ++ "<volume>",
+        "--onc" , grey6,
+        "--offc", grey2
+      ]
+
+    date' = ["Run Date", quote dateFormat, quote "date", "50"]
+    dateFormat = "%a %b %-d " ++ xmobarColor chalk "" "%l:%M"
+
+    stdinReader = ["Run StdinReader"]
+
+list :: [String] -> String
+list = brackets . intercalate ","
+
+brackets :: String -> String
+brackets s = "[" ++ s ++ "]"
+
+quote :: String -> String
+quote = wrap "\"" "\""
+
+icon :: String -> String
+icon = wrap "<icon=" "/>"
+
+fontN :: Int -> String -> String
+fontN n = wrap ("<fn=" ++ show n ++ ">") "</fn>"
+
+
+logHook' :: X ()
+logHook' = multiPP currentScreenPP nonCurrentScreenPP
+  where
+    multiPP :: PP -> PP -> X ()
+    multiPP = multiPPFormat (withCurrentScreen . logString)
+
+    logString :: PP -> ScreenId -> X String
+    logString pp =
+      (workspaceNamesPP >=> dynamicLogString)
+        . namedScratchpadFilterOutWorkspacePP
+        . flip marshallPP pp
+
+    currentScreenPP :: PP
+    currentScreenPP = barPP
+
+    nonCurrentScreenPP :: PP
+    nonCurrentScreenPP = barPP
+
+    barPP :: PP
+    barPP =
+      xmobarPP
+        { ppCurrent = xmobarColor grey7 blue . pad,
+          ppHidden  = xmobarColor grey4 grey1 . pad,
+          ppSep     = " ",
+          ppWsSep   = "",
+          ppTitle   = const "",
+          ppLayout  = ppLayout'
+        }
+
+    ppLayout' :: String -> String
+    ppLayout' s
+      | "Full"  `isInfixOf` s = xmobarColor cyan "" "·"
+      | "Limit" `isInfixOf` s = xmobarColor grey2 "" "·"
+      | otherwise             = ""
+
+withCurrentScreen :: (ScreenId -> X a) -> X a
+withCurrentScreen f =
+  withWindowSet (f . W.screen . W.current)
+
+
+handleEventHook' :: Event -> X All
+handleEventHook' =
+  dynStatusBarEventHook xmobar killAlsactl
+    <> refocusLastWhen isFloat
+    <> fullscreenEventHook
+
+
+manageHook' :: ManageHook
+manageHook' =
+  composeAll
+    [ composeOne
+        [ appName =? "desktop_window" -?> doIgnore,
+          appName =? "manpage" -?> doCenteredFloat 0.6 0.6,
+          isDialog -?> doFloat,
+          className =? "Gcr-prompter" -?> doCenterFloat,
+          className =? "Xmessage" -?> doCenterFloat
+        ],
+      namedScratchpadManageHook scratchpads,
+      insertPosition Above Newer
+    ]
+
+doCenteredFloat :: Rational -> Rational -> ManageHook
+doCenteredFloat width height =
+  doRectFloat (W.RationalRect x y width height)
+  where
+    x :: Rational
+    x = (1 - width) / 2
+
+    y :: Rational
+    y = (1 - height) / 2
+
+scratchpads :: [NamedScratchpad]
+scratchpads =
+  [ scratchTerminal
+  ]
+
+scratchTerminal :: NamedScratchpad
+scratchTerminal =
+  NS name command (appName =? name) (doCenteredFloat 0.8 0.7)
+  where
+    name :: String
+    name = "scratchpad"
+
+    command :: String
+    command = "alacritty-transparent --class " ++ name
+
 
 -- https://github.com/xmonad/X11/blob/6e5ef8019a0cc49e18410a335dbdeea87b7c4aac/Graphics/X11/Types.hsc
 -- https://stackoverflow.com/questions/6605399/how-can-i-set-an-action-to-occur-on-a-key-release-in-xmonad
@@ -366,6 +627,18 @@ keys' conf@(XConfig {modMask}) =
          ]
       ++ [ ( (modMask, alt),
              submap . M.fromList $
+               -- [ ( (noModMask, xK_u),
+               --     switchProjectPrompt xPConfig
+               --   ),
+               --   ( (shiftMask, xK_u),
+               --     shiftToProjectPrompt xPConfig
+               --   ),
+               --   ( (noModMask, xK_m),
+               --     renameProjectPrompt xPConfig
+               --   ),
+               --   ( (noModMask, xK_c),
+               --     changeProjectDirPrompt xPConfig
+               --   ),
                [ ( (noModMask, xK_a),
                    appendThoughtPrompt xPConfig
                  ),
@@ -517,23 +790,6 @@ keys' conf@(XConfig {modMask}) =
         ("refresh", refresh)
       ]
 
-mouseBindings' :: XConfig Layout -> Map (KeyMask, Button) (Window -> X ())
-mouseBindings' XConfig {modMask} =
-  M.fromList $
-    [ ( (modMask, button1),
-        \w ->
-          focus w
-            >> mouseMoveWindow w
-            >> windows W.shiftMaster
-      ),
-      ( (mod4Mask, button1),
-        \w ->
-          focus w
-            >> mouseResizeEdgeWindow (3/4) w
-            >> windows W.shiftMaster
-      )
-    ]
-
 xPConfig :: XPConfig
 xPConfig =
   def
@@ -556,292 +812,24 @@ xPConfig =
         ((mod1Mask,    xK_n), moveHistory W.focusDown')
       ]
 
-scratchpads :: [NamedScratchpad]
-scratchpads =
-  [ scratchTerminal
-  ]
 
-scratchTerminal :: NamedScratchpad
-scratchTerminal =
-  NS name command (appName =? name) (doCenteredFloat 0.8 0.7)
-  where
-    name :: String
-    name = "scratchpad"
-
-    command :: String
-    command = "alacritty-transparent --class " ++ name
-
-doCenteredFloat :: Rational -> Rational -> ManageHook
-doCenteredFloat width height =
-  doRectFloat (W.RationalRect x y width height)
-  where
-    x :: Rational
-    x = (1 - width) / 2
-
-    y :: Rational
-    y = (1 - height) / 2
-
-withCurrentScreen :: (ScreenId -> X a) -> X a
-withCurrentScreen f =
-  withWindowSet (f . W.screen . W.current)
-
-------------------------------------------------------------------------
--- Window rules:
-
--- Execute arbitrary actions and WindowSet manipulations when managing
--- a new window. You can use this to, for example, always float a
--- particular program, or have a client always appear on a particular
--- workspace.
---
--- To find the property name associated with a program, use
--- > xprop | grep WM_CLASS
--- and click on the client you're interested in.
---
--- To match on the WM_NAME, you can use 'title' in the same way that
--- 'className' and 'appName' are used below.
---
-manageHook' :: ManageHook
-manageHook' =
-  composeAll
-    [ insertPosition Above Newer,
-      composeOne
-        [ isDialog -?> doFloat,
-          className =? "Gcr-prompter" -?> doCenterFloat,
-          className =? "Xmessage" -?> doCenterFloat,
-          appName =? "desktop_window" -?> doIgnore,
-          appName =? "manpage" -?> doCenteredFloat 0.6 0.6
-        ],
-      namedScratchpadManageHook scratchpads
-    ]
-
-------------------------------------------------------------------------
--- Event handling
-
--- * EwmhDesktops users should change this to ewmhDesktopsEventHook
---
--- Defines a custom handler function for X Events. The function should
--- return (All True) if the default handler is to be run afterwards. To
--- combine event hooks use mappend or mconcat from Data.Monoid.
---
-eventHook :: Event -> X All
-eventHook =
-  dynStatusBarEventHook xmobar killAlsactl
-    <> refocusLastWhen isFloat
-    <> fullscreenEventHook
-
-------------------------------------------------------------------------
--- Status bars and logging
-
--- Perform an arbitrary action on each internal state change or X event.
--- See the 'XMonad.Hooks.DynamicLog' extension for examples.
---
-logHook' :: X ()
-logHook' = multiPP currentScreenPP nonCurrentScreenPP
-  where
-    multiPP :: PP -> PP -> X ()
-    multiPP = multiPPFormat (withCurrentScreen . logString)
-
-    logString :: PP -> ScreenId -> X String
-    logString pp =
-      (workspaceNamesPP >=> dynamicLogString)
-        . namedScratchpadFilterOutWorkspacePP
-        . flip marshallPP pp
-
-    currentScreenPP :: PP
-    currentScreenPP = barPP
-
-    nonCurrentScreenPP :: PP
-    nonCurrentScreenPP = barPP
-
-    barPP :: PP
-    barPP =
-      xmobarPP
-        { ppCurrent = xmobarColor grey7 blue . pad,
-          ppHidden  = xmobarColor grey4 grey1 . pad,
-          ppSep     = " ",
-          ppWsSep   = "",
-          ppTitle   = const "",
-          ppLayout  = ppLayout'
-        }
-
-    ppLayout' :: String -> String
-    ppLayout' s
-      | "Full"  `isInfixOf` s = xmobarColor cyan "" "·"
-      | "Limit" `isInfixOf` s = xmobarColor grey2 "" "·"
-      | otherwise             = ""
-
-------------------------------------------------------------------------
--- Startup hook
-
-startupHook' :: X ()
-startupHook' = do
-  io killAlsactl
-  dynStatusBarStartup xmobar killAlsactl
-
-xmobar :: ScreenId -> IO Handle
-xmobar s@(S i) = spawnPipe $
-  unwords
-    [ "xmobar",
-      "-B", translate black,
-      "-F", translate grey6,
-      "-f", "xft:monospace:size=11",
-      "-N", "xft:FontAwesome:size=11",
-      "-i", "/run/current-system/sw/share/icons/xmobar",
-      "-x", show i,
-      "-t", translate (xmobarTemplate s),
-      "-c", translate $ list (xmobarCommands s)
-    ]
-
-xmobarTemplate :: ScreenId -> String
-xmobarTemplate (S i) = concat $
-  if i == 0
-    then
-      [ cmd "StdinReader",
-        pad "}{",
-        cmd "disku",
-        " ",
-        xmobarColor cyan "" "·",
-        cmd "cpu",
-        "  ",
-        fontN 1 $ xmobarColor grey2 "" (cmd "vpn"),
-        pad (cmd "wlp58s0wi"),
-        pad (cmd "battery"),
-        pad (cmd "alsa:default:Master"),
-        pad (cmd "date")
-      ]
-    else
-      [ cmd "StdinReader",
-        pad "}{"
-      ]
-  where
-    cmd = wrap "%" "%"
-
-
-xmobarCommands :: ScreenId -> [String]
-xmobarCommands (S i) = map unwords $
-  if i == 0
-    then [disk, cpu, vpn, wireless, battery, volume, date', stdinReader]
-    else [stdinReader]
-  where
-    disk =
-      [ "Run DiskU",
-        brackets $ show ("/", "<free>"),
-        list (map quote diskArgs),
-        "50"
-      ]
-    diskArgs =
-      [ "--Low"   , "5",
-        "--high"  , grey3,
-        "--normal", grey3,
-        "--low"   , red
-      ]
-
-    cpu = ["Run Cpu", list (map quote cpuArgs), "50"]
-    cpuArgs =
-      [ "--template", "<total>",
-        "--ppad"    , "2",
-        "--High"    , "50",
-        "--Low"     , "3",
-        "--high"    , orange,
-        "--normal"  , grey2,
-        "--low"     , grey2
-      ]
-
-    vpn = ["Run Com", quote "bleep", list [], quote "vpn", "50"]
-
-    wireless =
-      [ "Run Wireless",
-        quote "wlp58s0",
-        list $ map quote ["--template", "<essid>"],
-        "50"
-      ]
-
-    battery = ["Run Battery", list (map quote batteryArgs), "20"]
-    batteryArgs =
-      [ "--template", "<acstatus>",
-        "--",
-        "--on-icon-pattern"  , icon "battery/on/battery_on_%%.xpm",
-        "--idle-icon-pattern", icon "battery/idle/battery_idle_%%.xpm",
-        "--off-icon-pattern" , icon "battery/off/battery_off_%%.xpm",
-        "--on"               , "<leftipat>",
-        "--idle"             , "<leftipat>",
-        "--off"              , "<leftipat>"
-      ]
-
-    volume =
-      ["Run Alsa", quote "default", quote "Master", list (map quote volumeArgs)]
-    volumeArgs =
-      [ "--template", "<status>",
-        "--",
-        "--on"  , fontN 1 "\xf026" ++ "<volume>",
-        "--off" , fontN 1 "\xf026" ++ "<volume>",
-        "--onc" , grey6,
-        "--offc", grey2
-      ]
-
-    date' = ["Run Date", quote dateFormat, quote "date", "50"]
-    dateFormat = "%a %b %-d " ++ xmobarColor chalk "" "%l:%M"
-
-    stdinReader = ["Run StdinReader"]
-
-list :: [String] -> String
-list = brackets . intercalate ","
-
-brackets :: String -> String
-brackets s = "[" ++ s ++ "]"
-
-quote :: String -> String
-quote = wrap "\"" "\""
-
-icon :: String -> String
-icon = wrap "<icon=" "/>"
-
-fontN :: Int -> String -> String
-fontN n = wrap ("<fn=" ++ show n ++ ">") "</fn>"
-
--- https://github.com/jaor/xmobar/issues/432
-killAlsactl :: MonadIO m => m ()
-killAlsactl = spawn $
-  intercalate
-    " | "
-    [ "ps axo pid,s,command",
-      "awk '/alsactl monitor default$/{print $1}'",
-      "xargs --no-run-if-empty kill 2>/dev/null"
-    ]
-
-type SmartBorders a = ModifiedLayout SmartBorder a
-type Refocus      a = ModifiedLayout RefocusLastLayoutHook (FocusTracking a)
-type Boring       a = ModifiedLayout BoringWindows a
-type ToggleFull   a = ToggleLayouts Full a
-type Renamed      a = ModifiedLayout Rename a
-type LimitSelect  a = ModifiedLayout Selection a
-
-type Layouts
-  = Choose
-      ResizableTall
-      ( Choose
-          (Renamed (LimitSelect ResizableTall))
-          (Mirror (LimitSelect ResizableTall))
+mouseBindings' :: XConfig Layout -> Map (KeyMask, Button) (Window -> X ())
+mouseBindings' XConfig {modMask} =
+  M.fromList $
+    [ ( (modMask, button1),
+        \w ->
+          focus w
+            >> mouseMoveWindow w
+            >> windows W.shiftMaster
+      ),
+      ( (mod4Mask, button1),
+        \w ->
+          focus w
+            >> mouseResizeEdgeWindow (3/4) w
+            >> windows W.shiftMaster
       )
+    ]
 
-layoutHook' :: SmartBorders (Refocus (Boring (ToggleFull Layouts))) Window
-layoutHook' =
-  id
-    . smartBorders
-    . refocusLastLayoutHook
-    . focusTracking
-    . boringAuto
-    . toggleLayouts Full
-    $ tall ||| rename (limit tall) ||| Mirror (limit tall)
-  where
-    limit :: l Window -> LimitSelect l Window
-    limit = limitSelect 1 1
-
-    rename :: l Window -> Renamed l Window
-    rename = renamed [Prepend "Limit (", Append ")"]
-
-    tall :: ResizableTall Window
-    tall = ResizableTall 1 (3/100) (1/2) []
 
 black, grey0, grey1, grey2, grey3, grey4, grey6, grey5, grey7, white :: String
 black = "#161616"
