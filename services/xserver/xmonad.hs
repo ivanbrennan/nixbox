@@ -1,5 +1,5 @@
 {-# LANGUAGE NamedFieldPuns #-}
-{-# OPTIONS_GHC -O2 -Wall -Werror #-}
+{-# OPTIONS_GHC -Wall -Werror -O2 #-}
 
 {- base -}
 import Control.Arrow (second)
@@ -606,14 +606,11 @@ manageHook' =
     [ insertPosition Above Newer,
       composeOne
         [ isDialog -?> doFloat,
-          -- isFullscreen -?> doFullFloat,
           className =? "Gcr-prompter" -?> doCenterFloat,
           className =? "Xmessage" -?> doCenterFloat,
-          -- className =? "vlc" -?> doFloat,
           appName =? "desktop_window" -?> doIgnore,
           appName =? "manpage" -?> doCenteredFloat 0.6 0.6
         ],
-      -- fullscreenManageHook,
       namedScratchpadManageHook scratchpads
     ]
 
@@ -835,7 +832,6 @@ layoutHook' =
     . focusTracking
     . boringAuto
     . toggleLayouts Full
-    -- . fullscreenFloat
     $ tall ||| rename (limit tall) ||| Mirror (limit tall)
   where
     limit :: l Window -> LimitSelect l Window
