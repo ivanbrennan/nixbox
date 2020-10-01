@@ -60,6 +60,7 @@ with pkgs; [
   nice-icons
   nix-prefetch-git
   neovim
+  nnn
   openssl
   ormolu
   pass
