@@ -54,7 +54,7 @@ import qualified XMonad.StackSet as W
 import XMonad.Actions.CycleWS
   ( Direction1D (Next, Prev), WSType (WSIs, NonEmptyWS), moveTo,
   )
-import XMonad.Actions.DynamicProjects (dynamicProjects, changeProjectDirPrompt')
+import XMonad.Actions.DynamicProjects (dynamicProjects, changeProjectDirPrompt)
 import XMonad.Actions.FlexibleResize (mouseResizeEdgeWindow)
 import XMonad.Actions.PerWindowKeys (bindFirst)
 import XMonad.Actions.RotateSome (surfaceNext, surfacePrev)
@@ -106,8 +106,9 @@ import XMonad.Layout.ResizableTile
 import XMonad.Layout.StateFull (FocusTracking, focusTracking)
 import XMonad.Prompt
   ( ComplCaseSensitivity (ComplCaseSensitive), XPConfig, XPPosition (Top),
-    alwaysHighlight, bgColor, bgHLight, defaultXPKeymap, fgColor, fgHLight, font,
-    height, moveHistory, position, promptBorderWidth, promptKeymap,
+    alwaysHighlight, bgColor, bgHLight, complCaseSensitivity, defaultXPKeymap,
+    fgColor, fgHLight, font, height, moveHistory, position, promptBorderWidth,
+    promptKeymap,
   )
 import XMonad.Prompt.AppendFile (appendFilePrompt')
 import XMonad.Prompt.ConfirmPrompt (confirmPrompt)
@@ -186,7 +187,7 @@ layoutHook' =
     rename = renamed [Prepend "Limit (", Append ")"]
 
     tall :: ResizableTall Window
-    tall = ResizableTall 1 (2/100) (54/100) []
+    tall = ResizableTall 1 (4/100) (54/100) []
 
 
 startupHook' :: X ()
@@ -447,7 +448,7 @@ keys' conf@(XConfig {modMask}) =
         moveTo Next NonEmptyWS
       ),
       ( (modMask .|. shiftMask, xK_semicolon),
-        changeWorkspaceDir
+        changeProjectDirPrompt xPConfig
       ),
       -- focus
       ( (modMask, xK_j),
@@ -750,10 +751,6 @@ keys' conf@(XConfig {modMask}) =
           ++ W.hidden ws
           ++ [W.workspace (W.current ws)]
 
-    changeWorkspaceDir :: X ()
-    changeWorkspaceDir =
-      changeProjectDirPrompt' (ComplCaseSensitive False) xPConfig
-
     setTerminal :: String -> XConf -> XConf
     setTerminal t xc =
       xc {config = (config xc) {terminal = t}}
@@ -796,16 +793,17 @@ keys' conf@(XConfig {modMask}) =
 xPConfig :: XPConfig
 xPConfig =
   def
-    { position          = Top,
-      height            = 25,
-      alwaysHighlight   = False,
-      promptBorderWidth = 0,
-      promptKeymap      = keymap `M.union` defaultXPKeymap,
-      bgColor           = grey0,
-      fgColor           = grey5,
-      bgHLight          = grey7,
-      fgHLight          = grey0,
-      font              = "xft:monospace:size=12"
+    { position             = Top,
+      height               = 25,
+      alwaysHighlight      = False,
+      promptBorderWidth    = 0,
+      promptKeymap         = keymap `M.union` defaultXPKeymap,
+      complCaseSensitivity = ComplCaseSensitive True,
+      bgColor              = grey0,
+      fgColor              = grey5,
+      bgHLight             = grey7,
+      fgHLight             = grey0,
+      font                 = "xft:monospace:size=12"
     }
   where
     keymap = M.fromList $
