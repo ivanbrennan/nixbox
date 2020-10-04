@@ -1,12 +1,12 @@
 { coreutils
 , ffmpeg
 , gnugrep
+, libnotify
 , slop
 , writeShellScriptBin
 , xrandr
 }:
 
-# TODO: notify-send
 writeShellScriptBin "screencast" ''
   set -u
 
@@ -70,14 +70,14 @@ writeShellScriptBin "screencast" ''
   ${ffmpeg}/bin/ffmpeg -y -f x11grab -s "$W"x"$H" -i :0.0+"$X","$Y" "$tmpfile"
   expectedExitCode=0
 
-  # notify-send 'generating palette'
+  ${libnotify}/bin/notify-send 'generating palette'
   ${ffmpeg}/bin/ffmpeg -y -i "$tmpfile" -vf fps=10,palettegen "$palette"
 
-  # notify-send 'generating gif'
+  ${libnotify}/bin/notify-send 'generating gif'
   ${ffmpeg}/bin/ffmpeg -y -i "$tmpfile" -i "$palette" -filter_complex "paletteuse" "$output".gif
 
   mv "$tmpfile" "$output".mkv
   echo "$output"
 
-  # notify-send "size $(du -h $output.gif | awk '{print $1}')"
+  ${libnotify}/bin/notify-send "size $(du -h "$output".gif | cut --fields=1)"
 ''
