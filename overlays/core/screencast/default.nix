@@ -20,32 +20,7 @@ writeShellScriptBin "screencast" ''
           exit "$exitCode"
       fi
   }
-  trap "checkError" ERR
-
-  exec > ~/.screencast.log 2>&1
-
-  all=false
-
-  while getopts "a" opt
-  do
-      case "$opt" in
-          a) all=true ;;
-          *) exit 1   ;;
-      esac
-  done
-
-  tmpfile="$(mktemp -t screencast-XXXXXXX)"
-  palette="$(mktemp -t palette-XXXXXXX)"
-  tmpfile_mkv="''${tmpfile}.mkv"
-  palette_png="''${palette}.png"
-
-  cleanup() {
-      rm -f "$tmpfile" "$tmpfile_mkv" "$palette" "$palette_png"
-  }
-  trap "cleanup" EXIT QUIT TERM
-
-  mkdir -p "$HOME/Pictures"
-  output="$HOME/Pictures/screencast.$(${coreutils}/bin/date +%s)"
+  trap checkError ERR
 
   screenRegion() {
       ${xrandr}/bin/xrandr \
@@ -61,6 +36,24 @@ writeShellScriptBin "screencast" ''
       ${slop}/bin/slop --format "%w %h %x %y"
   }
 
+  exec > ~/.screencast.log 2>&1
+
+  all=false
+  while getopts "a" opt
+  do
+      case "$opt" in
+          a) all=true ;;
+          *) exit 1   ;;
+      esac
+  done
+
+  tmpfile="$(mktemp -t screencast-XXXXXXX.mkv)"
+  palette="$(mktemp -t palette-XXXXXXX.png)"
+  trap "rm -f '$tmpfile' '$palette'" EXIT QUIT TERM
+
+  mkdir -p "$HOME/Pictures"
+  output="$HOME/Pictures/screencast.$(${coreutils}/bin/date +%s)"
+
   if "$all"
   then
       region=$(screenRegion)
@@ -70,19 +63,20 @@ writeShellScriptBin "screencast" ''
 
   read -r W H X Y < <(echo "$region")
 
-  # External process may stop the recording via signal (e.g. "killall ffmpeg"),
+  # Recording may be stopped by running "killall ffmpeg",
   # in which case ffmpeg exits with code 255.
+  #
   expectedExitCode=255
-  ${ffmpeg}/bin/ffmpeg -y -f x11grab -s "$W"x"$H" -i :0.0+$X,$Y "$tmpfile_mkv"
+  ${ffmpeg}/bin/ffmpeg -y -f x11grab -s "$W"x"$H" -i :0.0+"$X","$Y" "$tmpfile"
   expectedExitCode=0
 
   # notify-send 'generating palette'
-  ${ffmpeg}/bin/ffmpeg -y -i "$tmpfile_mkv" -vf fps=10,palettegen "$palette_png"
+  ${ffmpeg}/bin/ffmpeg -y -i "$tmpfile" -vf fps=10,palettegen "$palette"
 
   # notify-send 'generating gif'
-  ${ffmpeg}/bin/ffmpeg -y -i "$tmpfile_mkv" -i "$palette_png" -filter_complex "paletteuse" $output.gif
+  ${ffmpeg}/bin/ffmpeg -y -i "$tmpfile" -i "$palette" -filter_complex "paletteuse" "$output".gif
 
-  mv $tmpfile_mkv $output.mkv
+  mv "$tmpfile" "$output".mkv
   echo "$output"
 
   # notify-send "size $(du -h $output.gif | awk '{print $1}')"
