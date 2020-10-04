@@ -3,13 +3,13 @@
 
 {- base -}
 import Control.Arrow (second)
-import Control.Concurrent (threadDelay)
-import Control.Monad (void, when, (>=>))
+import Control.Monad (when, (>=>))
 import Data.Bits ((.|.))
+import Data.Dynamic (Typeable)
 import Data.List (intercalate, isInfixOf)
 import Data.Monoid (All)
 import System.Directory (getHomeDirectory)
-import System.Exit (ExitCode (ExitFailure), exitSuccess)
+import System.Exit (exitSuccess)
 import System.FilePath ((</>))
 import System.IO (Handle)
 
@@ -22,9 +22,6 @@ import Data.Default (def)
 
 {- process -}
 import System.Process.Internals (translate)
-
-{- unix -}
-import System.Posix (ProcessStatus (Exited), getProcessStatus)
 
 {- X11 -}
 import Graphics.X11
@@ -42,15 +39,16 @@ import Graphics.X11.Xlib.Extras (Event)
 
 {- xmonad -}
 import XMonad
-  ( ChangeLayout (NextLayout), Choose, IncMasterN (IncMasterN), Layout,
-    ManageHook, MonadIO, Query, Resize (Expand, Shrink), ScreenId (S), WindowSet,
-    WindowSpace, WorkspaceId, X, XConf, XConfig (XConfig), appName, className,
-    clickJustFocuses, composeAll, config, description, doFloat, doIgnore, focus,
-    focusedBorderColor, handleEventHook, io, keys, kill, layoutHook, local,
-    logHook, manageHook, modMask, mouseBindings, mouseMoveWindow,
-    normalBorderColor, refresh, screenWorkspace, sendMessage, spawn, spawnPID,
-    startupHook, terminal, trace, whenJust, windows, withFocused, withWindowSet,
-    workspaces, xfork, xmonad, (=?), (|||),
+  ( ChangeLayout (NextLayout), Choose, ExtensionClass, IncMasterN (IncMasterN),
+    Layout, ManageHook, MonadIO, Query, Resize (Expand, Shrink), ScreenId (S),
+    StateExtension (PersistentExtension), WindowSet, WindowSpace, WorkspaceId, X,
+    XConf, XConfig (XConfig), appName, className, clickJustFocuses, composeAll,
+    config, description, doFloat, doIgnore, extensionType, focus,
+    focusedBorderColor, handleEventHook, initialValue, io, keys, kill,
+    layoutHook, local, logHook, manageHook, modMask, mouseBindings,
+    mouseMoveWindow, normalBorderColor, refresh, screenWorkspace, sendMessage,
+    spawn, startupHook, terminal, trace, whenJust, windows, withFocused,
+    withWindowSet, workspaces, xmonad, (=?), (|||),
   )
 import qualified XMonad.StackSet as W
 
@@ -120,6 +118,7 @@ import XMonad.Prompt.Man (manPrompt)
 import XMonad.Prompt.RunOrRaise (runOrRaisePrompt)
 import XMonad.Prompt.Workspace (workspacePrompt)
 import XMonad.Prompt.XMonad (xmonadPromptC)
+import qualified XMonad.Util.ExtensibleState as XS
 import XMonad.Util.Loggers (date)
 import XMonad.Util.NamedScratchpad
   ( NamedScratchpad (NS), namedScratchpadAction,
@@ -578,10 +577,10 @@ keys' conf@(XConfig {modMask}) =
         spawn "screenshot -a -c"
       ),
       ( (mod4Mask, xK_Print),
-        toggleScreencast []
+        screencast []
       ),
       ( (mod4Mask .|. shiftMask, xK_Print),
-        toggleScreencast ["-a"]
+        screencast ["-a"]
       ),
       ( (mod4Mask .|. shiftMask, xK_d),
         kill
@@ -800,23 +799,21 @@ keys' conf@(XConfig {modMask}) =
         ("refresh", refresh)
       ]
 
-    toggleScreencast :: [String] -> X ()
-    toggleScreencast args =
-      void . xfork $ do
-        pid <- spawnPID "{ pgrep -x screencast && pgrep -x ffmpeg; } >/dev/null"
-        stat <- poll (getProcessStatus False True) pid 1000
-        case stat of
-          Just (Exited (ExitFailure 1)) -> spawn $ unwords ("screencast" : args)
-          _                             -> spawn "killall ffmpeg"
+    screencast :: [String] -> X ()
+    screencast args = do
+      Screencast on <- XS.get
+      spawn $
+        if on
+          then "killall ffmpeg"
+          else unwords ("screencast" : args)
+      XS.put $ Screencast (not on)
 
-    poll :: (a -> IO (Maybe b)) -> a -> Int -> IO (Maybe b)
-    poll f x msec
-      | msec < 1  = pure Nothing
-      | otherwise = do
-          mres <- f x
-          case mres of
-            Just res -> pure (Just res)
-            Nothing  -> threadDelay 1000 >> poll f x (msec - 1)
+
+newtype Screencast = Screencast Bool deriving (Read, Show, Typeable)
+
+instance ExtensionClass Screencast where
+  initialValue = Screencast False
+  extensionType = PersistentExtension
 
 
 xPConfig :: XPConfig
