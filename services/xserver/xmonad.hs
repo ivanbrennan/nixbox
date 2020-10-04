@@ -191,7 +191,7 @@ layoutHook' =
     rename = renamed [Prepend "Limit (", Append ")"]
 
     tall :: ResizableTall Window
-    tall = ResizableTall 1 (4/100) (54/100) []
+    tall = ResizableTall 1 (1/100) (52/100) []
 
 
 startupHook' :: X ()
