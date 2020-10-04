@@ -3,12 +3,13 @@
 
 {- base -}
 import Control.Arrow (second)
-import Control.Monad (when, (>=>))
+import Control.Concurrent (threadDelay)
+import Control.Monad (void, when, (>=>))
 import Data.Bits ((.|.))
 import Data.List (intercalate, isInfixOf)
 import Data.Monoid (All)
 import System.Directory (getHomeDirectory)
-import System.Exit (exitSuccess)
+import System.Exit (ExitCode (ExitFailure), exitSuccess)
 import System.FilePath ((</>))
 import System.IO (Handle)
 
@@ -21,6 +22,9 @@ import Data.Default (def)
 
 {- process -}
 import System.Process.Internals (translate)
+
+{- unix -}
+import System.Posix (ProcessStatus (Exited), getProcessStatus)
 
 {- X11 -}
 import Graphics.X11
@@ -44,9 +48,9 @@ import XMonad
     clickJustFocuses, composeAll, config, description, doFloat, doIgnore, focus,
     focusedBorderColor, handleEventHook, io, keys, kill, layoutHook, local,
     logHook, manageHook, modMask, mouseBindings, mouseMoveWindow,
-    normalBorderColor, refresh, screenWorkspace, sendMessage, spawn, startupHook,
-    terminal, trace, whenJust, windows, withFocused, withWindowSet, workspaces,
-    xmonad, (=?), (|||),
+    normalBorderColor, refresh, screenWorkspace, sendMessage, spawn, spawnPID,
+    startupHook, terminal, trace, whenJust, windows, withFocused, withWindowSet,
+    workspaces, xfork, xmonad, (=?), (|||),
   )
 import qualified XMonad.StackSet as W
 
@@ -573,6 +577,12 @@ keys' conf@(XConfig {modMask}) =
       ( (controlMask .|. shiftMask, xK_Print),
         spawn "screenshot -a -c"
       ),
+      ( (mod4Mask, xK_Print),
+        toggleScreencast []
+      ),
+      ( (mod4Mask .|. shiftMask, xK_Print),
+        toggleScreencast ["-a"]
+      ),
       ( (mod4Mask .|. shiftMask, xK_d),
         kill
       ),
@@ -789,6 +799,25 @@ keys' conf@(XConfig {modMask}) =
         ("expand", sendMessage Expand),
         ("refresh", refresh)
       ]
+
+    toggleScreencast :: [String] -> X ()
+    toggleScreencast args =
+      void . xfork $ do
+        pid <- spawnPID "{ pgrep -x screencast && pgrep -x ffmpeg; } >/dev/null"
+        stat <- poll (getProcessStatus False True) pid 1000
+        case stat of
+          Just (Exited (ExitFailure 1)) -> spawn $ unwords ("screencast" : args)
+          _                             -> spawn "killall ffmpeg"
+
+    poll :: (a -> IO (Maybe b)) -> a -> Int -> IO (Maybe b)
+    poll f x msec
+      | msec < 1  = pure Nothing
+      | otherwise = do
+          mres <- f x
+          case mres of
+            Just res -> pure (Just res)
+            Nothing  -> threadDelay 1000 >> poll f x (msec - 1)
+
 
 xPConfig :: XPConfig
 xPConfig =

@@ -93,6 +93,7 @@ self: super: {
     '';
   });
 
+  screencast = super.callPackage ./screencast { };
   screenshot = super.callPackage ./screenshot { };
 
   st = super.st.overrideAttrs (old: {

@@ -73,6 +73,7 @@ with pkgs; [
   reptyr
   ripgrep
   rxvt_unicode-with-plugins
+  screencast
   screenshot
   shellcheck
   slack
