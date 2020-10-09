@@ -17,10 +17,10 @@ self: super:
         super.haskell.lib.dontHaddock
         ( hsuper.xmobar.overrideAttrs (old: {
             src = super.fetchFromGitHub {
-              owner  = "ivanbrennan";
+              owner  = "jaor";
               repo   = "xmobar";
-              rev    = "3a67fad558e42db5e4115884f1afe826054b88c9";
-              sha256 = "10z03kab14phpd07m2fp3j475bv82pp4gd2gz18wm5nnd6fvn837";
+              rev    = "3d90497d1e680d844e0b640cf72b6ee7b587243a";
+              sha256 = "0wna3n0gfwszvpfa6znl41vcnwxaam6mxwwqc59msxzczf1m1wp2";
             };
           })
         );
