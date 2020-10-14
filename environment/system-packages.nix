@@ -95,6 +95,7 @@ with pkgs; [
   vln
   weechat
   wget
+  wmctrl
   xclip
   xorg.xmessage
   xmobar

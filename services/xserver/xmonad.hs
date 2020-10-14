@@ -63,14 +63,15 @@ import XMonad.Actions.RotateSome (surfaceNext, surfacePrev)
 import XMonad.Actions.RotSlaves (rotAllDown, rotAllUp, rotSlavesDown, rotSlavesUp)
 import XMonad.Actions.Submap (submap)
 import XMonad.Actions.WindowBringer (gotoMenuArgs)
-import XMonad.Actions.WorkspaceNames (renameWorkspace, workspaceNamesPP)
+import XMonad.Actions.WorkspaceNames (getWorkspaceNames', renameWorkspace)
 import XMonad.Hooks.DebugStack (debugStackString)
 import XMonad.Hooks.DynamicBars
   ( dynStatusBarEventHook, dynStatusBarStartup, multiPPFormat,
   )
 import XMonad.Hooks.DynamicLog
-  ( PP, dynamicLogString, pad, ppCurrent, ppHidden, ppLayout, ppSep, ppTitle,
-    ppWsSep, wrap, xmobarColor, xmobarPP,
+  ( PP, dynamicLogString, pad, ppCurrent, ppHidden, ppHiddenNoWindows, ppLayout,
+    ppSep, ppTitle, ppUrgent, ppVisible, ppWsSep, wrap, xmobarAction, xmobarColor,
+    xmobarPP, xmobarRaw,
   )
 import XMonad.Hooks.EwmhDesktops (ewmh, fullscreenEventHook)
 import XMonad.Hooks.InsertPosition
@@ -128,6 +129,7 @@ import XMonad.Util.NamedScratchpad
 import qualified XMonad.Util.NamedScratchpad as NS
 import XMonad.Util.Paste (sendKey)
 import XMonad.Util.Run (spawnPipe)
+import XMonad.Util.WorkspaceCompare (getWsIndex)
 
 
 main :: IO ()
@@ -228,7 +230,7 @@ xmobarTemplate :: ScreenId -> String
 xmobarTemplate (S i) = concat $
   if i == 0
     then
-      [ cmd "StdinReader",
+      [ cmd "UnsafeStdinReader",
         pad "}{",
         cmd "disku",
         " ",
@@ -242,7 +244,7 @@ xmobarTemplate (S i) = concat $
         pad (cmd "date")
       ]
     else
-      [ cmd "StdinReader",
+      [ cmd "UnsafeStdinReader",
         pad "}{"
       ]
   where
@@ -251,8 +253,8 @@ xmobarTemplate (S i) = concat $
 xmobarCommands :: ScreenId -> [String]
 xmobarCommands (S i) = map unwords $
   if i == 0
-    then [disk, cpu, vpn, wireless, battery, volume, date', stdinReader]
-    else [stdinReader]
+    then [disk, cpu, vpn, wireless, battery, volume, date', unsafeStdinReader]
+    else [unsafeStdinReader]
   where
     disk =
       [ "Run DiskU",
@@ -313,7 +315,7 @@ xmobarCommands (S i) = map unwords $
     date' = ["Run Date", quote dateFormat, quote "date", "50"]
     dateFormat = "%a %b %-d " ++ xmobarColor chalk "" "%l:%M"
 
-    stdinReader = ["Run StdinReader"]
+    unsafeStdinReader = ["Run UnsafeStdinReader"]
 
 list :: [String] -> String
 list = brackets . intercalate ","
@@ -339,9 +341,22 @@ logHook' = multiPP currentScreenPP nonCurrentScreenPP
 
     logString :: PP -> ScreenId -> X String
     logString pp =
-      (workspaceNamesPP >=> dynamicLogString)
+      composePP pp >=> dynamicLogString
+
+    composePP :: PP -> ScreenId -> X PP
+    composePP pp s = do
+      names <- getWorkspaceNames (marshall s)
+      click <- getClickable (marshall s . omitName)
+      return
         . namedScratchpadFilterOutWorkspacePP
-        . flip marshallPP pp
+        . marshallPP s
+        $ pp
+          { ppCurrent         = ppCurrent         pp . click . names,
+            ppVisible         = ppVisible         pp . click . names,
+            ppHidden          = ppHidden          pp . click . names,
+            ppHiddenNoWindows = ppHiddenNoWindows pp . click . names,
+            ppUrgent          = ppUrgent          pp . click . names
+          }
 
     currentScreenPP :: PP
     currentScreenPP = barPP
@@ -365,6 +380,23 @@ logHook' = multiPP currentScreenPP nonCurrentScreenPP
       | "Full"  `isInfixOf` s = xmobarColor cyan "" "·"
       | "Limit" `isInfixOf` s = xmobarColor grey2 "" "·"
       | otherwise             = ""
+
+    omitName :: WorkspaceId -> WorkspaceId
+    omitName = takeWhile (/= ':')
+
+    getWorkspaceNames :: (WorkspaceId -> WorkspaceId) -> X (WorkspaceId -> String)
+    getWorkspaceNames f = do
+      name <- getWorkspaceNames'
+      pure $ \wks -> wks ++ maybe "" (':' :) (name $ f wks)
+
+    getClickable :: (WorkspaceId -> WorkspaceId) -> X (VirtualWorkspace -> String)
+    getClickable f = do
+      wsIndex <- getWsIndex
+      pure $ \wks -> maybe wks (`clickableWrap` wks) (wsIndex $ f wks)
+
+    clickableWrap :: Int -> String -> String
+    clickableWrap i =
+      xmobarAction ("wmctrl -s " ++ show i) "1" . xmobarRaw
 
 withCurrentScreen :: (ScreenId -> X a) -> X a
 withCurrentScreen f =
@@ -727,12 +759,12 @@ keys' conf@(XConfig {modMask}) =
       WSIs $ withCurrentScreen (pure . cycledWorkspaceOnScreen)
 
     cycledWorkspaceOnScreen :: ScreenId -> WindowSpace -> Bool
-    cycledWorkspaceOnScreen sid wsp =
+    cycledWorkspaceOnScreen s wsp =
       all
         ($ wsp)
         [ (not . scratchpadWorkspace),
           (not . emptyWorkspace),
-          isOnScreen sid
+          isOnScreen s
         ]
 
     emptyWorkspace :: WindowSpace -> Bool
