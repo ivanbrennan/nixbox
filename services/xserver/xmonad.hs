@@ -347,7 +347,7 @@ logHook' = multiPP currentScreenPP nonCurrentScreenPP
     composePP pp s = do
       names <- getWorkspaceNames (marshall s)
       click <- getClickable (marshall s . omitName)
-      return
+      pure
         . namedScratchpadFilterOutWorkspacePP
         . marshallPP s
         $ pp
