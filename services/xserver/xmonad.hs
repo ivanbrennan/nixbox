@@ -70,8 +70,7 @@ import XMonad.Hooks.DynamicBars
   )
 import XMonad.Hooks.DynamicLog
   ( PP, dynamicLogString, pad, ppCurrent, ppHidden, ppHiddenNoWindows, ppLayout,
-    ppSep, ppTitle, ppUrgent, ppVisible, ppWsSep, wrap, xmobarAction, xmobarColor,
-    xmobarPP, xmobarRaw,
+    ppSep, ppTitle, ppUrgent, ppVisible, ppWsSep, wrap, xmobarColor, xmobarPP,
   )
 import XMonad.Hooks.EwmhDesktops (ewmh, fullscreenEventHook)
 import XMonad.Hooks.InsertPosition
@@ -119,6 +118,7 @@ import XMonad.Prompt.Man (manPrompt)
 import XMonad.Prompt.RunOrRaise (runOrRaisePrompt)
 import XMonad.Prompt.Workspace (workspacePrompt)
 import XMonad.Prompt.XMonad (xmonadPromptC)
+import XMonad.Util.ClickableWorkspaces (clickableWrap)
 import qualified XMonad.Util.ExtensibleState as XS
 import XMonad.Util.Loggers (date)
 import XMonad.Util.NamedScratchpad
@@ -393,10 +393,6 @@ logHook' = multiPP currentScreenPP nonCurrentScreenPP
     getClickable f = do
       wsIndex <- getWsIndex
       pure $ \wks -> maybe wks (`clickableWrap` wks) (wsIndex $ f wks)
-
-    clickableWrap :: Int -> String -> String
-    clickableWrap i =
-      xmobarAction ("wmctrl -s " ++ show i) "1" . xmobarRaw
 
 withCurrentScreen :: (ScreenId -> X a) -> X a
 withCurrentScreen f =
