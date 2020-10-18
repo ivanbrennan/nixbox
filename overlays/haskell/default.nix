@@ -8,8 +8,8 @@ self: super:
             src = super.fetchFromGitHub {
               owner  = "ivanbrennan";
               repo   = "xmonad-contrib";
-              rev    = "9c4c417936a4506566947c91ddd3b1f6af31e412";
-              sha256 = "1b4zqf08qwjx4rp3z3919f6aqdfxvk0pmn752xq3pg8l29i2ka5k";
+              rev    = "d4e15cddd1c2f42126ce1017efe0cd05d1306d0f";
+              sha256 = "145ikcm41gp8wka7snb4jlma2jwv9v9lkjnpd9d5qfpird53rg3s";
             };
           })
         );
