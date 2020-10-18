@@ -67,6 +67,8 @@
       NIX_GITHUB_PRIVATE_PASSWORD = import ./environment/github-token.private;
     };
 
+    trustedUsers = [ "ivan" ];
+
     gc.automatic = true;
     gc.dates = "03:15";
   };
