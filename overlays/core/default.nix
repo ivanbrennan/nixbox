@@ -15,10 +15,10 @@ self: super: {
 
   flaccurate = super.callPackage ./flaccurate { };
 
-  fly-6_3_0 =
+  fly-6_6_0 =
     (import (builtins.fetchTarball {
-      url = "https://github.com/NixOS/nixpkgs/archive/992db90c4c3dfc0bcf954ab8024769d268720206.tar.gz";
-      sha256 = "11y74g7zlwnaj6jfg17q0dvifa2m1wmxllmb18n0525fn62vkkfs";
+      url = "https://github.com/NixOS/nixpkgs/archive/98715062091b2288c8129d309a1d797c8045f03d.tar.gz";
+      sha256 = "0n3pb6i5szp4rrib9apmf04lz7i8fsw29h5bbys9g4iw5dvvlzax";
     }) { }).fly;
 
   interactive-editor = super.callPackage ./interactive-editor { };

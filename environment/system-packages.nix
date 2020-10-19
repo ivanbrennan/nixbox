@@ -31,7 +31,7 @@ with pkgs; [
   file
   flac
   flaccurate
-  fly-6_3_0
+  fly-6_6_0
   fzf
   gimp
   git
