@@ -52,6 +52,7 @@ with (pkgs.vimPlugins) // (pkgs.vimPrivatePlugins); {
       vim-rake
       vim-spec-runner
       vim-tmux-runner
+      vim-vue
       vmux
       wmgraphviz
     ];
