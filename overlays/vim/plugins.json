@@ -278,16 +278,6 @@
       "sha256": "052amdb4bd2qbip3z9xz7h1cv61k4p038j65yijm68vy0hf2724y"
     }
   },
-  "vim-vue": {
-    "name": "vim-vue",
-    "src": {
-      "owner": "posva",
-      "repo": "vim-vue",
-      "rev": "c424294e769b26659176065f9713c395731f7b3a",
-      "sha256": "1ig8qacavr15i6z7whlkf2ivw5smnqsw3jwhh4dg5q6037k1hjh1"
-    },
-    "buildPhase": ":"
-  },
   "vmacs": {
     "name": "vmacs",
     "src": {
