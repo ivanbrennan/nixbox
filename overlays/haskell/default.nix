@@ -17,10 +17,10 @@ self: super:
         super.haskell.lib.dontHaddock
         ( hsuper.xmobar.overrideAttrs (old: {
             src = super.fetchFromGitHub {
-              owner  = "ivanbrennan";
+              owner  = "jaor";
               repo   = "xmobar";
-              rev    = "cc414307db83c3cac94e3452209ad32d37295fd7";
-              sha256 = "0qw9f0gv14ghac40swis5l3485ki4yf03fda3jk45wppig0xqzi4";
+              rev    = "a58e32f7c8af7b03410ab6693019cfc92c9cfca3";
+              sha256 = "186h8qlp7gjdh6r8qns0vfsl40qsi2a1r0w6xzzsy4lvslqhc2fx";
             };
             configureFlags = [
               "-fwith_alsa" "-fwith_conduit" "-fwith_datezone" "-fwith_dbus"
