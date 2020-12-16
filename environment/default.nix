@@ -24,6 +24,7 @@ in {
       "xdg/gtk-3.0/settings.ini".source = etc/xdg/gtk-3.0/settings.ini;
       "xdg/gtk-2.0/gtkrc".source = etc/xdg/gtk-2.0/gtkrc;
       "xdg/kitty/kitty.conf".source = etc/xdg/kitty/kitty.conf;
+      "zathurarc".source = etc/zathurarc;
     };
     extraInit = ''
       export XDG_CONFIG_DIRS="/etc/xdg''${XDG_CONFIG_DIRS:+:}$XDG_CONFIG_DIRS"
