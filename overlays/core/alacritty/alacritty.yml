@@ -388,8 +388,8 @@ colors: *dark
   #   - Linear
   #animation: EaseOutExpo
 
-  # Duration of the visual bell flash. A `duration` of `0` will disable the
-  # visual bell animation.
+  # Duration of the visual bell flash in milliseconds. A `duration` of `0` will
+  # disable the visual bell animation.
   #duration: 0
 
   # Visual bell animation color.
