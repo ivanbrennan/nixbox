@@ -772,8 +772,8 @@ key_bindings:
   #- { key: Insert,   mods: Shift,                   action: PasteSelection   }
   #- { key: Key0,     mods: Control,                 action: ResetFontSize    }
   #- { key: Equals,   mods: Control,                 action: IncreaseFontSize }
-  #- { key: Add,      mods: Control,                 action: IncreaseFontSize }
-  #- { key: Subtract, mods: Control,                 action: DecreaseFontSize }
+  #- { key: NumpadAdd,      mods: Control,                 action: IncreaseFontSize }
+  #- { key: NumpadSubtract, mods: Control,                 action: DecreaseFontSize }
   #- { key: Minus,    mods: Control,                 action: DecreaseFontSize }
 
   # (Windows only)
@@ -783,7 +783,7 @@ key_bindings:
   #- { key: K,      mods: Command, mode: ~Vi, chars: "\x0c"            }
   #- { key: Key0,   mods: Command,            action: ResetFontSize    }
   #- { key: Equals, mods: Command,            action: IncreaseFontSize }
-  #- { key: Add,    mods: Command,            action: IncreaseFontSize }
+  #- { key: NumpadAdd,    mods: Command,            action: IncreaseFontSize }
   #- { key: Minus,  mods: Command,            action: DecreaseFontSize }
   #- { key: K,      mods: Command,            action: ClearHistory     }
   #- { key: V,      mods: Command,            action: Paste            }
@@ -808,8 +808,8 @@ key_bindings:
   - { key: Space,     mods: Alt|Shift,             chars: "\x1b[32;4u"         }
   - { key: Space,     mods: Control|Shift,         chars: "\x1b[32;6u"         }
   - { key: Space,     mods: Control,               chars: "\x00"               }
-  - { key: Subtract,  mods: Alt,                   chars: "\x1b-"              }
-  - { key: Subtract,  mods: Alt|Shift,             chars: "\x1b_"              }
+  - { key: Minus,     mods: Alt,                   chars: "\x1b-"              }
+  - { key: Minus,     mods: Alt|Shift,             chars: "\x1b_"              }
   - { key: Backslash, mods: Alt,                   chars: "\x1b\\"             }
   - { key: Backslash, mods: Alt|Shift,             chars: "\x1b|"              }
   - { key: Comma,     mods: Control,               chars: "\x1b[44;5u"         }
