@@ -35,7 +35,8 @@ with pkgs; [
   fly-6_7_2
   fzf
   gimp
-  git
+  # git
+  git-2_29
   global
   gnumake
   gnupg
