@@ -60,7 +60,7 @@ window:
   #
   # Values for `decorations` (macOS only):
   #     - transparent: Title bar, transparent background and title bar buttons
-  #     - buttonless: Title bar, transparent background, but no title bar buttons
+  #     - buttonless: Title bar, transparent background and no title bar buttons
   decorations: full
 
   # Startup Mode (changes require restart)
@@ -89,8 +89,8 @@ window:
 
   # GTK theme variant (Linux/BSD only)
   #
-  # Override the variant of the GTK theme. Commonly supported values are `dark` and `light`.
-  # Set this to `None` to use the default theme variant.
+  # Override the variant of the GTK theme. Commonly supported values are `dark`
+  # and `light`. Set this to `None` to use the default theme variant.
   gtk_theme_variant: None
 
 scrolling:
@@ -152,15 +152,16 @@ font:
   # Point size
   size: 14.0
 
-  # Offset is the extra space around each character. `offset.y` can be thought of
-  # as modifying the line spacing, and `offset.x` as modifying the letter spacing.
+  # Offset is the extra space around each character. `offset.y` can be thought
+  # of as modifying the line spacing, and `offset.x` as modifying the letter
+  # spacing.
   offset:
     x: 0
     y: 0
 
   # Glyph offset determines the locations of the glyphs within their cells with
-  # the default being at the bottom. Increasing `x` moves the glyph to the right,
-  # increasing `y` moves the glyph upward.
+  # the default being at the bottom. Increasing `x` moves the glyph to the
+  # right, increasing `y` moves the glyph upward.
   glyph_offset:
     x: 0
     y: 0
@@ -183,9 +184,10 @@ color_schemes:
 
       # Bright and dim foreground colors
       #
-      # The dimmed foreground color is calculated automatically if it is not present.
-      # If the bright foreground color is not set, or `draw_bold_text_with_bright_colors`
-      # is `false`, the normal foreground color will be used.
+      # The dimmed foreground color is calculated automatically if it is not
+      # present. If the bright foreground color is not set, or
+      # `draw_bold_text_with_bright_colors` is `false`, the normal foreground
+      # color will be used.
       #dim_foreground: '#9a9a9a'
       #bright_foreground: '#ffffff'
 
@@ -415,6 +417,8 @@ colors: *dark
 background_opacity: 1.0
 
 selection:
+  # This string contains all characters that are used as separators for
+  # "semantic words" in Alacritty.
   semantic_escape_chars: ",│`|:\"' ()[]{}<>\t"
 
   # When set to `true`, selected text will be copied to the primary clipboard.
@@ -450,8 +454,9 @@ live_config_reload: true
 
 # Shell
 #
-# You can set `shell.program` to the path of your favorite shell, e.g. `/bin/fish`.
-# Entries in `shell.args` are passed unmodified as arguments to the shell.
+# You can set `shell.program` to the path of your favorite shell, e.g.
+# `/bin/fish`. Entries in `shell.args` are passed unmodified as arguments to the
+# shell.
 #
 # Default:
 #   - (macOS) /bin/bash --login
@@ -497,8 +502,8 @@ mouse:
   url:
     # URL launcher
     #
-    # This program is executed when clicking on a text which is recognized as a URL.
-    # The URL is always added to the command as the last parameter.
+    # This program is executed when clicking on a text which is recognized as a
+    # URL. The URL is always added to the command as the last parameter.
     #
     # When set to `launcher: None`, URL launching will be disabled completely.
     #
@@ -512,8 +517,9 @@ mouse:
 
     # URL modifiers
     #
-    # These are the modifiers that need to be held down for opening URLs when clicking
-    # on them. The available modifiers are documented in the key binding section.
+    # These are the modifiers that need to be held down for opening URLs when
+    # clicking on them. The available modifiers are documented in the key
+    # binding section.
     modifiers: None
 
 # Mouse bindings
@@ -521,8 +527,9 @@ mouse:
 # Mouse bindings are specified as a list of objects, much like the key
 # bindings further below.
 #
-# To trigger mouse bindings when an application running within Alacritty captures the mouse, the
-# `Shift` modifier is automatically added as a requirement.
+# To trigger mouse bindings when an application running within Alacritty
+# captures the mouse, the `Shift` modifier is automatically added as a
+# requirement.
 #
 # Each mouse binding will specify a:
 #
@@ -606,7 +613,8 @@ mouse_bindings:
 #   - ReceiveChar
 #   - None
 #
-#   (`mode: Vi` only):
+# - Vi mode exclusive actions:
+#
 #   - Open
 #   - Up
 #   - Down
@@ -636,7 +644,19 @@ mouse_bindings:
 #   - SearchStart
 #   - SearchEnd
 #
-#   (macOS only):
+#   Search mode exclusive actions:
+#   - SearchFocusNext
+#       Move the focus to the next search match.
+#   - SearchFocusPrevious
+#       Move the focus to the previous search match.
+#   - SearchConfirm
+#   - SearchCancel
+#   - SearchClear
+#       Reset the search regex.
+#   - SearchDeleteWord
+#       Delete the last word in the search regex.
+#
+# - macOS exclusive actions:
 #   - ToggleSimpleFullscreen: Enters fullscreen without occupying another space
 #
 #   (Linux/BSD only):
@@ -671,6 +691,7 @@ mouse_bindings:
 #
 #    - AppCursor
 #    - AppKeypad
+#    - Search
 #    - Alt
 #    - Vi
 #
