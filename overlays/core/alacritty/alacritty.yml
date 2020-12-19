@@ -575,7 +575,6 @@ mouse_bindings:
 #   - SearchBackward
 #   - Copy
 #   - Paste
-#   - PasteSelection
 #   - IncreaseFontSize
 #   - DecreaseFontSize
 #   - ResetFontSize
@@ -633,6 +632,7 @@ mouse_bindings:
 #
 #   (Linux/BSD only):
 #   - CopySelection: Copies into selection buffer
+#   - PasteSelection: Pastes from selection buffer
 #
 #   - `command`: Fork and execute a specified command plus arguments
 #
