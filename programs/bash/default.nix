@@ -8,5 +8,6 @@
     ${builtins.readFile ./bashrc}
     . ${pkgs.fzf}/share/fzf/key-bindings.bash
     . ${pkgs.etcdots}/share/etcdots/key-bindings.bash
+    . ${pkgs.git}/share/bash-completion/completions/git-prompt.sh
   '';
 }
