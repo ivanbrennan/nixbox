@@ -808,8 +808,6 @@ key_bindings:
   - { key: Escape,                mode: Search,     action: SearchCancel        }
   - { key: U,      mods: Control, mode: Search,     action: SearchClear         }
   - { key: W,      mods: Control, mode: Search,     action: SearchDeleteWord    }
-  - { key: P,      mods: Control, mode: Search|Vi,  action: SearchFocusNext     }
-  - { key: N,      mods: Control, mode: Search|Vi,  action: SearchFocusPrevious }
   - { key: Return,                mode: Search|~Vi, action: SearchFocusNext     }
   - { key: Return, mods: Shift,   mode: Search|~Vi, action: SearchFocusPrevious }
 
