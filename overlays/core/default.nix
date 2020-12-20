@@ -21,12 +21,6 @@ self: super: {
       sha256 = "1s0j9czimcrcc58i95xaxqlv4jyjvlr5gx9jmfbs1nh2xpcv9dzv";
     }) { }).fly;
 
-  git-2_29 =
-    (import (builtins.fetchTarball {
-      url = "https://github.com/NixOS/nixpkgs/archive/a371c1071161104d329f6a85d922fd92b7cbab63.tar.gz";
-      sha256 = "1k5wa16wyb1byk5xfjlq4m518gsw6g1kypx4xb09k3inni13p0r4";
-    }) { }).git;
-
   interactive-editor = super.callPackage ./interactive-editor { };
 
   kubernetes-helm-2_11 =
