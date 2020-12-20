@@ -30,7 +30,7 @@ pkgs:
   FZF_CTRL_T_COMMAND = "$FZF_DEFAULT_COMMAND";
   FZF_CTRL_T_OPTS = ''
     --preview-window=hidden
-    --bind="?:toggle-preview"
+    --bind="ctrl-h:toggle-preview"
     --preview='[[ \$(file --mime {}) =~ binary ]] &&
                    echo {} is a binary file ||
                    (highlight -O ansi -l {} ||
