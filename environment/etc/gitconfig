@@ -1,7 +1,15 @@
 [core]
 	whitespace=fix,-indent-with-non-tab,trailing-space,cr-at-eol
-	pager = less -FRX
+	pager = delta
 	excludesfile = /etc/gitignore
+[interactive]
+	diffFilter = delta --color-only
+[delta]
+	features = line-numbers
+	whitespace-error-style = 22 reverse
+	commit-decoration-style = bold yellow box ul
+	file-style = bold yellow ul
+	file-decoration-style = none
 [alias]
 	st = status
 	co = checkout

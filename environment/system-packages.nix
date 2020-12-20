@@ -36,6 +36,7 @@ with pkgs; [
   fzf
   gimp
   git
+  gitAndTools.delta
   global
   gnumake
   gnupg
