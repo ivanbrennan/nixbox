@@ -7,11 +7,15 @@ import Control.Monad (when, (>=>))
 import Data.Bits ((.|.))
 import Data.Dynamic (Typeable)
 import Data.List (intercalate, isInfixOf)
+import Data.Maybe (fromMaybe)
 import Data.Monoid (All)
 import System.Directory (getHomeDirectory)
+import System.Environment (getArgs)
 import System.Exit (exitSuccess)
 import System.FilePath ((</>))
 import System.IO (Handle)
+import System.Info (arch, os)
+import Text.Printf (printf)
 
 {- containers -}
 import Data.Map (Map)
@@ -22,6 +26,9 @@ import Data.Default (def)
 
 {- process -}
 import System.Process.Internals (translate)
+
+{- unix -}
+import System.Posix.Process (executeFile)
 
 {- X11 -}
 import Graphics.X11
@@ -42,13 +49,14 @@ import XMonad
   ( ChangeLayout (NextLayout), Choose, ExtensionClass, IncMasterN (IncMasterN),
     Layout, ManageHook, MonadIO, Query, Resize (Expand, Shrink), ScreenId (S),
     StateExtension (PersistentExtension), WindowSet, WindowSpace, WorkspaceId, X,
-    XConf, XConfig (XConfig), appName, className, clickJustFocuses, composeAll,
-    config, description, doFloat, doIgnore, extensionType, focus,
-    focusedBorderColor, handleEventHook, initialValue, io, keys, kill,
-    layoutHook, local, logHook, manageHook, modMask, mouseBindings,
-    mouseMoveWindow, normalBorderColor, refresh, screenWorkspace, sendMessage,
-    spawn, startupHook, terminal, trace, whenJust, windows, withFocused,
-    withWindowSet, workspaces, xmonad, (=?), (|||),
+    XConf, XConfig (XConfig), appName, catchIO, className, clickJustFocuses,
+    composeAll, config, description, doFloat, doIgnore, extensionType, focus,
+    focusedBorderColor, getXMonadDataDir, handleEventHook, initialValue, io, keys,
+    kill, launch, layoutHook, local, logHook, manageHook, modMask, mouseBindings,
+    mouseMoveWindow, normalBorderColor, recompile, refresh, restart,
+    screenWorkspace, sendMessage, spawn, startupHook, terminal, trace, whenJust,
+    whenX, windows, withFocused, withWindowSet, workspaces, writeStateToFile,
+    (=?), (|||),
   )
 import qualified XMonad.StackSet as W
 
@@ -134,7 +142,7 @@ import XMonad.Util.WorkspaceCompare (getWsIndex)
 
 main :: IO ()
 main =
-  xmonad . xconfig =<< countScreens
+  launch . xconfig =<< countScreens
   where
     xconfig nScreens =
       docks $
@@ -563,18 +571,22 @@ keys' conf@(XConfig {modMask}) =
       ( (mod4Mask, xK_t),
         withFocused (windows . W.sink)
       ),
-      -- quit or restart
+      -- restart "xmonad" executable and resume window state
       ( (mod4Mask, xK_q),
-        spawn "xmonad --recompile && xmonad --restart"
+        restart "xmonad" True
       ),
-      ( (mod4Mask .|. modMask, xK_q),
-        spawn $
-          intercalate
-            ";"
-            [ "ln -s /dev/null ~/.xmonad/xmonad.state || true",
-              "xmonad --recompile && xmonad --restart"
-            ]
+      -- recompile ~/.xmonad/xmonad.hs and restart from resulting executable
+      ( (mod4Mask .|. mod1Mask, xK_q),
+        writeStateToFile >> compileRestart
       ),
+      -- ( (mod4Mask .|. mod1Mask, xK_q),
+      --   spawn $
+      --     intercalate
+      --       ";"
+      --       [ "ln -s /dev/null ~/.xmonad/xmonad.state || true",
+      --         "xmonad --recompile && xmonad --restart"
+      --       ]
+      -- ),
       ( (mod4Mask .|. shiftMask, xK_q),
         confirmPrompt xPConfig "exit" (io exitSuccess)
       ),
@@ -736,6 +748,12 @@ keys' conf@(XConfig {modMask}) =
     onCurrentScreenX :: (PhysicalWorkspace -> X a) -> (VirtualWorkspace -> X a)
     onCurrentScreenX f vwsp =
       withCurrentScreen (f . flip marshall vwsp)
+
+    compileRestart :: X ()
+    compileRestart = whenX (recompile True) . catchIO $ do
+      dir <- getXMonadDataDir
+      args <- getArgs
+      executeFile (dir </> (printf "xmonad-%s-%s" arch os)) False args Nothing
 
     fullToggleOff :: X ()
     fullToggleOff = do
