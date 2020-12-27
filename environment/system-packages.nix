@@ -34,7 +34,6 @@ with pkgs; [
   flaccurate
   fly-6_7_2
   fzf
-  (haskellPackages.ghcWithPackages (ps: with ps; [xmonad xmonad-contrib]))
   gimp
   git
   gitAndTools.delta

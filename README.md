@@ -15,9 +15,9 @@ sudo make -C /etc/nixos machine=MACHINE
     1. modify ~/.xmonad/xmonad.hs
     2. compileRestart
       * runs with config from ~/.xmonad/xmonad.hs
-  - [ ] without putting ghc in systemPackages
-  - [ ] return to config from /etc/nixos/services/xserver/xmonad.hs
-  - [ ] without xmonad.state?
+  - [x] without putting ghc in systemPackages
+  - [x] return to config from /etc/nixos/services/xserver/xmonad.hs
+  - [x] without xmonad.state?
 - fix fzf preview: https://github.com/junegunn/fzf.vim/issues/751
 Try some window managers
 - [XMonad](http://xmonad.org)

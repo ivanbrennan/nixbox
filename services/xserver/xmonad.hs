@@ -7,7 +7,6 @@ import Control.Monad (when, (>=>))
 import Data.Bits ((.|.))
 import Data.Dynamic (Typeable)
 import Data.List (intercalate, isInfixOf)
-import Data.Maybe (fromMaybe)
 import Data.Monoid (All)
 import System.Directory (getHomeDirectory)
 import System.Environment (getArgs)
@@ -571,22 +570,23 @@ keys' conf@(XConfig {modMask}) =
       ( (mod4Mask, xK_t),
         withFocused (windows . W.sink)
       ),
-      -- restart "xmonad" executable and resume window state
+      -- exec the xmonad found on PATH, resuming state
       ( (mod4Mask, xK_q),
         restart "xmonad" True
       ),
-      -- recompile ~/.xmonad/xmonad.hs and restart from resulting executable
-      ( (mod4Mask .|. mod1Mask, xK_q),
-        writeStateToFile >> compileRestart
+      -- exec the xmonad found on PATH, discarding state
+      ( (mod4Mask .|. controlMask, xK_q),
+        restart "xmonad" False
       ),
-      -- ( (mod4Mask .|. mod1Mask, xK_q),
-      --   spawn $
-      --     intercalate
-      --       ";"
-      --       [ "ln -s /dev/null ~/.xmonad/xmonad.state || true",
-      --         "xmonad --recompile && xmonad --restart"
-      --       ]
-      -- ),
+      -- compile ~/.xmonad/xmonad.hs and exec the result, resuming state
+      ( (mod4Mask .|. mod1Mask, xK_q),
+        compileRestart True
+      ),
+      -- compile ~/.xmonad/xmonad.hs and exec the result, discarding state
+      ( (mod4Mask .|. mod1Mask .|. controlMask, xK_q),
+        compileRestart False
+      ),
+      -- quit xmonad
       ( (mod4Mask .|. shiftMask, xK_q),
         confirmPrompt xPConfig "exit" (io exitSuccess)
       ),
@@ -749,11 +749,16 @@ keys' conf@(XConfig {modMask}) =
     onCurrentScreenX f vwsp =
       withCurrentScreen (f . flip marshall vwsp)
 
-    compileRestart :: X ()
-    compileRestart = whenX (recompile True) . catchIO $ do
-      dir <- getXMonadDataDir
-      args <- getArgs
-      executeFile (dir </> (printf "xmonad-%s-%s" arch os)) False args Nothing
+    compileRestart :: Bool -> X ()
+    compileRestart resume =
+      whenX (recompile True) $
+        when resume writeStateToFile
+          *> catchIO
+            ( do
+              dir <- getXMonadDataDir
+              args <- getArgs
+              executeFile (dir </> printf "xmonad-%s-%s" arch os) False args Nothing
+            )
 
     fullToggleOff :: X ()
     fullToggleOff = do
