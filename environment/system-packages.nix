@@ -58,6 +58,7 @@ with pkgs; [
   mkcue
   mkpasswd
   mutt
+  gnome3.nautilus # TODO: find a replacement
   nice-backgrounds
   nice-icons
   nix-prefetch-git
@@ -104,4 +105,25 @@ with pkgs; [
   xsel
   zathura
   zip
+
+  # Gnome. Adapt from https://gitlab.gnome.org/GNOME/gnome-build-meta/blob/gnome-3-38/elements/core/meta-gnome-core-shell.bst
+  gnome3.adwaita-icon-theme
+  gnome3.gnome-backgrounds
+  gnome3.gnome-bluetooth
+  gnome3.gnome-color-manager
+  gnome3.gnome-control-center
+  gnome3.gnome-getting-started-docs
+  gnome3.gnome-shell
+  gnome3.gnome-shell-extensions
+  gnome3.gnome-themes-extra
+  nixos-artwork.wallpapers.simple-dark-gray
+  nixos-artwork.wallpapers.simple-dark-gray-bottom
+  gnome-user-docs
+  orca
+  glib # for gsettings
+  gnome-menus
+  gtk3.out # for gtk-launch
+  hicolor-icon-theme
+  shared-mime-info # for update-mime-database
+  xdg-user-dirs # Update user dirs as described in http://freedesktop.org/wiki/Software/xdg-user-dirs/
 ]

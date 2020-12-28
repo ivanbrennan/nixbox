@@ -14,6 +14,7 @@
       ./services
       ./users
       ./xmonad.nix
+      ./without-desktop-manager.nix
     ];
 
   disabledModules = [ "services/x11/window-managers/xmonad.nix" ];
@@ -92,9 +93,12 @@
   };
 
   fonts.fonts = [
+    pkgs.cantarell-fonts
+    pkgs.dejavu_fonts
     pkgs.emacs-all-the-icons-fonts
     pkgs.mononoki
     pkgs.open-sans
     pkgs.source-code-pro
+    pkgs.source-sans-pro
   ];
 }

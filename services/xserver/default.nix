@@ -17,7 +17,6 @@ pkgs:
   };
 
   # desktopManager
-  desktopManager.gnome3.enable = true;
   desktopManager.xterm.enable = false;
 
   # windowManager
@@ -41,7 +40,7 @@ pkgs:
     ${pkgs.xorg.xrdb}/bin/xrdb -merge < ${./Xresources}
     ${pkgs.hsetroot}/bin/hsetroot -solid "#112026"
 
-    eval $(gnome-keyring-daemon --daemonize)
+    eval $(${pkgs.gnome3.gnome-keyring}/bin/gnome-keyring-daemon --daemonize)
     export SSH_AUTH_SOCK
   '';
 }
