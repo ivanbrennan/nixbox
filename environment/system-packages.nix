@@ -10,6 +10,7 @@ with pkgs; [
   aspellDicts.en
   aws-iam-authenticator
   awscli
+  bat
   bats
   bc
   bind
@@ -42,7 +43,6 @@ with pkgs; [
   gnupg
   graphviz
   haskellPackages.hasktags
-  highlight
   htop
   i3lock
   imagemagick

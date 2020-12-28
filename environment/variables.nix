@@ -29,12 +29,13 @@ pkgs:
   '';
   FZF_CTRL_T_COMMAND = "$FZF_DEFAULT_COMMAND";
   FZF_CTRL_T_OPTS = ''
-    --preview-window=hidden
+    --preview-window="hidden"
     --bind="ctrl-h:toggle-preview"
-    --preview='[[ \$(file --mime {}) =~ binary ]] &&
-                   echo {} is a binary file ||
-                   (highlight -O ansi -l {} ||
-                    cat {}) 2> /dev/null | head -500'
+    --preview='
+      [[ \$(file --mime {}) =~ binary ]] &&
+        echo {} is a binary file ||
+        ( bat --style=numbers --color=always --line-range :500 {} || cat {}
+        ) 2> /dev/null | head -500'
   '';
   FZF_TMUX = "1";
 
