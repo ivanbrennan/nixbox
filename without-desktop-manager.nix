@@ -45,7 +45,6 @@ in
   ];
 
   services.colord.enable = true;
-  services.gnome3.glib-networking.enable = true;
   services.gvfs.enable = true;
   services.telepathy.enable = true;
 
