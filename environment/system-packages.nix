@@ -99,8 +99,8 @@ with pkgs; [
   wget
   wmctrl
   xclip
-  xorg.xmessage
   xmobar
+  xorg.xmessage
   xsel
   zathura
   zip
