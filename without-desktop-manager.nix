@@ -1,16 +1,5 @@
 { config, lib, pkgs, ... }:
 
-let
-  mimeAppsList = pkgs.writeTextFile {
-    name = "gnome-mimeapps";
-    destination = "/share/applications/mimeapps.list";
-    text = ''
-      [Default Applications]
-      inode/directory=nautilus.desktop;org.gnome.Nautilus.desktop
-    '';
-  };
-in
-
 {
   services.xserver.desktopManager.gnome3.enable = false;
 
@@ -59,7 +48,4 @@ in
   # Let nautilus find extensions
   # TODO: Create nautilus-with-extensions package
   environment.sessionVariables.NAUTILUS_EXTENSION_DIR = "${config.system.path}/lib/nautilus/extensions-3.0";
-
-  # Prioritize nautilus by default when opening directories
-  environment.sessionVariables.XDG_DATA_DIRS = [ "${mimeAppsList}/share" ];
 }
