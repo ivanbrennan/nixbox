@@ -21,7 +21,6 @@ in
   services.accounts-daemon.enable = true;
   services.dleyna-renderer.enable = true;
   services.dleyna-server.enable = true;
-  services.gnome3.at-spi2-core.enable = true;
   services.gnome3.evolution-data-server.enable = true;
   services.gnome3.gnome-keyring.enable = true;
   services.gnome3.gnome-online-accounts.enable = true;

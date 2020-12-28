@@ -119,7 +119,6 @@ with pkgs; [
   nixos-artwork.wallpapers.simple-dark-gray
   nixos-artwork.wallpapers.simple-dark-gray-bottom
   gnome-user-docs
-  orca
   glib # for gsettings
   gnome-menus
   gtk3.out # for gtk-launch
