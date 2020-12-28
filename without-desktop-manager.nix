@@ -22,8 +22,6 @@ in
   services.dleyna-renderer.enable = true;
   services.dleyna-server.enable = true;
   services.gnome3.gnome-keyring.enable = true;
-  services.gnome3.gnome-online-accounts.enable = true;
-  services.gnome3.gnome-online-miners.enable = true;
   services.hardware.bolt.enable = true;
   services.packagekit.enable = true;
   services.udisks2.enable = true;
@@ -32,7 +30,6 @@ in
   xdg.portal.enable = true;
   xdg.portal.extraPortals = [
     pkgs.xdg-desktop-portal-gtk
-    pkgs.gnome3.gnome-shell
   ];
 
   networking.networkmanager.enable = true;
@@ -52,18 +49,11 @@ in
   ];
 
   services.colord.enable = true;
-  services.gnome3.chrome-gnome-shell.enable = true;
   services.gnome3.glib-networking.enable = true;
-  services.gnome3.gnome-settings-daemon.enable = true;
   services.gnome3.gnome-user-share.enable = true;
   services.gnome3.rygel.enable = true;
   services.gvfs.enable = true;
   services.telepathy.enable = true;
-
-  systemd.packages = with pkgs.gnome3; [
-    gnome-session
-    gnome-shell
-  ];
 
   services.udev.packages = with pkgs.gnome3; [
     # Force enable KMS modifiers for devices that require them.
@@ -72,22 +62,6 @@ in
   ];
 
   services.avahi.enable = true;
-
-  services.geoclue2.enable = true;
-  services.geoclue2.enableDemoAgent = false; # GNOME has its own geoclue agent
-
-  services.geoclue2.appConfig.gnome-datetime-panel = {
-    isAllowed = true;
-    isSystem = true;
-  };
-  services.geoclue2.appConfig.gnome-color-panel = {
-    isAllowed = true;
-    isSystem = true;
-  };
-  services.geoclue2.appConfig."org.gnome.Shell" = {
-    isAllowed = true;
-    isSystem = true;
-  };
 
   programs.seahorse.enable = true;
 
