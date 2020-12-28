@@ -107,8 +107,6 @@ with pkgs; [
   zip
 
   # Gnome. Adapt from https://gitlab.gnome.org/GNOME/gnome-build-meta/blob/gnome-3-38/elements/core/meta-gnome-core-shell.bst
-  gnome3.adwaita-icon-theme
-  hicolor-icon-theme
   shared-mime-info # for update-mime-database
   xdg-user-dirs # Update user dirs as described in http://freedesktop.org/wiki/Software/xdg-user-dirs/
 ]
