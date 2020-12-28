@@ -563,7 +563,7 @@ keys' conf@(XConfig {modMask}) =
         sendMessage MirrorExpand
       ),
       -- refresh
-      ( (mod4Mask .|. shiftMask, xK_r),
+      ( (mod4Mask .|. controlMask, xK_r),
         refresh
       ),
       -- tile
