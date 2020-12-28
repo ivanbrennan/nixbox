@@ -18,7 +18,6 @@ in
   hardware.pulseaudio.enable = true;
   programs.dconf.enable = true;
   security.polkit.enable = true;
-  services.accounts-daemon.enable = true;
   services.dleyna-renderer.enable = true;
   services.dleyna-server.enable = true;
   services.gnome3.gnome-keyring.enable = true;
@@ -60,8 +59,6 @@ in
     # https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1443
     mutter
   ];
-
-  services.avahi.enable = true;
 
   programs.seahorse.enable = true;
 
