@@ -108,13 +108,7 @@ with pkgs; [
 
   # Gnome. Adapt from https://gitlab.gnome.org/GNOME/gnome-build-meta/blob/gnome-3-38/elements/core/meta-gnome-core-shell.bst
   gnome3.adwaita-icon-theme
-  gnome3.gnome-backgrounds
-  gnome3.gnome-bluetooth
-  gnome3.gnome-color-manager
-  nixos-artwork.wallpapers.simple-dark-gray
-  nixos-artwork.wallpapers.simple-dark-gray-bottom
   glib # for gsettings
-  gnome-menus
   gtk3.out # for gtk-launch
   hicolor-icon-theme
   shared-mime-info # for update-mime-database

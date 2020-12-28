@@ -18,11 +18,8 @@ in
   hardware.pulseaudio.enable = true;
   programs.dconf.enable = true;
   security.polkit.enable = true;
-  services.dleyna-renderer.enable = true;
-  services.dleyna-server.enable = true;
   services.gnome3.gnome-keyring.enable = true;
   services.hardware.bolt.enable = true;
-  services.packagekit.enable = true;
   services.udisks2.enable = true;
   services.upower.enable = config.powerManagement.enable;
 
@@ -49,8 +46,6 @@ in
 
   services.colord.enable = true;
   services.gnome3.glib-networking.enable = true;
-  services.gnome3.gnome-user-share.enable = true;
-  services.gnome3.rygel.enable = true;
   services.gvfs.enable = true;
   services.telepathy.enable = true;
 
