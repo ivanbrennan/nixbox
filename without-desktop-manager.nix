@@ -28,7 +28,7 @@
   ];
 
   services.colord.enable = true;
-  services.gvfs.enable = true;
+  services.gvfs.enable = true; # Access usb and trash in Nautilus
   services.telepathy.enable = true;
 
   services.udev.packages = with pkgs.gnome3; [
