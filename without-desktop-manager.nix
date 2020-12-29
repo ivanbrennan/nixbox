@@ -19,11 +19,9 @@
   # Needed for themes and backgrounds
   environment.pathsToLink = [
     "/share" # TODO: https://github.com/NixOS/nixpkgs/issues/47173
-    "/share/nautilus-python/extensions"
   ];
 
   services.colord.enable = true;
-  services.gvfs.enable = true; # Access usb and trash in Nautilus
   services.telepathy.enable = true;
 
   services.udev.packages = with pkgs.gnome3; [
@@ -33,8 +31,4 @@
   ];
 
   programs.seahorse.enable = true;
-
-  # Let nautilus find extensions
-  # TODO: Create nautilus-with-extensions package
-  environment.sessionVariables.NAUTILUS_EXTENSION_DIR = "${config.system.path}/lib/nautilus/extensions-3.0";
 }

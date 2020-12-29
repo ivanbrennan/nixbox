@@ -59,7 +59,6 @@ with pkgs; [
   mkcue
   mkpasswd
   mutt
-  gnome3.nautilus # TODO: find a replacement
   nice-backgrounds
   nice-icons
   nix-prefetch-git
@@ -101,6 +100,7 @@ with pkgs; [
   wget
   wmctrl
   xclip
+  xfce.thunar
   xmobar
   xorg.xmessage
   xsel
