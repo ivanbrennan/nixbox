@@ -59,6 +59,7 @@ with pkgs; [
   mkcue
   mkpasswd
   mutt
+  networkmanager_dmenu # TODO: build something for vpn
   nice-backgrounds
   nice-icons
   nix-prefetch-git

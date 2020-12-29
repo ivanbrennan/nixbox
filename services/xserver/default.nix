@@ -39,6 +39,18 @@ pkgs:
   displayManager.sessionCommands = ''
     ${pkgs.xorg.xrdb}/bin/xrdb -merge < ${./Xresources}
     ${pkgs.hsetroot}/bin/hsetroot -solid "#112026"
+    ${pkgs.trayer}/bin/trayer \
+        --edge top \
+        --align right \
+        --SetDockType true \
+        --SetPartialStrut true \
+        --expand true \
+        --width 2 \
+        --transparent true \
+        --alpha 0 \
+        --tint 0x161616 \
+        --height 22 \
+        --monitor 0 &
 
     eval $(${pkgs.gnome3.gnome-keyring}/bin/gnome-keyring-daemon --daemonize)
     export SSH_AUTH_SOCK

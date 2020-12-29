@@ -229,9 +229,14 @@ xmobar s@(S i) = spawnPipe $
       "-N", "xft:FontAwesome:size=11",
       "-i", "/run/current-system/sw/share/icons/xmobar",
       "-x", show i,
+      "-p", translate (xmobarPosition s),
       "-t", translate (xmobarTemplate s),
       "-c", translate $ list (xmobarCommands s)
     ]
+
+xmobarPosition :: ScreenId -> String
+xmobarPosition (S i) =
+  if i == 0 then "TopW L 98" else "Top"
 
 xmobarTemplate :: ScreenId -> String
 xmobarTemplate (S i) = concat $
@@ -245,7 +250,6 @@ xmobarTemplate (S i) = concat $
         cmd "cpu",
         "  ",
         fontN 1 $ xmobarColor grey2 "" (cmd "vpn"),
-        pad (cmd "wlp58s0wi"),
         pad (cmd "battery"),
         pad (cmd "alsa:default:Master"),
         pad (cmd "date")
@@ -260,7 +264,7 @@ xmobarTemplate (S i) = concat $
 xmobarCommands :: ScreenId -> [String]
 xmobarCommands (S i) = map unwords $
   if i == 0
-    then [disk, cpu, vpn, wireless, battery, volume, date', unsafeStdinReader]
+    then [disk, cpu, vpn, battery, volume, date', unsafeStdinReader]
     else [unsafeStdinReader]
   where
     disk =
@@ -288,13 +292,6 @@ xmobarCommands (S i) = map unwords $
       ]
 
     vpn = ["Run Com", quote "bleep", list [], quote "vpn", "50"]
-
-    wireless =
-      [ "Run Wireless",
-        quote "wlp58s0",
-        list $ map quote ["--template", "<essid>"],
-        "50"
-      ]
 
     battery = ["Run Battery", list (map quote batteryArgs), "20"]
     batteryArgs =
