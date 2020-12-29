@@ -14,7 +14,6 @@
       ./services
       ./users
       ./xmonad.nix
-      ./without-desktop-manager.nix
     ];
 
   disabledModules = [ "services/x11/window-managers/xmonad.nix" ];
@@ -90,7 +89,12 @@
 
     firewall.allowedTCPPorts = import ./allowed-tcp-ports.nix.private;
     firewall.allowedUDPPorts = [ ];
+
+    networkmanager.enable = true;
   };
+
+  hardware.bluetooth.enable = true;
+  hardware.pulseaudio.enable = true;
 
   fonts.fonts = [
     pkgs.cantarell-fonts

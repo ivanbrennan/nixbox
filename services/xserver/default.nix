@@ -43,4 +43,6 @@ pkgs:
     eval $(${pkgs.gnome3.gnome-keyring}/bin/gnome-keyring-daemon --daemonize)
     export SSH_AUTH_SOCK
   '';
+
+  updateDbusEnvironment = true;
 }

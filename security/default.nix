@@ -15,15 +15,19 @@ let
 in
 
 {
-  security.sudo.extraRules = lib.mkAfter [
-    {
-      groups = [ "wheel" ];
+  security = {
+    sudo.extraRules = lib.mkAfter [
+      {
+        groups = [ "wheel" ];
 
-      commands = lib.concatMap (unit: [
-        (systemctl "start" unit)
-        (systemctl "restart" unit)
-        (systemctl "stop" unit)
-      ]) vpns;
-    }
-  ];
+        commands = lib.concatMap (unit: [
+          (systemctl "start" unit)
+          (systemctl "restart" unit)
+          (systemctl "stop" unit)
+        ]) vpns;
+      }
+    ];
+
+    polkit.enable = true;
+  };
 }

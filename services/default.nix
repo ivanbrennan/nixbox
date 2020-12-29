@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 
 {
   services = {
@@ -29,5 +29,11 @@
       backend = "xrender";
       vSync = true;
     };
+
+    colord.enable = true;
+    gnome3.gnome-keyring.enable = true;
+    hardware.bolt.enable = true;
+    udisks2.enable = true;
+    upower.enable = config.powerManagement.enable;
   };
 }

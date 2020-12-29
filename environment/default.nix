@@ -29,5 +29,9 @@ in {
     extraInit = ''
       export XDG_CONFIG_DIRS="/etc/xdg''${XDG_CONFIG_DIRS:+:}$XDG_CONFIG_DIRS"
     '';
+    # Needed for themes and backgrounds
+    pathsToLink = [
+      "/share" # TODO: https://github.com/NixOS/nixpkgs/issues/47173
+    ];
   };
 }

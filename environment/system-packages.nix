@@ -78,6 +78,7 @@ with pkgs; [
   rxvt_unicode-with-plugins
   screencast
   screenshot
+  shared-mime-info
   shellcheck
   slack
   socat
@@ -100,14 +101,11 @@ with pkgs; [
   wget
   wmctrl
   xclip
+  xdg-user-dirs
   xfce.thunar
   xmobar
   xorg.xmessage
   xsel
   zathura
   zip
-
-  # Gnome. Adapt from https://gitlab.gnome.org/GNOME/gnome-build-meta/blob/gnome-3-38/elements/core/meta-gnome-core-shell.bst
-  shared-mime-info # for update-mime-database
-  xdg-user-dirs # Update user dirs as described in http://freedesktop.org/wiki/Software/xdg-user-dirs/
 ]
