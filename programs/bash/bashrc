@@ -119,6 +119,15 @@ fdoc() {
   curl dict://dict.org/d:${1}:foldoc
 }
 
+opf() {
+    local items
+    items=$(op list items)
+    if [ $? -eq 0 ]
+    then
+        op get item "$(jq -r 'map(.overview.title) | .[]' <<< "$items" | fzf)"
+    fi
+}
+
 blink() {
   if [ "$cursor_code" = 3 ]; then
     cursor_code=0
