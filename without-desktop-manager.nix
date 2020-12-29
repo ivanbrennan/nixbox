@@ -12,11 +12,6 @@
   services.udisks2.enable = true;
   services.upower.enable = config.powerManagement.enable;
 
-  xdg.portal.enable = true;
-  xdg.portal.extraPortals = [
-    pkgs.xdg-desktop-portal-gtk
-  ];
-
   networking.networkmanager.enable = true;
 
   services.xserver.updateDbusEnvironment = true;
