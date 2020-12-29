@@ -23,11 +23,5 @@
 
   services.colord.enable = true;
 
-  services.udev.packages = with pkgs.gnome3; [
-    # Force enable KMS modifiers for devices that require them.
-    # https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1443
-    mutter
-  ];
-
   programs.seahorse.enable = true;
 }
