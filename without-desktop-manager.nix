@@ -22,7 +22,6 @@
   ];
 
   services.colord.enable = true;
-  services.telepathy.enable = true;
 
   services.udev.packages = with pkgs.gnome3; [
     # Force enable KMS modifiers for devices that require them.
