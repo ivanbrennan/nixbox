@@ -1,4 +1,1 @@
-import ../server.nix {
-  name = "pia-swiss";
-  remote = builtins.readFile ./remote.private;
-}
+import ../server.nix { remote = builtins.readFile ./remote.private; }

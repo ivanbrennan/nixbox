@@ -1,5 +1,4 @@
-{ name
-, remote
+{ remote
 , private ? builtins.readFile ./client.private.conf
 }:
 
@@ -47,9 +46,6 @@
 
     # Server hostname and port.
     ${remote}
-
-    # Write status to file every 60 seconds.
-    status /run/openvpn/${name}.status 60
 
     ${private}
   '';
