@@ -105,4 +105,8 @@
     pkgs.source-code-pro
     pkgs.source-sans-pro
   ];
+
+  systemd.tmpfiles.rules = [
+    "d /run/openvpn 0750 root root -"
+  ];
 }

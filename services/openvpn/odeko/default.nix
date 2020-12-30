@@ -31,6 +31,9 @@
     # Don't cache passwords in memory.
     auth-nocache
 
+    # Write status to file every 60 seconds.
+    status /run/openvpn/odeko.status 60
+
     ${builtins.readFile ./client.private.conf}
   '';
 }
