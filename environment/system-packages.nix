@@ -26,6 +26,7 @@ with pkgs; [
   dmidecode
   docker
   docker-compose
+  dunst
   easyrsa
   emacs
   fd

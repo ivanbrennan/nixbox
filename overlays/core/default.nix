@@ -11,6 +11,15 @@ self: super: {
   bleep = super.callPackage ./bleep { };
   bloop = super.callPackage ./bloop { };
 
+  dunst = super.dunst.overrideAttrs (old: rec {
+    postInstall = ''
+      install -Dm755 dunstify $out/bin
+      wrapProgram $out/bin/dunst \
+        --set GDK_PIXBUF_MODULE_FILE "$GDK_PIXBUF_MODULE_FILE" \
+        --add-flags "-conf ${./dunstrc}"
+    '';
+  });
+
   etcdots = super.callPackage ./etcdots { };
 
   flaccurate = super.callPackage ./flaccurate { };
