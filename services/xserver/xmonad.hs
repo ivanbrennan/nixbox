@@ -722,6 +722,9 @@ keys' conf@(XConfig {modMask}) =
                  ( (noModMask, xK_m),
                    renameWorkspace xPConfig
                  ),
+                 ( (noModMask, xK_n),
+                   spawn "networkmanager_dmenu"
+                 ),
                  ( (noModMask, xK_r),
                    runOrRaisePrompt xPConfig
                  ),
