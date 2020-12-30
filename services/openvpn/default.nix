@@ -5,6 +5,5 @@
     pia-nl    = import ./pia/nl;
     pia-swiss = import ./pia/swiss;
     odeko     = import ./odeko;
-    sumall    = import ./sumall;
   };
 }
