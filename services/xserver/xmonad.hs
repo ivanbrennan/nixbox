@@ -725,6 +725,12 @@ keys' conf@(XConfig {modMask}) =
                  ( (noModMask, xK_n),
                    spawn "networkmanager_dmenu"
                  ),
+                 ( (noModMask, xK_v),
+                   spawn $ unwords ("openvpn_dmenu" : dmenuArgs)
+                 ),
+                 ( (shiftMask, xK_v),
+                   spawn $ unwords ("openvpn_dmenu restart" : dmenuArgs)
+                 ),
                  ( (noModMask, xK_r),
                    runOrRaisePrompt xPConfig
                  ),

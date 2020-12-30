@@ -23,7 +23,9 @@ in
               if (verb == "start" ||
                   verb == "stop" ||
                   verb == "restart") {
-                return polkit.Result.AUTH_ADMIN_KEEP
+                if (subject.isInGroup("wheel")) {
+                  return polkit.Result.YES
+                }
               }
             }
           }

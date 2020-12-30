@@ -59,13 +59,14 @@ with pkgs; [
   mkcue
   mkpasswd
   mutt
-  networkmanager_dmenu # TODO: build something for vpn
+  networkmanager_dmenu
   nice-backgrounds
   nice-icons
   nix-prefetch-git
   neovim
   nnn
   openssl
+  openvpn_dmenu
   ormolu
   pass
   par

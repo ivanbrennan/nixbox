@@ -77,6 +77,8 @@ self: super: {
     });
   };
 
+  openvpn_dmenu = super.callPackage ./openvpn_dmenu { };
+
   rxvt_unicode = super.rxvt_unicode.overrideAttrs (old: {
     version = "2020-02-12";
     src = super.fetchcvs {
