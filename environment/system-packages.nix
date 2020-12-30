@@ -90,6 +90,7 @@ with pkgs; [
   sxiv
   tcpdump
   tmux
+  trayer
   tree
   universal-ctags
   unzip

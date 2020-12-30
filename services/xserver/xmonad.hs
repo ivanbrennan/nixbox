@@ -136,6 +136,7 @@ import XMonad.Util.NamedScratchpad
 import qualified XMonad.Util.NamedScratchpad as NS
 import XMonad.Util.Paste (sendKey)
 import XMonad.Util.Run (spawnPipe)
+import XMonad.Util.SpawnOnce (spawnOnce)
 import XMonad.Util.WorkspaceCompare (getWsIndex)
 
 
@@ -204,9 +205,30 @@ layoutHook' =
 
 startupHook' :: X ()
 startupHook' = do
+  systray
   io killAlsactl
   dynStatusBarStartup xmobar killAlsactl
 
+
+systray :: X ()
+systray = spawnOnce $
+  unwords
+    [ "trayer",
+      "--edge top",
+      "--align right",
+      "--height 22",
+      "--width", show systrayWidth,
+      "--expand true",
+      "--SetDockType true",
+      "--SetPartialStrut true",
+      "--transparent true",
+      "--alpha 0",
+      "--tint 0x161616",
+      "--monitor 0"
+    ]
+
+systrayWidth :: Int
+systrayWidth = 2
 
 -- https://github.com/jaor/xmobar/issues/432
 killAlsactl :: MonadIO m => m ()
@@ -236,7 +258,9 @@ xmobar s@(S i) = spawnPipe $
 
 xmobarPosition :: ScreenId -> String
 xmobarPosition (S i) =
-  if i == 0 then "TopW L 98" else "Top"
+  if i == 0
+    then "TopW L " ++ show (100 - systrayWidth)
+    else "Top"
 
 xmobarTemplate :: ScreenId -> String
 xmobarTemplate (S i) = concat $
