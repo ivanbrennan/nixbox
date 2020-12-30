@@ -1,33 +1,34 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, ... }:
 
 let
 
-  vpns = lib.concatMap (x: [
-    "openvpn-${x}"
-    "openvpn-${x}.service"
-  ]) (builtins.attrNames config.services.openvpn.servers);
+  vpns = builtins.map (x: "openvpn-${x}.service")
+    (builtins.attrNames config.services.openvpn.servers);
 
-  systemctl = cmd: unit: {
-    command = "${pkgs.systemd}/bin/systemctl ${cmd} ${unit}";
-    options = [ "NOPASSWD" "SETENV" ];
-  };
+  array = xs: "[${lib.concatMapStringsSep ", " (x: ''"${x}"'') xs}]";
 
 in
 
 {
   security = {
-    sudo.extraRules = lib.mkAfter [
-      {
-        groups = [ "wheel" ];
-
-        commands = lib.concatMap (unit: [
-          (systemctl "start" unit)
-          (systemctl "restart" unit)
-          (systemctl "stop" unit)
-        ]) vpns;
-      }
-    ];
-
-    polkit.enable = true;
+    polkit = {
+      enable = true;
+      extraConfig = ''
+        polkit.addRule(function(action, subject) {
+          let id = action.id;
+          if (id == "org.freedesktop.systemd1.manage-units" ||
+              id == "org.freedesktop.systemd1.manage-unit-files") {
+            if (${array vpns}.includes(action.lookup("unit"))) {
+              let verb = action.lookup("verb");
+              if (verb == "start" ||
+                  verb == "stop" ||
+                  verb == "restart") {
+                return polkit.Result.AUTH_ADMIN_KEEP
+              }
+            }
+          }
+        });
+      '';
+    };
   };
 }

@@ -39,6 +39,7 @@ pkgs:
   displayManager.sessionCommands = ''
     ${pkgs.xorg.xrdb}/bin/xrdb -merge < ${./Xresources}
     ${pkgs.hsetroot}/bin/hsetroot -solid "#112026"
+    ${pkgs.lxqt.lxqt-policykit}/bin/lxqt-policykit-agent &
 
     eval $(${pkgs.gnome3.gnome-keyring}/bin/gnome-keyring-daemon --daemonize)
     export SSH_AUTH_SOCK

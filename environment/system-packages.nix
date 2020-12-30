@@ -55,7 +55,6 @@ with pkgs; [
   lshw
   lsof
   lsscsi
-  lxqt.lxqt-policykit
   minikube
   mkcue
   mkpasswd
