@@ -1,0 +1,40 @@
+#! /usr/bin/env bash
+
+set -u
+
+active_clients=$(
+    systemctl show openvpn-* --type=service --state=running --property=Id \
+        | grep --only-matching --perl-regexp '^Id=\K.+(?=.service$)'
+)
+
+if [ "${1-}" = "restart" ]
+then
+    restart=true
+    shift
+else
+    restart=false
+fi
+
+if [ -n "$active_clients" ]
+then
+    units="$active_clients"
+    if $restart
+    then
+        unit_command=restart
+    else
+        unit_command=stop
+    fi
+else
+    units=$(
+        systemctl list-unit-files openvpn-* --type=service \
+            | grep --only-matching --perl-regexp '^openvpn-.+(?=.service)'
+    )
+    unit_command=start
+fi
+
+unit=$(echo "$units" | dmenu -p "$unit_command" "$@")
+
+if [ $? -eq 0 ]
+then
+    systemctl "$unit_command" "$unit"
+fi

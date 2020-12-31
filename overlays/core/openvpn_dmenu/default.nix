@@ -1,53 +1,18 @@
 { coreutils
 , dmenu
 , gnugrep
+, stdenv
 , systemd
-, writeShellScriptBin
+, runCommandLocal
 }:
 
-writeShellScriptBin "openvpn_dmenu" ''
-  set -u
+runCommandLocal "openvpn_dmenu" { } ''
+  install -D -m755 ${./openvpn_dmenu} $out/bin/$name
+  patchShebangs --host $out/bin
+  substituteInPlace $out/bin/$name \
+      --replace "systemctl" "${systemd}/bin/systemctl" \
+      --replace "grep"      "${gnugrep}/bin/grep" \
+      --replace "dmenu"     "${dmenu}/bin/dmenu"
 
-  active_clients=$(
-      ${systemd}/bin/systemctl show openvpn-* \
-          --type=service \
-          --state=running \
-          --property=Id \
-          | ${gnugrep}/bin/grep \
-              --only-matching \
-              --perl-regexp \
-              '^Id=\K.+(?=.service$)'
-  )
-
-  if [ "''${1-}" = "restart" ]
-  then
-      restart=true
-      shift
-  else
-      restart=false
-  fi
-
-  if [ -n "$active_clients" ]
-  then
-      if $restart
-      then
-          unit_command=restart
-      else
-          unit_command=stop
-      fi
-      units="$active_clients"
-  else
-      unit_command=start
-      units=$(
-          ${systemd}/bin/systemctl list-unit-files openvpn-* \
-              --type=service \
-              | ${gnugrep}/bin/grep \
-                  --only-matching \
-                  --perl-regexp \
-                  '^openvpn-.+(?=.service)'
-      )
-  fi
-
-  unit=$(echo "$units" | ${dmenu}/bin/dmenu -p "$unit_command" "$@")
-  [ $? -eq 0 ] && ${systemd}/bin/systemctl "$unit_command" "$unit"
+  ${stdenv.shell} -n $out/bin/$name
 ''
