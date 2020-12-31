@@ -93,6 +93,7 @@ with pkgs; [
   tmux
   trayer
   tree
+  udisks_dmenu
   universal-ctags
   unzip
   vim-configured

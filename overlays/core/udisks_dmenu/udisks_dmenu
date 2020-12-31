@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+
+set -u
+
+list_drives() {
+    lsblk --raw --path --output 'name,rm,size,type,mountpoint'
+}
+
+list_unmounted_drives() {
+    list_drives |
+    # is removable, is partition, no mountpoint
+        awk '$2==1 && $4=="part" && $5=="" {printf "%s (%s)\n", $1, $3}'
+}
+
+list_mounted_drives() {
+    # is removable, is partition, has mountpoint
+    list_drives |
+        awk '$2==1 && $4=="part" && $5!="" {printf "%s (%s)\n", $1, $3}'
+}
+
+case "${1-}" in
+mount)
+    shift
+    drives=$(list_unmounted_drives)
+    if [ -n "$drives" ]
+    then
+        drive=$(echo "$drives" | dmenu -p "mount" "$@" | awk '{print $1}')
+        if [ -n "$drive" ]
+        then
+            result=$(udisksctl mount --no-user-interaction --block-device="$drive" 2>/dev/null)
+            if [ -n "$result" ]
+            then
+                notify-send "$result"
+            fi
+        fi
+    else
+        notify-send "No drives detected to mount"
+    fi
+    ;;
+unmount)
+    shift
+    drives=$(list_mounted_drives)
+    if [ -n "$drives" ]
+    then
+        drive=$(echo "$drives" | dmenu -p "unmount" "$@" | awk '{print $1}')
+        if [ -n "$drive" ]
+        then
+            result=$(udisksctl unmount --no-user-interaction --block-device="$drive" 2>/dev/null)
+            if [ -n "$result" ]
+            then
+                notify-send "$result"
+                udisksctl power-off --no-user-interaction --block-device="$drive"
+            fi
+        fi
+    else
+        notify-send "No drives detected to unmount"
+    fi
+    ;;
+esac
