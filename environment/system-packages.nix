@@ -106,6 +106,7 @@ with pkgs; [
   xclip
   xdg-user-dirs
   xfce.thunar
+  xfce.thunar-volman
   xmobar
   xorg.xmessage
   xsel

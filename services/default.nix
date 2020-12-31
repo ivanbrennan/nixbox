@@ -4,6 +4,8 @@
   services = {
     emacs.enable = true;
 
+    gvfs.enable = true;
+
     interception-tools = {
       enable = true;
       udevmonConfig = ./udevmon.yaml;
