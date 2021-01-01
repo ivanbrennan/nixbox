@@ -235,8 +235,8 @@ killAlsactl :: MonadIO m => m ()
 killAlsactl = spawn $
   intercalate
     " | "
-    [ "ps axo pid,s,command",
-      "awk '/alsactl monitor default$/{print $1}'",
+    [ "ps --no-headers -o pid,command -C alsactl",
+      "awk '/alsactl monitor default$/ { print $1 }'",
       "xargs --no-run-if-empty kill 2>/dev/null"
     ]
 
