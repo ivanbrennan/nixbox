@@ -32,10 +32,10 @@ import System.Posix.Process (executeFile)
 {- X11 -}
 import Graphics.X11
   ( Button, KeyMask, KeySym, Window, button1, controlMask, mod1Mask, mod4Mask,
-    noModMask, shiftMask, xK_1, xK_9, xK_Alt_L, xK_Alt_R, xK_Print, xK_Tab, xK_a,
-    xK_c, xK_comma, xK_d, xK_e, xK_g, xK_h, xK_i, xK_j, xK_k, xK_l, xK_m, xK_n,
-    xK_p, xK_period, xK_q, xK_r, xK_semicolon, xK_slash, xK_space, xK_t, xK_u,
-    xK_v, xK_w, xK_x, xK_y, xK_z,
+    noModMask, shiftMask, xK_1, xK_9, xK_Alt_L, xK_Alt_R, xK_BackSpace,
+    xK_Delete, xK_Insert, xK_Print, xK_Tab, xK_a, xK_c, xK_comma, xK_d, xK_e,
+    xK_g, xK_h, xK_i, xK_j, xK_k, xK_l, xK_m, xK_n, xK_p, xK_period, xK_q, xK_r,
+    xK_semicolon, xK_slash, xK_space, xK_t, xK_u, xK_v, xK_w, xK_x, xK_y, xK_z,
   )
 import Graphics.X11.ExtraTypes
   ( xF86XK_AudioLowerVolume, xF86XK_AudioMute, xF86XK_AudioRaiseVolume,
@@ -725,10 +725,10 @@ keys' conf@(XConfig {modMask}) =
                  ( (noModMask, xK_n),
                    spawn "networkmanager_dmenu"
                  ),
-                 ( (noModMask, xK_u),
+                 ( (noModMask, xK_Insert),
                    spawn $ unwords ("udisks_dmenu mount" : dmenuArgs)
                  ),
-                 ( (shiftMask, xK_u),
+                 ( (noModMask, xK_Delete),
                    spawn $ unwords ("udisks_dmenu unmount" : dmenuArgs)
                  ),
                  ( (noModMask, xK_v),
@@ -751,6 +751,15 @@ keys' conf@(XConfig {modMask}) =
                  ),
                  ( (noModMask, xK_z),
                    spawn ("i3lock --color=" ++ grey0)
+                 ),
+                 ( (noModMask, xK_u),
+                   spawn "dunstctl close"
+                 ),
+                 ( (shiftMask, xK_u),
+                   spawn "dunstctl close-all"
+                 ),
+                 ( (noModMask, xK_BackSpace),
+                   spawn "dunstctl history-pop"
                  )
                ]
            )

@@ -11,14 +11,13 @@ self: super: {
   bleep = super.callPackage ./bleep { };
   bloop = super.callPackage ./bloop { };
 
-  dunst = super.dunst.overrideAttrs (old: rec {
-    postInstall = ''
-      install -Dm755 dunstify $out/bin
-      wrapProgram $out/bin/dunst \
-        --set GDK_PIXBUF_MODULE_FILE "$GDK_PIXBUF_MODULE_FILE" \
-        --add-flags "-conf ${./dunstrc}"
-    '';
-  });
+  dunst = super.callPackage ./dunst {
+    dunst = super.dunst;
+    iconThemes = [
+      self.hicolor-icon-theme
+      self.gnome3.adwaita-icon-theme
+    ];
+  };
 
   etcdots = super.callPackage ./etcdots { };
 
