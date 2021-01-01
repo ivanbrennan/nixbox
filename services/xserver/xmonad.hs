@@ -136,7 +136,6 @@ import XMonad.Util.NamedScratchpad
 import qualified XMonad.Util.NamedScratchpad as NS
 import XMonad.Util.Paste (sendKey)
 import XMonad.Util.Run (spawnPipe)
-import XMonad.Util.SpawnOnce (spawnOnce)
 import XMonad.Util.WorkspaceCompare (getWsIndex)
 
 
@@ -211,21 +210,33 @@ startupHook' = do
 
 
 systray :: X ()
-systray = spawnOnce $
-  unwords
-    [ "trayer",
-      "--edge top",
-      "--align right",
-      "--height 22",
-      "--width", show systrayWidth,
-      "--expand true",
-      "--SetDockType true",
-      "--SetPartialStrut true",
-      "--transparent true",
-      "--alpha 0",
-      "--tint 0x161616",
-      "--monitor 0"
-    ]
+systray = spawn $
+  intercalate " ; " [killTray, execTray]
+  where
+    killTray =
+      intercalate
+        " | "
+        [ "ps --no-headers -o pid,command -C trayer",
+          "awk '/\\<trayer .*SetDockType true\\>/ { print $1 }'",
+          "xargs --no-run-if-empty kill 2>/dev/null"
+        ]
+
+    execTray =
+      unwords $
+        "exec" :
+        [ "trayer",
+          "--edge top",
+          "--align right",
+          "--height 22",
+          "--width", show systrayWidth,
+          "--expand true",
+          "--SetDockType true",
+          "--SetPartialStrut true",
+          "--transparent true",
+          "--alpha 0",
+          "--tint 0x161616",
+          "--monitor 0"
+        ]
 
 systrayWidth :: Int
 systrayWidth = 2
