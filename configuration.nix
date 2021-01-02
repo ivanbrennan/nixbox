@@ -93,13 +93,20 @@
   hardware.bluetooth.enable = true;
   hardware.pulseaudio.enable = true;
 
-  fonts.fonts = [
-    pkgs.cantarell-fonts
-    pkgs.dejavu_fonts
-    pkgs.emacs-all-the-icons-fonts
-    pkgs.mononoki
-    pkgs.open-sans
-    pkgs.source-code-pro
-    pkgs.source-sans-pro
-  ];
+  fonts = {
+    fonts = [
+      pkgs.cantarell-fonts
+      pkgs.dejavu_fonts
+      pkgs.emacs-all-the-icons-fonts
+      pkgs.mononoki
+      pkgs.open-sans
+      pkgs.source-code-pro
+      pkgs.source-sans-pro
+    ];
+
+    fontconfig = {
+      dpi = 96;
+      subpixel.rgba = "rgb";
+    };
+  };
 }
