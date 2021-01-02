@@ -6,7 +6,8 @@ pkgs:
 
   # Configure keyboard.
   layout = "us";
-  xkbOptions = "ctrl:nocaps, shift:both_capslock";
+  enableCtrlAltBackspace = true;
+  xkbOptions = "ctrl:nocaps, shift:both_capslock, terminate:ctrl_alt_bksp";
   autoRepeatDelay = 200;
   autoRepeatInterval = 30;
 
