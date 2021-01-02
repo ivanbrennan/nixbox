@@ -19,8 +19,6 @@ self: super: {
     ];
   };
 
-  dutree = super.callPackage ./dutree { };
-
   etcdots = super.callPackage ./etcdots { };
 
   flaccurate = super.callPackage ./flaccurate { };
