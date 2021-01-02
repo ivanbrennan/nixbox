@@ -27,6 +27,7 @@ with pkgs; [
   docker
   docker-compose
   dunst
+  dutree
   easyrsa
   emacs
   fd
