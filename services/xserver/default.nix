@@ -4,6 +4,9 @@ pkgs:
   # Enable the X11 windowing system.
   enable = true;
 
+  # Virtual console for the X server
+  # tty = 7;
+
   # Configure keyboard.
   layout = "us";
   enableCtrlAltBackspace = true;
