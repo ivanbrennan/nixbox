@@ -2,7 +2,7 @@
 
 {
   enableCompletion = true;
-  shellAliases = import ./aliases.nix;
+  shellAliases = import ./aliases.nix pkgs;
   promptInit = builtins.readFile ./prompt.sh;
   interactiveShellInit = ''
     ${builtins.readFile ./bashrc}
