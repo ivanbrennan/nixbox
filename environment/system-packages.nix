@@ -23,6 +23,7 @@ with pkgs; [
   cmus
   conky
   dmenu
+  dmenu_cdpath
   dmidecode
   docker
   docker-compose

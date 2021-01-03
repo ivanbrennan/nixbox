@@ -11,6 +11,8 @@ self: super: {
   bleep = super.callPackage ./bleep { };
   bloop = super.callPackage ./bloop { };
 
+  dmenu_cdpath = super.callPackage ./dmenu_cdpath { };
+
   dunst = super.callPackage ./dunst {
     dunst = super.dunst;
     iconThemes = [

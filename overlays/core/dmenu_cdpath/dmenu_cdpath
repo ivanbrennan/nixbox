@@ -1,0 +1,45 @@
+#! /usr/bin/env bash
+
+cat=@cat@
+dmenu=@dmenu@
+sort=@sort@
+find=@find@
+sed=@sed@
+
+set -u
+
+usage() {
+    $cat >&2 <<EOF
+Usage: $0 DIR:... [find-options] -- [dmenu-options]
+e.g.
+  ${0##*/} ~/Development
+  ${0##*/} ~/Development:~/Desktop -maxdepth 3
+  ${0##*/} ~/Development:~/Desktop -maxdepth 3 -- -l 24
+EOF
+}
+
+(( $# == 0 )) && { usage ; exit 1 ; }
+
+dirs=${1//\~/$HOME}
+shift
+
+findOpts=()
+while (( $# > 0 ))
+do
+    arg=$1
+    shift
+    [[ "$arg" == '--' ]] && break
+    findOpts+=("$1")
+done
+
+IFS=:
+$find ${dirs}                \
+    -maxdepth 2              \
+    -not -name '.*'          \
+    -not -path '*/.*'        \
+    -type d                  \
+    -nowarn "${findOpts[@]}" \
+    | $sort --unique         \
+    | $sed "s,^$HOME,~,"     \
+    | $dmenu "$@"            \
+    | $sed "s,^~,$HOME,"
