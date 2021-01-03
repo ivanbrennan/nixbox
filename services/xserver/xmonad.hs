@@ -135,7 +135,7 @@ import XMonad.Util.NamedScratchpad
   )
 import qualified XMonad.Util.NamedScratchpad as NS
 import XMonad.Util.Paste (sendKey)
-import XMonad.Util.Run (spawnPipe)
+import XMonad.Util.Run (safeSpawn, safeSpawnProg, spawnPipe)
 import XMonad.Util.WorkspaceCompare (getWsIndex)
 
 
@@ -624,10 +624,10 @@ keys' conf@(XConfig {modMask}) =
       ),
       -- launch/kill
       ( (modMask, xK_i),
-        spawn (terminal conf)
+        safeSpawnProg (terminal conf)
       ),
       ( (controlMask, xK_space),
-        spawn $ unwords ("dmenu_run" : dmenuOpts)
+        safeSpawn "dmenu_run" dmenuOpts
       ),
       ( (controlMask .|. shiftMask, xK_space),
         namedScratchpadAction scratchpads (NS.name scratchTerminal)
@@ -637,16 +637,16 @@ keys' conf@(XConfig {modMask}) =
           >>= trace . unlines . uncurry (++) . second reverse . splitAt 1 . lines
       ),
       ( (noModMask, xK_Print),
-        spawn "screenshot"
+        safeSpawn "screenshot" []
       ),
       ( (controlMask, xK_Print),
-        spawn "screenshot -c"
+        safeSpawn "screenshot" ["-c"]
       ),
       ( (shiftMask, xK_Print),
-        spawn "screenshot -a"
+        safeSpawn "screenshot" ["-a"]
       ),
       ( (controlMask .|. shiftMask, xK_Print),
-        spawn "screenshot -a -c"
+        safeSpawn "screenshot" ["-a", "-c"]
       ),
       ( (mod4Mask, xK_Print),
         screencast []
@@ -658,33 +658,33 @@ keys' conf@(XConfig {modMask}) =
         kill
       ),
       ( (modMask .|. shiftMask, xK_space),
-        spawn $ unwords ("passmenu" : dmenuOpts)
+        safeSpawn "passmenu" dmenuOpts
       ),
       -- volume
       ( (noModMask, xF86XK_AudioRaiseVolume),
         spawn "pactl set-sink-mute @DEFAULT_SINK@ 0 && pactl set-sink-volume @DEFAULT_SINK@ +2%"
       ),
       ( (noModMask, xF86XK_AudioLowerVolume),
-        spawn "pactl set-sink-volume @DEFAULT_SINK@ -2%"
+        safeSpawn "pactl" ["set-sink-volume", "@DEFAULT_SINK@", "-2%"]
       ),
       ( (noModMask, xF86XK_AudioMute),
-        spawn "pactl set-sink-mute @DEFAULT_SINK@ toggle"
+        safeSpawn "pactl" ["set-sink-mute", "@DEFAULT_SINK@", "toggle"]
       ),
       ( (mod4Mask, xF86XK_AudioMute),
-        spawn "pactl set-source-mute @DEFAULT_SOURCE@ toggle"
+        safeSpawn "pactl" ["set-source-mute", "@DEFAULT_SOURCE@", "toggle"]
       ),
       ( (mod4Mask, xF86XK_AudioRaiseVolume),
         spawn "pactl set-source-mute @DEFAULT_SOURCE@ 0 && pactl set-source-volume @DEFAULT_SOURCE@ +2%"
       ),
       ( (mod4Mask, xF86XK_AudioLowerVolume),
-        spawn "pactl set-source-volume @DEFAULT_SOURCE@ -2%"
+        safeSpawn "pactl" ["set-source-volume", "@DEFAULT_SOURCE@", "-2%"]
       ),
       -- brightness
       ( (noModMask, xF86XK_MonBrightnessUp),
-        spawn "light -A 20"
+        safeSpawn "light" ["-A", "20"]
       ),
       ( (noModMask, xF86XK_MonBrightnessDown),
-        spawn "light -U 20"
+        safeSpawn "light" ["-U", "20"]
       ),
       -- copy/paste
       ( (modMask, xK_c),
@@ -728,7 +728,7 @@ keys' conf@(XConfig {modMask}) =
                    appendThoughtPrompt xPConfig
                  ),
                  ( (noModMask, xK_f),
-                   gotoMenuArgs $ filter (not . (== '\'')) <$> dmenuOpts
+                   gotoMenuArgs dmenuOpts
                  ),
                  ( (noModMask, xK_g),
                    dmenuSpawnTerminal
@@ -737,19 +737,19 @@ keys' conf@(XConfig {modMask}) =
                    renameWorkspace xPConfig
                  ),
                  ( (noModMask, xK_n),
-                   spawn "networkmanager_dmenu"
+                   safeSpawnProg "networkmanager_dmenu"
                  ),
                  ( (noModMask, xK_Insert),
-                   spawn $ unwords ("udisks_dmenu mount" : dmenuOpts)
+                   safeSpawn "udisks_dmenu" ("mount" : dmenuOpts)
                  ),
                  ( (noModMask, xK_Delete),
-                   spawn $ unwords ("udisks_dmenu unmount" : dmenuOpts)
+                   safeSpawn "udisks_dmenu" ("unmount" : dmenuOpts)
                  ),
                  ( (noModMask, xK_v),
-                   spawn $ unwords ("openvpn_dmenu" : dmenuOpts)
+                   safeSpawn "openvpn_dmenu" dmenuOpts
                  ),
                  ( (shiftMask, xK_v),
-                   spawn $ unwords ("openvpn_dmenu restart" : dmenuOpts)
+                   safeSpawn "openvpn_dmenu" ("restart" : dmenuOpts)
                  ),
                  ( (noModMask, xK_r),
                    runOrRaisePrompt xPConfig
@@ -764,16 +764,13 @@ keys' conf@(XConfig {modMask}) =
                    layoutDescription >>= trace
                  ),
                  ( (noModMask, xK_z),
-                   spawn ("i3lock --color=" ++ grey0)
+                   safeSpawn "i3lock" ["--color", grey0]
                  ),
                  ( (noModMask, xK_u),
-                   spawn "dunstctl close"
-                 ),
-                 ( (shiftMask, xK_u),
-                   spawn "dunstctl close-all"
+                   safeSpawn "dunstctl" ["close-all"]
                  ),
                  ( (noModMask, xK_BackSpace),
-                   spawn "dunstctl history-pop"
+                   safeSpawn "dunstctl" ["history-pop"]
                  )
                ]
            )
@@ -896,7 +893,7 @@ keys' conf@(XConfig {modMask}) =
               ( "dmenu_cdpath"
                 : "$HOME/Development"
                 : "--"
-                : dmenuOpts
+                : unsafeDmenuOpts
               ),
             unwords
               [ "xargs",
@@ -909,6 +906,17 @@ keys' conf@(XConfig {modMask}) =
 
     dmenuOpts :: [String]
     dmenuOpts =
+      [ "-fn", "monospace:size=12",
+        "-l", "24",
+        "-i",
+        "-nb", grey0,
+        "-nf", grey6,
+        "-sb", grey1,
+        "-sf", white
+      ]
+
+    unsafeDmenuOpts :: [String]
+    unsafeDmenuOpts =
       [ "-fn", "monospace:size=12",
         "-l", "24",
         "-i",
@@ -928,10 +936,9 @@ keys' conf@(XConfig {modMask}) =
     screencast :: [String] -> X ()
     screencast args = do
       Screencast on <- XS.get
-      spawn $
-        if on
-          then "killall ffmpeg"
-          else unwords ("screencast" : args)
+      if on
+        then safeSpawn "killall" ["ffmpeg"]
+        else safeSpawn "screencast" args
       XS.put $ Screencast (not on)
 
 
