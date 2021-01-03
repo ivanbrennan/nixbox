@@ -1,4 +1,6 @@
-CDPATH=".:~/Development:~/Development/resources:~"
+# NOTE: CDPATH should not be exported, because it can interfere with
+# scripts that call cd.
+CDPATH=".:~/Development:~/Development/code:~/Development/resources:~"
 
 shopt -s histappend cmdhist lithist
 
