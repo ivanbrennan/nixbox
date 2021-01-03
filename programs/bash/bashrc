@@ -130,6 +130,11 @@ opf() {
     fi
 }
 
+realink() {
+    readlink -f $(which "$1")
+}
+complete -c realink
+
 blink() {
   if [ "$cursor_code" = 3 ]; then
     cursor_code=0
