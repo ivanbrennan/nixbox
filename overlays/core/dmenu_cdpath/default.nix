@@ -2,14 +2,11 @@
 , dmenu
 , findutils
 , gnused
-, makeWrapper
 , stdenv
 , runCommandLocal
 }:
 
-runCommandLocal "dmenu_cdpath" {
-  buildInputs = [ makeWrapper ];
-} ''
+runCommandLocal "dmenu_cdpath" { } ''
   install -D -m755 ${./dmenu_cdpath} $out/bin/$name
   patchShebangs --host $out/bin
   substituteInPlace $out/bin/$name                   \
