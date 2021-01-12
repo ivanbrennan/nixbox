@@ -890,14 +890,21 @@ keys' conf@(XConfig {modMask}) =
                 : "--"
                 : unsafeDmenuOpts
               ),
-            unwords
-              [ "xargs",
-                "--no-run-if-empty",
-                "--delimiter='\\n'",
-                terminal conf,
-                "--working-directory"
-              ]
+            doubleFork
+              ( unwords
+                [ "xargs",
+                  "--no-run-if-empty",
+                  "--delimiter='\\n'",
+                  "setsid",
+                  terminal conf,
+                  "--working-directory"
+                ]
+              )
           ]
+      where
+        doubleFork = subshell . background
+        subshell   = wrap "(" ")"
+        background = (++ " &")
 
     dmenuOpts :: [String]
     dmenuOpts =
