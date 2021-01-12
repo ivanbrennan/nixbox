@@ -228,7 +228,7 @@ systray = spawn $
           "--edge top",
           "--align right",
           "--height 22",
-          "--width", show systrayWidth,
+          "--widthtype request",
           "--expand true",
           "--SetDockType true",
           "--SetPartialStrut true",
@@ -237,9 +237,6 @@ systray = spawn $
           "--tint 0x161616",
           "--monitor 0"
         ]
-
-systrayWidth :: Int
-systrayWidth = 2
 
 -- https://github.com/jaor/xmobar/issues/432
 killAlsactl :: MonadIO m => m ()
@@ -262,16 +259,10 @@ xmobar s@(S i) = spawnPipe $
       "-N", "xft:FontAwesome:size=11",
       "-i", "/run/current-system/sw/share/icons/xmobar",
       "-x", show i,
-      "-p", translate (xmobarPosition s),
+      "-p", translate "Top",
       "-t", translate (xmobarTemplate s),
       "-c", translate $ list (xmobarCommands s)
     ]
-
-xmobarPosition :: ScreenId -> String
-xmobarPosition (S i) =
-  if i == 0
-    then "TopW L " ++ show (100 - systrayWidth)
-    else "Top"
 
 xmobarTemplate :: ScreenId -> String
 xmobarTemplate (S i) = concat $
@@ -287,7 +278,8 @@ xmobarTemplate (S i) = concat $
         fontN 1 $ xmobarColor grey2 "" (cmd "vpn"),
         pad (cmd "battery"),
         pad (cmd "alsa:default:Master"),
-        pad (cmd "date")
+        pad (cmd "date"),
+        pad (cmd "trayerpad")
       ]
     else
       [ cmd "UnsafeStdinReader",
@@ -299,7 +291,7 @@ xmobarTemplate (S i) = concat $
 xmobarCommands :: ScreenId -> [String]
 xmobarCommands (S i) = map unwords $
   if i == 0
-    then [disk, cpu, vpn, battery, volume, date', unsafeStdinReader]
+    then [disk, cpu, vpn, battery, volume, date', unsafeStdinReader, trayerpad]
     else [unsafeStdinReader]
   where
     disk =
@@ -352,9 +344,12 @@ xmobarCommands (S i) = map unwords $
       ]
 
     date' = ["Run Date", quote dateFormat, quote "date", "50"]
-    dateFormat = "%a %b %-d " ++ xmobarColor chalk "" "%l:%M"
+    dateFormat = "%a %b %-d  " ++ xmobarColor chalk "" "%l:%M"
 
     unsafeStdinReader = ["Run UnsafeStdinReader"]
+
+    trayerpad =
+      ["Run Com", quote "trayer-padding-icon", list [], quote "trayerpad", "10"]
 
 list :: [String] -> String
 list = brackets . intercalate ","

@@ -93,6 +93,7 @@ with pkgs; [
   tcpdump
   tmux
   trayer
+  trayer-padding-icon
   tree
   udisks_dmenu
   universal-ctags

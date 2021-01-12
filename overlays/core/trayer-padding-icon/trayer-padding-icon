@@ -1,0 +1,45 @@
+#! /usr/bin/env bash
+
+# Detects the width of running trayer-srg window (xprop name 'panel')
+# and creates an XPM icon of that width, 1px height, and transparent.
+# Outputs an <icon>-tag for use in xmobar to display the generated
+# XPM icon.
+#
+# Run script from xmobar:
+# `Run Com "trayer-padding-icon" [] "trayerpad" 10`
+# and use `%trayerpad%` in your template.
+
+cat=@cat@
+grep=@grep@
+seq=@seq@
+xprop=@xprop@
+
+set -u
+
+create_xpm_icon () {
+    $cat > "$2" << EOF
+/* XPM *
+static char * trayer_pad_xpm[] = {
+/* <w/cols>  <h/rows>  <colors>  <chars per pixel> */
+"$1 1 1 1",
+/* Colors (none: transparent) */
+". c none",
+/* Pixels */
+"$(for i in `$seq $1` ; do printf '.' ; done)"
+};
+EOF
+}
+
+# Width of the trayer window
+width=$( $xprop -name panel WM_NORMAL_HINTS 2>/dev/null |
+         $grep -oP 'program specified minimum size: \K\d+' )
+
+# Fallback to zero width.
+: ${width:=0}
+
+iconfile="${TMPDIR-/tmp}/trayer-padding-${width}px.xpm"
+
+[ -f $iconfile ] || create_xpm_icon "$width" "$iconfile"
+
+# Output the icon tag for xmobar
+echo "<icon=${iconfile}/>"

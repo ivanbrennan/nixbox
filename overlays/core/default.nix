@@ -117,5 +117,7 @@ self: super: {
     };
   });
 
+  trayer-padding-icon = super.callPackage ./trayer-padding-icon { };
+
   vln = super.callPackage ./vln { };
 }
