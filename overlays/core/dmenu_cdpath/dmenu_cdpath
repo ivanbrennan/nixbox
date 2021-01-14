@@ -29,7 +29,7 @@ do
     arg=$1
     shift
     [[ "$arg" == '--' ]] && break
-    findOpts+=("$1")
+    findOpts+=("$arg")
 done
 
 IFS=:
