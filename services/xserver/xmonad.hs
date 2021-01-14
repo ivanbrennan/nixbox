@@ -33,9 +33,9 @@ import System.Posix.Process (executeFile)
 import Graphics.X11
   ( Button, KeyMask, KeySym, Window, button1, controlMask, mod1Mask, mod4Mask,
     noModMask, shiftMask, xK_1, xK_9, xK_Alt_L, xK_Alt_R, xK_BackSpace, xK_Delete,
-    xK_Insert, xK_Print, xK_Tab, xK_a, xK_c, xK_comma, xK_d, xK_e, xK_f, xK_g,
-    xK_h, xK_i, xK_j, xK_k, xK_l, xK_m, xK_n, xK_p, xK_period, xK_q, xK_r,
-    xK_semicolon, xK_slash, xK_space, xK_t, xK_u, xK_v, xK_w, xK_x, xK_y, xK_z,
+    xK_Insert, xK_Print, xK_Tab, xK_a, xK_c, xK_comma, xK_d, xK_e, xK_f, xK_h,
+    xK_i, xK_j, xK_k, xK_l, xK_m, xK_n, xK_p, xK_period, xK_q, xK_r, xK_semicolon,
+    xK_slash, xK_space, xK_t, xK_u, xK_v, xK_w, xK_x, xK_y, xK_z,
   )
 import Graphics.X11.ExtraTypes
   ( xF86XK_AudioLowerVolume, xF86XK_AudioMute, xF86XK_AudioRaiseVolume,
@@ -621,6 +621,9 @@ keys' conf@(XConfig {modMask}) =
       ( (modMask, xK_i),
         safeSpawnProg (terminal conf)
       ),
+      ( (modMask .|. shiftMask, xK_i),
+        dmenuSpawnTerminal
+      ),
       ( (controlMask, xK_space),
         safeSpawn "dmenu_run" dmenuOpts
       ),
@@ -724,9 +727,6 @@ keys' conf@(XConfig {modMask}) =
                  ),
                  ( (noModMask, xK_f),
                    gotoMenuArgs dmenuOpts
-                 ),
-                 ( (noModMask, xK_g),
-                   dmenuSpawnTerminal
                  ),
                  ( (noModMask, xK_m),
                    renameWorkspace xPConfig
@@ -881,30 +881,8 @@ keys' conf@(XConfig {modMask}) =
 
     dmenuSpawnTerminal :: X ()
     dmenuSpawnTerminal =
-      spawn $
-        intercalate
-          " | "
-          [ unwords
-              ( "dmenu_cdpath"
-                : "$HOME/Development"
-                : "--"
-                : unsafeDmenuOpts
-              ),
-            doubleFork
-              ( unwords
-                [ "xargs",
-                  "--no-run-if-empty",
-                  "--delimiter='\\n'",
-                  "setsid",
-                  terminal conf,
-                  "--working-directory"
-                ]
-              )
-          ]
-      where
-        doubleFork = subshell . background
-        subshell   = wrap "(" ")"
-        background = (++ " &")
+      safeSpawn "dmenu_cdpath-alacritty" $
+        "~/Development" : "--" : dmenuOpts
 
     dmenuOpts :: [String]
     dmenuOpts =
@@ -915,17 +893,6 @@ keys' conf@(XConfig {modMask}) =
         "-nf", grey6,
         "-sb", grey1,
         "-sf", white
-      ]
-
-    unsafeDmenuOpts :: [String]
-    unsafeDmenuOpts =
-      [ "-fn", "monospace:size=12",
-        "-l", "24",
-        "-i",
-        "-nb", translate grey0,
-        "-nf", translate grey6,
-        "-sb", translate grey1,
-        "-sf", translate white
       ]
 
     commands :: [(String, X ())]

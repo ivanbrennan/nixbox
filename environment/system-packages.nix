@@ -21,6 +21,7 @@ with pkgs; [
   cdparanoia
   chromium
   cmus
+  computables
   conky
   dmenu
   dmenu_cdpath

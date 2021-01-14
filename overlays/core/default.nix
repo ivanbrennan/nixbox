@@ -21,6 +21,10 @@ self: super: {
     ];
   };
 
+  computables = super.callPackage ./computables {
+    alacritty = self.alacritty-wrapped;
+  };
+
   etcdots = super.callPackage ./etcdots { };
 
   flaccurate = super.callPackage ./flaccurate { };

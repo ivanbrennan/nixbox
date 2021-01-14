@@ -1,0 +1,25 @@
+#! /usr/bin/env bash
+
+cat=@cat@
+dmenu_cdpath=@dmenu_cdpath@
+alacritty=@alacritty@
+
+set -u
+
+usage() {
+    $cat >&2 <<EOF
+Usage: $0 DIR:... [find-options] -- [dmenu-options]
+e.g.
+  ${0##*/} ~/Development
+  ${0##*/} ~/Development:~/Desktop -maxdepth 3
+  ${0##*/} ~/Development:~/Desktop -maxdepth 3 -- -l 24
+EOF
+}
+
+(( $# == 0 )) && { usage ; exit 1 ; }
+
+dir=$($dmenu_cdpath "$@")
+
+[ -d "$dir" ] || exit 1
+
+exec $alacritty --working-directory "$dir"
