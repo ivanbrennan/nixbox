@@ -41,6 +41,7 @@ with pkgs; [
   gimp
   git
   gitAndTools.delta
+  glances
   global
   gnumake
   gnupg
@@ -73,7 +74,6 @@ with pkgs; [
   pass
   par
   psmisc
-  glances
   pup
   qbittorrent
   redis
