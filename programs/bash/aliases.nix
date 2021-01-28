@@ -21,11 +21,11 @@ in
   gpr = "${git} log origin/master.. --reverse";
   grep = "${grep} --color=auto";
   gst = "${git} status";
-  l = "${ls} -Alh";
-  la = "${ls} -A";
-  ll = "${ls} -l";
   ls = "${ls} --color=tty";
-  lsd = "${ls} -d .[!.]*";
+  l = "ls -Alh";
+  la = "ls -A";
+  ll = "ls -l";
+  lsd = "ls -d .[!.]*";
   nirb = "${nix-shell} -p ruby interactive-editor --command irb";
   t = tmux;
   tls = "${tmux} ls";
