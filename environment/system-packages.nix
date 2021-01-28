@@ -73,6 +73,7 @@ with pkgs; [
   ormolu
   pass
   par
+  procs
   psmisc
   pup
   qbittorrent
