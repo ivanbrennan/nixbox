@@ -70,14 +70,14 @@ import XMonad.Actions.RotateSome (surfaceNext, surfacePrev)
 import XMonad.Actions.RotSlaves (rotAllDown, rotAllUp, rotSlavesDown, rotSlavesUp)
 import XMonad.Actions.Submap (submap)
 import XMonad.Actions.WindowBringer (gotoMenuArgs)
-import XMonad.Actions.WorkspaceNames (getWorkspaceNames', renameWorkspace)
+import XMonad.Actions.WorkspaceNames (renameWorkspace)
 import XMonad.Hooks.DebugStack (debugStackString)
 import XMonad.Hooks.DynamicBars
   ( dynStatusBarEventHook, dynStatusBarStartup, multiPPFormat,
   )
 import XMonad.Hooks.DynamicLog
-  ( PP, dynamicLogString, pad, ppCurrent, ppHidden, ppHiddenNoWindows, ppLayout,
-    ppSep, ppTitle, ppUrgent, ppVisible, ppWsSep, wrap, xmobarColor, xmobarPP,
+  ( PP, dynamicLogString, pad, ppCurrent, ppHidden, ppLayout, ppSep, ppTitle,
+    ppWsSep, wrap, xmobarColor, xmobarPP, filterOutWsPP,
   )
 import XMonad.Hooks.EwmhDesktops (ewmh, fullscreenEventHook)
 import XMonad.Hooks.InsertPosition
@@ -96,8 +96,8 @@ import XMonad.Layout.BoringWindows
   ( BoringWindows, boringAuto, focusDown, focusUp, siftDown, siftUp,
   )
 import XMonad.Layout.IndependentScreens
-  ( PhysicalWorkspace, VirtualWorkspace, countScreens, marshall, marshallPP,
-    unmarshallS, withScreens, workspaces',
+  ( PhysicalWorkspace, VirtualWorkspace, countScreens, marshall, unmarshallS,
+    withScreens, workspaces',
   )
 import XMonad.Layout.LayoutModifier (ModifiedLayout)
 import XMonad.Layout.LimitWindows
@@ -125,18 +125,17 @@ import XMonad.Prompt.Man (manPrompt)
 import XMonad.Prompt.RunOrRaise (runOrRaisePrompt)
 import XMonad.Prompt.Workspace (workspacePrompt)
 import XMonad.Prompt.XMonad (xmonadPromptC)
-import XMonad.Util.ClickableWorkspaces (clickableWrap)
+import XMonad.Util.ClickableWorkspaces (clickableMarshallWorkspaceNamesPP)
 import qualified XMonad.Util.ExtensibleState as XS
 import XMonad.Util.Loggers (date)
 import XMonad.Util.NamedScratchpad
   ( NamedScratchpad (NS), namedScratchpadAction,
-    namedScratchpadFilterOutWorkspace, namedScratchpadFilterOutWorkspacePP,
-    namedScratchpadManageHook,
+    namedScratchpadManageHook, scratchpadWorkspaceTag,
   )
 import qualified XMonad.Util.NamedScratchpad as NS
 import XMonad.Util.Paste (sendKey)
 import XMonad.Util.Run (safeSpawn, safeSpawnProg, spawnPipe)
-import XMonad.Util.WorkspaceCompare (getWsIndex)
+import XMonad.Util.WorkspaceCompare (filterOutWs)
 
 
 main :: IO ()
@@ -378,19 +377,9 @@ logHook' = multiPP currentScreenPP nonCurrentScreenPP
       composePP pp >=> dynamicLogString
 
     composePP :: PP -> ScreenId -> X PP
-    composePP pp s = do
-      names <- getWorkspaceNames (marshall s)
-      click <- getClickable (marshall s . omitName)
-      pure
-        . namedScratchpadFilterOutWorkspacePP
-        . marshallPP s
-        $ pp
-          { ppCurrent         = ppCurrent         pp . click . names,
-            ppVisible         = ppVisible         pp . click . names,
-            ppHidden          = ppHidden          pp . click . names,
-            ppHiddenNoWindows = ppHiddenNoWindows pp . click . names,
-            ppUrgent          = ppUrgent          pp . click . names
-          }
+    composePP pp s =
+      filterOutWsPP [scratchpadWorkspaceTag]
+        <$> clickableMarshallWorkspaceNamesPP s pp
 
     currentScreenPP :: PP
     currentScreenPP = barPP
@@ -414,19 +403,6 @@ logHook' = multiPP currentScreenPP nonCurrentScreenPP
       | "Full"  `isInfixOf` s = xmobarColor cyan "" "·"
       | "Limit" `isInfixOf` s = xmobarColor grey2 "" "·"
       | otherwise             = ""
-
-    omitName :: WorkspaceId -> WorkspaceId
-    omitName = takeWhile (/= ':')
-
-    getWorkspaceNames :: (WorkspaceId -> WorkspaceId) -> X (WorkspaceId -> String)
-    getWorkspaceNames f = do
-      name <- getWorkspaceNames'
-      pure $ \wks -> wks ++ maybe "" (':' :) (name $ f wks)
-
-    getClickable :: (WorkspaceId -> WorkspaceId) -> X (VirtualWorkspace -> String)
-    getClickable f = do
-      wsIndex <- getWsIndex
-      pure $ \wks -> maybe wks (`clickableWrap` wks) (wsIndex $ f wks)
 
 withCurrentScreen :: (ScreenId -> X a) -> X a
 withCurrentScreen f =
@@ -841,7 +817,7 @@ keys' conf@(XConfig {modMask}) =
     emptyWorkspace = null . W.stack
 
     scratchpadWorkspace :: WindowSpace -> Bool
-    scratchpadWorkspace = null . namedScratchpadFilterOutWorkspace . (:[])
+    scratchpadWorkspace = null . filterOutWs [scratchpadWorkspaceTag] . (:[])
 
     isOnScreen :: ScreenId -> WindowSpace -> Bool
     isOnScreen s = (s ==) . unmarshallS . W.tag
@@ -857,7 +833,7 @@ keys' conf@(XConfig {modMask}) =
     recentTags ws =
       map W.tag
         . filter (not . null . W.stack)
-        . namedScratchpadFilterOutWorkspace
+        . filterOutWs [scratchpadWorkspaceTag]
         $ map W.workspace (W.visible ws)
           ++ W.hidden ws
           ++ [W.workspace (W.current ws)]

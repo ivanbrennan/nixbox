@@ -110,6 +110,7 @@ with pkgs; [
   wmctrl
   xclip
   xdg-user-dirs
+  xdotool
   xfce.thunar
   xfce.thunar-volman
   xmobar
