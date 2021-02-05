@@ -17,7 +17,7 @@ pkgs:
   # Configure touchpad.
   libinput = {
     enable = true;
-    naturalScrolling = true;
+    touchpad.naturalScrolling = true;
   };
 
   # desktopManager
