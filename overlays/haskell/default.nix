@@ -32,7 +32,7 @@ self: super:
                ];
                homepage = "http://xmonad.org/";
                description = "Third party extensions for xmonad";
-               license = stdenv.lib.licenses.bsd3;
+               license = super.lib.licenses.bsd3;
              }) {}
         );
         # ( hsuper.xmonad-contrib.overrideAttrs (old: {

@@ -1,4 +1,4 @@
-{ stdenv, fetchFromGitHub, kernel }:
+{ stdenv, fetchFromGitHub, kernel, lib }:
 
 stdenv.mkDerivation rec {
   name = "i8042_debounce-${version}-${kernel.version}";
@@ -36,7 +36,7 @@ stdenv.mkDerivation rec {
   meta = {
     description = "Module to debounce keypresses on crapppyy keyboards";
     homepage = https://github.com/nylen/i8042-debounce;
-    license = stdenv.lib.licenses.gpl3;
+    license = lib.licenses.gpl3;
     platforms = [ "x86_64-linux" ];
   };
 }
