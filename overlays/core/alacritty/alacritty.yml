@@ -238,7 +238,7 @@ color_schemes:
     #
     # By default, these will use the opposing primary color.
     line_indicator:
-      foreground: '#88aab6'
+      foreground: '#99aab6'
       background: '#1f1f1f'
 
     # Selection colors
