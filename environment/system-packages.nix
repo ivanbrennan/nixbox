@@ -43,6 +43,7 @@ with pkgs; [
   gitAndTools.delta
   glances
   global
+  gnome3.adwaita-icon-theme
   gnumake
   gnupg
   graphviz
