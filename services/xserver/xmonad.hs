@@ -81,7 +81,7 @@ import XMonad.Hooks.DynamicLog
   )
 import XMonad.Hooks.EwmhDesktops (ewmh, fullscreenEventHook)
 import XMonad.Hooks.InsertPosition
-  ( Focus (Newer), Position (Above), insertPosition,
+  ( Focus (Newer, Older), Position (Above, Below), insertPosition,
   )
 import XMonad.Hooks.ManageDebug (debugManageHookOn)
 import XMonad.Hooks.ManageDocks (ToggleStruts (ToggleStruts), avoidStruts, docks)
@@ -424,7 +424,8 @@ manageHook' =
           appName =? "manpage" -?> doCenteredFloat 0.6 0.6,
           isDialog -?> doFloat,
           className =? "Gcr-prompter" -?> doCenterFloat,
-          className =? "Xmessage" -?> doCenterFloat
+          className =? "Xmessage" -?> doCenterFloat,
+          className =? "tabbed" -?> insertPosition Below Older
         ],
       namedScratchpadManageHook scratchpads,
       insertPosition Above Newer

@@ -40,4 +40,10 @@ pkgs:
   FZF_TMUX = "1";
 
   IRBRC = "${pkgs.etcdots}/etc/irbrc";
+
+  NNN_OPTS = "eAR";
+  NNN_COLORS = "#fcfcfc";
+  NNN_FCOLORS = "c1ddfdbf006025f7c6d6abc4";
+  NNN_FIFO = "/tmp/nnn.fifo";
+  NNN_PLUG = "t:preview-tabbed";
 }

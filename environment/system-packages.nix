@@ -93,6 +93,7 @@ with pkgs; [
   stack-1_9_3
   stow
   sxiv
+  tabbed
   tcpdump
   tmux
   trayer
