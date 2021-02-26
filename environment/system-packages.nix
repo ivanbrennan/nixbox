@@ -56,6 +56,7 @@ with pkgs; [
   kitty
   kubectl
   kubernetes-helm-2_11
+  libqalculate
   lshw
   lsof
   lsscsi
@@ -77,6 +78,7 @@ with pkgs; [
   procs
   psmisc
   pup
+  qalculate-gtk
   qbittorrent
   redis
   reptyr

@@ -5,8 +5,9 @@
 import Control.Arrow (second)
 import Control.Monad (when, (>=>))
 import Data.Bits ((.|.))
+import Data.Char (isSpace)
 import Data.Dynamic (Typeable)
-import Data.List (intercalate, isInfixOf)
+import Data.List (dropWhileEnd, intercalate, isInfixOf)
 import Data.Monoid (All)
 import System.Directory (getHomeDirectory)
 import System.Environment (getArgs)
@@ -33,9 +34,9 @@ import System.Posix.Process (executeFile)
 import Graphics.X11
   ( Button, KeyMask, KeySym, Window, button1, controlMask, mod1Mask, mod4Mask,
     noModMask, shiftMask, xK_1, xK_9, xK_Alt_L, xK_Alt_R, xK_BackSpace, xK_Delete,
-    xK_Insert, xK_Print, xK_Tab, xK_a, xK_c, xK_comma, xK_d, xK_e, xK_f, xK_h,
-    xK_i, xK_j, xK_k, xK_l, xK_m, xK_n, xK_p, xK_period, xK_q, xK_r, xK_semicolon,
-    xK_slash, xK_space, xK_t, xK_u, xK_v, xK_w, xK_x, xK_y, xK_z,
+    xK_Insert, xK_Print, xK_Tab, xK_a, xK_c, xK_comma, xK_d, xK_e, xK_equal, xK_f,
+    xK_h, xK_i, xK_j, xK_k, xK_l, xK_m, xK_n, xK_p, xK_period, xK_q, xK_r,
+    xK_semicolon, xK_slash, xK_space, xK_t, xK_u, xK_v, xK_w, xK_x, xK_y, xK_z,
   )
 import Graphics.X11.ExtraTypes
   ( xF86XK_AudioLowerVolume, xF86XK_AudioMute, xF86XK_AudioRaiseVolume,
@@ -121,6 +122,7 @@ import XMonad.Prompt
   )
 import XMonad.Prompt.AppendFile (appendFilePrompt')
 import XMonad.Prompt.ConfirmPrompt (confirmPrompt)
+import XMonad.Prompt.Input (inputPrompt, (?+))
 import XMonad.Prompt.Man (manPrompt)
 import XMonad.Prompt.RunOrRaise (runOrRaisePrompt)
 import XMonad.Prompt.Workspace (workspacePrompt)
@@ -134,7 +136,7 @@ import XMonad.Util.NamedScratchpad
   )
 import qualified XMonad.Util.NamedScratchpad as NS
 import XMonad.Util.Paste (sendKey)
-import XMonad.Util.Run (safeSpawn, safeSpawnProg, spawnPipe)
+import XMonad.Util.Run (runProcessWithInput, safeSpawn, safeSpawnProg, spawnPipe)
 import XMonad.Util.WorkspaceCompare (filterOutWs)
 
 
@@ -702,6 +704,9 @@ keys' conf@(XConfig {modMask}) =
                [ ( (noModMask, xK_a),
                    appendThoughtPrompt xPConfig
                  ),
+                 ( (noModMask, xK_equal),
+                   calcPrompt xPConfig "qalc"
+                 ),
                  ( (noModMask, xK_f),
                    gotoMenuArgs dmenuOpts
                  ),
@@ -849,6 +854,16 @@ keys' conf@(XConfig {modMask}) =
 
     isTerminal :: Query Bool
     isTerminal = className =? "Alacritty"
+
+    calcPrompt :: XPConfig -> String -> X ()
+    calcPrompt xP str =
+      inputPrompt xP (trim str) ?+ \input ->
+        io (runProcessWithInput "qalc" [input] "")
+          >>= calcPrompt xP
+
+    trim :: String -> String
+    trim =
+      dropWhileEnd isSpace . dropWhile isSpace
 
     appendThoughtPrompt :: XPConfig -> X ()
     appendThoughtPrompt xP = do
