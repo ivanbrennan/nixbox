@@ -119,6 +119,7 @@ with pkgs; [
   xdotool
   xfce.thunar
   xfce.thunar-volman
+  xfce.tumbler
   xmobar
   xorg.xmessage
   xsel
