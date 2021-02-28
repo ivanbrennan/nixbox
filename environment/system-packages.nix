@@ -6,6 +6,7 @@ with pkgs; [
   abduco
   ag
   alacritty-wrapped
+  arc-icon-theme
   aspell
   aspellDicts.en
   aws-iam-authenticator
@@ -18,6 +19,7 @@ with pkgs; [
   bleep
   cabal-install
   cabal2nix
+  capitaine-cursors
   cdparanoia
   chromium
   cmus
