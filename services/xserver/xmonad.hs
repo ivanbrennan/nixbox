@@ -3,7 +3,7 @@
 
 {- base -}
 import Control.Arrow (second)
-import Control.Monad (when, (>=>))
+import Control.Monad (filterM, when, (>=>))
 import Data.Bits ((.|.))
 import Data.Char (isSpace)
 import Data.Dynamic (Typeable)
@@ -32,32 +32,34 @@ import System.Posix.Process (executeFile)
 
 {- X11 -}
 import Graphics.X11
-  ( Button, KeyMask, KeySym, Window, button1, controlMask, mod1Mask, mod4Mask,
-    noModMask, shiftMask, xK_1, xK_9, xK_Alt_L, xK_Alt_R, xK_BackSpace, xK_Delete,
-    xK_Insert, xK_Print, xK_Tab, xK_a, xK_c, xK_comma, xK_d, xK_e, xK_equal, xK_f,
-    xK_h, xK_i, xK_j, xK_k, xK_l, xK_m, xK_minus, xK_n, xK_p, xK_period, xK_q,
-    xK_r, xK_semicolon, xK_slash, xK_space, xK_t, xK_u, xK_v, xK_w, xK_x, xK_y,
-    xK_z,
+  ( Button, KeyMask, KeySym, Window, button1, controlMask, lowerWindow, mod1Mask,
+    mod4Mask, noModMask, shiftMask, xK_1, xK_9, xK_Alt_L, xK_Alt_R, xK_BackSpace,
+    xK_Delete, xK_Insert, xK_Print, xK_Tab, xK_a, xK_c, xK_comma, xK_d, xK_e,
+    xK_equal, xK_f, xK_h, xK_i, xK_j, xK_k, xK_l, xK_m, xK_minus, xK_n, xK_p,
+    xK_period, xK_q, xK_r, xK_semicolon, xK_slash, xK_space, xK_t, xK_u, xK_v,
+    xK_w, xK_x, xK_y, xK_z,
   )
 import Graphics.X11.ExtraTypes
   ( xF86XK_AudioLowerVolume, xF86XK_AudioMute, xF86XK_AudioRaiseVolume,
     xF86XK_Copy, xF86XK_MonBrightnessDown, xF86XK_MonBrightnessUp, xF86XK_Paste,
   )
-import Graphics.X11.Xlib.Extras (Event)
+import Graphics.X11.Xlib.Extras
+  ( Event (ConfigureEvent), ev_above, ev_window, none, queryTree,
+  )
 
 {- xmonad -}
 import XMonad
   ( ChangeLayout (NextLayout), Choose, ExtensionClass, IncMasterN (IncMasterN),
     Layout, ManageHook, MonadIO, Query, Resize (Expand, Shrink), ScreenId (S),
     StateExtension (PersistentExtension), WindowSet, WindowSpace, WorkspaceId, X,
-    XConf, XConfig (XConfig), appName, catchIO, className, clickJustFocuses,
+    XConf, XConfig (XConfig), appName, asks, catchIO, className, clickJustFocuses,
     composeAll, config, description, doFloat, doIgnore, extensionType, focus,
     focusedBorderColor, getXMonadDataDir, handleEventHook, initialValue, io, keys,
     kill, launch, layoutHook, local, logHook, manageHook, modMask, mouseBindings,
-    mouseMoveWindow, normalBorderColor, recompile, refresh, restart,
-    screenWorkspace, sendMessage, spawn, startupHook, terminal, trace, whenJust,
-    whenX, windows, withFocused, withWindowSet, workspaces, writeStateToFile,
-    (=?), (|||),
+    mouseMoveWindow, normalBorderColor, recompile, refresh, restart, runQuery,
+    screenWorkspace, sendMessage, spawn, startupHook, terminal, theRoot, trace,
+    whenJust, whenX, windows, withDisplay, withFocused, withWindowSet, workspaces,
+    writeStateToFile, (=?), (|||),
   )
 import qualified XMonad.StackSet as W
 
@@ -237,7 +239,8 @@ systray = spawn $
           "--transparent true",
           "--alpha 0",
           "--tint 0x161616",
-          "--monitor 0"
+          "--monitor 0",
+          "-l" -- lower on startup
         ]
 
 -- https://github.com/jaor/xmobar/issues/432
@@ -416,7 +419,26 @@ handleEventHook' :: Event -> X All
 handleEventHook' =
   dynStatusBarEventHook xmobar killAlsactl
     <> refocusLastWhen isFloat
+    <> trayerDockEventHook
     <> fullscreenEventHook
+  where
+    trayerDockEventHook :: Event -> X All
+    trayerDockEventHook ConfigureEvent {ev_window, ev_above} | ev_above == none =
+      do
+        whenX
+          (runQuery (className =? "trayer") ev_window)
+          (ev_window `stackAbove` "xmobar")
+        mempty
+    trayerDockEventHook _ = mempty
+
+    stackAbove :: Window -> String -> X ()
+    w `stackAbove` appname =
+      withDisplay $ \dpy -> do
+        rootw <- asks theRoot
+        (_, _, ws) <- io (queryTree dpy rootw)
+        let ws' = dropWhile (w /=) ws
+        xmobarWs <- filterM (runQuery (appName =? appname)) ws'
+        mapM_ (io . lowerWindow dpy) xmobarWs
 
 
 manageHook' :: ManageHook
