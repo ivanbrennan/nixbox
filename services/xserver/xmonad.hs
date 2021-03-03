@@ -35,8 +35,9 @@ import Graphics.X11
   ( Button, KeyMask, KeySym, Window, button1, controlMask, mod1Mask, mod4Mask,
     noModMask, shiftMask, xK_1, xK_9, xK_Alt_L, xK_Alt_R, xK_BackSpace, xK_Delete,
     xK_Insert, xK_Print, xK_Tab, xK_a, xK_c, xK_comma, xK_d, xK_e, xK_equal, xK_f,
-    xK_h, xK_i, xK_j, xK_k, xK_l, xK_m, xK_n, xK_p, xK_period, xK_q, xK_r,
-    xK_semicolon, xK_slash, xK_space, xK_t, xK_u, xK_v, xK_w, xK_x, xK_y, xK_z,
+    xK_h, xK_i, xK_j, xK_k, xK_l, xK_m, xK_minus, xK_n, xK_p, xK_period, xK_q,
+    xK_r, xK_semicolon, xK_slash, xK_space, xK_t, xK_u, xK_v, xK_w, xK_x, xK_y,
+    xK_z,
   )
 import Graphics.X11.ExtraTypes
   ( xF86XK_AudioLowerVolume, xF86XK_AudioMute, xF86XK_AudioRaiseVolume,
@@ -606,7 +607,7 @@ keys' conf@(XConfig {modMask}) =
       ( (controlMask, xK_space),
         safeSpawn "dmenu_run" dmenuOpts
       ),
-      ( (controlMask .|. shiftMask, xK_space),
+      ( (modMask, xK_minus),
         namedScratchpadAction scratchpads (NS.name scratchTerminal)
       ),
       ( (mod4Mask .|. modMask, xK_y),
