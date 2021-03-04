@@ -514,9 +514,6 @@ keys' conf@(XConfig {modMask}) =
       ( (mod4Mask, xK_Tab),
         moveTo Next NonEmptyWS
       ),
-      ( (modMask .|. shiftMask, xK_semicolon),
-        changeProjectDirPrompt xPConfig
-      ),
       -- focus
       ( (modMask, xK_j),
         do
@@ -721,10 +718,10 @@ keys' conf@(XConfig {modMask}) =
                --   ( (noModMask, xK_m),
                --     renameProjectPrompt xPConfig
                --   ),
-               --   ( (noModMask, xK_c),
-               --     changeProjectDirPrompt xPConfig
-               --   ),
-               [ ( (noModMask, xK_a),
+               [ ( (noModMask, xK_c),
+                   changeProjectDirPrompt xPConfig
+                 ),
+                 ( (noModMask, xK_a),
                    appendThoughtPrompt xPConfig
                  ),
                  ( (noModMask, xK_equal),
