@@ -259,7 +259,7 @@ xmobar s@(S i) = spawnPipe $
   unwords
     [ "xmobar",
       "-B", translate black,
-      "-F", translate grey6,
+      "-F", translate grey5,
       "-f", "xft:monospace:size=11",
       "-N", "xft:FontAwesome:size=11",
       "-i", "/run/current-system/sw/share/icons/xmobar",
@@ -344,7 +344,7 @@ xmobarCommands (S i) = map unwords $
         "--",
         "--on"  , fontN 1 "\xf026" ++ "<volume>",
         "--off" , fontN 1 "\xf026" ++ "<volume>",
-        "--onc" , grey6,
+        "--onc" , grey5,
         "--offc", grey2
       ]
 
@@ -396,7 +396,7 @@ logHook' = multiPP currentScreenPP nonCurrentScreenPP
     barPP :: PP
     barPP =
       xmobarPP
-        { ppCurrent = xmobarColor grey7 blue . pad,
+        { ppCurrent = xmobarColor grey6 blue . pad,
           ppHidden  = xmobarColor grey4 grey1 . pad,
           ppSep     = " ",
           ppWsSep   = "",
@@ -902,7 +902,7 @@ keys' conf@(XConfig {modMask}) =
         "-l", "24",
         "-i",
         "-nb", grey0,
-        "-nf", grey6,
+        "-nf", grey5,
         "-sb", grey1,
         "-sf", white
       ]
@@ -940,8 +940,8 @@ xPConfig =
       promptKeymap         = keymap `M.union` defaultXPKeymap,
       complCaseSensitivity = ComplCaseSensitive False,
       bgColor              = grey0,
-      fgColor              = grey5,
-      bgHLight             = grey7,
+      fgColor              = grey6,
+      bgHLight             = grey6,
       fgHLight             = grey0,
       font                 = "xft:monospace:size=12"
     }
@@ -972,16 +972,15 @@ mouseBindings' XConfig {modMask} =
     ]
 
 
-black, grey0, grey1, grey2, grey3, grey4, grey6, grey5, grey7, white :: String
+black, grey0, grey1, grey2, grey3, grey4, grey5, grey6, white :: String
 black = "#161616"
 grey0 = "#1c1c1c"
 grey1 = "#212121"
 grey2 = "#525d6a"
 grey3 = "#787888"
 grey4 = "#888888"
-grey5 = "#aaaaaa"
-grey6 = "#a8b8b8"
-grey7 = "#dddddd"
+grey5 = "#a8b8b8"
+grey6 = "#dddddd"
 white = "#ffffff"
 
 chalk, blue, cyan, orange, red :: String
