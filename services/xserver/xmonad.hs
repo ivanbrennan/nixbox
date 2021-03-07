@@ -947,10 +947,10 @@ xPConfig =
     }
   where
     keymap = M.fromList $
-      [ ((controlMask, xK_p), moveHistory W.focusUp'),
-        ((mod1Mask,    xK_p), moveHistory W.focusUp'),
-        ((controlMask, xK_n), moveHistory W.focusDown'),
-        ((mod1Mask,    xK_n), moveHistory W.focusDown')
+      [ ((controlMask, xK_n), moveHistory W.focusUp'),
+        ((mod1Mask,    xK_n), moveHistory W.focusUp'),
+        ((controlMask, xK_p), moveHistory W.focusDown'),
+        ((mod1Mask,    xK_p), moveHistory W.focusDown')
       ]
 
 
