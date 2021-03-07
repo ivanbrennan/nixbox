@@ -24,7 +24,7 @@ _build_color_prompt() {
     bold="\033[1m"
     normal="\033[0m"
 
-    line1="╭\[${bold}\]\w\[${normal}\]\$(_git_ps1_)\[${normal}\] \[${black}\]\$? \d \t\[${normal}\]"
+    line1="╭──\$(printf '%.3d' \$?)──╼ \[${bold}\]\w\[${normal}\]\$(_git_ps1_)\[${normal}\] \[${black}\] \d \t\[${normal}\]"
     line2="╰(\u)• "
 
     PS1="\n${line1}\n${line2}"
