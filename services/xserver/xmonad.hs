@@ -34,10 +34,10 @@ import System.Posix.Process (executeFile)
 import Graphics.X11
   ( Button, KeyMask, KeySym, Window, button1, controlMask, lowerWindow, mod1Mask,
     mod4Mask, noModMask, shiftMask, xK_1, xK_9, xK_Alt_L, xK_Alt_R, xK_BackSpace,
-    xK_Delete, xK_Insert, xK_Print, xK_Tab, xK_a, xK_c, xK_comma, xK_d, xK_e,
-    xK_equal, xK_f, xK_h, xK_i, xK_j, xK_k, xK_l, xK_m, xK_minus, xK_n, xK_p,
-    xK_period, xK_q, xK_r, xK_semicolon, xK_slash, xK_space, xK_t, xK_u, xK_v,
-    xK_w, xK_x, xK_y, xK_z,
+    xK_Delete, xK_Insert, xK_Print, xK_Return, xK_Tab, xK_a, xK_c, xK_comma,
+    xK_d, xK_e, xK_equal, xK_f, xK_h, xK_i, xK_j, xK_k, xK_l, xK_m, xK_minus,
+    xK_n, xK_p, xK_period, xK_q, xK_r, xK_semicolon, xK_slash, xK_space, xK_u,
+    xK_v, xK_w, xK_x, xK_y, xK_z,
   )
 import Graphics.X11.ExtraTypes
   ( xF86XK_AudioLowerVolume, xF86XK_AudioMute, xF86XK_AudioRaiseVolume,
@@ -458,7 +458,11 @@ manageHook' =
 
 doCenteredFloat :: Rational -> Rational -> ManageHook
 doCenteredFloat width height =
-  doRectFloat (W.RationalRect x y width height)
+  doRectFloat (centeredRect width height)
+
+centeredRect :: Rational -> Rational -> W.RationalRect
+centeredRect width height =
+  W.RationalRect x y width height
   where
     x :: Rational
     x = (1 - width) / 2
@@ -593,8 +597,8 @@ keys' conf@(XConfig {modMask}) =
         refresh
       ),
       -- tile
-      ( (mod4Mask, xK_t),
-        withFocused (windows . W.sink)
+      ( (mod4Mask, xK_Return),
+        withFocused $ windows . toggleFloat (centeredRect 0.7 0.7)
       ),
       -- exec the xmonad found on PATH, resuming state
       ( (mod4Mask, xK_q),
@@ -863,6 +867,12 @@ keys' conf@(XConfig {modMask}) =
         $ map W.workspace (W.visible ws)
           ++ W.hidden ws
           ++ [W.workspace (W.current ws)]
+
+    toggleFloat :: W.RationalRect -> Window -> WindowSet -> WindowSet
+    toggleFloat rec w s =
+      if w `M.member` W.floating s
+        then W.sink w s
+        else W.float w rec s
 
     setTerminal :: String -> XConf -> XConf
     setTerminal t xc =
