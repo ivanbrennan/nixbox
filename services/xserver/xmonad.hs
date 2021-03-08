@@ -598,7 +598,7 @@ keys' conf@(XConfig {modMask}) =
       ),
       -- tile
       ( (mod4Mask, xK_Return),
-        withFocused $ windows . toggleFloat (centeredRect 0.7 0.7)
+        withFocused $ windows . toggleFloat (centeredRect 0.8 0.7)
       ),
       -- exec the xmonad found on PATH, resuming state
       ( (mod4Mask, xK_q),
