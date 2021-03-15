@@ -33,6 +33,7 @@ with pkgs; [
   dunst
   easyrsa
   emacs
+  emc
   fd
   feh
   file

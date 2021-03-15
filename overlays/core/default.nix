@@ -25,6 +25,8 @@ self: super: {
     alacritty = self.alacritty-wrapped;
   };
 
+  emc = super.callPackage ./emc { };
+
   etcdots = super.callPackage ./etcdots { };
 
   flaccurate = super.callPackage ./flaccurate { };
