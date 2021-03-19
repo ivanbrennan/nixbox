@@ -1,5 +1,5 @@
 { writeShellScriptBin }:
 
 writeShellScriptBin "emc" ''
-  exec emacsclient -c "$@"
+  exec emacsclient -a "" -c "$@"
 ''
