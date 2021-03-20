@@ -7,8 +7,6 @@ shopt -s histappend cmdhist lithist
 # If shell is interactive, disable START/STOP output control.
 # This allows Ctrl-S to trigger i-search.
 if [[ $- = *i* ]]; then
-  # -ixon : Disable START/STOP output control.
-  # This allows Ctrl-S to trigger i-search.
   stty -ixon
 fi
 
