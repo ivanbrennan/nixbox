@@ -797,14 +797,13 @@ key_bindings:
   - { key: E,      mods: Shift,         mode: Vi|~Search,  action: WordRightEnd            }
   - { key: Key5,   mods: Shift,         mode: Vi|~Search,  action: Bracket                 }
   - { key: Slash,                       mode: Vi|~Search,  action: SearchForward           }
+  # NOTE: Slash with modifiers isn't being recognized, so we use the scancode directly.
   - { key: 53,     mods: Shift,         mode: Vi|~Search,  action: SearchBackward          }
   - { key: N,                           mode: Vi|~Search,  action: SearchNext              }
   - { key: N,      mods: Shift,         mode: Vi|~Search,  action: SearchPrevious          }
 
-  # NOTE: Slash with modifiers isn't being recognized, so we use the scancode
-  # (53) directly here as a workaround.
-  - { key: 53,       mods: Control,  mode: ~Vi|~Search,      action: ToggleViMode    }
-  - { key: 53,       mods: Control,  mode: ~Vi|~Search,      action: SearchBackward  }
+  - { key: Slash,    mods: Control,  mode: ~Vi|~Search,      action: ToggleViMode    }
+  - { key: Slash,    mods: Control,  mode: ~Vi|~Search,      action: SearchBackward  }
 
   # Search Mode
   - { key: Return,                mode: Search|Vi,  action: SearchConfirm         }
