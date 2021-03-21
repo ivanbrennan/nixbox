@@ -598,7 +598,14 @@ keys' conf@(XConfig {modMask}) =
       ),
       -- tile
       ( (mod4Mask, xK_Return),
-        withFocused $ windows . toggleFloat (centeredRect 0.8 0.7)
+        withFocused $ windows . cycleFloat [centeredRect 0.80 0.70]
+      ),
+      ( (mod4Mask .|. shiftMask, xK_Return),
+        withFocused $ windows . cycleFloat
+          [ centeredRect 0.95 0.89,
+            centeredRect 0.88 0.79,
+            centeredRect 0.80 0.70
+          ]
       ),
       -- exec the xmonad found on PATH, resuming state
       ( (mod4Mask, xK_q),
@@ -868,11 +875,15 @@ keys' conf@(XConfig {modMask}) =
           ++ W.hidden ws
           ++ [W.workspace (W.current ws)]
 
-    toggleFloat :: W.RationalRect -> Window -> WindowSet -> WindowSet
-    toggleFloat rec w s =
-      if w `M.member` W.floating s
-        then W.sink w s
-        else W.float w rec s
+    cycleFloat :: [W.RationalRect] -> Window -> WindowSet -> WindowSet
+    cycleFloat recs w s =
+      maybe (W.sink w) (W.float w) mRec s
+      where
+        mRec  = find ((< width) . rationalWidth) recs
+        width = maybe 1 rationalWidth (w `M.lookup` W.floating s)
+
+    rationalWidth :: W.RationalRect -> Rational
+    rationalWidth (W.RationalRect _ _ w _) = w
 
     setTerminal :: String -> XConf -> XConf
     setTerminal t xc =
