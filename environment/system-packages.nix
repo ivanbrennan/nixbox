@@ -39,7 +39,7 @@ with pkgs; [
   file
   flac
   flaccurate
-  fly-7_0_0
+  fly-7_1_0
   fzf
   gimp
   git

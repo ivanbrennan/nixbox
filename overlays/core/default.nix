@@ -31,10 +31,10 @@ self: super: {
 
   flaccurate = super.callPackage ./flaccurate { };
 
-  fly-7_0_0 =
+  fly-7_1_0 =
     (import (builtins.fetchTarball {
-      url = "https://github.com/NixOS/nixpkgs/archive/74b34f4a1705763fff52febb9648ac6dc6d9e953.tar.gz";
-      sha256 = "1f0fi95nglyf7ificjnaszbbq912zh1bgcg3yw3236cpy2zd1mnd";
+      url = "https://github.com/NixOS/nixpkgs/archive/b3e20ea813400a8c23444455f13a81f5de15c74d.tar.gz";
+      sha256 = "10a10syc2n6l87ah5ncr692d08jxixjgsb7rhf62wxsah8dka62p";
     }) { }).fly;
 
   interactive-editor = super.callPackage ./interactive-editor { };
