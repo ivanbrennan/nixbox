@@ -23,9 +23,10 @@
     remote-cert-tls server
 
     # The cipher the server is using.
-    cipher AES-256-CBC
+    data-ciphers AES-256-CBC
+    data-ciphers-fallback AES-256-CBC
 
-    # Server has compression enabled, so we can too.
+    # Server has compression enabled, so we must also.
     compress lzo
 
     # Don't cache passwords in memory.
