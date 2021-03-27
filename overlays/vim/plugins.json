@@ -31,8 +31,8 @@
     "src": {
       "owner": "ivanbrennan",
       "repo": "coherent",
-      "rev": "d08f6835b3bc4122b728c709f042a25a30af51cf",
-      "sha256": "13kicn6vj3bzqzk5sk7wy9fky8zl4l48642vm386ljksj7dzgsim"
+      "rev": "208df8a3f04be4cb0ba210931c2e86ae1949c32f",
+      "sha256": "1j782vaysz38xhq704vdxy6s975j03w4678yyghm7mirz756kzxk"
     }
   },
   "coot": {
