@@ -58,9 +58,9 @@ import XMonad
     focusedBorderColor, getXMonadDataDir, handleEventHook, initialValue, io, keys,
     kill, launch, layoutHook, local, logHook, manageHook, modMask, mouseBindings,
     mouseMoveWindow, normalBorderColor, recompile, refresh, restart, runQuery,
-    screenWorkspace, sendMessage, spawn, startupHook, terminal, theRoot, trace,
-    whenJust, whenX, windows, withDisplay, withFocused, withWindowSet, workspaces,
-    writeStateToFile, (=?), (|||),
+    screenWorkspace, sendMessage, spawn, startupHook, terminal, theRoot, title,
+    trace, whenJust, whenX, windows, withDisplay, withFocused, withWindowSet,
+    workspaces, writeStateToFile, (=?), (|||),
   )
 import qualified XMonad.StackSet as W
 
@@ -473,18 +473,33 @@ centeredRect width height =
 
 scratchpads :: [NamedScratchpad]
 scratchpads =
-  [ scratchTerminal
+  [ scratchpadTerminal,
+    scratchpadEmacs
   ]
 
-scratchTerminal :: NamedScratchpad
-scratchTerminal =
+scratchpadTerminal :: NamedScratchpad
+scratchpadTerminal =
   NS name command (appName =? name) (doCenteredFloat 0.8 0.7)
   where
     name :: String
-    name = "scratchpad"
+    name = "scratchpadTerminal"
 
     command :: String
     command = "alacritty-transparent --class " ++ name
+
+scratchpadEmacs :: NamedScratchpad
+scratchpadEmacs =
+  NS name command (title =? name) (doCenteredFloat 0.8 0.7)
+  where
+    name :: String
+    name = "scratchpadEmacs"
+
+    command :: String
+    command =
+      "emc --no-wait --frame-parameters=" ++ frameParameters
+
+    frameParameters :: String
+    frameParameters = "'(quote (name . " ++ quote name ++ "))'"
 
 
 -- https://github.com/xmonad/X11/blob/6e5ef8019a0cc49e18410a335dbdeea87b7c4aac/Graphics/X11/Types.hsc
@@ -639,7 +654,10 @@ keys' conf@(XConfig {modMask}) =
         safeSpawn "dmenu_run" dmenuOpts
       ),
       ( (modMask, xK_minus),
-        namedScratchpadAction scratchpads (NS.name scratchTerminal)
+        namedScratchpadAction scratchpads (NS.name scratchpadTerminal)
+      ),
+      ( (modMask .|. shiftMask, xK_minus),
+        namedScratchpadAction scratchpads (NS.name scratchpadEmacs)
       ),
       ( (mod4Mask .|. modMask, xK_y),
         debugStackString
