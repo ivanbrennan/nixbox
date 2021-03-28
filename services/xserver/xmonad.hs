@@ -121,8 +121,8 @@ import XMonad.Layout.StateFull (FocusTracking, focusTracking)
 import XMonad.Prompt
   ( ComplCaseSensitivity (ComplCaseSensitive), XPConfig, XPPosition (Top),
     alwaysHighlight, bgColor, bgHLight, complCaseSensitivity, defaultXPKeymap,
-    fgColor, fgHLight, font, height, moveHistory, position, promptBorderWidth,
-    promptKeymap,
+    deleteConsecutive, fgColor, fgHLight, font, height, historyFilter,
+    moveHistory, position, promptBorderWidth, promptKeymap,
   )
 import XMonad.Prompt.AppendFile (appendFilePrompt')
 import XMonad.Prompt.ConfirmPrompt (confirmPrompt)
@@ -979,6 +979,7 @@ xPConfig =
       promptBorderWidth    = 0,
       promptKeymap         = keymap `M.union` defaultXPKeymap,
       complCaseSensitivity = ComplCaseSensitive False,
+      historyFilter        = deleteConsecutive,
       bgColor              = grey0,
       fgColor              = grey6,
       bgHLight             = grey6,
