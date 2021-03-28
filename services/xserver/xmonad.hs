@@ -53,10 +53,10 @@ import XMonad
   ( ChangeLayout (NextLayout), Choose, ExtensionClass, IncMasterN (IncMasterN),
     Layout, ManageHook, MonadIO, Query, Resize (Expand, Shrink), ScreenId (S),
     StateExtension (PersistentExtension), WindowSet, WindowSpace, WorkspaceId, X,
-    XConfig (XConfig), appName, asks, catchIO, className, clickJustFocuses,
-    composeAll, description, doFloat, doIgnore, extensionType, focus,
+    XConf, XConfig (XConfig), appName, asks, catchIO, className, clickJustFocuses,
+    composeAll, config, description, doFloat, doIgnore, extensionType, focus,
     focusedBorderColor, getXMonadDataDir, handleEventHook, initialValue, io, keys,
-    kill, launch, layoutHook, logHook, manageHook, modMask, mouseBindings,
+    kill, launch, layoutHook, local, logHook, manageHook, modMask, mouseBindings,
     mouseMoveWindow, normalBorderColor, recompile, refresh, restart, runQuery,
     screenWorkspace, sendMessage, spawn, startupHook, terminal, theRoot, title,
     trace, whenJust, whenX, windows, withDisplay, withFocused, withWindowSet,
@@ -127,6 +127,7 @@ import XMonad.Prompt
 import XMonad.Prompt.AppendFile (appendFilePrompt')
 import XMonad.Prompt.ConfirmPrompt (confirmPrompt)
 import XMonad.Prompt.Input (inputPrompt, (?+))
+import XMonad.Prompt.Man (manPrompt)
 import XMonad.Prompt.RunOrRaise (runOrRaisePrompt)
 import XMonad.Prompt.Workspace (workspacePrompt)
 import XMonad.Prompt.XMonad (xmonadPromptC)
@@ -649,9 +650,6 @@ keys' conf@(XConfig {modMask}) =
       ( (modMask .|. shiftMask, xK_i),
         dmenuSpawnTerminal
       ),
-      ( (modMask, xK_slash),
-        dmenuManpages
-      ),
       ( (controlMask, xK_space),
         safeSpawn "dmenu_run" dmenuOpts
       ),
@@ -729,6 +727,16 @@ keys' conf@(XConfig {modMask}) =
     ]
       ++ workspaceTagKeys
       ++ screenKeys
+      ++ [ ( (modMask, xK_slash),
+             submap . M.fromList $
+               [ ( (modMask, xK_slash),
+                   local
+                     (setTerminal "alacritty --class=manpage")
+                     (manPrompt xPConfig)
+                 )
+               ]
+           )
+         ]
       ++ [ ( (modMask, alt),
              submap . M.fromList $
                -- [ ( (noModMask, xK_u),
@@ -896,6 +904,10 @@ keys' conf@(XConfig {modMask}) =
     rationalWidth :: W.RationalRect -> Rational
     rationalWidth (W.RationalRect _ _ w _) = w
 
+    setTerminal :: String -> XConf -> XConf
+    setTerminal t xc =
+      xc {config = (config xc) {terminal = t}}
+
     ifTerminal :: X () -> X () -> X ()
     ifTerminal thenX elseX =
       bindFirst [(isTerminal, thenX), (pure True, elseX)]
@@ -923,10 +935,6 @@ keys' conf@(XConfig {modMask}) =
     dmenuSpawnTerminal =
       safeSpawn "dmenu_cdpath-alacritty" $
         "~/Development" : "--" : dmenuOpts
-
-    dmenuManpages :: X ()
-    dmenuManpages =
-      safeSpawn "dmenu_manpages-alacritty" dmenuOpts
 
     dmenuOpts :: [String]
     dmenuOpts =
