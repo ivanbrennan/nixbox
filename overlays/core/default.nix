@@ -12,6 +12,7 @@ self: super: {
   bloop = super.callPackage ./bloop { };
 
   dmenu_cdpath = super.callPackage ./dmenu_cdpath { };
+  dmenu_manpages = super.callPackage ./dmenu_manpages { };
 
   dunst = super.callPackage ./dunst {
     dunst = super.dunst;
