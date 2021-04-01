@@ -653,6 +653,9 @@ keys' conf@(XConfig {modMask}) =
       ( (controlMask, xK_space),
         safeSpawn "dmenu_run" dmenuOpts
       ),
+      ( (modMask, xK_Tab),
+        namedScratchpadAction scratchpads (NS.name scratchpadTerminal)
+      ),
       ( (modMask, xK_minus),
         namedScratchpadAction scratchpads (NS.name scratchpadTerminal)
       ),
