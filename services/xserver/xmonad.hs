@@ -561,16 +561,16 @@ keys' conf@(XConfig {modMask}) =
       ( (modMask .|. controlMask, xK_j),
         rotSlavesUp
       ),
-      ( (mod4Mask .|. controlMask, xK_k),
+      ( (mod4Mask .|. controlMask, xK_h),
         rotAllDown
       ),
-      ( (mod4Mask .|. controlMask, xK_j),
+      ( (mod4Mask .|. controlMask, xK_l),
         rotAllUp
       ),
-      ( (modMask .|. controlMask, xK_n),
+      ( (mod4Mask .|. controlMask, xK_n),
         surfaceNext
       ),
-      ( (modMask .|. controlMask, xK_p),
+      ( (mod4Mask .|. controlMask, xK_p),
         surfacePrev
       ),
       ( (modMask .|. controlMask, xK_comma),
