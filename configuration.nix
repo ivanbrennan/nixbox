@@ -13,6 +13,8 @@
       ./security
       ./services
       ./users
+      # TODO: kmonad config is machine-specific
+      ./kmonad.nix
     ];
 
   i18n.defaultLocale = "en_US.UTF-8";

@@ -11,6 +11,11 @@
       udevmonConfig = ./udevmon.yaml;
     };
 
+    kmonad = {
+      enable = true;
+      configfile = ./config.kbd;
+    };
+
     locate.enable = true;
 
     openvpn = import ./openvpn;

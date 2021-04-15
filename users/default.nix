@@ -8,7 +8,9 @@
       extraGroups = [
         "dialout"
         "docker"
+        "input"
         "networkmanager"
+        "uinput"
         "vboxusers"
         "video"
         "wheel"
