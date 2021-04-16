@@ -30,7 +30,7 @@
 (defalias
   ec (tap-hold-next 180 esc lctl)
   'c (tap-hold-next-release 250 ' rctl)
-  /s (tap-hold-next-release 250 / rsft)
+  /s (tap-hold-next 250 / rsft)
 )
 
 (deflayer qwerty
