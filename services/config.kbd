@@ -29,7 +29,6 @@
 
 (defalias
   ec (tap-hold-next 180 esc lctl)
-  'c (tap-hold-next-release 250 ' rctl)
   /s (tap-hold 200 / rsft)
   ba (tap-hold-next 180 bspc lalt)
 )
@@ -38,7 +37,7 @@
   esc  f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12  prnt ins  del
   grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
   tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
-  @ec  a    s    d    f    g    h    j    k    l    ;    @'c  ret
+  @ec  a    s    d    f    g    h    j    k    l    ;    '    ret
   lsft z    x    c    v    b    n    m    ,    .    @/s  rsft
   lctl      lmet @ba  spc                 ralt rctl      left up   down rght
 )
