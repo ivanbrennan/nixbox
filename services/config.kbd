@@ -31,6 +31,7 @@
   ec (tap-hold-next 180 esc lctl)
   'c (tap-hold-next-release 250 ' rctl)
   /s (tap-hold 200 / rsft)
+  ba (tap-hold-next 180 bspc lalt)
 )
 
 (deflayer qwerty
@@ -39,5 +40,5 @@
   tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
   @ec  a    s    d    f    g    h    j    k    l    ;    @'c  ret
   lsft z    x    c    v    b    n    m    ,    .    @/s  rsft
-  lctl      lmet lalt spc                 ralt rctl      left up   down rght
+  lctl      lmet @ba  spc                 ralt rctl      left up   down rght
 )
