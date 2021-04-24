@@ -37,8 +37,8 @@ import Graphics.X11
     mod4Mask, noModMask, shiftMask, xK_1, xK_9, xK_Alt_L, xK_Alt_R, xK_BackSpace,
     xK_Delete, xK_Insert, xK_Print, xK_Return, xK_Tab, xK_a, xK_c, xK_comma,
     xK_d, xK_e, xK_equal, xK_f, xK_h, xK_i, xK_j, xK_k, xK_l, xK_m, xK_minus,
-    xK_n, xK_p, xK_period, xK_q, xK_r, xK_semicolon, xK_slash, xK_space, xK_u,
-    xK_v, xK_w, xK_x, xK_y, xK_z,
+    xK_n, xK_p, xK_period, xK_q, xK_r, xK_s, xK_semicolon, xK_slash, xK_space,
+    xK_u, xK_v, xK_w, xK_x, xK_y, xK_z,
   )
 import Graphics.X11.ExtraTypes
   ( xF86XK_AudioLowerVolume, xF86XK_AudioMute, xF86XK_AudioRaiseVolume,
@@ -140,7 +140,9 @@ import XMonad.Util.NamedScratchpad
   )
 import qualified XMonad.Util.NamedScratchpad as NS
 import XMonad.Util.Paste (sendKey)
-import XMonad.Util.Run (runProcessWithInput, safeSpawn, safeSpawnProg, spawnPipe)
+import XMonad.Util.Run
+  ( runProcessWithInput, runInTerm, safeSpawn, safeSpawnProg, spawnPipe,
+  )
 import XMonad.Util.WorkspaceCompare (filterOutWs)
 
 
@@ -365,6 +367,9 @@ brackets s = "[" ++ s ++ "]"
 
 quote :: String -> String
 quote = wrap "\"" "\""
+
+quote' :: String -> String
+quote' = wrap "'" "'"
 
 icon :: String -> String
 icon = wrap "<icon=" "/>"
@@ -784,6 +789,9 @@ keys' conf@(XConfig {modMask}) =
                  ( (noModMask, xK_r),
                    runOrRaisePrompt xPConfig
                  ),
+                 ( (noModMask, xK_s),
+                   sudoTerm "/etc/nixos"
+                 ),
                  ( (noModMask, xK_w),
                    workspacePrompt xPConfig (windows . W.view)
                  ),
@@ -917,6 +925,17 @@ keys' conf@(XConfig {modMask}) =
 
     isTerminal :: Query Bool
     isTerminal = className =? "Alacritty"
+
+    sudoTerm :: FilePath -> X ()
+    sudoTerm dir =
+      runInTerm
+        ""
+        ( "bash -c "
+            <> quote'
+              ( "sudo --login bash -c "
+                  <> quote ("cd " <> dir <> " ; exec bash")
+              )
+        )
 
     calcPrompt :: XPConfig -> String -> X ()
     calcPrompt xP str =
