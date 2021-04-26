@@ -30,7 +30,8 @@
 (defalias
   ec (tap-hold-next 180 esc lctl)
   /s (tap-hold 200 / rsft)
-  ba (tap-hold-next 180 bspc lalt)
+  ;; ba (tap-hold-next 180 bspc lalt)
+  ;; sa (tap-hold-next 180 spc ralt)
 )
 
 (deflayer qwerty
@@ -39,5 +40,5 @@
   tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
   @ec  a    s    d    f    g    h    j    k    l    ;    '    ret
   lsft z    x    c    v    b    n    m    ,    .    @/s  rsft
-  lctl      lmet @ba  spc                 ralt rctl      left up   down rght
+  lctl      lmet lalt spc                 ralt rctl      left up   down rght
 )
