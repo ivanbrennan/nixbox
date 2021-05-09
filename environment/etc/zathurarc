@@ -1,2 +1,3 @@
 set selection-clipboard clipboard
 set selection-notification false
+set scroll-full-overlap 0.1
