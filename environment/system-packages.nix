@@ -36,6 +36,7 @@ with pkgs; [
   emc
   fd
   feh
+  ffmpeg
   file
   flac
   flaccurate
