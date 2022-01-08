@@ -12,7 +12,7 @@
     };
 
     kmonad = {
-      enable = true;
+      # enable = true;
       configfile = ./config.kbd;
     };
 
