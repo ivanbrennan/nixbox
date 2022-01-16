@@ -6,10 +6,17 @@
 
 {
   imports =
-    [
+    [ # Symlink: sudo make -C /etc/nixos machine=MACHINE
       "${builtins.fetchTarball { url = "https://github.com/NixOS/nixos-hardware/archive/d7a12fcc071bff59bd0ead589c975d802952a064.tar.gz"; sha256 = "1a213sa4smqwwhkwjsm2ccrzbq7mb0qrrw54jc2ik7q0v4x93ypn"; }}/lenovo/thinkpad/x1/9th-gen"
       ./hardware-configuration.nix
+
+      # shared
+      ./environment
     ];
+
+  # Allow redshift to work.
+  location.latitude = 40.7;
+  location.longitude = -74.0;
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
@@ -41,7 +48,7 @@
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
   # Select internationalisation properties.
-  # i18n.defaultLocale = "en_US.UTF-8";
+  i18n.defaultLocale = "en_US.UTF-8";
   # console = {
   #   font = "Lat2-Terminus16";
   #   keyMap = "us";
@@ -50,8 +57,61 @@
   # Enable the X11 windowing system.
   # services.xserver.enable = true;
 
+  nixpkgs.config = {
+    allowUnfree = true;
 
-  
+    vim = {
+      # Don't patch minimal nix support into vim. I'll use a plugin.
+      ftNix = false;
+
+      # Avoid cursor redraw bugs
+      gui = "no";
+    };
+  };
+
+  nixpkgs.overlays =
+    [ (import ./overlays/core)
+      (import ./overlays/haskell)
+      # (import ./overlays/odeko)
+      (import ./overlays/vim)
+    ];
+
+  nix = {
+    nixPath =
+      [ "nixpkgs=/nix/var/nix/profiles/per-user/root/channels/nixos/nixpkgs"
+        "nixpkgs-overlays=/etc/nixos/overlays"
+        "nixos-config=/etc/nixos/configuration.nix"
+        "/nix/var/nix/profiles/per-user/root/channels"
+      ];
+
+    envVars = {
+      NIX_GITHUB_PRIVATE_USERNAME = import ./environment/github-username.private;
+      NIX_GITHUB_PRIVATE_PASSWORD = import ./environment/github-token.private;
+    };
+
+    trustedUsers = [ "ivan" ];
+
+    gc.automatic = true;
+    gc.dates = "03:15";
+  };
+
+  fonts = {
+    fonts = [
+      pkgs.cantarell-fonts
+      pkgs.dejavu_fonts
+      pkgs.emacs-all-the-icons-fonts
+      pkgs.mononoki
+      pkgs.open-sans
+      pkgs.source-code-pro
+      pkgs.source-sans-pro
+    ];
+
+    fontconfig = {
+      # The fontconfig service’s dpi option has been removed. Fontconfig should use Xft settings by default so there’s no need to override one value in multiple places. The user can set DPI via ~/.Xresources properly, or at the system level per monitor, or as a last resort at the system level with services.xserver.dpi.
+      # dpi = 96;
+      subpixel.rgba = "rgb";
+    };
+  };
 
   # Configure keymap in X11
   # services.xserver.layout = "us";
@@ -81,14 +141,6 @@
     openssh.authorizedKeys.keys = [ "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDABjGqcHsTTDjmT30YUZ9VUJMz0cNYFqIRROz/7NVmS79gvIeS4/ll+flOtdgVcsDijjghHqA9AM/4OCv5sKICaufRV73PS4HKk06yfiCS2au5YzIg/jd+7gK5smxpS+55qtR0Yu1hOBrBik0Q2J7biLNpXLqHLnnrrrS5mkgnIRAb7Ojv/CQKT+ZDcusJWsZ7pzxY1BHqC59VNuy79knVbPAE44n6jnIXlfcIACVqmHlU/W6KVvxfkv+lncf2t6SAj3AuWdFD98YuWxN5QlGBPe+If5WwneYUc3ENjiSAJu1sHUYU9BMhe9YEFiCZVzKsv45Lr+1HlA225u447835 ivan.brennan@gmail.com" ];
   };
   users.mutableUsers = false;
-
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
-  environment.systemPackages = with pkgs; [
-    git
-    vim
-    wget
-  ];
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
