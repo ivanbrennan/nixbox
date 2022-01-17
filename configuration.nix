@@ -107,7 +107,6 @@
     ];
 
     fontconfig = {
-      dpi = 96;
       subpixel.rgba = "rgb";
     };
   };
