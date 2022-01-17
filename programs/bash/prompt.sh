@@ -13,7 +13,7 @@ _build_prompt() {
 }
 
 _build_basic_prompt() {
-    PS1="\[\033]2;\h:\u:\w\007\]${PS1}"
+    PS1="\h:\u:\w "
 }
 
 _build_color_prompt() {
@@ -22,10 +22,11 @@ _build_color_prompt() {
     green="\033[0;32m"
     black="\033[0;30m"
     bold="\033[1m"
+    grey="\033[1;30m"
     normal="\033[0m"
 
     line1="╭\[${bold}\]\w\[${normal}\]\$(_git_ps1_)\[${normal}\] \[${black}\]\$? \d \t\[${normal}\]"
-    line2="╰(\u)• "
+    line2="╰(\u\[${grey}\]@\H\[${normal}\])• "
 
     PS1="\n${line1}\n${line2}"
     PS2=" ❯ "
