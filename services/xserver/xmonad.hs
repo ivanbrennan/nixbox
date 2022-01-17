@@ -1,5 +1,6 @@
 {-# LANGUAGE NamedFieldPuns #-}
-{-# OPTIONS_GHC -Wall -Werror -O2 #-}
+-- {-# OPTIONS_GHC -Wall -Werror -O2 #-}
+{-# OPTIONS_GHC -Wall -O2 #-}
 
 {- base -}
 import Control.Arrow (second)
@@ -8,6 +9,7 @@ import Data.Bits ((.|.))
 import Data.Char (isSpace)
 import Data.Dynamic (Typeable)
 import Data.Foldable (find)
+import Data.Functor ((<&>))
 import Data.List (dropWhileEnd, intercalate, isInfixOf)
 import Data.Monoid (All)
 import System.Directory (getHomeDirectory)
@@ -54,13 +56,13 @@ import XMonad
     Layout, ManageHook, MonadIO, Query, Resize (Expand, Shrink), ScreenId (S),
     StateExtension (PersistentExtension), WindowSet, WindowSpace, WorkspaceId, X,
     XConf, XConfig (XConfig), appName, asks, catchIO, className, clickJustFocuses,
-    composeAll, config, description, doFloat, doIgnore, extensionType, focus,
-    focusedBorderColor, getXMonadDataDir, handleEventHook, initialValue, io, keys,
-    kill, launch, layoutHook, local, logHook, manageHook, modMask, mouseBindings,
-    mouseMoveWindow, normalBorderColor, recompile, refresh, restart, runQuery,
-    screenWorkspace, sendMessage, spawn, startupHook, terminal, theRoot, title,
-    trace, whenJust, whenX, windows, withDisplay, withFocused, withWindowSet,
-    workspaces, writeStateToFile, (=?), (|||),
+    composeAll, config, dataDir, description, doFloat, doIgnore, extensionType,
+    focus, focusedBorderColor, getDirectories, handleEventHook, initialValue, io,
+    keys, kill, launch, layoutHook, local, logHook, manageHook, modMask,
+    mouseBindings, mouseMoveWindow, normalBorderColor, recompile, refresh,
+    restart, runQuery, screenWorkspace, sendMessage, spawn, startupHook,
+    terminal, theRoot, title, trace, whenJust, whenX, windows, withDisplay,
+    withFocused, withWindowSet, workspaces, writeStateToFile, (=?), (|||),
   )
 import qualified XMonad.StackSet as W
 
@@ -75,7 +77,7 @@ import XMonad.Actions.RotateSome (surfaceNext, surfacePrev)
 import XMonad.Actions.RotSlaves (rotAllDown, rotAllUp, rotSlavesDown, rotSlavesUp)
 import XMonad.Actions.Submap (submap)
 import XMonad.Actions.WindowBringer (gotoMenuArgs)
-import XMonad.Actions.WorkspaceNames (renameWorkspace)
+import XMonad.Actions.WorkspaceNames (renameWorkspace, workspaceNamesPP)
 import XMonad.Hooks.DebugStack (debugStackString)
 import XMonad.Hooks.DynamicBars
   ( dynStatusBarEventHook, dynStatusBarStartup, multiPPFormat,
@@ -101,8 +103,8 @@ import XMonad.Layout.BoringWindows
   ( BoringWindows, boringAuto, focusDown, focusUp, siftDown, siftUp,
   )
 import XMonad.Layout.IndependentScreens
-  ( PhysicalWorkspace, VirtualWorkspace, countScreens, marshall, unmarshallS,
-    withScreens, workspaces',
+  ( PhysicalWorkspace, VirtualWorkspace, countScreens, marshall, marshallPP,
+    unmarshallS, withScreens, workspaces',
   )
 import XMonad.Layout.LayoutModifier (ModifiedLayout)
 import XMonad.Layout.LimitWindows
@@ -119,7 +121,7 @@ import XMonad.Layout.ResizableTile
   )
 import XMonad.Layout.StateFull (FocusTracking, focusTracking)
 import XMonad.Prompt
-  ( ComplCaseSensitivity (ComplCaseSensitive), XPConfig, XPPosition (Top),
+  ( ComplCaseSensitivity (CaseInSensitive), XPConfig, XPPosition (Top),
     alwaysHighlight, bgColor, bgHLight, complCaseSensitivity, defaultXPKeymap,
     deleteConsecutive, fgColor, fgHLight, font, height, historyFilter,
     moveHistory, position, promptBorderWidth, promptKeymap,
@@ -131,7 +133,7 @@ import XMonad.Prompt.Man (manPrompt)
 import XMonad.Prompt.RunOrRaise (runOrRaisePrompt)
 import XMonad.Prompt.Workspace (workspacePrompt)
 import XMonad.Prompt.XMonad (xmonadPromptC)
-import XMonad.Util.ClickableWorkspaces (clickableMarshallWorkspaceNamesPP)
+import XMonad.Util.ClickableWorkspaces (clickablePP)
 import qualified XMonad.Util.ExtensibleState as XS
 import XMonad.Util.Loggers (date)
 import XMonad.Util.NamedScratchpad
@@ -147,8 +149,13 @@ import XMonad.Util.WorkspaceCompare (filterOutWs)
 
 
 main :: IO ()
-main =
-  launch . xconfig =<< countScreens
+main = do
+  -- dataDir  = ~/.local/share/xmonad
+  -- cfgDir   = ~/.config/xmonad
+  -- cacheDir = ~/.cache/xmonad
+  dirs <- getDirectories
+  nScreens <- countScreens
+  launch (xconfig nScreens) dirs
   where
     xconfig nScreens =
       docks $
@@ -390,8 +397,9 @@ logHook' = multiPP currentScreenPP nonCurrentScreenPP
 
     composePP :: PP -> ScreenId -> X PP
     composePP pp s =
-      filterOutWsPP [scratchpadWorkspaceTag]
-        <$> clickableMarshallWorkspaceNamesPP s pp
+      workspaceNamesPP (marshallPP s pp)
+        >>= clickablePP
+        <&> filterOutWsPP [scratchpadWorkspaceTag]
 
     currentScreenPP :: PP
     currentScreenPP = barPP
@@ -636,11 +644,11 @@ keys' conf@(XConfig {modMask}) =
       ( (mod4Mask .|. controlMask, xK_q),
         restart "xmonad" False
       ),
-      -- compile ~/.xmonad/xmonad.hs and exec the result, resuming state
+      -- compile ~/.config/xmonad/xmonad.hs and exec the result, resuming state
       ( (mod4Mask .|. mod1Mask, xK_q),
         compileRestart True
       ),
-      -- compile ~/.xmonad/xmonad.hs and exec the result, discarding state
+      -- compile ~/.config/xmonad/xmonad.hs and exec the result, discarding state
       ( (mod4Mask .|. mod1Mask .|. controlMask, xK_q),
         compileRestart False
       ),
@@ -844,14 +852,14 @@ keys' conf@(XConfig {modMask}) =
       withCurrentScreen (f . flip marshall vwsp)
 
     compileRestart :: Bool -> X ()
-    compileRestart resume =
-      whenX (recompile True) $
+    compileRestart resume = do
+      dirs <- io getDirectories
+      whenX (recompile dirs True) $
         when resume writeStateToFile
           *> catchIO
             ( do
-              dir <- getXMonadDataDir
               args <- getArgs
-              executeFile (dir </> printf "xmonad-%s-%s" arch os) False args Nothing
+              executeFile (dataDir dirs </> printf "xmonad-%s-%s" arch os) False args Nothing
             )
 
     fullToggleOff :: X ()
@@ -1000,7 +1008,7 @@ xPConfig =
       alwaysHighlight      = False,
       promptBorderWidth    = 0,
       promptKeymap         = keymap `M.union` defaultXPKeymap,
-      complCaseSensitivity = ComplCaseSensitive False,
+      complCaseSensitivity = CaseInSensitive,
       historyFilter        = deleteConsecutive,
       bgColor              = grey0,
       fgColor              = grey6,

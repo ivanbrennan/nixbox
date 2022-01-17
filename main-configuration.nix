@@ -13,7 +13,6 @@
       ./security
       ./services
       ./users
-      # TODO: kmonad config is machine-specific
       ./kmonad.nix
     ];
 

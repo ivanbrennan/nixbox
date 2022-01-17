@@ -12,11 +12,13 @@
     };
 
     kmonad = {
-      enable = true;
+      # TODO: kmonad config is machine-specific
+      enable = false;
       configfile = ./config.kbd;
     };
 
     locate.enable = true;
+    locate.pruneNames = [];
 
     openvpn = import ./openvpn;
 
@@ -38,7 +40,7 @@
     };
 
     colord.enable = true;
-    gnome3.gnome-keyring.enable = true;
+    gnome.gnome-keyring.enable = true;
     hardware.bolt.enable = true;
     udisks2.enable = true;
     upower.enable = config.powerManagement.enable;

@@ -27,7 +27,7 @@ pkgs:
   windowManager = {
     xmonad = {
       enable = true;
-      extraPackages = ps: [ ps.xmonad-contrib ];
+      extraPackages = ps: [ ps.xmonad-contrib_0_17_0 ];
       config = ./xmonad.hs;
     };
   };
