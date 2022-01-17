@@ -138,20 +138,6 @@
       "wheel"
     ];
     hashedPassword = "$6$aAJGKQbaRR74cAFn$on/SNMV5pcVPH.dPaYQQgp1ZhBp3FA.0BoRRDQYndY.R8TdjMFqOmWP7kVTXZnpienIw7R/x8hmDeins/U.c/1";
-    openssh.authorizedKeys.keys = [ "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDABjGqcHsTTDjmT30YUZ9VUJMz0cNYFqIRROz/7NVmS79gvIeS4/ll+flOtdgVcsDijjghHqA9AM/4OCv5sKICaufRV73PS4HKk06yfiCS2au5YzIg/jd+7gK5smxpS+55qtR0Yu1hOBrBik0Q2J7biLNpXLqHLnnrrrS5mkgnIRAb7Ojv/CQKT+ZDcusJWsZ7pzxY1BHqC59VNuy79knVbPAE44n6jnIXlfcIACVqmHlU/W6KVvxfkv+lncf2t6SAj3AuWdFD98YuWxN5QlGBPe+If5WwneYUc3ENjiSAJu1sHUYU9BMhe9YEFiCZVzKsv45Lr+1HlA225u447835 ivan.brennan@gmail.com" ];
   };
   users.mutableUsers = false;
-
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
-
-  # List services that you want to enable:
-
-  # Enable the OpenSSH daemon.
-  services.openssh.enable = true;
 }
