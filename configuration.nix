@@ -116,8 +116,6 @@
     ];
 
     fontconfig = {
-      # The fontconfig service’s dpi option has been removed. Fontconfig should use Xft settings by default so there’s no need to override one value in multiple places. The user can set DPI via ~/.Xresources properly, or at the system level per monitor, or as a last resort at the system level with services.xserver.dpi.
-      # dpi = 96;
       subpixel.rgba = "rgb";
     };
   };

@@ -1,6 +1,8 @@
 Xcursor.theme: capitaine-cursors
 Xcursor.size: 32
 
+Xft.dpi: 96
+
 xterm*faceName: Source Code Pro
 xterm*faceSize: 14
 
