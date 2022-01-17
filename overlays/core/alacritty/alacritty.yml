@@ -223,9 +223,9 @@ color_schemes:
       matches:
         foreground: '#f8bb39'
         background: '#181818'
-      # focused_match:
-      #   foreground: CellBackground
-      #   background: CellForeground
+      focused_match:
+        foreground: '#181818'
+        background: '#f8bb39'
 
       bar:
         background: '#272727'
