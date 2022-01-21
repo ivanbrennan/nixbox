@@ -56,7 +56,7 @@ import XMonad
     Layout, ManageHook, MonadIO, Query, Resize (Expand, Shrink), ScreenId (S),
     StateExtension (PersistentExtension), WindowSet, WindowSpace, WorkspaceId, X,
     XConf, XConfig (XConfig), appName, asks, catchIO, className, clickJustFocuses,
-    composeAll, config, dataDir, description, doFloat, doIgnore, extensionType,
+    composeAll, cacheDir, config, description, doFloat, doIgnore, extensionType,
     focus, focusedBorderColor, getDirectories, handleEventHook, initialValue, io,
     keys, kill, launch, layoutHook, local, logHook, manageHook, modMask,
     mouseBindings, mouseMoveWindow, normalBorderColor, recompile, refresh,
@@ -859,7 +859,7 @@ keys' conf@(XConfig {modMask}) =
           *> catchIO
             ( do
               args <- getArgs
-              executeFile (dataDir dirs </> printf "xmonad-%s-%s" arch os) False args Nothing
+              executeFile (cacheDir dirs </> printf "xmonad-%s-%s" arch os) False args Nothing
             )
 
     fullToggleOff :: X ()
