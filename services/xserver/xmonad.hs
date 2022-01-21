@@ -82,7 +82,7 @@ import XMonad.Hooks.DebugStack (debugStackString)
 import XMonad.Hooks.DynamicBars
   ( dynStatusBarEventHook, dynStatusBarStartup, multiPPFormat,
   )
-import XMonad.Hooks.DynamicLog
+import XMonad.Hooks.StatusBar.PP
   ( PP, dynamicLogString, pad, ppCurrent, ppHidden, ppLayout, ppSep, ppTitle,
     ppWsSep, wrap, xmobarColor, xmobarPP, filterOutWsPP,
   )
