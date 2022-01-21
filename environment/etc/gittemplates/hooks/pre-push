@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+protected_branch='master'
+current_ref=$(git symbolic-ref HEAD)
+current_branch=${current_ref##*/}
+
+if [[ "$current_branch" = "master" ]] || [[ "$current_branch" = "main" ]]
+then
+  read -r -p "You're about to push $current_branch, is that what you intended? [yes|no] " < /dev/tty
+  echo
+  if [[ "$REPLY" = yes ]]; then
+    exit 0 # allow push
+  else
+    exit 1 # prevent push
+  fi
+fi

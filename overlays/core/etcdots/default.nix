@@ -20,8 +20,6 @@ stdenv.mkDerivation {
   installPhase = ''
     install -D -m644 $src/lesskey               $out/lesskey
 
-    install -D -m644 $src/git/attributes        $out/etc/gitattributes
-    install -D -m644 $src/git/ignore            $out/etc/gitignore
     install -D -m644 $src/shell/inputrc         $out/etc/inputrc
     install -D -m644 $src/tmux/tmux.conf        $out/etc/tmux.conf
     install -D -m644 $src/irbrc                 $out/etc/irbrc

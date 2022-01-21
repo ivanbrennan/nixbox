@@ -1,0 +1,23 @@
+#!/bin/sh
+
+set -e
+
+cabalfiles=`git ls-files --cached --others --directory --exclude-standard -- '*.cabal'`
+
+# Change IFS from its default '<space><tab><newline>' to just '<newline>'.
+# This lets us iterate through cabalfiles correctly even if there are space
+# characters embedded in its elements.
+IFS='
+'
+
+# Run hasktags in each directory that holds a .cabal file.
+for cabalfile in ${cabalfiles}
+do
+    ( tmpfile=`mktemp --tmpdir tags.XXXXXXXXXX~`
+      trap "rm -f '$tmpfile'" EXIT INT TERM
+      # Create tags file.
+      cd `dirname "$cabalfile"`
+      hasktags --ctags --extendedctag --tags-absolute --output "$tmpfile" .
+      mv "$tmpfile" tags
+    )
+done

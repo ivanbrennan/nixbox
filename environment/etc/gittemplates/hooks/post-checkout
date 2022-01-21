@@ -1,0 +1,10 @@
+#!/bin/sh
+
+cabalfiles=`git ls-files --cached --others --directory --exclude-standard -- '*.cabal'`
+
+if [ ${#cabalfiles} -gt 0 ]; then
+  .git/hooks/hasktags >/dev/null 2>&1 &
+else
+  .git/hooks/ctags >/dev/null 2>&1 &
+  .git/hooks/gtags >/dev/null 2>&1 &
+fi

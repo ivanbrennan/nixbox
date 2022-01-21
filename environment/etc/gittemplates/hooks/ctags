@@ -1,0 +1,27 @@
+#!/bin/sh
+
+set -e
+
+# Find any .ctags option files.
+optfiles=`git ls-files --cached --others --directory --exclude-standard -- .ctags '*/.ctags'`
+
+# Change IFS from its default '<space><tab><newline>' to just '<newline>'.
+# This lets us iterate through optfiles correctly even if there are space
+# characters embedded in its elements.
+IFS='
+'
+
+# Run ctags in each directory that holds a .ctags file. If no .ctags files
+# were found, just run ctags from the top-level directory.
+for optfile in ${optfiles:-./fake}
+do
+    ( # Ensure `git ls-files` searches from PWD.
+      unset GIT_DIR GIT_WORK_TREE
+      tmpfile=`mktemp --tmpdir tags.XXXXXXXXXX~`
+      trap "rm -f '$tmpfile'" EXIT INT TERM
+      # Create tags file.
+      cd `dirname "$optfile"`
+      git ls-files | ctags -L - -f $tmpfile "$@"
+      mv "$tmpfile" tags
+    )
+done

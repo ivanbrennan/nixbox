@@ -2,6 +2,8 @@
 	whitespace=fix,-indent-with-non-tab,trailing-space,cr-at-eol
 	pager = delta
 	excludesfile = /etc/gitignore
+[init]
+	templatedir = /etc/gittemplates
 [interactive]
 	diffFilter = delta --color-only
 [delta]
@@ -28,8 +30,13 @@
 	pretty = %C(cyan dim italic)%h%Creset %s %C(magenta dim)(%an, %cr)%Creset
 [diff "elisp"]
   xfuncname = ^[[:space:]]*(\\(.+)$
+[user]
+	name = ivanbrennan
+	email = ivan.brennan@gmail.com
+	signingkey = 79C3C47DC652EA54
 [commit]
 	verbose = true
+	gpgsign = true
 [push]
 	default = current
 [advice]

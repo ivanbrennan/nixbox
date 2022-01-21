@@ -8,9 +8,41 @@ in {
     systemPackages = (import ./system-packages.nix) pkgs;
     variables = (import ./variables.nix) pkgs;
     etc = {
-      "gitattributes".source = "${pkgs.etcdots}/etc/gitattributes";
+      "gitattributes".source = etc/gitattributes;
       "gitconfig".source = pkgs.lib.mkForce etc/gitconfig;
-      "gitignore".source = "${pkgs.etcdots}/etc/gitignore";
+      "gittemplates/hooks/ctags" = {
+        source = pkgs.lib.mkForce etc/gittemplates/hooks/ctags;
+        mode = "0755";
+      };
+      "gittemplates/hooks/gtags" = {
+        source = pkgs.lib.mkForce etc/gittemplates/hooks/gtags;
+        mode = "0755";
+      };
+      "gittemplates/hooks/hasktags" = {
+        source = pkgs.lib.mkForce etc/gittemplates/hooks/hasktags;
+        mode = "0755";
+      };
+      "gittemplates/hooks/post-checkout" = {
+        source = pkgs.lib.mkForce etc/gittemplates/hooks/post-checkout;
+        mode = "0755";
+      };
+      "gittemplates/hooks/post-commit" = {
+        source = pkgs.lib.mkForce etc/gittemplates/hooks/post-commit;
+        mode = "0755";
+      };
+      "gittemplates/hooks/post-merge" = {
+        source = pkgs.lib.mkForce etc/gittemplates/hooks/post-merge;
+        mode = "0755";
+      };
+      "gittemplates/hooks/post-rewrite" = {
+        source = pkgs.lib.mkForce etc/gittemplates/hooks/post-rewrite;
+        mode = "0755";
+      };
+      "gittemplates/hooks/pre-push" = {
+        source = pkgs.lib.mkForce etc/gittemplates/hooks/pre-push;
+        mode = "0755";
+      };
+      "gitignore".source = etc/gitignore;
       "inputrc".source = "${pkgs.etcdots}/etc/inputrc";
       "nix/netrc".source = pkgs.writeText "netrc" ''
         machine github.com

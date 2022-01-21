@@ -1,0 +1,2 @@
+*.rb diff=ruby
+*.el diff=elisp
