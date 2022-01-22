@@ -4,11 +4,6 @@
 sudo make -C /etc/nixos machine=MACHINE
 ```
 
-## turn off GPG signing for this root-owned repo
-```sh
-git config commit.gpgsign false
-```
-
 ## Todo
 Try some window managers
 - [XMonad](http://xmonad.org)

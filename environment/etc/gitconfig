@@ -34,10 +34,8 @@
 [user]
 	name = ivanbrennan
 	email = ivan.brennan@gmail.com
-	signingkey = 79C3C47DC652EA54
 [commit]
 	verbose = true
-	gpgsign = true
 [push]
 	default = current
 [advice]
