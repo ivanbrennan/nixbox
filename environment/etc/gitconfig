@@ -3,6 +3,7 @@
 	pager = delta
 	excludesfile = /etc/gitignore
 [init]
+	defaultBranch = main
 	templatedir = /etc/gittemplates
 [interactive]
 	diffFilter = delta --color-only
