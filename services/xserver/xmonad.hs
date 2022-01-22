@@ -8,7 +8,6 @@ import Data.Bits ((.|.))
 import Data.Char (isSpace)
 import Data.Dynamic (Typeable)
 import Data.Foldable (find)
-import Data.Functor ((<&>))
 import Data.List (dropWhileEnd, intercalate, isInfixOf)
 import Data.Monoid (All)
 import System.Directory (getHomeDirectory)
@@ -51,7 +50,7 @@ import Graphics.X11.Xlib.Extras
 {- xmonad -}
 import XMonad
   ( ChangeLayout (NextLayout), Choose, ExtensionClass, IncMasterN (IncMasterN),
-    Layout, ManageHook, MonadIO, Query, Resize (Expand, Shrink), ScreenId (S),
+    Layout, ManageHook, Query, Resize (Expand, Shrink), ScreenId (S),
     StateExtension (PersistentExtension), WindowSet, WindowSpace, WorkspaceId, X,
     XConf, XConfig (XConfig), appName, asks, catchIO, className, clickJustFocuses,
     composeAll, cacheDir, config, description, doFloat, doIgnore, extensionType,
@@ -78,7 +77,7 @@ import XMonad.Actions.WindowBringer (gotoMenuArgs)
 import XMonad.Actions.WorkspaceNames (renameWorkspace, workspaceNamesPP)
 import XMonad.Hooks.DebugStack (debugStackString)
 import XMonad.Hooks.StatusBar.PP
-  ( PP, pad, ppCurrent, ppHidden, ppLayout, ppSep, ppTitle, ppWsSep, wrap,
+  ( pad, ppCurrent, ppHidden, ppLayout, ppSep, ppTitle, ppWsSep, wrap,
     xmobarColor, xmobarPP, filterOutWsPP,
   )
 import XMonad.Hooks.EwmhDesktops (ewmh, ewmhFullscreen)
@@ -155,7 +154,7 @@ main = do
   where
     xconfig nScreens =
       docks $
-      dynamicSBs barSpawner $
+      dynamicSBs xmobarSpawner $
       debugManageHookOn "M1-M4-v" $
       dynamicProjects [] $
       ewmhFullscreen $
@@ -214,9 +213,7 @@ layoutHook' =
 
 
 startupHook' :: X ()
-startupHook' =
-  systray *> io killAlsactl
-
+startupHook' = systray *> killAlsactl
 
 systray :: X ()
 systray = spawn $
@@ -249,7 +246,7 @@ systray = spawn $
         ]
 
 -- https://github.com/jaor/xmobar/issues/432
-killAlsactl :: MonadIO m => m ()
+killAlsactl :: X ()
 killAlsactl = spawn $
   intercalate
     " | "
@@ -258,6 +255,28 @@ killAlsactl = spawn $
       "xargs --no-run-if-empty kill 2>/dev/null"
     ]
 
+
+xmobarSpawner :: ScreenId -> IO StatusBarConfig
+xmobarSpawner s =
+  pure
+    . statusBarProp (xmobar s)
+    . (workspaceNamesPP >=> clickablePP)
+    . filterOutWsPP [scratchpadWorkspaceTag]
+    . marshallPP s
+    $ xmobarPP
+        { ppCurrent = xmobarColor grey6 blue . pad,
+          ppHidden  = xmobarColor grey4 grey1 . pad,
+          ppSep     = " ",
+          ppWsSep   = "",
+          ppTitle   = const "",
+          ppLayout  = ppLayout'
+        }
+  where
+    ppLayout' :: String -> String
+    ppLayout' str
+      | "Full"  `isInfixOf` str = xmobarColor cyan "" "·"
+      | "Limit" `isInfixOf` str = xmobarColor grey2 "" "·"
+      | otherwise               = ""
 
 xmobar :: ScreenId -> String
 xmobar s@(S i) =
@@ -378,32 +397,6 @@ icon = wrap "<icon=" "/>"
 
 fontN :: Int -> String -> String
 fontN n = wrap ("<fn=" ++ show n ++ ">") "</fn>"
-
-
-barSpawner :: ScreenId -> IO StatusBarConfig
-barSpawner s = pure $
-  statusBarProp (xmobar s)
-    ( workspaceNamesPP (marshallPP s pp)
-        >>= clickablePP
-        <&> filterOutWsPP [scratchpadWorkspaceTag]
-    )
-  where
-    pp :: PP
-    pp =
-      xmobarPP
-        { ppCurrent = xmobarColor grey6 blue . pad,
-          ppHidden  = xmobarColor grey4 grey1 . pad,
-          ppSep     = " ",
-          ppWsSep   = "",
-          ppTitle   = const "",
-          ppLayout  = ppLayout'
-        }
-
-    ppLayout' :: String -> String
-    ppLayout' str
-      | "Full"  `isInfixOf` str = xmobarColor cyan "" "·"
-      | "Limit" `isInfixOf` str = xmobarColor grey2 "" "·"
-      | otherwise               = ""
 
 
 handleEventHook' :: Event -> X All
