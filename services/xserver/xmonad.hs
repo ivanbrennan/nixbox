@@ -3,13 +3,13 @@
 
 {- base -}
 import Control.Arrow (second)
-import Control.Monad (filterM, when, (>=>))
+import Control.Monad (when, (>=>))
 import Data.Bits ((.|.))
 import Data.Char (isSpace)
 import Data.Dynamic (Typeable)
 import Data.Foldable (find)
 import Data.List (dropWhileEnd, intercalate, isInfixOf)
-import Data.Monoid (All)
+import Data.Monoid (All (All))
 import System.Directory (getHomeDirectory)
 import System.Environment (getArgs)
 import System.Exit (exitSuccess)
@@ -32,8 +32,8 @@ import System.Posix.Process (executeFile)
 
 {- X11 -}
 import Graphics.X11
-  ( Button, KeyMask, KeySym, Window, button1, controlMask, lowerWindow, mod1Mask,
-    mod4Mask, noModMask, shiftMask, xK_1, xK_9, xK_Alt_L, xK_Alt_R, xK_BackSpace,
+  ( Button, KeyMask, KeySym, Window, button1, controlMask, mod1Mask, mod4Mask,
+    noModMask, shiftMask, xK_1, xK_9, xK_Alt_L, xK_Alt_R, xK_BackSpace,
     xK_Delete, xK_Insert, xK_Print, xK_Return, xK_Tab, xK_a, xK_c, xK_comma,
     xK_d, xK_e, xK_equal, xK_f, xK_h, xK_i, xK_j, xK_k, xK_l, xK_m, xK_minus,
     xK_n, xK_p, xK_period, xK_q, xK_r, xK_s, xK_semicolon, xK_slash, xK_space,
@@ -44,7 +44,7 @@ import Graphics.X11.ExtraTypes
     xF86XK_Copy, xF86XK_MonBrightnessDown, xF86XK_MonBrightnessUp, xF86XK_Paste,
   )
 import Graphics.X11.Xlib.Extras
-  ( Event (ConfigureEvent), ev_above, ev_window, none, queryTree,
+  ( Event (ConfigureEvent), ev_width, ev_window,
   )
 
 {- xmonad -}
@@ -52,14 +52,14 @@ import XMonad
   ( ChangeLayout (NextLayout), Choose, ExtensionClass, IncMasterN (IncMasterN),
     Layout, ManageHook, Query, Resize (Expand, Shrink), ScreenId (S),
     StateExtension (PersistentExtension), WindowSet, WindowSpace, WorkspaceId, X,
-    XConf, XConfig (XConfig), appName, asks, catchIO, className, clickJustFocuses,
+    XConf, XConfig (XConfig), appName, catchIO, className, clickJustFocuses,
     composeAll, cacheDir, config, description, doFloat, doIgnore, extensionType,
     focus, focusedBorderColor, getDirectories, handleEventHook, initialValue, io,
     keys, kill, launch, layoutHook, local, manageHook, modMask, mouseBindings,
     mouseMoveWindow, normalBorderColor, recompile, refresh, restart, runQuery,
-    screenWorkspace, sendMessage, spawn, startupHook, terminal, theRoot, title,
-    trace, whenJust, whenX, windows, withDisplay, withFocused, withWindowSet,
-    workspaces, writeStateToFile, (=?), (|||),
+    screenWorkspace, sendMessage, spawn, startupHook, terminal, title, trace,
+    whenJust, whenX, windows, withFocused, withWindowSet, workspaces,
+    writeStateToFile, (=?), (|||),
   )
 import qualified XMonad.StackSet as W
 
@@ -76,10 +76,6 @@ import XMonad.Actions.Submap (submap)
 import XMonad.Actions.WindowBringer (gotoMenuArgs)
 import XMonad.Actions.WorkspaceNames (renameWorkspace, workspaceNamesPP)
 import XMonad.Hooks.DebugStack (debugStackString)
-import XMonad.Hooks.StatusBar.PP
-  ( pad, ppCurrent, ppHidden, ppLayout, ppSep, ppTitle, ppWsSep, wrap,
-    xmobarColor, xmobarPP, filterOutWsPP,
-  )
 import XMonad.Hooks.EwmhDesktops (ewmh, ewmhFullscreen)
 import XMonad.Hooks.InsertPosition
   ( Focus (Newer, Older), Position (Above, Below), insertPosition,
@@ -93,7 +89,13 @@ import XMonad.Hooks.RefocusLast
   ( RefocusLastLayoutHook, isFloat, refocusLastLayoutHook, refocusLastWhen,
     shiftRLWhen, swapWithLast, toggleFocus,
   )
-import XMonad.Hooks.StatusBar (StatusBarConfig, dynamicSBs, statusBarProp)
+import XMonad.Hooks.StatusBar
+  ( StatusBarConfig, dynamicSBs, statusBarProp, xmonadDefProp, xmonadPropLog',
+  )
+import XMonad.Hooks.StatusBar.PP
+  ( pad, ppCurrent, ppHidden, ppLayout, ppSep, ppTitle, ppWsSep, wrap,
+    xmobarColor, xmobarPP, filterOutWsPP,
+  )
 import XMonad.Layout.BoringWindows
   ( BoringWindows, boringAuto, focusDown, focusUp, siftDown, siftUp,
   )
@@ -130,6 +132,7 @@ import XMonad.Prompt.Workspace (workspacePrompt)
 import XMonad.Prompt.XMonad (xmonadPromptC)
 import XMonad.Util.ClickableWorkspaces (clickablePP)
 import qualified XMonad.Util.ExtensibleState as XS
+import XMonad.Util.Hacks (trayerAboveXmobarEventHook)
 import XMonad.Util.Loggers (date)
 import XMonad.Util.NamedScratchpad
   ( NamedScratchpad (NS), namedScratchpadAction,
@@ -297,7 +300,7 @@ xmobarTemplate :: ScreenId -> String
 xmobarTemplate (S i) = concat $
   if i == 0
     then
-      [ cmd "UnsafeXMonadLog",
+      [ cmd xmonadDefProp,
         pad "}{",
         cmd "disku",
         " ",
@@ -308,10 +311,10 @@ xmobarTemplate (S i) = concat $
         pad (cmd "battery"),
         pad (cmd "alsa:default:Master"),
         pad (cmd "date"),
-        pad (cmd "trayerpad")
+        pad (cmd trayPaddingXmobarDefProp)
       ]
     else
-      [ cmd "UnsafeXMonadLog",
+      [ cmd xmonadDefProp,
         pad "}{"
       ]
   where
@@ -320,7 +323,7 @@ xmobarTemplate (S i) = concat $
 xmobarCommands :: ScreenId -> [String]
 xmobarCommands (S i) = map unwords $
   if i == 0
-    then [disk, cpu, vpn, battery, volume, date', xmonadLog, trayerpad]
+    then [disk, cpu, vpn, battery, volume, date', xmonadLog, traypad]
     else [xmonadLog]
   where
     disk =
@@ -375,10 +378,9 @@ xmobarCommands (S i) = map unwords $
     date' = ["Run Date", quote dateFormat, quote "date", "50"]
     dateFormat = "%a %b %-d  " ++ xmobarColor chalk "" "%l:%M"
 
-    xmonadLog = ["Run UnsafeXMonadLog"]
+    xmonadLog = ["Run UnsafeXPropertyLog", quote xmonadDefProp]
 
-    trayerpad =
-      ["Run Com", quote "trayer-padding-icon", list [], quote "trayerpad", "10"]
+    traypad = ["Run UnsafeXPropertyLog", quote trayPaddingXmobarDefProp]
 
 list :: [String] -> String
 list = brackets . intercalate ","
@@ -402,25 +404,42 @@ fontN n = wrap ("<fn=" ++ show n ++ ">") "</fn>"
 handleEventHook' :: Event -> X All
 handleEventHook' =
   refocusLastWhen isFloat
-    <> trayerDockEventHook
-  where
-    trayerDockEventHook :: Event -> X All
-    trayerDockEventHook ConfigureEvent {ev_window, ev_above} | ev_above == none =
-      do
-        whenX
-          (runQuery (className =? "trayer") ev_window)
-          (ev_window `stackAbove` "xmobar")
-        mempty
-    trayerDockEventHook _ = mempty
+    <> trayerPaddingXmobarEventHook
+    <> trayerAboveXmobarEventHook
 
-    stackAbove :: Window -> String -> X ()
-    w `stackAbove` appname =
-      withDisplay $ \dpy -> do
-        rootw <- asks theRoot
-        (_, _, ws) <- io (queryTree dpy rootw)
-        let ws' = dropWhile (w /=) ws
-        xmobarWs <- filterM (runQuery (appName =? appname)) ws'
-        mapM_ (io . lowerWindow dpy) xmobarWs
+{-
+  Borrow code from XMonad.Util.Hacks that hasn't made it into a release yet.
+  https://github.com/xmonad/xmonad-contrib/pull/643
+-}
+trayerQuery :: Query Bool
+trayerQuery = className =? "trayer"
+--
+trayPaddingXmobarDefProp :: String
+trayPaddingXmobarDefProp = "_XMONAD_TRAYPAD"
+--
+trayerPaddingXmobarEventHook :: Event -> X All -- ^ event hook
+trayerPaddingXmobarEventHook = trayerPaddingXmobarEventHook' trayPaddingXmobarDefProp
+--
+trayerPaddingXmobarEventHook'
+  :: String         -- ^ 'xmonadPropLog'' string to use
+  -> Event -> X All -- ^ event hook result
+trayerPaddingXmobarEventHook' s = trayPaddingXmobarEventHook (trayDefaultAction s) trayerQuery
+--
+trayPaddingXmobarEventHook
+  :: (Int -> X())   -- ^ action to take when query succeeds, pixels to action
+  -> Query Bool     -- ^ query to identify the tray window
+  -> Event -> X All -- ^ event hook result
+trayPaddingXmobarEventHook action trayQ ConfigureEvent{ ev_window = w, ev_width = wa } = do
+  whenX (runQuery trayQ w) $ action (fromIntegral wa)
+  return (All True)
+trayPaddingXmobarEventHook _ _ _ = return (All True)
+--
+trayDefaultAction
+  :: String -- ^ 'xmonadPropLog'' property to use
+  -> Int    -- ^ new tray width in pixels
+  -> X ()   -- ^ resultant update
+trayDefaultAction xPropLog n = xmonadPropLog' xPropLog ("<hspace=" ++ show n ++ "/>")
+{- End of borrowed code. -}
 
 
 manageHook' :: ManageHook
