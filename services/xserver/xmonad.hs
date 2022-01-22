@@ -1,6 +1,5 @@
 {-# LANGUAGE NamedFieldPuns #-}
--- {-# OPTIONS_GHC -Wall -Werror -O2 #-}
-{-# OPTIONS_GHC -Wall -O2 #-}
+{-# OPTIONS_GHC -Wall -Werror -O2 #-}
 
 {- base -}
 import Control.Arrow (second)
@@ -16,7 +15,6 @@ import System.Directory (getHomeDirectory)
 import System.Environment (getArgs)
 import System.Exit (exitSuccess)
 import System.FilePath ((</>))
-import System.IO (Handle)
 import System.Info (arch, os)
 import Text.Printf (printf)
 
@@ -58,17 +56,17 @@ import XMonad
     XConf, XConfig (XConfig), appName, asks, catchIO, className, clickJustFocuses,
     composeAll, cacheDir, config, description, doFloat, doIgnore, extensionType,
     focus, focusedBorderColor, getDirectories, handleEventHook, initialValue, io,
-    keys, kill, launch, layoutHook, local, logHook, manageHook, modMask,
-    mouseBindings, mouseMoveWindow, normalBorderColor, recompile, refresh,
-    restart, runQuery, screenWorkspace, sendMessage, spawn, startupHook,
-    terminal, theRoot, title, trace, whenJust, whenX, windows, withDisplay,
-    withFocused, withWindowSet, workspaces, writeStateToFile, (=?), (|||),
+    keys, kill, launch, layoutHook, local, manageHook, modMask, mouseBindings,
+    mouseMoveWindow, normalBorderColor, recompile, refresh, restart, runQuery,
+    screenWorkspace, sendMessage, spawn, startupHook, terminal, theRoot, title,
+    trace, whenJust, whenX, windows, withDisplay, withFocused, withWindowSet,
+    workspaces, writeStateToFile, (=?), (|||),
   )
 import qualified XMonad.StackSet as W
 
 {- xmonad-contrib -}
 import XMonad.Actions.CycleWS
-  ( Direction1D (Next, Prev), WSType (WSIs, NonEmptyWS), moveTo,
+  ( Direction1D (Next, Prev), WSType (WSIs, Not), emptyWS, moveTo,
   )
 import XMonad.Actions.DynamicProjects (dynamicProjects, changeProjectDirPrompt)
 import XMonad.Actions.FlexibleResize (mouseResizeEdgeWindow)
@@ -79,14 +77,11 @@ import XMonad.Actions.Submap (submap)
 import XMonad.Actions.WindowBringer (gotoMenuArgs)
 import XMonad.Actions.WorkspaceNames (renameWorkspace, workspaceNamesPP)
 import XMonad.Hooks.DebugStack (debugStackString)
-import XMonad.Hooks.DynamicBars
-  ( dynStatusBarEventHook, dynStatusBarStartup, multiPPFormat,
-  )
 import XMonad.Hooks.StatusBar.PP
-  ( PP, dynamicLogString, pad, ppCurrent, ppHidden, ppLayout, ppSep, ppTitle,
-    ppWsSep, wrap, xmobarColor, xmobarPP, filterOutWsPP,
+  ( PP, pad, ppCurrent, ppHidden, ppLayout, ppSep, ppTitle, ppWsSep, wrap,
+    xmobarColor, xmobarPP, filterOutWsPP,
   )
-import XMonad.Hooks.EwmhDesktops (ewmh, fullscreenEventHook)
+import XMonad.Hooks.EwmhDesktops (ewmh, ewmhFullscreen)
 import XMonad.Hooks.InsertPosition
   ( Focus (Newer, Older), Position (Above, Below), insertPosition,
   )
@@ -99,6 +94,7 @@ import XMonad.Hooks.RefocusLast
   ( RefocusLastLayoutHook, isFloat, refocusLastLayoutHook, refocusLastWhen,
     shiftRLWhen, swapWithLast, toggleFocus,
   )
+import XMonad.Hooks.StatusBar (StatusBarConfig, dynamicSBs, statusBarProp)
 import XMonad.Layout.BoringWindows
   ( BoringWindows, boringAuto, focusDown, focusUp, siftDown, siftUp,
   )
@@ -142,31 +138,32 @@ import XMonad.Util.NamedScratchpad
   )
 import qualified XMonad.Util.NamedScratchpad as NS
 import XMonad.Util.Paste (sendKey)
-import XMonad.Util.Run
-  ( runProcessWithInput, runInTerm, safeSpawn, safeSpawnProg, spawnPipe,
-  )
+import XMonad.Util.Run (runProcessWithInput, runInTerm, safeSpawn, safeSpawnProg)
 import XMonad.Util.WorkspaceCompare (filterOutWs)
 
 
 main :: IO ()
 main = do
-  -- dataDir  = ~/.local/share/xmonad
-  -- cfgDir   = ~/.config/xmonad
-  -- cacheDir = ~/.cache/xmonad
-  dirs <- getDirectories
   nScreens <- countScreens
+  dirs <- getDirectories
+  {-
+    dataDir:  ~/.local/share/xmonad
+    cfgDir:   ~/.config/xmonad
+    cacheDir: ~/.cache/xmonad
+  -}
   launch (xconfig nScreens) dirs
   where
     xconfig nScreens =
       docks $
+      dynamicSBs barSpawner $
       debugManageHookOn "M1-M4-v" $
       dynamicProjects [] $
+      ewmhFullscreen $
       ewmh $
         def
           { layoutHook         = avoidStruts layoutHook',
             workspaces         = withScreens nScreens (workspaces def),
             startupHook        = startupHook',
-            logHook            = logHook',
             handleEventHook    = handleEventHook',
             manageHook         = manageHook',
             keys               = keys',
@@ -217,10 +214,8 @@ layoutHook' =
 
 
 startupHook' :: X ()
-startupHook' = do
-  systray
-  io killAlsactl
-  dynStatusBarStartup xmobar killAlsactl
+startupHook' =
+  systray *> io killAlsactl
 
 
 systray :: X ()
@@ -264,8 +259,8 @@ killAlsactl = spawn $
     ]
 
 
-xmobar :: ScreenId -> IO Handle
-xmobar s@(S i) = spawnPipe $
+xmobar :: ScreenId -> String
+xmobar s@(S i) =
   unwords
     [ "xmobar",
       "-B", translate black,
@@ -283,7 +278,7 @@ xmobarTemplate :: ScreenId -> String
 xmobarTemplate (S i) = concat $
   if i == 0
     then
-      [ cmd "UnsafeStdinReader",
+      [ cmd "UnsafeXMonadLog",
         pad "}{",
         cmd "disku",
         " ",
@@ -297,7 +292,7 @@ xmobarTemplate (S i) = concat $
         pad (cmd "trayerpad")
       ]
     else
-      [ cmd "UnsafeStdinReader",
+      [ cmd "UnsafeXMonadLog",
         pad "}{"
       ]
   where
@@ -306,8 +301,8 @@ xmobarTemplate (S i) = concat $
 xmobarCommands :: ScreenId -> [String]
 xmobarCommands (S i) = map unwords $
   if i == 0
-    then [disk, cpu, vpn, battery, volume, date', unsafeStdinReader, trayerpad]
-    else [unsafeStdinReader]
+    then [disk, cpu, vpn, battery, volume, date', xmonadLog, trayerpad]
+    else [xmonadLog]
   where
     disk =
       [ "Run DiskU",
@@ -352,8 +347,8 @@ xmobarCommands (S i) = map unwords $
     volumeArgs =
       [ "--template", "<status>",
         "--",
-        "--on"  , fontN 1 "\xf026" ++ "<volume>",
-        "--off" , fontN 1 "\xf026" ++ "<volume>",
+        "--on"  , fontN 1 "\xf026" ++ " <volume>",
+        "--off" , fontN 1 "\xf026" ++ " <volume>",
         "--onc" , grey5,
         "--offc", grey2
       ]
@@ -361,7 +356,7 @@ xmobarCommands (S i) = map unwords $
     date' = ["Run Date", quote dateFormat, quote "date", "50"]
     dateFormat = "%a %b %-d  " ++ xmobarColor chalk "" "%l:%M"
 
-    unsafeStdinReader = ["Run UnsafeStdinReader"]
+    xmonadLog = ["Run UnsafeXMonadLog"]
 
     trayerpad =
       ["Run Com", quote "trayer-padding-icon", list [], quote "trayerpad", "10"]
@@ -385,30 +380,16 @@ fontN :: Int -> String -> String
 fontN n = wrap ("<fn=" ++ show n ++ ">") "</fn>"
 
 
-logHook' :: X ()
-logHook' = multiPP currentScreenPP nonCurrentScreenPP
-  where
-    multiPP :: PP -> PP -> X ()
-    multiPP = multiPPFormat (withCurrentScreen . logString)
-
-    logString :: PP -> ScreenId -> X String
-    logString pp =
-      composePP pp >=> dynamicLogString
-
-    composePP :: PP -> ScreenId -> X PP
-    composePP pp s =
-      workspaceNamesPP (marshallPP s pp)
+barSpawner :: ScreenId -> IO StatusBarConfig
+barSpawner s = pure $
+  statusBarProp (xmobar s)
+    ( workspaceNamesPP (marshallPP s pp)
         >>= clickablePP
         <&> filterOutWsPP [scratchpadWorkspaceTag]
-
-    currentScreenPP :: PP
-    currentScreenPP = barPP
-
-    nonCurrentScreenPP :: PP
-    nonCurrentScreenPP = barPP
-
-    barPP :: PP
-    barPP =
+    )
+  where
+    pp :: PP
+    pp =
       xmobarPP
         { ppCurrent = xmobarColor grey6 blue . pad,
           ppHidden  = xmobarColor grey4 grey1 . pad,
@@ -419,22 +400,16 @@ logHook' = multiPP currentScreenPP nonCurrentScreenPP
         }
 
     ppLayout' :: String -> String
-    ppLayout' s
-      | "Full"  `isInfixOf` s = xmobarColor cyan "" "·"
-      | "Limit" `isInfixOf` s = xmobarColor grey2 "" "·"
-      | otherwise             = ""
-
-withCurrentScreen :: (ScreenId -> X a) -> X a
-withCurrentScreen f =
-  withWindowSet (f . W.screen . W.current)
+    ppLayout' str
+      | "Full"  `isInfixOf` str = xmobarColor cyan "" "·"
+      | "Limit" `isInfixOf` str = xmobarColor grey2 "" "·"
+      | otherwise               = ""
 
 
 handleEventHook' :: Event -> X All
 handleEventHook' =
-  dynStatusBarEventHook xmobar killAlsactl
-    <> refocusLastWhen isFloat
+  refocusLastWhen isFloat
     <> trayerDockEventHook
-    <> fullscreenEventHook
   where
     trayerDockEventHook :: Event -> X All
     trayerDockEventHook ConfigureEvent {ev_window, ev_above} | ev_above == none =
@@ -545,7 +520,7 @@ keys' conf@(XConfig {modMask}) =
         toggleRecentWS
       ),
       ( (mod4Mask, xK_Tab),
-        moveTo Next NonEmptyWS
+        moveTo Next (Not emptyWS)
       ),
       -- focus
       ( (modMask, xK_j),
@@ -850,6 +825,10 @@ keys' conf@(XConfig {modMask}) =
     onCurrentScreenX :: (PhysicalWorkspace -> X a) -> (VirtualWorkspace -> X a)
     onCurrentScreenX f vwsp =
       withCurrentScreen (f . flip marshall vwsp)
+
+    withCurrentScreen :: (ScreenId -> X a) -> X a
+    withCurrentScreen f =
+      withWindowSet (f . W.screen . W.current)
 
     compileRestart :: Bool -> X ()
     compileRestart resume = do
