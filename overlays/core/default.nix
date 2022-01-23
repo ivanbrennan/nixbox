@@ -13,6 +13,8 @@ self: super: {
 
   dmenu_cdpath = super.callPackage ./dmenu_cdpath { };
 
+  dotinit = super.callPackage ./dotinit { };
+
   dunst = super.callPackage ./dunst {
     dunst = super.dunst;
     iconThemes = [

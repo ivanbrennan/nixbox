@@ -30,6 +30,7 @@ with pkgs; [
   dmidecode
   docker
   docker-compose
+  dotinit
   dunst
   easyrsa
   emacs
