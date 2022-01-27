@@ -14,12 +14,7 @@
       ./services
       # ./users # TODO: upgrade nixosbox to 21.11
       ./kmonad.nix
-      ./local-modules/xmonad.nix
     ];
-
-  disabledModules = [
-    "services/x11/window-managers/xmonad.nix"
-  ];
 
   i18n.defaultLocale = "en_US.UTF-8";
   console.useXkbConfig = true;
