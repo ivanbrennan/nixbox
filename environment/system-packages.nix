@@ -110,6 +110,7 @@ with pkgs; [
   udisks_dmenu
   universal-ctags
   unzip
+  urxvt_perls
   vim-configured
   vimPlugins.haskell-vim
   virtualboxHeadless
