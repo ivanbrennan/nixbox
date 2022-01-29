@@ -90,6 +90,17 @@ self: super: {
 
   openvpn_dmenu = super.callPackage ./openvpn_dmenu { };
 
+  # A patch for CVE-2021-4034 has made it into the nixos-unstable channel, but
+  # an unrelated change that's also made it into the channel has broken ALSA,
+  # so for now, rollback to the previous channel revision and fetch the patched
+  # version of polkit from the channel revision that contains it.
+  polkit =
+    (import (builtins.fetchTarball {
+      url = "https://github.com/NixOS/nixpkgs/archive/945ec499041db73043f745fad3b2a3a01e826081.tar.gz";
+      sha256 = "1ixv310sjw0r5vda4yfwp3snyha2i9h7aqygd43cyvdk2qsjk8pq";
+    }) { }).polkit;
+
+
   udisks_dmenu = super.callPackage ./udisks_dmenu { };
 
   rxvt_unicode = super.rxvt_unicode.overrideAttrs (old: {
