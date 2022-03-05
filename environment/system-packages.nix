@@ -4,7 +4,7 @@ with pkgs; [
   _1password-1_4_0
   abcde
   abduco
-  ag
+  silver-searcher
   alacritty-wrapped
   arc-icon-theme
   aspell
@@ -96,7 +96,7 @@ with pkgs; [
   shellcheck
   slack
   socat
-  sqliteInteractive
+  sqlite-interactive
   st
   stack-1_9_3
   stow
