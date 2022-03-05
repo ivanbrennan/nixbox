@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+set -eu
+
+# https://github.com/thesofproject/sof/issues/5168
+
+# remove and re-insert problematic kernel module
+sudo remod-sof
+
+# restart pulseaudio
+systemctl restart --user pulseaudio.service
+
+# restart xmonad
+xdotool key super+q

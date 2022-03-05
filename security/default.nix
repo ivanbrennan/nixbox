@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 
 let
 
@@ -11,6 +11,18 @@ in
 
 {
   security = {
+    sudo.extraRules = lib.mkAfter [
+      {
+        users = [ "ivan" ];
+        commands = [
+          {
+            command = "${pkgs.resound}/bin/remod-sof";
+            options = [ "NOPASSWD" "SETENV" ];
+          }
+        ];
+      }
+    ];
+
     polkit = {
       enable = true;
       extraConfig = ''

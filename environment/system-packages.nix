@@ -88,6 +88,7 @@ with pkgs; [
   qbittorrent
   redis
   reptyr
+  resound
   ripgrep
   rxvt_unicode-with-plugins
   screencast
