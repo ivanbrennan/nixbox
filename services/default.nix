@@ -40,8 +40,14 @@
       enable = true;
       fade = false;
       shadow = false;
-      backend = "xrender";
+      backend = "xr_glx_hybrid";
       vSync = true;
+      settings = {
+        glx-no-stencil = true;
+        # glx-no-rebind-pixmap = true;
+        unredir-if-possible = true;
+        # xrender-sync-fence = true;
+      };
     };
 
     colord.enable = true;

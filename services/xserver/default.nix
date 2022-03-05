@@ -51,4 +51,7 @@ pkgs:
   '';
 
   updateDbusEnvironment = true;
+
+  videoDrivers = [ "modesetting" ];
+  useGlamor = true;
 }
