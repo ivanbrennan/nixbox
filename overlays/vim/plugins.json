@@ -31,8 +31,8 @@
     "src": {
       "owner": "ivanbrennan",
       "repo": "coherent",
-      "rev": "b8517e78c907b5241ffd74c9870e2661e2ee5e6e",
-      "sha256": "sha256-dh6XXBzqqNtrlhSqwAQzSdm7lrIhWmkaJbPUdAZk2M8="
+      "rev": "e4afe01d6ad3c35aa858e8880a3cb87f5306867d",
+      "sha256": "sha256-qWX4wGBsP4xtH+9SSRI1VnoYNPW7pdj1OMQcSUOij14="
     }
   },
   "coot": {
@@ -40,8 +40,8 @@
     "src": {
       "owner": "ivanbrennan",
       "repo": "coot",
-      "rev": "d244bf1fe7cf69e1ad4650e67617e992cb45ae31",
-      "sha256": "sha256-m6pvLrAawYCw9aRz7ijotiDY5nmj8QguWgLM76ZKpmM="
+      "rev": "5094f01693bbf701e4f35233eef7a4435c314214",
+      "sha256": "sha256-GwZaKTb+hrQJmHXPrQvtw4d/FCJqxVW17OrXref/ayE="
     }
   },
   "dirvish": {
