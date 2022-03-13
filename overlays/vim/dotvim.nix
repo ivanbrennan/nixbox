@@ -8,8 +8,8 @@ stdenv.mkDerivation {
   src = fetchFromGitHub {
     owner = "ivanbrennan";
     repo = "dotvim";
-    rev = "97bed1f2e534ea583c51b4317d8d9ea53c4728cf";
-    sha256 = "0bxhqvzswg37dswnqqgrwq4fwc1jb3lks85fb26i77has57lzv2y";
+    rev = "a4a6a9b66df9ba92c0640492d3f250a175b6abec";
+    sha256 = "sha256-l6r18ljmMrYyo6WRzNcnqeWO18WDS2hGiqQQ9VOsZp0=";
   };
 
   phases = [
