@@ -42,5 +42,9 @@
     hardware.bolt.enable = true;
     udisks2.enable = true;
     upower.enable = config.powerManagement.enable;
+    openssh = {
+      enable = true;
+      passwordAuthentication = false;
+    };
   };
 }
