@@ -17,16 +17,19 @@ _build_basic_prompt() {
 }
 
 _build_color_prompt() {
-    local green black bold normal line1 line2
+    local green black bold grey gold normal host line1 line2
 
     green="\033[0;32m"
     black="\033[0;30m"
     bold="\033[1m"
     grey="\033[1;30m"
+    gold="\033[1;33m"
     normal="\033[0m"
 
+    host="${SSH_CLIENT:+\[${normal}\]}@${SSH_CLIENT:+\[${gold}\]}\H"
+
     line1="╭\[${bold}\]\w\[${normal}\]\$(_git_ps1_)\[${normal}\] \[${black}\]\$? \d \t\[${normal}\]"
-    line2="╰(\u${VIM_TERMINAL:+:vim}\[${grey}\]@\H\[${normal}\])• "
+    line2="╰(\u${VIM_TERMINAL:+:vim}\[${grey}\]${host}\[${normal}\])• "
 
     PS1="\n${line1}\n${line2}"
     PS2=" ❯ "
