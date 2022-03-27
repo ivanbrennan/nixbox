@@ -11,6 +11,10 @@ in
 
 {
   security = {
+    sudo.extraConfig = ''
+      Defaults env_keep+="SSH_CLIENT SSH_CONNECTION SSH_TTY"
+    '';
+
     polkit = {
       enable = true;
       extraConfig = ''
