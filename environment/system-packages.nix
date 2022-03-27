@@ -35,6 +35,7 @@ with pkgs; [
   easyrsa
   emacs
   emc
+  exfat
   fd
   feh
   ffmpeg
