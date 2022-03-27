@@ -11,17 +11,25 @@ in
 
 {
   security = {
-    sudo.extraRules = lib.mkAfter [
-      {
-        users = [ "ivan" ];
-        commands = [
-          {
-            command = "${pkgs.resound}/bin/remod-sof";
-            options = [ "NOPASSWD" "SETENV" ];
-          }
-        ];
-      }
-    ];
+    sudo = {
+      extraRules = lib.mkAfter [
+        {
+          users = [ "ivan" ];
+          commands = [
+            {
+              command = "${pkgs.resound}/bin/remod-sof";
+              options = [ "NOPASSWD" "SETENV" ];
+            }
+          ];
+        }
+      ];
+
+      # The NixOS sudo module already preserves SSH_AUTH_SOCK, but let's also
+      # preserve ssh client connection environment variables.
+      extraConfig = ''
+        Defaults env_keep+="SSH_CLIENT SSH_CONNECTION SSH_TTY"
+      '';
+    };
 
     polkit = {
       enable = true;
