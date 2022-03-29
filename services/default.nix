@@ -47,6 +47,12 @@
       passwordAuthentication = false;
       challengeResponseAuthentication = false;
       permitRootLogin = "no";
+      extraConfig = ''
+        AllowAgentForwarding = no
+
+        Match User ivan
+          AllowAgentForwarding yes
+      '';
     };
   };
 }
