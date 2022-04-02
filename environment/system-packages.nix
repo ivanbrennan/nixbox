@@ -45,6 +45,7 @@ with pkgs; [
   gimp
   git
   gitAndTools.delta
+  git-annex
   glances
   global
   gnome3.adwaita-icon-theme
