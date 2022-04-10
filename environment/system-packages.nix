@@ -92,6 +92,7 @@ with pkgs; [
   reptyr
   resound
   ripgrep
+  rover
   rxvt_unicode-with-plugins
   screencast
   screenshot

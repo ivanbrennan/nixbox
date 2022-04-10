@@ -94,6 +94,8 @@ self: super: {
 
   resound = super.callPackage ./resound { };
 
+  rover = super.callPackage ./rover { };
+
   rxvt_unicode = super.rxvt_unicode.overrideAttrs (old: {
     version = "2020-02-12";
     src = super.fetchcvs {
