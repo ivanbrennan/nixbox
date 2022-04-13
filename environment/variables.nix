@@ -4,6 +4,7 @@ pkgs:
   ABDUCO_CMD = "bash";
   DOTFILES = "$HOME/Development/resources/dotfiles";
   EDITOR = "vim";
+  GIT_CEILING_DIRECTORIES = "/home";
   GIT_EDITOR = "vim";
   GIT_MERGE_AUTOEDIT = "no";
   VISUAL = "vim";
