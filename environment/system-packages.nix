@@ -122,6 +122,7 @@ with pkgs; [
   vln
   weechat
   wget
+  wireshark
   wmctrl
   xclip
   xdg-user-dirs
