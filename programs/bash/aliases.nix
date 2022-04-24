@@ -16,9 +16,12 @@ in
   du1 = "${du} -h -d 1";
   fgg = "fg '%-'";
   finame = "${find} . -name";
-  gpc = "${git} log origin/master.. -- | wc -l";
-  gpp = "${git} log origin/master.. --reverse -p";
-  gpr = "${git} log origin/master.. --reverse";
+  git-default-branch =
+    "${git} rev-parse 2>/dev/null && " +
+    "${git} branch --list main master | ${grep} -m1 -oP 'main|master'";
+  gpc = "${git} log $(git-default-branch)..HEAD -- | wc -l";
+  gpp = "${git} log $(git-default-branch)..HEAD --reverse -p";
+  gpr = "${git} log $(git-default-branch)..HEAD --reverse";
   grep = "${grep} --color=auto";
   gst = "${git} status";
   ls = "${ls} --color=tty";
