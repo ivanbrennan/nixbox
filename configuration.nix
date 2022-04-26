@@ -138,6 +138,7 @@
       "vboxusers"
       "video"
       "wheel"
+      "wireshark"
     ];
     hashedPassword = "$6$aAJGKQbaRR74cAFn$on/SNMV5pcVPH.dPaYQQgp1ZhBp3FA.0BoRRDQYndY.R8TdjMFqOmWP7kVTXZnpienIw7R/x8hmDeins/U.c/1";
   };
