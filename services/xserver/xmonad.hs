@@ -471,9 +471,21 @@ centeredRect width height =
     y :: Rational
     y = (1 - height) / 2
 
+doTopCenteredFloat :: Rational -> Rational -> ManageHook
+doTopCenteredFloat width height =
+  doRectFloat (topCenteredRect width height)
+
+topCenteredRect :: Rational -> Rational -> W.RationalRect
+topCenteredRect width height =
+  W.RationalRect x 0 width height
+  where
+    x :: Rational
+    x = (1 - width) / 2
+
 scratchpads :: [NamedScratchpad]
 scratchpads =
   [ scratchpadTerminal,
+    scratchpadVisorTerminal,
     scratchpadEmacs
   ]
 
@@ -483,6 +495,16 @@ scratchpadTerminal =
   where
     name :: String
     name = "scratchpadTerminal"
+
+    command :: String
+    command = "alacritty-transparent --class " ++ name
+
+scratchpadVisorTerminal :: NamedScratchpad
+scratchpadVisorTerminal =
+  NS name command (appName =? name) (doTopCenteredFloat 1.0 0.4)
+  where
+    name :: String
+    name = "scratchpadVisorTerminal"
 
     command :: String
     command = "alacritty-transparent --class " ++ name
@@ -657,7 +679,7 @@ keys' conf@(XConfig {modMask}) =
         namedScratchpadAction scratchpads (NS.name scratchpadTerminal)
       ),
       ( (modMask, xK_minus),
-        namedScratchpadAction scratchpads (NS.name scratchpadTerminal)
+        namedScratchpadAction scratchpads (NS.name scratchpadVisorTerminal)
       ),
       ( (modMask .|. shiftMask, xK_minus),
         namedScratchpadAction scratchpads (NS.name scratchpadEmacs)
