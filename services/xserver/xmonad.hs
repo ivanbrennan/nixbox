@@ -477,10 +477,13 @@ doTopCenteredFloat width height =
 
 topCenteredRect :: Rational -> Rational -> W.RationalRect
 topCenteredRect width height =
-  W.RationalRect x 0 width height
+  W.RationalRect x y width height
   where
     x :: Rational
     x = (1 - width) / 2
+
+    y :: Rational
+    y = 0.018 -- just beneath StatusBar
 
 scratchpads :: [NamedScratchpad]
 scratchpads =
