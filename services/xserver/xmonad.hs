@@ -504,7 +504,7 @@ scratchpadTerminal =
 
 scratchpadVisorTerminal :: NamedScratchpad
 scratchpadVisorTerminal =
-  NS name command (appName =? name) (doTopCenteredFloat 1.0 0.4)
+  NS name command (appName =? name) (doTopCenteredFloat 1.0 0.66)
   where
     name :: String
     name = "scratchpadVisorTerminal"
