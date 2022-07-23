@@ -81,6 +81,7 @@ with pkgs; [
   openssl
   openvpn_dmenu
   ormolu
+  pandoc
   pass
   par
   procs
