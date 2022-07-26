@@ -5,6 +5,7 @@ with (pkgs.vimPlugins) // (pkgs.vimPrivatePlugins); {
     [ abolish
       articulate
       bstack
+      clever-f-vim
       coherent
       commentary
       coot
