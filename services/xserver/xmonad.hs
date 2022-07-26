@@ -59,7 +59,7 @@ import XMonad
     mouseMoveWindow, normalBorderColor, recompile, refresh, restart, runQuery,
     screenWorkspace, sendMessage, spawn, startupHook, terminal, title, trace,
     whenJust, whenX, windows, withFocused, withWindowSet, workspaces,
-    writeStateToFile, (=?), (|||),
+    writeStateToFile, (=?), (<||>), (|||),
   )
 import qualified XMonad.StackSet as W
 
@@ -743,12 +743,12 @@ keys' conf@(XConfig {modMask}) =
       ),
       -- copy/paste
       ( (modMask, xK_c),
-        ifTerminal
+        ifTerminalOrEmacs
           (sendKey noModMask xF86XK_Copy)
           (sendKey controlMask xK_c)
       ),
       ( (modMask, xK_v),
-        ifTerminal
+        ifTerminalOrEmacs
           (sendKey noModMask xF86XK_Paste)
           (sendKey controlMask xK_v)
       )
@@ -946,12 +946,18 @@ keys' conf@(XConfig {modMask}) =
     setTerminal t xc =
       xc {config = (config xc) {terminal = t}}
 
-    ifTerminal :: X () -> X () -> X ()
-    ifTerminal thenX elseX =
-      bindFirst [(isTerminal, thenX), (pure True, elseX)]
+    ifTerminalOrEmacs :: X () -> X () -> X ()
+    ifTerminalOrEmacs thenX elseX =
+      bindFirst [(isTerminalOrEmacs, thenX), (pure True, elseX)]
 
     isTerminal :: Query Bool
     isTerminal = className =? "Alacritty"
+
+    isEmacs :: Query Bool
+    isEmacs = className =? "Emacs"
+
+    isTerminalOrEmacs :: Query Bool
+    isTerminalOrEmacs = isTerminal <||> isEmacs
 
     sudoTerm :: FilePath -> X ()
     sudoTerm dir =
