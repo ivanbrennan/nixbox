@@ -39,6 +39,17 @@ self: super: {
       sha256 = "1bif9nq5l89if03lvpbzh9ib7aisiq5z9vir76l56m351cw1am2h";
     }) { }).fly;
 
+  gpick = super.gpick.overrideAttrs (old: {
+    nativeBuildInputs = old.nativeBuildInputs ++ [ self.wrapGAppsHook ];
+    buildInputs = old.buildInputs ++ [ self.gsettings-desktop-schemas ];
+  });
+  # TODO: Figure out why the following causes nixos-rebuild to run out of memory.
+  # gpick =
+  #   (import (builtins.fetchTarball {
+  #     url = "https://github.com/ivanbrennan/nixpkgs/archive/5d96ab3f84b70f68e931bc1dce7510f52344bdd7.tar.gz";
+  #     sha256 = "1awgjk5i8bs8zhzhj7qag86sscmim4gl7pffyxc1da6vrkq82z7m";
+  #   }) { }).gpick;
+
   interactive-editor = super.callPackage ./interactive-editor { };
 
   kubernetes-helm-2_11 =

@@ -142,6 +142,22 @@ blink() {
   printf '\e[%i q' $cursor_code
 }
 
+show_color() {
+    perl -e '
+      foreach $a (@ARGV) {
+        $code = join(":", unpack("C*", pack("H*", $a)));
+        print "\e[48:2::${code}m        \e[49m ${a}\n";
+      }
+    ' "$@"
+}
+
+xcolors() {
+    while true
+    do
+        show_color "$(xcolor --custom='%{02hr}%{02hg}%{02hb}')"
+    done
+}
+
 # gsettings
 
 superswap() {

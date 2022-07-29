@@ -451,7 +451,8 @@ manageHook' =
           isDialog -?> doFloat,
           className =? "Gcr-prompter" -?> doCenterFloat,
           className =? "Xmessage" -?> doCenterFloat,
-          className =? "tabbed" -?> insertPosition Below Older
+          className =? "tabbed" -?> insertPosition Below Older,
+          className =? "Gpick" -?> doFloat
         ],
       namedScratchpadManageHook scratchpads,
       insertPosition Above Newer

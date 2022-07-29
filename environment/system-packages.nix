@@ -53,6 +53,7 @@ with pkgs; [
   gnome3.adwaita-icon-theme
   gnumake
   gnupg
+  gpick
   graphviz
   haskellPackages.hasktags
   htop
@@ -125,6 +126,7 @@ with pkgs; [
   wget
   wmctrl
   xclip
+  xcolor
   xdg-user-dirs
   xdotool
   xfce.thunar
