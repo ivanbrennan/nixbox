@@ -39,16 +39,11 @@ self: super: {
       sha256 = "1bif9nq5l89if03lvpbzh9ib7aisiq5z9vir76l56m351cw1am2h";
     }) { }).fly;
 
-  gpick = super.gpick.overrideAttrs (old: {
-    nativeBuildInputs = old.nativeBuildInputs ++ [ self.wrapGAppsHook ];
-    buildInputs = old.buildInputs ++ [ self.gsettings-desktop-schemas ];
-  });
-  # TODO: Figure out why the following causes nixos-rebuild to run out of memory.
-  # gpick =
-  #   (import (builtins.fetchTarball {
-  #     url = "https://github.com/ivanbrennan/nixpkgs/archive/5d96ab3f84b70f68e931bc1dce7510f52344bdd7.tar.gz";
-  #     sha256 = "1awgjk5i8bs8zhzhj7qag86sscmim4gl7pffyxc1da6vrkq82z7m";
-  #   }) { }).gpick;
+  gpick-wrapped =
+    (import (builtins.fetchTarball {
+      url = "https://github.com/ivanbrennan/nixpkgs/archive/f6a4dedd3d253d1741a61cd7b3844646df154de8.tar.gz";
+      sha256 = "1gbm2mjkifa9zirxbf5gya480397fjwlzlymxs92d1nppd45spw7";
+    }) { }).gpick;
 
   interactive-editor = super.callPackage ./interactive-editor { };
 

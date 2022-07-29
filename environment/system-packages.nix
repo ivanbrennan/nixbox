@@ -53,7 +53,7 @@ with pkgs; [
   gnome3.adwaita-icon-theme
   gnumake
   gnupg
-  gpick
+  gpick-wrapped
   graphviz
   haskellPackages.hasktags
   htop
