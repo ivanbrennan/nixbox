@@ -25,6 +25,7 @@ with pkgs; [
   cmus
   computables
   conky
+  direnv
   dmenu
   dmenu_cdpath
   dmidecode
