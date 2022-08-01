@@ -1,4 +1,7 @@
-self: super: {
+let
+  pinned = attrs: (import (builtins.fetchTarball attrs) { overlays = []; });
+
+in self: super: {
   abcde = super.abcde.overrideAttrs (old: rec {
     configurePhase = old.configurePhase + ''
       substituteInPlace "abcde" \
@@ -35,33 +38,33 @@ self: super: {
 
   flaccurate = super.callPackage ./flaccurate { };
 
-  fly-7_3_0 =
-    (import (builtins.fetchTarball {
+  fly =
+    (pinned {
       url = "https://github.com/NixOS/nixpkgs/archive/ff5aa118274d1c9e9dc4e1010fb1eafdeeddc4d1.tar.gz";
       sha256 = "1bif9nq5l89if03lvpbzh9ib7aisiq5z9vir76l56m351cw1am2h";
-    }) { }).fly;
+    }).fly;
 
-  gpick-wrapped =
-    (import (builtins.fetchTarball {
+  gpick =
+    (pinned {
       url = "https://github.com/ivanbrennan/nixpkgs/archive/f6a4dedd3d253d1741a61cd7b3844646df154de8.tar.gz";
       sha256 = "1gbm2mjkifa9zirxbf5gya480397fjwlzlymxs92d1nppd45spw7";
-    }) { }).gpick;
+    }).gpick;
 
   interactive-editor = super.callPackage ./interactive-editor { };
 
-  kubernetes-helm-2_11 =
-    (import (builtins.fetchTarball {
+  kubernetes-helm =
+    (pinned {
       url = "https://github.com/NixOS/nixpkgs/archive/a071bfa7e7bbd62e1b43830e5e79d8b36afe5fa6.tar.gz";
       sha256 = "0yl2bsan5x69a7z6r1fb8zlv4zpibq67pb2x45jjp7wx42ssdkq2";
-    }) { }).kubernetes-helm;
+    }).kubernetes-helm;
 
-  stack-1_9_3 =
-    (import (builtins.fetchTarball {
+  stack =
+    (pinned {
       url = "https://github.com/NixOS/nixpkgs/archive/bc94dcf500286495e3c478a9f9322debc94c4304.tar.gz";
       sha256 = "1siqklf863181fqk19d0x5cd0xzxf1w0zh08lv0l0dmjc8xic64a";
-    }) { }).stack;
+    }).stack;
 
-  _1password-1_4_0 = super._1password.overrideAttrs (old: rec {
+  _1password = super._1password.overrideAttrs (old: rec {
     version = "1.4.0";
     src = super.fetchzip {
       url = "https://cache.agilebits.com/dist/1P/op/pkg/v${version}/op_linux_amd64_v${version}.zip";

@@ -1,7 +1,7 @@
 pkgs:
 
 with pkgs; [
-  _1password-1_4_0
+  _1password
   abcde
   abduco
   silver-searcher
@@ -44,7 +44,7 @@ with pkgs; [
   file
   flac
   flaccurate
-  fly-7_3_0
+  fly
   fzf
   gimp
   git
@@ -55,7 +55,7 @@ with pkgs; [
   gnome3.adwaita-icon-theme
   gnumake
   gnupg
-  gpick-wrapped
+  gpick
   graphviz
   haskellPackages.hasktags
   htop
@@ -65,7 +65,7 @@ with pkgs; [
   jq
   kitty
   kubectl
-  kubernetes-helm-2_11
+  kubernetes-helm
   libnotify
   libqalculate
   lshw
@@ -106,7 +106,7 @@ with pkgs; [
   socat
   sqlite-interactive
   st
-  stack-1_9_3
+  stack
   stow
   sxiv
   tabbed
