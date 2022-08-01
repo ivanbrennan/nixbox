@@ -35,6 +35,7 @@ with pkgs; [
   dunst
   easyrsa
   emacs
+  emacseverywhere
   emc
   exfat
   fd
@@ -135,6 +136,8 @@ with pkgs; [
   xfce.tumbler
   xmobar
   xorg.xmessage
+  xorg.xprop
+  xorg.xwininfo
   xsel
   zathura
   zip

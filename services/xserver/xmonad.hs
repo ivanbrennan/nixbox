@@ -8,7 +8,7 @@ import Data.Bits ((.|.))
 import Data.Char (isSpace)
 import Data.Dynamic (Typeable)
 import Data.Foldable (find)
-import Data.List (dropWhileEnd, intercalate, isInfixOf)
+import Data.List (dropWhileEnd, intercalate, isInfixOf, isPrefixOf)
 import Data.Monoid (All (All))
 import System.Directory (getHomeDirectory)
 import System.Environment (getArgs)
@@ -59,7 +59,7 @@ import XMonad
     mouseMoveWindow, normalBorderColor, recompile, refresh, restart, runQuery,
     screenWorkspace, sendMessage, spawn, startupHook, terminal, title, trace,
     whenJust, whenX, windows, withFocused, withWindowSet, workspaces,
-    writeStateToFile, (=?), (|||),
+    writeStateToFile, (=?), (|||), (<&&>), (-->),
   )
 import qualified XMonad.StackSet as W
 
@@ -76,6 +76,7 @@ import XMonad.Actions.Submap (submap)
 import XMonad.Actions.WindowBringer (gotoMenuArgs)
 import XMonad.Actions.WorkspaceNames (renameWorkspace, workspaceNamesPP)
 import XMonad.Hooks.DebugStack (debugStackString)
+import XMonad.Hooks.DynamicProperty (dynamicTitle)
 import XMonad.Hooks.EwmhDesktops (ewmh, ewmhFullscreen)
 import XMonad.Hooks.InsertPosition
   ( Focus (Newer, Older), Position (Above, Below), insertPosition,
@@ -406,6 +407,15 @@ handleEventHook' =
   refocusLastWhen isFloat
     <> trayerPaddingXmobarEventHook
     <> trayerAboveXmobarEventHook
+    <> emacsEverywhereEventHook
+
+emacsEverywhereEventHook :: Event -> X All
+emacsEverywhereEventHook =
+  dynamicTitle (isEmacsEverywhere --> doCenteredFloat 0.5 0.5)
+  where
+    isEmacsEverywhere :: Query Bool
+    isEmacsEverywhere =
+      isEmacs <&&> fmap ("Emacs Everywhere :: " `isPrefixOf`) title
 
 {-
   Borrow code from XMonad.Util.Hacks that hasn't made it into a release yet.
@@ -441,6 +451,12 @@ trayDefaultAction
 trayDefaultAction xPropLog n = xmonadPropLog' xPropLog ("<hspace=" ++ show n ++ "/>")
 {- End of borrowed code. -}
 
+
+isTerminal :: Query Bool
+isTerminal = className =? "Alacritty"
+
+isEmacs :: Query Bool
+isEmacs = className =? "Emacs"
 
 manageHook' :: ManageHook
 manageHook' =
@@ -790,6 +806,9 @@ keys' conf@(XConfig {modMask}) =
                  ( (noModMask, xK_equal),
                    calcPrompt xPConfig "qalc"
                  ),
+                 ( (noModMask, xK_e),
+                   safeSpawnProg "emacseverywhere"
+                 ),
                  ( (noModMask, xK_f),
                    gotoMenuArgs dmenuOpts
                  ),
@@ -950,12 +969,6 @@ keys' conf@(XConfig {modMask}) =
     setTerminal :: String -> XConf -> XConf
     setTerminal t xc =
       xc {config = (config xc) {terminal = t}}
-
-    isTerminal :: Query Bool
-    isTerminal = className =? "Alacritty"
-
-    isEmacs :: Query Bool
-    isEmacs = className =? "Emacs"
 
     sudoTerm :: FilePath -> X ()
     sudoTerm dir =

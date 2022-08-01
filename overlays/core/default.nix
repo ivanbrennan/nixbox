@@ -27,6 +27,8 @@ self: super: {
     alacritty = self.alacritty-wrapped;
   };
 
+  emacseverywhere = super.callPackage ./emacseverywhere { };
+
   emc = super.callPackage ./emc { };
 
   etcdots = super.callPackage ./etcdots { };
