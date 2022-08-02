@@ -8,7 +8,7 @@ import Data.Bits ((.|.))
 import Data.Char (isSpace)
 import Data.Dynamic (Typeable)
 import Data.Foldable (find)
-import Data.List (dropWhileEnd, intercalate, isInfixOf, isPrefixOf)
+import Data.List (dropWhileEnd, intercalate, isInfixOf)
 import Data.Monoid (All (All))
 import System.Directory (getHomeDirectory)
 import System.Environment (getArgs)
@@ -411,11 +411,10 @@ handleEventHook' =
 
 emacsEverywhereEventHook :: Event -> X All
 emacsEverywhereEventHook =
-  dynamicTitle (isEmacsEverywhere --> doCenteredFloat 0.5 0.5)
+  dynamicTitle (isEmacsEverywhere --> doCenteredFloat 0.6 0.6)
   where
     isEmacsEverywhere :: Query Bool
-    isEmacsEverywhere =
-      isEmacs <&&> fmap ("Emacs Everywhere :: " `isPrefixOf`) title
+    isEmacsEverywhere = isEmacs <&&> title =? "emacs-anywhere"
 
 {-
   Borrow code from XMonad.Util.Hacks that hasn't made it into a release yet.
