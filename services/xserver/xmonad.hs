@@ -1,5 +1,5 @@
 {-# LANGUAGE NamedFieldPuns #-}
-{-# OPTIONS_GHC -Wall -Wwarn -O2 #-}
+{-# OPTIONS_GHC -Wall -Werror -O2 #-}
 
 {- base -}
 import Control.Arrow (second)
@@ -481,10 +481,6 @@ doTopCenteredFloat :: Rational -> Rational -> Rational -> ManageHook
 doTopCenteredFloat margin width height =
   doRectFloat (topCenteredRect margin width height)
 
-doBottomCenteredFloat :: Rational -> Rational -> Rational -> ManageHook
-doBottomCenteredFloat margin width height =
-  doRectFloat (bottomCenteredRect margin width height)
-
 centeredRect :: Rational -> Rational -> W.RationalRect
 centeredRect width height =
   horizontallyCenter $
@@ -495,12 +491,6 @@ topCenteredRect :: Rational -> Rational -> Rational -> W.RationalRect
 topCenteredRect margin width height =
   horizontallyCenter $
     topOffset margin $
-    W.RationalRect 0 0 width height
-
-bottomCenteredRect :: Rational -> Rational -> Rational -> W.RationalRect
-bottomCenteredRect margin width height =
-  horizontallyCenter $
-    bottomOffset margin $
     W.RationalRect 0 0 width height
 
 horizontallyCenter :: W.RationalRect -> W.RationalRect
@@ -524,18 +514,8 @@ topOffset margin (W.RationalRect x _ width height) =
     y :: Rational
     y = min 1 margin
 
-bottomOffset :: Rational -> W.RationalRect -> W.RationalRect
-bottomOffset margin (W.RationalRect x _ width height) =
-  W.RationalRect x y width height
-  where
-    y :: Rational
-    y = max 0 (1 - margin - height)
-
 defaultTopMargin :: Rational
 defaultTopMargin = 0.018 -- height of StatusBar
-
-defaultBottomMargin :: Rational
-defaultBottomMargin = 0.022
 
 scratchpads :: [NamedScratchpad]
 scratchpads =
