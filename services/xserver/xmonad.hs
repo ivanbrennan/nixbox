@@ -1,5 +1,5 @@
 {-# LANGUAGE NamedFieldPuns #-}
-{-# OPTIONS_GHC -Wall -Werror -O2 #-}
+{-# OPTIONS_GHC -Wall -Wwarn -O2 #-}
 
 {- base -}
 import Control.Arrow (second)
@@ -477,40 +477,77 @@ doCenteredFloat :: Rational -> Rational -> ManageHook
 doCenteredFloat width height =
   doRectFloat (centeredRect width height)
 
+doTopCenteredFloat :: Rational -> Rational -> Rational -> ManageHook
+doTopCenteredFloat margin width height =
+  doRectFloat (topCenteredRect margin width height)
+
+doBottomCenteredFloat :: Rational -> Rational -> Rational -> ManageHook
+doBottomCenteredFloat margin width height =
+  doRectFloat (bottomCenteredRect margin width height)
+
 centeredRect :: Rational -> Rational -> W.RationalRect
 centeredRect width height =
+  horizontallyCenter $
+    verticallyCenter $
+    W.RationalRect 0 0 width height
+
+topCenteredRect :: Rational -> Rational -> Rational -> W.RationalRect
+topCenteredRect margin width height =
+  horizontallyCenter $
+    topOffset margin $
+    W.RationalRect 0 0 width height
+
+bottomCenteredRect :: Rational -> Rational -> Rational -> W.RationalRect
+bottomCenteredRect margin width height =
+  horizontallyCenter $
+    bottomOffset margin $
+    W.RationalRect 0 0 width height
+
+horizontallyCenter :: W.RationalRect -> W.RationalRect
+horizontallyCenter (W.RationalRect _ y width height) =
   W.RationalRect x y width height
   where
     x :: Rational
     x = (1 - width) / 2
 
+verticallyCenter :: W.RationalRect -> W.RationalRect
+verticallyCenter (W.RationalRect x _ width height) =
+  W.RationalRect x y width height
+  where
     y :: Rational
     y = (1 - height) / 2
 
-doTopCenteredFloat :: Rational -> Rational -> ManageHook
-doTopCenteredFloat width height =
-  doRectFloat (topCenteredRect width height)
-
-topCenteredRect :: Rational -> Rational -> W.RationalRect
-topCenteredRect width height =
+topOffset :: Rational -> W.RationalRect -> W.RationalRect
+topOffset margin (W.RationalRect x _ width height) =
   W.RationalRect x y width height
   where
-    x :: Rational
-    x = (1 - width) / 2
-
     y :: Rational
-    y = 0.018 -- just beneath StatusBar
+    y = min 1 margin
+
+bottomOffset :: Rational -> W.RationalRect -> W.RationalRect
+bottomOffset margin (W.RationalRect x _ width height) =
+  W.RationalRect x y width height
+  where
+    y :: Rational
+    y = max 0 (1 - margin - height)
+
+defaultTopMargin :: Rational
+defaultTopMargin = 0.018 -- height of StatusBar
+
+defaultBottomMargin :: Rational
+defaultBottomMargin = 0.022
 
 scratchpads :: [NamedScratchpad]
 scratchpads =
   [ scratchpadTerminal,
     scratchpadVisorTerminal,
-    scratchpadEmacs
+    scratchpadEmacs,
+    scratchpadColorPicker
   ]
 
 scratchpadTerminal :: NamedScratchpad
 scratchpadTerminal =
-  NS name command (appName =? name) (doCenteredFloat 0.8 0.7)
+  NS name command (appName =? name) hook
   where
     name :: String
     name = "scratchpadTerminal"
@@ -518,9 +555,12 @@ scratchpadTerminal =
     command :: String
     command = "alacritty-transparent --class " ++ name
 
+    hook :: ManageHook
+    hook = doCenteredFloat 0.8 0.7
+
 scratchpadVisorTerminal :: NamedScratchpad
 scratchpadVisorTerminal =
-  NS name command (appName =? name) (doTopCenteredFloat 1.0 0.66)
+  NS name command (appName =? name) hook
   where
     name :: String
     name = "scratchpadVisorTerminal"
@@ -528,9 +568,12 @@ scratchpadVisorTerminal =
     command :: String
     command = "alacritty-transparent --class " ++ name
 
+    hook :: ManageHook
+    hook = doTopCenteredFloat defaultTopMargin 1.0 0.66
+
 scratchpadEmacs :: NamedScratchpad
 scratchpadEmacs =
-  NS name command (title =? name) (doCenteredFloat 0.8 0.7)
+  NS name command (title =? name) hook
   where
     name :: String
     name = "scratchpadEmacs"
@@ -541,6 +584,22 @@ scratchpadEmacs =
 
     frameParameters :: String
     frameParameters = "'(quote (name . " ++ quote name ++ "))'"
+
+    hook :: ManageHook
+    hook = doCenteredFloat 0.8 0.7
+
+scratchpadColorPicker :: NamedScratchpad
+scratchpadColorPicker =
+  NS name command (className =? name) hook
+  where
+    name :: String
+    name = "scratchpadColorPicker"
+
+    command :: String
+    command = "gpick --class " ++ name
+
+    hook :: ManageHook
+    hook = doTopCenteredFloat 0.02 0.5 0.4
 
 
 -- https://github.com/xmonad/X11/blob/6e5ef8019a0cc49e18410a335dbdeea87b7c4aac/Graphics/X11/Types.hsc
@@ -816,6 +875,12 @@ keys' conf@(XConfig {modMask}) =
                  ),
                  ( (noModMask, xK_n),
                    safeSpawnProg "networkmanager_dmenu"
+                 ),
+                 ( (noModMask, xK_p),
+                   safeSpawnProg "pick-one-color"
+                 ),
+                 ( (shiftMask, xK_p),
+                   namedScratchpadAction scratchpads (NS.name scratchpadColorPicker)
                  ),
                  ( (noModMask, xK_Insert),
                    safeSpawn "udisks_dmenu" ("mount" : dmenuOpts)

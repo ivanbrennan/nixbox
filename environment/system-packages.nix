@@ -88,6 +88,7 @@ with pkgs; [
   pandoc
   pass
   par
+  pick-one-color
   procs
   psmisc
   pup
