@@ -79,6 +79,7 @@ with pkgs; [
   nice-backgrounds
   nice-icons
   nix-prefetch-git
+  nixfmt
   neovim
   nnn
   openssl
