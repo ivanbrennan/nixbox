@@ -767,9 +767,6 @@ keys' conf@(XConfig {modMask}) =
       ( (mod4Mask .|. shiftMask, xK_d),
         kill
       ),
-      ( (modMask .|. shiftMask, xK_space),
-        safeSpawn "passmenu" dmenuOpts
-      ),
       -- volume
       ( (noModMask, xF86XK_AudioRaiseVolume),
         spawn "pactl set-sink-mute @DEFAULT_SINK@ 0 && pactl set-sink-volume @DEFAULT_SINK@ +2%"
@@ -884,6 +881,9 @@ keys' conf@(XConfig {modMask}) =
                    safeSpawn "resound" []
                  ),
                  ( (noModMask, xK_w),
+                   safeSpawn "passmenu" dmenuOpts
+                 ),
+                 ( (shiftMask, xK_w),
                    workspacePrompt xPConfig (windows . W.view)
                  ),
                  ( (noModMask, xK_x),
