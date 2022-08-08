@@ -730,7 +730,7 @@ keys' conf@(XConfig {modMask}) =
       ( (modMask .|. shiftMask, xK_i),
         dmenuSpawnTerminal
       ),
-      ( (controlMask, xK_space),
+      ( (shiftMask, xK_space),
         safeSpawn "dmenu_run" dmenuOpts
       ),
       ( (modMask, xK_Tab),
