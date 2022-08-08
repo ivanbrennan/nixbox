@@ -798,9 +798,9 @@ key_bindings:
   - { key: Tab,       mods: Shift,                       chars: "\x1b[Z"        }
 
   # Vi Mode
-  - { key: Space,  mods: Control|Shift, mode: Vi,          action: ScrollPageUp            }
+  - { key: Space,  mods: Shift,         mode: Vi|~Search,  action: ScrollPageUp            }
   - { key: Space,                       mode: Vi|~Search,  action: ScrollPageDown          }
-  - { key: Space,  mods: Control|Shift, mode: ~Vi|~Search, action: ToggleViMode            }
+  - { key: Space,  mods: Shift,         mode: ~Vi|~Search, action: ToggleViMode            }
   - { key: Escape,                      mode: Vi|~Search,  action: ToggleViMode            }
   - { key: Escape,                      mode: Vi|~Search,  action: ScrollToBottom          }
   - { key: Escape,                      mode: Vi|~Search,  action: ClearSelection          }
@@ -921,6 +921,7 @@ key_bindings:
   - { key: Return,          mods: Alt|Shift,               chars: "\x1b[13;4u"         }
   - { key: Return,          mods: Control,                 chars: "\x1b[13;5u"         }
   - { key: Space,           mods: Alt|Shift,               chars: "\x1b[32;4u"         }
+  - { key: Space,           mods: Control|Shift,           chars: "\x1b[32;6u"         }
   - { key: Space,           mods: Control,                 chars: "\x00"               }
   - { key: Minus,           mods: Alt,                     chars: "\x1b-"              }
   - { key: Minus,           mods: Alt|Shift,               chars: "\x1b_"              }
