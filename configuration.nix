@@ -8,6 +8,7 @@
       ./machines/self.nix
 
       # shared
+      ./cachix.nix
       ./environment
       ./programs
       ./security

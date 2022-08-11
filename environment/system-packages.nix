@@ -19,6 +19,7 @@ with pkgs; [
   bleep
   cabal-install
   cabal2nix
+  cachix
   capitaine-cursors
   cdparanoia
   chromium
