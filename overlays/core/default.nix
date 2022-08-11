@@ -16,6 +16,8 @@ in self: super: {
 
   dmenu_cdpath = super.callPackage ./dmenu_cdpath { };
 
+  dmenu_fontpreview = super.callPackage ./dmenu_fontpreview { };
+
   dotinit = super.callPackage ./dotinit { };
 
   dunst = super.callPackage ./dunst {

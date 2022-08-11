@@ -28,6 +28,7 @@ with pkgs; [
   direnv
   dmenu
   dmenu_cdpath
+  dmenu_fontpreview
   dmidecode
   docker
   docker-compose

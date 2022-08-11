@@ -114,9 +114,12 @@
       pkgs.dejavu_fonts
       pkgs.emacs-all-the-icons-fonts
       pkgs.mononoki
+      pkgs.noto-fonts
       pkgs.open-sans
       pkgs.source-code-pro
-      pkgs.source-sans-pro
+      pkgs.source-sans
+      pkgs.source-serif
+      pkgs.vollkorn
     ];
 
     fontconfig = {
