@@ -4,8 +4,6 @@
 sudo make -C /etc/nixos machine=MACHINE
 ```
 
-keybinding to hide/show emacseverywhere
-
 sleep battery drain
 https://forums.lenovo.com/t5/Other-Linux-Discussions/X1C-gen9-fan-starts-in-sleep-mode-drains-battery-in-a-few-hours/m-p/5132432
 https://bbs.archlinux.org/viewtopic.php?id=274292
