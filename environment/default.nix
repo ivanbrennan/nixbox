@@ -43,6 +43,9 @@ in {
         mode = "0755";
       };
       "gitignore".source = etc/gitignore;
+      "ripgreprc".source = pkgs.writeText "ripgreprc" ''
+        --ignore-file=/etc/gitignore
+      '';
       "inputrc".source = "${pkgs.etcdots}/etc/inputrc";
       "nix/netrc".source = pkgs.writeText "netrc" ''
         machine github.com

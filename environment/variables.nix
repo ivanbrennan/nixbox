@@ -8,6 +8,7 @@ pkgs:
   GIT_EDITOR = "vim";
   GIT_MERGE_AUTOEDIT = "no";
   VISUAL = "vim";
+  RIPGREP_CONFIG_PATH = "/etc/ripgreprc";
 
   FZF_DEFAULT_COMMAND = "fd -t file -E GTAGS -E GRTAGS -E GPATH";
   FZF_DEFAULT_OPTS = ''
