@@ -46,6 +46,8 @@
 	showuntrackedfiles = all
 [diff]
 	submodule = log
+[merge]
+	conflictstyle = diff3
 [fetch]
 	recurseSubmodules = on-demand
 [pull]
