@@ -114,9 +114,12 @@
       pkgs.cantarell-fonts
       pkgs.dejavu_fonts
       pkgs.emacs-all-the-icons-fonts
+      pkgs.fira-code
       pkgs.mononoki
+      pkgs.nerdfonts
       pkgs.noto-fonts
       pkgs.open-sans
+      pkgs.roboto-mono
       pkgs.source-code-pro
       pkgs.source-sans
       pkgs.source-serif
