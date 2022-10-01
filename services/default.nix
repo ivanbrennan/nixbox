@@ -29,7 +29,10 @@
 
     redshift = {
       enable = true;
-      temperature.night = 4000;
+      temperature = {
+        day = 5250;
+        night = 3700;
+      };
     };
 
     xbanish.enable = true;
