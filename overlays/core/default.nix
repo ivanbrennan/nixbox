@@ -48,8 +48,8 @@ in self: super: {
 
   gpick =
     (pinned {
-      url = "https://github.com/ivanbrennan/nixpkgs/archive/f6a4dedd3d253d1741a61cd7b3844646df154de8.tar.gz";
-      sha256 = "1gbm2mjkifa9zirxbf5gya480397fjwlzlymxs92d1nppd45spw7";
+      url = "https://github.com/NixOS/nixpkgs/archive/d2042f91c1ad953825556be3ec2e53cf9a91fc77.tar.gz";
+      sha256 = "0nla2y1j4lfiqixj87y666c5v1n1zza45f3y0d2kr8sidb1ag62i";
     }).gpick;
 
   interactive-editor = super.callPackage ./interactive-editor { };
