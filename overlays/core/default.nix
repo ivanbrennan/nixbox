@@ -42,8 +42,8 @@ in self: super: {
 
   fly =
     (pinned {
-      url = "https://github.com/NixOS/nixpkgs/archive/ff5aa118274d1c9e9dc4e1010fb1eafdeeddc4d1.tar.gz";
-      sha256 = "1bif9nq5l89if03lvpbzh9ib7aisiq5z9vir76l56m351cw1am2h";
+      url = "https://github.com/NixOS/nixpkgs/archive/331c54c75a5cc8a795893c1f31524520a9dadb4d.tar.gz";
+      sha256 = "0ld59zlci23q89y4lq6f1hd7vwqg80swjn0rg1248w0jfahq046w";
     }).fly;
 
   gpick =
