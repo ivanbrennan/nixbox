@@ -15,7 +15,7 @@
         "video"
         "wheel"
       ];
-      hashedPassword = "$6$4uOYQEuFA$RqNmGNfQcR6mPK2.jSHPntF43HgN6BJP4nwQANNUbp8ulpquniQNqecgUMVGRBsjBzt2b7gJBhCCedbUYmI/60";
+      hashedPassword = "$y$j9T$vowJiSYMEds55yVoU3Rwn0$tdRX1zSuZRd8I.NJJwzYVEGKQn.ATGPXmH/ZubzmbE4";
     };
 
     mutableUsers = false;
