@@ -288,11 +288,11 @@ xmobar s@(S i) =
     [ "xmobar",
       "-B", translate black,
       "-F", translate grey5,
-      "-f", "xft:monospace:size=11",
-      "-N", "xft:FontAwesome:size=11",
+      "-f", translate "monospace 11",
+      "-N", translate "FontAwesome 11",
       "-i", "/run/current-system/sw/share/icons/xmobar",
       "-x", show i,
-      "-p", translate "Top",
+      "-p", translate "TopH 22",
       "-t", translate (xmobarTemplate s),
       "-c", translate $ list (xmobarCommands s)
     ]
