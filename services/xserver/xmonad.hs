@@ -9,7 +9,7 @@ import Data.Char (isSpace)
 import Data.Dynamic (Typeable)
 import Data.Foldable (find)
 import Data.List (dropWhileEnd, intercalate, isInfixOf)
-import Data.Monoid (All (All))
+import Data.Monoid (All)
 import System.Directory (getHomeDirectory)
 import System.Environment (getArgs)
 import System.Exit (exitSuccess)
@@ -43,9 +43,7 @@ import Graphics.X11.ExtraTypes
   ( xF86XK_AudioLowerVolume, xF86XK_AudioMute, xF86XK_AudioRaiseVolume,
     xF86XK_Copy, xF86XK_MonBrightnessDown, xF86XK_MonBrightnessUp, xF86XK_Paste,
   )
-import Graphics.X11.Xlib.Extras
-  ( Event (ConfigureEvent), ev_width, ev_window,
-  )
+import Graphics.X11.Xlib.Extras (Event)
 
 {- xmonad -}
 import XMonad
@@ -56,7 +54,7 @@ import XMonad
     composeAll, cacheDir, config, description, doFloat, doIgnore, extensionType,
     focus, focusedBorderColor, getDirectories, handleEventHook, initialValue, io,
     keys, kill, launch, layoutHook, local, manageHook, modMask, mouseBindings,
-    mouseMoveWindow, normalBorderColor, recompile, refresh, restart, runQuery,
+    mouseMoveWindow, normalBorderColor, recompile, refresh, restart,
     screenWorkspace, sendMessage, spawn, startupHook, terminal, title, trace,
     whenJust, whenX, windows, withFocused, withWindowSet, workspaces,
     writeStateToFile, (=?), (|||), (<&&>), (-->),
@@ -91,7 +89,7 @@ import XMonad.Hooks.RefocusLast
     shiftRLWhen, swapWithLast, toggleFocus,
   )
 import XMonad.Hooks.StatusBar
-  ( StatusBarConfig, dynamicSBs, statusBarProp, xmonadDefProp, xmonadPropLog',
+  ( StatusBarConfig, dynamicSBs, statusBarProp, xmonadDefProp,
   )
 import XMonad.Hooks.StatusBar.PP
   ( pad, ppCurrent, ppHidden, ppLayout, ppSep, ppTitle, ppWsSep, wrap,
@@ -133,7 +131,9 @@ import XMonad.Prompt.Workspace (workspacePrompt)
 import XMonad.Prompt.XMonad (xmonadPromptC)
 import XMonad.Util.ClickableWorkspaces (clickablePP)
 import qualified XMonad.Util.ExtensibleState as XS
-import XMonad.Util.Hacks (trayerAboveXmobarEventHook)
+import XMonad.Util.Hacks
+  ( trayerAboveXmobarEventHook, trayerPaddingXmobarEventHook,
+  )
 import XMonad.Util.Loggers (date)
 import XMonad.Util.NamedScratchpad
   ( NamedScratchpad (NS), namedScratchpadAction,
@@ -312,7 +312,7 @@ xmobarTemplate (S i) = concat $
         pad (cmd "battery"),
         pad (cmd "alsa:default:Master"),
         pad (cmd "date"),
-        pad (cmd trayPaddingXmobarDefProp)
+        pad (cmd traypadProp)
       ]
     else
       [ cmd xmonadDefProp,
@@ -381,7 +381,7 @@ xmobarCommands (S i) = map unwords $
 
     xmonadLog = ["Run UnsafeXPropertyLog", quote xmonadDefProp]
 
-    traypad = ["Run UnsafeXPropertyLog", quote trayPaddingXmobarDefProp]
+    traypad = ["Run UnsafeXPropertyLog", quote traypadProp]
 
 list :: [String] -> String
 list = brackets . intercalate ","
@@ -401,6 +401,10 @@ icon = wrap "<icon=" "/>"
 fontN :: Int -> String -> String
 fontN n = wrap ("<fn=" ++ show n ++ ">") "</fn>"
 
+-- see XMonad/Util/Hacks.trayerPaddingXmobarEventHook
+traypadProp :: String
+traypadProp = "_XMONAD_TRAYPAD"
+
 
 handleEventHook' :: Event -> X All
 handleEventHook' =
@@ -415,40 +419,6 @@ emacsEverywhereEventHook =
   where
     isEmacsEverywhere :: Query Bool
     isEmacsEverywhere = isEmacs <&&> title =? "emacs-anywhere"
-
-{-
-  Borrow code from XMonad.Util.Hacks that hasn't made it into a release yet.
-  https://github.com/xmonad/xmonad-contrib/pull/643
--}
-trayerQuery :: Query Bool
-trayerQuery = className =? "trayer"
---
-trayPaddingXmobarDefProp :: String
-trayPaddingXmobarDefProp = "_XMONAD_TRAYPAD"
---
-trayerPaddingXmobarEventHook :: Event -> X All -- ^ event hook
-trayerPaddingXmobarEventHook = trayerPaddingXmobarEventHook' trayPaddingXmobarDefProp
---
-trayerPaddingXmobarEventHook'
-  :: String         -- ^ 'xmonadPropLog'' string to use
-  -> Event -> X All -- ^ event hook result
-trayerPaddingXmobarEventHook' s = trayPaddingXmobarEventHook (trayDefaultAction s) trayerQuery
---
-trayPaddingXmobarEventHook
-  :: (Int -> X())   -- ^ action to take when query succeeds, pixels to action
-  -> Query Bool     -- ^ query to identify the tray window
-  -> Event -> X All -- ^ event hook result
-trayPaddingXmobarEventHook action trayQ ConfigureEvent{ ev_window = w, ev_width = wa } = do
-  whenX (runQuery trayQ w) $ action (fromIntegral wa)
-  return (All True)
-trayPaddingXmobarEventHook _ _ _ = return (All True)
---
-trayDefaultAction
-  :: String -- ^ 'xmonadPropLog'' property to use
-  -> Int    -- ^ new tray width in pixels
-  -> X ()   -- ^ resultant update
-trayDefaultAction xPropLog n = xmonadPropLog' xPropLog ("<hspace=" ++ show n ++ "/>")
-{- End of borrowed code. -}
 
 
 isTerminal :: Query Bool
