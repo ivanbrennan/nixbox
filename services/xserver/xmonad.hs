@@ -452,7 +452,14 @@ trayDefaultAction xPropLog n = xmonadPropLog' xPropLog ("<hspace=" ++ show n ++ 
 
 
 isTerminal :: Query Bool
-isTerminal = className =? "Alacritty"
+isTerminal = fmap (`elem` names) className
+  where
+    names :: [String]
+    names =
+      [ "Alacritty",
+        NS.name scratchpadTerminal,
+        NS.name scratchpadVisorTerminal
+      ]
 
 isEmacs :: Query Bool
 isEmacs = className =? "Emacs"
