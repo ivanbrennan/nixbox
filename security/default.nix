@@ -35,16 +35,16 @@ in
       enable = true;
       extraConfig = ''
         polkit.addRule(function(action, subject) {
-          let id = action.id;
+          const id = action.id;
           if (id == "org.freedesktop.systemd1.manage-units" ||
               id == "org.freedesktop.systemd1.manage-unit-files") {
-            if (${array vpns}.includes(action.lookup("unit"))) {
-              let verb = action.lookup("verb");
+            if (${array vpns}.indexOf(action.lookup("unit")) !== -1) {
+              const verb = action.lookup("verb");
               if (verb == "start" ||
                   verb == "stop" ||
                   verb == "restart") {
                 if (subject.isInGroup("wheel")) {
-                  return polkit.Result.YES
+                  return polkit.Result.YES;
                 }
               }
             }
