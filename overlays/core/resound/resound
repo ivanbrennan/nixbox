@@ -5,7 +5,7 @@ set -eu
 # https://github.com/thesofproject/sof/issues/5168
 
 # remove and re-insert problematic kernel module
-sudo remod-sof
+sudo remod-sof || true
 
 # restart pulseaudio
 systemctl restart --user pulseaudio.service
