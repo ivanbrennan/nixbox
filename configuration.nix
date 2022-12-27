@@ -35,8 +35,6 @@
       enable = true;
       headless = true;
     };
-
-    libvirtd.enable = true;
   };
 
   nixpkgs.config = {
