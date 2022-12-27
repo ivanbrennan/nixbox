@@ -13,6 +13,15 @@
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
+  # Experiencing audio failures on 5.15.83
+  # Similar reports suggest upgrading to kernel 6.x:
+  #   https://gitlab.freedesktop.org/pipewire/pipewire/-/issues/2886#note_1683148
+  #   https://forum.manjaro.org/t/audio-not-working-after-update/128475
+  # The relevant kernel bug might be this one:
+  #   https://bugzilla.kernel.org/show_bug.cgi?id=215079
+  # As of nixpkgs 18ee49839ea8817218c3bfe3a62e06f47a10fdd5, linuxPackages_latest is 6.1.0
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+
   fileSystems."/" =
     { device = "/dev/disk/by-uuid/dc71a88c-0ed9-42be-a036-8dfef5655434";
       fsType = "ext4";
