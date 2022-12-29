@@ -13,7 +13,7 @@
       # Pinned nixpkgs revisions for specific package versions.
       nixpkgs-fly.url = "github:NixOS/nixpkgs/331c54c75a5cc8a795893c1f31524520a9dadb4d";
       nixpkgs-gpick.url = "github:NixOS/nixpkgs/d2042f91c1ad953825556be3ec2e53cf9a91fc77";
-      nixpkgs-kubectl.url = "github:NixOS/nixpkgs/23d785aa6f853e6cf3430119811c334025bbef55";
+      nixpkgs-kubectl.url = "github:NixOS/nixpkgs/fe2ecaf706a5907b5e54d979fbde4924d84b65fc";
       nixpkgs-kubernetes-helm = {
         type = "github";
         owner = "NixOS";
