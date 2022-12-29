@@ -60,6 +60,12 @@ in self: super: {
       sha256 = "0yl2bsan5x69a7z6r1fb8zlv4zpibq67pb2x45jjp7wx42ssdkq2";
     }).kubernetes-helm;
 
+  kubectl =
+    (pinned {
+      url = "https://github.com/NixOS/nixpkgs/archive/8fdd33cfc443ad15876675475d52b4de2de58d3f.tar.gz";
+      sha256 = "0j9qfkjwvh5a2g24bflz15qss17hi29lhpfz7gzlpwx03n1rgdp9";
+    }).kubectl;
+
   stack =
     (pinned {
       url = "https://github.com/NixOS/nixpkgs/archive/bc94dcf500286495e3c478a9f9322debc94c4304.tar.gz";
