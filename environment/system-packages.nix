@@ -90,6 +90,7 @@ with pkgs; [
   pandoc
   pass
   par
+  parallel
   pick-one-color
   procs
   psmisc
