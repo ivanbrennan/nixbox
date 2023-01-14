@@ -8,6 +8,7 @@
     gnupg.agent.enable = true;
     less = (import ./less) pkgs;
     light.enable = true;
+    neovim = (import ./neovim) pkgs;
     nm-applet.enable = true;
     seahorse.enable = true;
     ssh  = (import ./ssh);

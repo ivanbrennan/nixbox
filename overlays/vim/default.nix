@@ -24,7 +24,4 @@ in
     vimrcConfig = configured;
   };
 
-  neovim = super.neovim.override {
-    configure = configured;
-  };
 }
