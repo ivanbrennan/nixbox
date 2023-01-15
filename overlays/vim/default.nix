@@ -30,10 +30,11 @@ in
   neovim-lush-unwrapped = super.neovim.override {
     configure = {
       customRC = self.neovim-init;
+      # TODO: packages.core = ... ncore
       packages.ncore = with (super.vimPlugins) // (self.vimPrivatePlugins); {
         start =
           [ ncore-plugin
-            lush-nvim-plugin
+            lush-nvim
           ];
       };
     };

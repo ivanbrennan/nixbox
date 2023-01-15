@@ -107,7 +107,7 @@
       "sha256": "1l8hxdxqgz9b68939q8r1r3hahw0f3qfyp700zgiw9dwz641sdrj"
     }
   },
-  "lush-nvim-plugin": {
+  "lush-nvim": {
     "name": "lush-nvim",
     "src": {
       "owner": "rktjmp",
