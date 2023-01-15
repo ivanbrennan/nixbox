@@ -1,35 +1,22 @@
 { pkgs, ... }:
 
 let
-  current-system-module = pkgs.runCommandLocal "current-system-module" { } ''
-    install -D -m644 ${./options.lua} $out/etc/lua/current-system/options.lua
-  '';
+  ncoherent = pkgs.vimUtils.buildVimPlugin {
+    name = "ncoherent";
+    src = ./ncoherent;
+  };
 
 in
 {
   enable = true;
 
   configure = {
-    customRC = ''
-      " It probably makes sense to stick primarily to Vimscript for
-      " configuration, and leverage lua for writing plugins. Using lua
-      " here just to see whether/how it can be done.
-      luafile ${./init.lua}
-
-      lua << LUA
-        -- It probably makes more sense to load these options as a package.
-        -- This is mostly a proof-of-concept.
-        vim.opt.runtimepath:prepend('${current-system-module}/etc')
-        require('current-system/options')
-
-        -- load ~/.config/nvim/lua/user/local.lua if it exists
-        pcall(require, 'user/local')
-      LUA
-    '';
+    customRC = builtins.readFile ./init.vim;
 
     packages.core = with (pkgs.vimPlugins) // (pkgs.vimPrivatePlugins); {
       start =
         [ coot
+          ncoherent
         ];
       # opt =
       #   [ haskell-vim
