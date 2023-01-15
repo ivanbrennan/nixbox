@@ -82,6 +82,7 @@ with pkgs; [
   nice-icons
   nix-prefetch-git
   nixfmt
+  neovim-lush
   nnn
   openssl
   openvpn_dmenu

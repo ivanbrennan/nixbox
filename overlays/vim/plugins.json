@@ -107,6 +107,15 @@
       "sha256": "1l8hxdxqgz9b68939q8r1r3hahw0f3qfyp700zgiw9dwz641sdrj"
     }
   },
+  "lush-nvim-plugin": {
+    "name": "lush-nvim",
+    "src": {
+      "owner": "rktjmp",
+      "repo": "lush.nvim",
+      "rev": "979f4d206e7111c2b710aa85cc723f6140d2ec98",
+      "sha256": "1xmndvhxjzb6lsfd0i7ifyqk0p37hyb9qy6l3aj75k7ifd4bsy2w"
+    }
+  },
   "mline": {
     "name": "mline",
     "src": {

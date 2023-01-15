@@ -1,22 +1,14 @@
 { pkgs, ... }:
 
-let
-  ncoherent = pkgs.vimUtils.buildVimPlugin {
-    name = "ncoherent";
-    src = ./ncoherent;
-  };
-
-in
 {
   enable = true;
 
   configure = {
-    customRC = builtins.readFile ./init.vim;
+    customRC = pkgs.neovim-init;
 
-    packages.core = with (pkgs.vimPlugins) // (pkgs.vimPrivatePlugins); {
+    packages.ncore = with (pkgs.vimPlugins) // (pkgs.vimPrivatePlugins); {
       start =
-        [ coot
-          ncoherent
+        [ ncore-plugin
         ];
       # opt =
       #   [ haskell-vim
