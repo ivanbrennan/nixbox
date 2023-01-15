@@ -1,2 +1,1 @@
-require('ncoherent/options')
-require('ncoherent/keymap')
+require('ncoherent')
