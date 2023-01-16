@@ -61,6 +61,17 @@ vim.opt.wildmode = { 'longest:full', 'full' }
 vim.opt.wildoptions = { 'pum' }
 vim.opt.wrap = false
 
+local formattingGroup = vim.api.nvim_create_augroup("Formatting", {
+  clear = true
+})
+vim.api.nvim_create_autocmd("FileType", {
+  group = formattingGroup,
+  callback = function()
+    local tw = vim.o.textwidth
+    vim.opt_local.formatprg = "par -w" .. (tw > 0 and tw or 80)
+  end
+})
+
 vim.cmd('colorscheme wool')
 -- :help nvim_set_hl()
 -- vim.api.nvim_set_hl(0, 'WinSeparator', { fg = '#2c2f30', bold = true })
