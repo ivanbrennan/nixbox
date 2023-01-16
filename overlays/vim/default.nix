@@ -6,6 +6,35 @@ let
     customRC = builtins.readFile "${self.dotvim}/vimrc";
   };
 
+  neovim-init = builtins.readFile ./init.vim;
+
+  # TODO: Remove etc/ prefix once we have the following fix:
+  # https://github.com/NixOS/nixpkgs/pull/209755
+  neovim-runtime-attrs = {
+    "etc/ftplugin/c.vim".source = ./runtime/ftplugin/c.vim;
+    # "ftplugin/c.vim".text = "setlocal omnifunc=v:lua.vim.lsp.omnifunc";
+    # "ftplugin/d.vim".source = ./ftplugin/d.vim;
+    # "ftplugin/d.vim".enabled = false;
+  };
+
+  # NOTE: Based on nixos/modules/programs/neovim.nix
+  neovim-runtime = super.linkFarm "neovim-runtime" (
+    super.lib.mapAttrs (name: value: value.source) neovim-runtime-attrs
+  );
+  neovim-with-lush = super.neovim.override {
+    configure = {
+      customRC = neovim-init + ''
+        set runtimepath^=${neovim-runtime}/etc
+      '';
+      packages.ncore = with (super.vimPlugins) // (self.vimPrivatePlugins); {
+        start =
+          [ ncore-plugin
+            lush-nvim
+            shipwright-nvim
+          ];
+      };
+    };
+  };
 in
 
 {
@@ -24,29 +53,11 @@ in
     vimrcConfig = configured;
   };
 
-  neovim-init = builtins.readFile ./init.vim;
+  inherit neovim-init neovim-runtime-attrs;
 
-  # TODO: is there a way to incorporate programs.neovim.runtime?
-  neovim-lush-unwrapped = super.neovim.override {
-    configure = {
-      customRC = self.neovim-init;
-      # TODO: packages.core = ... ncore
-      packages.ncore = with (super.vimPlugins) // (self.vimPrivatePlugins); {
-        start =
-          [ ncore-plugin
-            lush-nvim
-            shipwright-nvim
-          ];
-      };
-    };
-  };
   neovim-lush = super.runCommandLocal "neovim-lush" {
-    buildInputs =
-      [ super.makeWrapper
-        self.neovim-lush-unwrapped
-      ];
+    buildInputs = [ super.makeWrapper neovim-with-lush ];
   } ''
-    mkdir -p $out/bin
-    makeWrapper ${self.neovim-lush-unwrapped}/bin/nvim $out/bin/nvim-lush
+    makeWrapper ${neovim-with-lush}/bin/nvim $out/bin/nvim-lush
   '';
 }
