@@ -314,6 +314,15 @@
       "sha256": "18g6zhfcp30lxcdgqr45fpdw0aqvi5zvm9m1ag0abc84c2lk7h3g"
     }
   },
+  "wool": {
+    "name": "wool",
+    "src": {
+      "owner": "ivanbrennan",
+      "repo": "wool",
+      "rev": "19c1594abc21758fd8264799470636638ea6dd23",
+      "sha256": "sha256-rWCydkskuVIhAtNakhS/hq/6kNf47YYO3gu022WvybY="
+    }
+  },
   "wmgraphviz": {
     "name": "wmgraphviz",
     "src": {

@@ -29,6 +29,7 @@ let
       packages.ncore = with (super.vimPlugins) // (self.vimPrivatePlugins); {
         start =
           [ ncore-plugin
+            wool
             lush-nvim
             shipwright-nvim
           ];

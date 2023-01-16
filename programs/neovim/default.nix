@@ -9,6 +9,7 @@
     packages.ncore = with (pkgs.vimPlugins) // (pkgs.vimPrivatePlugins); {
       start =
         [ ncore-plugin
+          wool
         ];
       # opt =
       #   [ haskell-vim
