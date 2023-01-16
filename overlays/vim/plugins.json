@@ -112,8 +112,8 @@
     "src": {
       "owner": "rktjmp",
       "repo": "lush.nvim",
-      "rev": "979f4d206e7111c2b710aa85cc723f6140d2ec98",
-      "sha256": "1xmndvhxjzb6lsfd0i7ifyqk0p37hyb9qy6l3aj75k7ifd4bsy2w"
+      "rev": "b1e8eb1da3fee95ef31515a73c9eff9bf251088d",
+      "sha256": "sha256-+M5tPNuL8OtkIZcB3+5+snygocWPhnXoZzen6gjOd2A="
     }
   },
   "mline": {
@@ -150,6 +150,15 @@
       "repo": "refract",
       "rev": "ef9cc91cbb571e54e32ccaa556e56491ba8c4385",
       "sha256": "1ycb6gjd202smx7q8yvx7576v86sz2l6xkg8ps0ry0minirgaf6g"
+    }
+  },
+  "shipwright-nvim": {
+    "name": "shipwright-nvim",
+    "src": {
+      "owner": "rktjmp",
+      "repo": "shipwright.nvim",
+      "rev": "ab70e80bb67b7ed3350bec89dd73473539893932",
+      "sha256": "sha256-Gy0tIqH1dmZgcUvrUcNrqpMXi3gOgHq9X1SbjIZqSns="
     }
   },
   "sohi": {

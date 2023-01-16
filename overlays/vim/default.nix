@@ -35,12 +35,16 @@ in
         start =
           [ ncore-plugin
             lush-nvim
+            shipwright-nvim
           ];
       };
     };
   };
   neovim-lush = super.runCommandLocal "neovim-lush" {
-    buildInputs = [ super.makeWrapper ];
+    buildInputs =
+      [ super.makeWrapper
+        self.neovim-lush-unwrapped
+      ];
   } ''
     mkdir -p $out/bin
     makeWrapper ${self.neovim-lush-unwrapped}/bin/nvim $out/bin/nvim-lush
