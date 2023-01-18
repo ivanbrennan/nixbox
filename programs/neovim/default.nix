@@ -9,7 +9,12 @@
     packages.ncore = with (pkgs.vimPlugins) // (pkgs.vimPrivatePlugins); {
       start =
         [ ncore-plugin
+          dirvish
+          fugitive
           wool
+        ];
+      opt =
+        [ nvim-colorizer-lua
         ];
       # opt =
       #   [ haskell-vim
