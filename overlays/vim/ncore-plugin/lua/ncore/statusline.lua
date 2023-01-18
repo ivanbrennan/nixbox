@@ -27,6 +27,8 @@ mline_after_filetype = function()
   return #vim.o.filetype > 0 and ']' or ''
 end
 
+vim.g.mline_branch_maxwidth = vim.g.mline_branch_maxwidth or 20
+
 mline_branch = function()
   local name = vim.fn.FugitiveHead()
 
