@@ -1,39 +1,44 @@
+local api = vim.api
+local fn = vim.fn
+local g = vim.g
+local o = vim.o
+
 local current = function()
-  local b = vim.g.actual_curbuf
-  return b and tonumber(b) == vim.api.nvim_get_current_buf()
+  local b = g.actual_curbuf
+  return b and tonumber(b) == api.nvim_get_current_buf()
 end
 
 mline_bufname = function()
-  return current() and vim.fn.bufname('%') or ''
+  return current() and fn.bufname('%') or ''
 end
 
 mline_bufname_nc = function()
-  return not current() and vim.fn.bufname('%') or ''
+  return not current() and fn.bufname('%') or ''
 end
 
 mline_filetype = function()
-  return current() and vim.o.filetype or ''
+  return current() and o.filetype or ''
 end
 
 mline_filetype_nc = function()
-  return not current() and vim.o.filetype or ''
+  return not current() and o.filetype or ''
 end
 
 mline_before_filetype = function()
-  return #vim.o.filetype > 0 and '[' or ''
+  return #o.filetype > 0 and '[' or ''
 end
 
 mline_after_filetype = function()
-  return #vim.o.filetype > 0 and ']' or ''
+  return #o.filetype > 0 and ']' or ''
 end
 
-vim.g.mline_branch_maxwidth = vim.g.mline_branch_maxwidth or 20
+g.mline_branch_maxwidth = g.mline_branch_maxwidth or 20
 
 mline_branch = function()
-  local name = vim.fn.FugitiveHead()
+  local name = fn.FugitiveHead()
 
   if #name > 0 then
-    local maxwidth = vim.g.mline_branch_maxwidth or 0
+    local maxwidth = g.mline_branch_maxwidth or 0
     if maxwidth > 0 and #name > maxwidth then
       name = string.sub(name, 1, maxwidth - 1) .. '‥'
     end
@@ -67,7 +72,7 @@ local statusline = function()
     '%=',                               -- separator
     ' ',
     '%{toupper(&fenc)}',                -- encoding
-    vim.g.loaded_fugitive and '%(  %{v:lua.mline_branch()}%)' or '', -- branch
+    g.loaded_fugitive and '%(  %{v:lua.mline_branch()}%)' or '', -- branch
     '  ',
     '%l:',                              -- line:
     '%#StatusLineNC#',                  -- dim
@@ -78,26 +83,26 @@ local statusline = function()
 end
 
 mline_update_highlight = function()
-  local ok, defn = pcall(vim.api.nvim_get_hl_by_name, 'StatusLine', true)
+  local ok, defn = pcall(api.nvim_get_hl_by_name, 'StatusLine', true)
   if not ok then return end
 
   local bg = defn.background
   local fg = defn.foreground
 
-  if vim.o.modified then
-    vim.api.nvim_set_hl(0, 'User1', { bg = bg, fg = fg, italic = true, bold = true })
-    vim.api.nvim_set_hl(0, 'User2', { bg = bg, fg = fg, italic = true })
+  if o.modified then
+    api.nvim_set_hl(0, 'User1', { bg = bg, fg = fg, italic = true, bold = true })
+    api.nvim_set_hl(0, 'User2', { bg = bg, fg = fg, italic = true })
   else
-    vim.api.nvim_set_hl(0, 'User1', { bg = bg, fg = fg, bold = true })
-    vim.api.nvim_set_hl(0, 'User2', { bg = bg, fg = fg })
+    api.nvim_set_hl(0, 'User1', { bg = bg, fg = fg, bold = true })
+    api.nvim_set_hl(0, 'User2', { bg = bg, fg = fg })
   end
-  vim.api.nvim_set_hl(0, 'User3', { bg = bg, fg = fg, italic = true })
+  api.nvim_set_hl(0, 'User3', { bg = bg, fg = fg, italic = true })
 end
 
 local highlight_modified = false
 
 mline_check_modified = function()
-  local modified = vim.o.modified
+  local modified = o.modified
 
   if modified and not highlight_modified then
     highlight_modified = true
@@ -115,14 +120,14 @@ local init_statusline = function()
 end
 
 local init_autocommands = function()
-  local mline_group = vim.api.nvim_create_augroup('Mline', {
+  local mline_group = api.nvim_create_augroup('Mline', {
     clear = true
   })
-  vim.api.nvim_create_autocmd('ColorScheme', {
+  api.nvim_create_autocmd('ColorScheme', {
     group = mline_group,
     callback = mline_update_highlight,
   })
-  vim.api.nvim_create_autocmd({
+  api.nvim_create_autocmd({
     'BufWinEnter',
     'BufWritePost',
     'FileWritePost',
@@ -143,10 +148,10 @@ end
 if vim.v.vim_did_enter == 1 then
   mline_init()
 else
-  local mline_group = vim.api.nvim_create_augroup('Mline', {
+  local mline_group = api.nvim_create_augroup('Mline', {
     clear = true
   })
-  vim.api.nvim_create_autocmd('VimEnter', {
+  api.nvim_create_autocmd('VimEnter', {
     group = mline_group,
     callback = mline_init,
   })
