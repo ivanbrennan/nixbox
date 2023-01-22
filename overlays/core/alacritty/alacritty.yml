@@ -953,6 +953,7 @@ key_bindings:
   - { key: Period,          mods: Control,                 chars: "\x1b[46;5u"         }
   - { key: Period,          mods: Alt,                     chars: "\x1b."              }
   - { key: Period,          mods: Alt|Shift,               chars: "\x1b>"              }
+  - { key: Semicolon,       mods: Control,                 chars: "\x1b[59;5u"         }
   - { key: Grave,           mods: Alt,                     chars: "\x1b`"              }
   - { key: Grave,           mods: Alt|Shift,               chars: "\x1b~"              }
   - { key: F,               mods: Alt|Control,             action: ToggleFullscreen    }
