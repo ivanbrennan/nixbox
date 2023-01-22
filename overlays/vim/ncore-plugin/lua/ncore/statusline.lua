@@ -48,36 +48,41 @@ mline_branch = function()
   end
 end
 
+mline_tabdot = function()
+  return fn.tabpagenr('$') > 1 and '· ' or ' '
+end
+
 local statusline = function()
   -- TODO: try converting to string.format() for performance
   return table.concat({
     ' ',
-    '%1*',                              -- User1 highlight group (filename)
-    '%{v:lua.mline_bufname()}',         -- relative path
-    '%*',                               -- reset highlight group
-    '%{v:lua.mline_bufname_nc()}',      -- relative path (non-current)
+    '%1*',                                -- User1 highlight group (filename)
+    '%{v:lua.mline_bufname()}',           -- relative path
+    '%*',                                 -- reset highlight group
+    '%{v:lua.mline_bufname_nc()}',        -- relative path (non-current)
     ' ',
-    '%#StatusLineNC#',                  -- StatusLineNC highlight group
-    '%{v:lua.mline_before_filetype()}', -- dimmed '['
-    '%2*',                              -- User2 highlight group (filetype)
-    '%{v:lua.mline_filetype()}',        -- filetype (current)
-    '%*',                               -- reset highlight group
-    '%{v:lua.mline_filetype_nc()}',     -- filetype (non-current)
-    '%#StatusLineNC#',                  -- StatusLineNC highlight group
-    '%{v:lua.mline_after_filetype()}',  -- dimmed ']'
-    '%*',                               -- reset highlight group
+    '%#StatusLineNC#',                    -- StatusLineNC highlight group
+    '%{v:lua.mline_before_filetype()}',   -- dimmed '['
+    '%2*',                                -- User2 highlight group (filetype)
+    '%{v:lua.mline_filetype()}',          -- filetype (current)
+    '%*',                                 -- reset highlight group
+    '%{v:lua.mline_filetype_nc()}',       -- filetype (non-current)
+    '%#StatusLineNC#',                    -- StatusLineNC highlight group
+    '%{v:lua.mline_after_filetype()}',    -- dimmed ']'
+    '%*',                                 -- reset highlight group
     ' ',
-    '%w',                               -- preview
-    '%M',                               -- modified
-    '%=',                               -- separator
+    '%w',                                 -- preview
+    '%M',                                 -- modified
+    '%=',                                 -- separator
     ' ',
-    '%{toupper(&fenc)}',                -- encoding
+    '%{toupper(&fenc)}',                  -- encoding
     g.loaded_fugitive and '%(  %{v:lua.mline_branch()}%)' or '', -- branch
-    '  ',
-    '%l:',                              -- line:
-    '%#StatusLineNC#',                  -- dim
-    '%v',                               -- column
-    '%*',                               -- reset highlight group
+    ' ',
+    '%{v:lua.mline_tabdot()}',            -- tabs indicator
+    '%l:',                                -- line:
+    '%#StatusLineNC#',                    -- dim
+    '%v',                                 -- column
+    '%*',                                 -- reset highlight group
     ' ',
   })
 end
@@ -148,6 +153,8 @@ end
 if vim.v.vim_did_enter == 1 then
   mline_init()
 else
+  -- Defer initializing mline until Vim finishes loading startup scripts.
+  -- This allows for a colorscheme and any dependent plugins to load first.
   local mline_group = api.nvim_create_augroup('Mline', {
     clear = true
   })

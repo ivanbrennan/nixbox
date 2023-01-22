@@ -2,8 +2,9 @@ local set = vim.keymap.set
 local api = vim.api
 local cmd = vim.cmd
 local fn = vim.fn
-local bo = vim.bo
+local opt = vim.opt
 local o = vim.o
+local bo = vim.bo
 
 --[[ Defaults
 set('n', 'Y', 'y$')
@@ -64,7 +65,6 @@ set('n', '<Leader>H', ':help <C-r><C-w>')
 -- add blank line above / below
 set('n', '<S-CR>', '<Cmd>call append(line(".") - 1, "")<CR>')
 set('n', '<C-CR>', '<Cmd>call append(line("."), "")<CR>')
-set('n', '<M-CR>', '<Cmd>call append(line("."), "")<CR>')
 
 -- bubble up / down
 set('n', '<C-Up>', 'mZ<Cmd>silent! move .-2<CR>==`Z')
@@ -190,13 +190,13 @@ set('c', '<M-r>', '<C-r>')
 set('n', '<C-n>', '+')
 set('n', '<C-p>', '-')
 
-vim.opt.cedit = '<C-o>'
+opt.cedit = '<C-o>'
 
 -- touch of Less
 set('n', '<M-u>', '<Cmd>nohlsearch<Bar>diffupdate<Bar>normal! <C-l><CR>')
 
 -- touch of shell
-local can_exit_without_confirmation = function()
+can_exit_without_confirmation = function()
   local bufs = api.nvim_list_bufs()
   local loaded = api.nvim_buf_is_loaded
   local op = api.nvim_buf_get_option
@@ -206,7 +206,7 @@ local can_exit_without_confirmation = function()
     local b = bufs[i]
 
     if loaded(b) and op(b, 'buftype') ~= 'help' then
-      if fn.filereadable(api.nvim_buf_get_name(b)) then
+      if fn.filereadable(api.nvim_buf_get_name(b)) == 1 then
         file_count = file_count + 1
       end
 
@@ -319,27 +319,53 @@ end, { expr = true })
 -- spell
 set('', 'z<CR>', '1z=')
 
+--[[
+safe <CR> for use in nmap's
+
+Define a plug mapping to <CR>. This can be used for things like:
+
+  nmap <CR> <Plug>(coherent_enter)<Plug>(hint_highlight)
+
+If you tried mapping,
+
+  nmap <CR> <CR><Plug>(hint_highlight)
+
+you'd cause infinite recursion, and if you tried using nnoremap you'd
+lose the underlying behavior that <Plug>(hint_highlight) maps to.
+
+Providing a plug mapping to <CR> solves this problem.
+--]]
+set('n', '<Plug>(ArticulateEnter)', '<CR>')
+
+-- zoom
+set('n', '<Plug>(ArticulateZoom)', function()
+  if fn.winnr('$') > 1 then
+    cmd('tab sbuffer %')
+  elseif fn.tabpagenr('$') > 1 then
+    cmd('tabclose!')
+  end
+end)
+
 set('n', '<CR>', function()
   if bo.filetype == 'qf' then
-    return '<CR>'
+    return '<Plug>(ArticulateEnter)'
   else
     return '<Plug>(ArticulateZoom)'
   end
 end, { expr = true })
 
-set('n', '<Plug>(ArticulateZoom)', function()
-  require('ncore/zoom').toggle()
+set('n', '<Leader><Tab>', function()
+  local i = o.showtabline
+  if i == 2 or (i == 1 and fn.tabpagenr('$') > 1) then
+    opt.showtabline = 0
+  else
+    opt.showtabline = 2
+  end
 end)
 
 -- recenter / redraw
 set('n', '<C-l>', 'zz')
 set('n', '<C-u><C-l>', 'zt')
-
--- TODO:
--- treat zoom line xmonad does?
--- * if you open a new window when zoomed, the new window should be zoomed?
--- treat closing windows like xmonad does?
--- * if you close a window when zoomed, another window should become zoomed?
 
 -- " git
 -- noremap <silent> gb :Git blame<CR>
