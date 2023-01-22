@@ -1,6 +1,9 @@
 local set = vim.keymap.set
 local api = vim.api
+local cmd = vim.cmd
 local fn = vim.fn
+local bo = vim.bo
+local o = vim.o
 
 --[[ Defaults
 set('n', 'Y', 'y$')
@@ -128,6 +131,8 @@ local transpose = function(line, col)
 end
 
 -- touch of Emacs
+set({ 'n', 'v', 's' }, '<C-e>', '$')
+set({ 'n', 'v', 's' }, '<C-a>', '0')
 set('i', '<C-b>', '<Left>')
 set('c', '<C-b>', '<Left>')
 set('i', '<C-f>', '<Right>')
@@ -161,8 +166,70 @@ set('c', '<M-d>', function()
   local ms = fn.matchlist(line, [[\(.*\%]] .. pos .. [[c\)\s*\w*\(.*\)]])
   fn.setcmdline(ms[2] .. ms[3], pos)
 end)
+set('i', '<C-s>', '<C-o>/')
+set('i', '<C-r>', '<C-o>?')
+set('i', '<M-r>', '<C-r>')
+set('n', 'U', '<C-r>')
+set('n', '<C-x><C-u>', 'U')
+set('n', '<C-x>u', 'U')
+local is_search = function()
+  local t = fn.getcmdtype()
+  return t == '/' or t == '?'
+end
+set('c', '<C-p>', function()
+  return o.incsearch and is_search() and '<C-t>' or '<C-p>'
+end, { expr = true })
+set('c', '<C-n>', function()
+  return o.incsearch and is_search() and '<C-g>' or '<C-n>'
+end, { expr = true })
+set('c', '<M-p>', '<Up>')
+set('c', '<M-n>', '<Down>')
+-- TODO:
+-- set('c', '<C-r>', reverse-search-history)
+set('c', '<M-r>', '<C-r>')
+set('n', '<C-n>', '+')
+set('n', '<C-p>', '-')
 
 vim.opt.cedit = '<C-o>'
+
+-- touch of Less
+set('n', '<M-u>', '<Cmd>nohlsearch<Bar>diffupdate<Bar>normal! <C-l><CR>')
+
+-- touch of shell
+local can_exit_without_confirmation = function()
+  local bufs = api.nvim_list_bufs()
+  local loaded = api.nvim_buf_is_loaded
+  local op = api.nvim_buf_get_option
+  local file_count = 0
+
+  for i=1, #bufs do
+    local b = bufs[i]
+
+    if loaded(b) and op(b, 'buftype') ~= 'help' then
+      if fn.filereadable(api.nvim_buf_get_name(b)) then
+        file_count = file_count + 1
+      end
+
+      if file_count > 1 or op(b, 'modified') then
+        return false
+      end
+    end
+  end
+
+  return true
+end
+
+local confirm_exit = function()
+  return fn.confirm('Exit?', 'y\nn') == 1
+end
+
+set('n', '<C-d>', function()
+  if fn.tabpagenr('$') > 1 or fn.winnr('$') > 1 or (fn.bufnr('$') == 1 and not bo.modified) then
+    cmd.quit()
+  elseif can_exit_without_confirmation() or confirm_exit() then
+    cmd('quitall!')
+  end
+end)
 
 -- + -
 set('n', '+', '<C-a>')
@@ -170,13 +237,113 @@ set('x', '+', '<C-a>')
 set('n', '_', '<C-x>')
 set('x', '_', '<C-x>')
 
+-- scroll
+set({ 'n', 'v', 's' }, '<C-j>', '<C-e>')
+set({ 'n', 'v', 's' }, '<C-k>', '<C-y>')
+
 -- commentary
 set({ 'x', 'n', 'o' }, '<Leader>;', '<Plug>Commentary', { remap = true })
 set('n', '<Leader>;;', '<Plug>CommentaryLine', { remap = true })
 
+-- " EasyAlign
+-- nmap     ga          <Plug>(EasyAlign)
+-- xmap     ga          <Plug>(EasyAlign)
+-- nnoremap gA          ga
+-- xnoremap gA          ga
+
+-- Articulated keybindings. These <Plug> pseudokeys provide a common interface
+-- I can target when setting custom keymaps, e.g. in ftplugin files.
+
+set({ 'n', 'x' }, '<Plug>(ArticulateTag)', '<C-]>')    -- tag
+set({ 'n', 'x' }, '<Plug>(ArticulatePop)', '<C-T>')    -- pop
+set({ 'n', 'x' }, '<Plug>(ArticulateTjump)', 'g<C-]>') -- tjump
+
+-- tag, pop
+set('n', '<C-.>', '<Plug>(ArticulateTag)', { remap = true })
+set('x', '<C-.>', '<Plug>(ArticulateTag)', { remap = true })
+set('n', '<C-,>', '<Plug>(ArticulatePop)', { remap = true })
+set('x', '<C-,>', '<Plug>(ArticulatePop)', { remap = true })
+set('n', 'g.', '<Plug>(ArticulateTjump)', { remap = true })
+set('x', 'g.', '<Plug>(ArticulateTjump)', { remap = true })
+set('n', 'g:', ':tjump ')
+
+-- fzf / ag
+-- nnoremap <silent> <M-o>         :Files<CR>
+-- nnoremap <silent> <leader>fo    :Files<CR>
+-- nnoremap <silent> <leader>/     :Ag<CR>
+-- nnoremap <silent> g<leader>     :Grepper<CR>
+set('n', '<C-;>', '<Cmd>ls<CR>')
+-- nnoremap <silent> <C-;>         :Buffers<CR>
+-- nnoremap <silent> <leader>fh    :History/<CR>
+-- nnoremap <silent> <leader>fg    :Tags<CR>
+-- nnoremap <silent> <M-H>         :Helptags<CR>
+-- cnoremap <expr>     :   refract#if_cmd_match(['^$'], "Commands\<CR>", ':')
+-- cnoremap <expr>   <C-R> refract#if_cmd_match(['^$'], "History:\<CR>", "\<C-R>")
+
+-- terminal keys
+set('t', '<C-w>h',     [[<C-\><C-n><C-w>h]])
+set('t', '<C-w>j',     [[<C-\><C-n><C-w>j]])
+set('t', '<C-w>k',     [[<C-\><C-n><C-w>k]])
+set('t', '<C-w>l',     [[<C-\><C-n><C-w>l]])
+set('t', '<C-w><C-h>', [[<C-\><C-n><C-w>h]])
+set('t', '<C-w><C-j>', [[<C-\><C-n><C-w>j]])
+set('t', '<C-w><C-k>', [[<C-\><C-n><C-w>k]])
+set('t', '<C-w><C-l>', [[<C-\><C-n><C-w>l]])
+set('t', '<C-w>;',     [[<C-\><C-n>:]])
+set('t', '<C-w><C-;>', [[<C-\><C-n>:]])
+
+-- shell
+set('n', '<Leader>i', '<C-z>', { remap = true })
+
+-- autocompletion
+set('i', '<C-f>', '<C-X><C-f>')
+set('i', '<C-l>', '<C-X><C-l>')
+set('i', '<C-]>', '<C-X><C-]>')
+
+-- indentation
+set('v', '<Tab>', '=')
+set('v', '<', '<gv')
+set('v', '>', '>gv')
+
+-- substitute
+set('n', '<M-s>', ':%s/')
+set('n', '<Leader>s', ':s/')
+set('v', '<Leader>s', ':s/')
+
+-- replace word under cursor
+set('n', 'c.', function()
+  fn.setreg('/', [[\<]] .. fn.expand('<cword>') .. [[\>]])
+  return 'cgn'
+end, { expr = true })
+
+-- spell
+set('', 'z<CR>', '1z=')
+
+set('n', '<CR>', function()
+  if bo.filetype == 'qf' then
+    return '<CR>'
+  else
+    return '<Plug>(ArticulateZoom)'
+  end
+end, { expr = true })
+
+set('n', '<Plug>(ArticulateZoom)', function()
+  require('ncore/zoom').toggle()
+end)
+
+-- recenter / redraw
+set('n', '<C-l>', 'zz')
+set('n', '<C-u><C-l>', 'zt')
+
+-- TODO:
+-- treat zoom line xmonad does?
+-- * if you open a new window when zoomed, the new window should be zoomed?
+-- treat closing windows like xmonad does?
+-- * if you close a window when zoomed, another window should become zoomed?
+
+-- " git
+-- noremap <silent> gb :Git blame<CR>
+-- noremap <silent> gs :Git<CR>
+
 -- " alternates
 -- nnoremap <Leader><Tab>  :A<CR>
-
-set('n', '<M-u>', '<Cmd>nohlsearch<Bar>diffupdate<Bar>normal! <C-l><CR>')
-set('n', '<C-d>', '<C-w><C-q>')
-set('n', 'U', '<C-r>')
