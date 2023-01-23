@@ -192,9 +192,6 @@ set('n', '<C-p>', '-')
 
 opt.cedit = '<C-o>'
 
--- touch of Less
-set('n', '<M-u>', '<Cmd>nohlsearch<Bar>diffupdate<Bar>normal! <C-l><CR>')
-
 -- touch of shell
 can_exit_without_confirmation = function()
   local bufs = api.nvim_list_bufs()

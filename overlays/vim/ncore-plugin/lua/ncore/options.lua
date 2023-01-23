@@ -12,7 +12,6 @@ opt.foldmethod = "syntax"
 opt.formatoptions:append('r')
 opt.formatoptions:remove('t')
 opt.guifont = { "Source Code Pro:h14" }
-opt.hlsearch = false
 opt.ignorecase = true
 opt.lazyredraw = true
 opt.list = true
