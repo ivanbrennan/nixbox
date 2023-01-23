@@ -746,10 +746,10 @@ keys' conf@(XConfig {modMask}) =
       ),
       -- volume
       ( (noModMask, xF86XK_AudioRaiseVolume),
-        spawn "pactl set-sink-mute @DEFAULT_SINK@ 0 && pactl set-sink-volume @DEFAULT_SINK@ +2%"
+        spawn "pactl set-sink-mute @DEFAULT_SINK@ 0 && pactl set-sink-volume @DEFAULT_SINK@ +1%"
       ),
       ( (noModMask, xF86XK_AudioLowerVolume),
-        safeSpawn "pactl" ["set-sink-volume", "@DEFAULT_SINK@", "-2%"]
+        safeSpawn "pactl" ["set-sink-volume", "@DEFAULT_SINK@", "-1%"]
       ),
       ( (noModMask, xF86XK_AudioMute),
         safeSpawn "pactl" ["set-sink-mute", "@DEFAULT_SINK@", "toggle"]
@@ -758,17 +758,17 @@ keys' conf@(XConfig {modMask}) =
         safeSpawn "pactl" ["set-source-mute", "@DEFAULT_SOURCE@", "toggle"]
       ),
       ( (mod4Mask, xF86XK_AudioRaiseVolume),
-        spawn "pactl set-source-mute @DEFAULT_SOURCE@ 0 && pactl set-source-volume @DEFAULT_SOURCE@ +2%"
+        spawn "pactl set-source-mute @DEFAULT_SOURCE@ 0 && pactl set-source-volume @DEFAULT_SOURCE@ +1%"
       ),
       ( (mod4Mask, xF86XK_AudioLowerVolume),
-        safeSpawn "pactl" ["set-source-volume", "@DEFAULT_SOURCE@", "-2%"]
+        safeSpawn "pactl" ["set-source-volume", "@DEFAULT_SOURCE@", "-1%"]
       ),
       -- brightness
       ( (noModMask, xF86XK_MonBrightnessUp),
-        safeSpawn "light" ["-A", "20"]
+        safeSpawn "light" ["-A", "10"]
       ),
       ( (noModMask, xF86XK_MonBrightnessDown),
-        safeSpawn "light" ["-U", "20"]
+        safeSpawn "light" ["-U", "10"]
       ),
       -- copy/paste
       ( (modMask, xK_c),
