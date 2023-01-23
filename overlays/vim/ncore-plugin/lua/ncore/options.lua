@@ -23,8 +23,10 @@ opt.number = true
 opt.scrolloff = 1
 opt.shiftwidth = 2
 opt.shortmess:append('I')
+opt.showcmd = false
 opt.showmatch = true
 opt.showmode = false
+opt.showtabline = 0
 opt.sidescroll = 2
 opt.smartcase = true
 opt.softtabstop = 2
@@ -85,7 +87,7 @@ api.nvim_create_autocmd("TermOpen", {
     opt_local.number = false
     opt_local.cursorline = false
     opt_local.winhighlight = 'Normal:EmbeddedTerminal'
-    cmd('startinsert')
+    cmd.startinsert()
   end
 })
 
@@ -113,7 +115,7 @@ g.terminal_color_13 = '#53769d' -- magenta
 g.terminal_color_14 = '#26a6a6' -- cyan
 g.terminal_color_15 = '#ffffff' -- white
 
-cmd('colorscheme wool')
+cmd.colorscheme('wool')
 
 cmd.aunmenu({ 'PopUp.How-to\\ disable\\ mouse' })
 cmd.aunmenu({ 'PopUp.-1-' })

@@ -120,7 +120,7 @@ end
 
 local init_statusline = function()
   vim.opt_global.statusline = statusline()
-  vim.cmd('redrawstatus')
+  vim.cmd.redrawstatus()
   mline_update_highlight()
 end
 
