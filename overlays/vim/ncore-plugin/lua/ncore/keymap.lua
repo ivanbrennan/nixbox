@@ -363,6 +363,7 @@ end)
 -- recenter / redraw
 set('n', '<C-l>', 'zz')
 set('n', '<C-u><C-l>', 'zt')
+set('n', '<C-u><C-u>', '<Cmd>diffupdate<CR><C-l>')
 
 -- " git
 -- noremap <silent> gb :Git blame<CR>
