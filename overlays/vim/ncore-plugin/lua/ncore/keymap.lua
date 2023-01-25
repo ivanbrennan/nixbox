@@ -404,6 +404,15 @@ set('n', '<Leader><Tab>', function()
   end
 end)
 
+set('n', '<Leader><Esc>', function()
+  local i = o.laststatus
+  if i < 3 then
+    opt.laststatus = 3
+  else
+    opt.laststatus = 2
+  end
+end)
+
 -- recenter / redraw
 set('n', '<C-l>', 'zz')
 set('n', '<C-u><C-l>', 'zt')
