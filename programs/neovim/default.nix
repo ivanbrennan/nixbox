@@ -12,6 +12,8 @@
           commentary
           dirvish
           fugitive
+          nvim-treesitter
+          telescope-nvim
           wool
         ];
       opt =

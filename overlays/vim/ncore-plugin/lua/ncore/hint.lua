@@ -168,8 +168,8 @@ if not hasmapto('<Plug>(hint_clear)') and not hasmapfrom('<Esc>', 'n') then
   })
 end
 
-if not hasmapfrom('<Esc><Space>', 'n') then
-  keymap.set('n', '<Esc><Space>', table.concat({
+if not hasmapfrom('<Leader><C-l>', 'n') then
+  keymap.set('n', '<Leader><C-l>', table.concat({
     '<Plug>(hint_clear)',
     '<Cmd>diffupdate',
     '<Bar>normal! <C-l><CR>'

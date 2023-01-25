@@ -316,10 +316,14 @@ set('n', 'g.', '<Plug>(ArticulateTjump)', { remap = true })
 set('x', 'g.', '<Plug>(ArticulateTjump)', { remap = true })
 set('n', 'g:', ':tjump ')
 
--- fzf / ag
--- nnoremap <silent> <M-o>         :Files<CR>
--- nnoremap <silent> <leader>fo    :Files<CR>
--- nnoremap <silent> <leader>/     :Ag<CR>
+-- telescope
+local telescope = require('telescope.builtin')
+set('n', '<M-o>', telescope.find_files)
+set('n', '<Leader>fg', telescope.live_grep)
+set('n', '<Leader>/', telescope.live_grep)
+set('n', '<Leader>fh', telescope.help_tags)
+set('n', '<Leader>,', telescope.buffers)
+set('n', 'g<Space>', ':tjump ')
 -- nnoremap <silent> g<leader>     :Grepper<CR>
 set('n', '<C-;>', '<Cmd>ls<CR>')
 -- nnoremap <silent> <C-;>         :Buffers<CR>
