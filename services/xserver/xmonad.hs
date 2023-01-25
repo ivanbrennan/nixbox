@@ -765,10 +765,10 @@ keys' conf@(XConfig {modMask}) =
       ),
       -- brightness
       ( (noModMask, xF86XK_MonBrightnessUp),
-        safeSpawn "light" ["-A", "10"]
+        safeSpawn "light" ["-A", "5"]
       ),
       ( (noModMask, xF86XK_MonBrightnessDown),
-        safeSpawn "light" ["-U", "10"]
+        safeSpawn "light" ["-U", "5"]
       ),
       -- copy/paste
       ( (modMask, xK_c),
