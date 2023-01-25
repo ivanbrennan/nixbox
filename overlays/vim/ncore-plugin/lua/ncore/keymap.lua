@@ -5,6 +5,7 @@ local fn = vim.fn
 local opt = vim.opt
 local o = vim.o
 local bo = vim.bo
+local wo = vim.wo
 
 --[[ Defaults
 set('n', 'Y', 'y$')
@@ -193,40 +194,91 @@ set('n', '<C-p>', '-')
 opt.cedit = '<C-o>'
 
 -- touch of shell
-can_exit_without_confirmation = function()
-  local bufs = api.nvim_list_bufs()
-  local loaded = api.nvim_buf_is_loaded
-  local op = api.nvim_buf_get_option
-  local file_count = 0
+local special_buftype = [[\C\v^%(help|quickfix|nowrite|nofile)$]]
 
-  for i=1, #bufs do
-    local b = bufs[i]
-
-    if loaded(b) and op(b, 'buftype') ~= 'help' then
-      if fn.filereadable(api.nvim_buf_get_name(b)) == 1 then
-        file_count = file_count + 1
-      end
-
-      if file_count > 1 or op(b, 'modified') then
-        return false
-      end
-    end
-  end
-
-  return true
+local is_regular_buffer = function(bufnr)
+  local o = bo[bufnr]
+  return fn.match(o.buftype, special_buftype) == -1 and o.buflisted
 end
 
-local confirm_exit = function()
-  return fn.confirm('Exit?', 'y\nn') == 1
+local win_get_buf = api.nvim_win_get_buf
+
+local any_other_regular_windows = function()
+  local windows = api.nvim_list_wins()
+  local current_win = api.nvim_get_current_win()
+
+  for i=1, #windows do
+    local w = windows[i]
+    if w ~= current_win and is_regular_buffer(win_get_buf(w)) and not wo[w].previewwindow then
+      return true
+    end
+  end
+  return false
+end
+
+local any_modified_buffers = function()
+  local buffers = api.nvim_list_bufs()
+
+  for i=1, #buffers do
+    if bo[buffers[i]].modified then
+      return true
+    end
+  end
+  return false
+end
+
+local any_other_regular_file_buffers = function()
+  local buffers = api.nvim_list_bufs()
+  local current_buf = api.nvim_get_current_buf()
+
+  for i=1, #buffers do
+    local b = buffers[i]
+    if b ~= current_buf and is_regular_buffer(b) and fn.filereadable(api.nvim_buf_get_name(b)) == 1 then
+      return true
+    end
+  end
+  return false
+end
+
+local confirm_exit = function(prompt)
+  return fn.confirm(prompt, 'y\nn') == 1
 end
 
 set('n', '<C-d>', function()
-  if fn.tabpagenr('$') > 1 or fn.winnr('$') > 1 or (fn.bufnr('$') == 1 and not bo.modified) then
+  if fn.tabpagenr('$') > 1 or any_other_regular_windows() then
+    -- With at least one other tab and/or regular window present, we can close
+    -- the current window without exiting nvim.
     cmd.quit()
-  elseif can_exit_without_confirmation() or confirm_exit() then
-    cmd('quitall!')
+  elseif any_modified_buffers() then
+    -- Closing the current window will exit nvim. Since there are unsaved
+    -- changes, prompt for confirmation first.
+    if confirm_exit('Modified buffers exist. Exit anyway?') then
+      cmd.quitall({ bang = true })
+    end
+  elseif any_other_regular_file_buffers() then
+    -- Closing the current window will exit nvim. Since there are other
+    -- file-backed buffers other than the current one, prompt to confirm first.
+    if confirm_exit('Exit?') then
+      cmd.quit()
+    end
+  else
+    -- Closing the current window will exit nvim, but there are no unsaved
+    -- changes and no file-backed buffers to worry about.
+    cmd.quit()
   end
 end)
+
+set('n', '<Leader>qq', function()
+  if any_modified_buffers() then
+    if confirm_exit('Modified buffers exist. Exit anyway?') then
+      cmd.quitall({ bang = true })
+    end
+  else
+    cmd.quitall()
+  end
+end)
+
+set('n', '<C-M-d>', '<Cmd>buffer #<Bar>bdelete #<CR>')
 
 -- + -
 set('n', '+', '<C-a>')
@@ -293,9 +345,9 @@ set('t', '<C-w><C-;>', [[<C-\><C-n>:]])
 set('n', '<Leader>i', '<C-z>', { remap = true })
 
 -- autocompletion
-set('i', '<C-f>', '<C-X><C-f>')
+set('i', '<C-;>', '<C-X><C-f>')
 set('i', '<C-l>', '<C-X><C-l>')
-set('i', '<C-]>', '<C-X><C-]>')
+set('i', '<C-.>', '<C-X><C-.>')
 
 -- indentation
 set('v', '<Tab>', '=')
@@ -317,22 +369,14 @@ end, { expr = true })
 set('', 'z<CR>', '1z=')
 
 --[[
-safe <CR> for use in nmap's
+  Safe <CR> for use in nmap's, cmap's, etc.
+  Define a plug mapping to <CR>. This can be used for things like:
 
-Define a plug mapping to <CR>. This can be used for things like:
+    nmap <CR> <Plug>(ArticulateEnter)<Plug>(hint_highlight)
 
-  nmap <CR> <Plug>(coherent_enter)<Plug>(hint_highlight)
-
-If you tried mapping,
-
-  nmap <CR> <CR><Plug>(hint_highlight)
-
-you'd cause infinite recursion, and if you tried using nnoremap you'd
-lose the underlying behavior that <Plug>(hint_highlight) maps to.
-
-Providing a plug mapping to <CR> solves this problem.
+  (without causing infinite recursion)
 --]]
-set('n', '<Plug>(ArticulateEnter)', '<CR>')
+set({'n','v','o','s','i','c','t'}, '<Plug>(ArticulateEnter)', '<CR>')
 
 -- zoom
 set('n', '<Plug>(ArticulateZoom)', function()
@@ -363,7 +407,6 @@ end)
 -- recenter / redraw
 set('n', '<C-l>', 'zz')
 set('n', '<C-u><C-l>', 'zt')
-set('n', '<C-u><C-u>', '<Cmd>diffupdate<CR><C-l>')
 
 -- " git
 -- noremap <silent> gb :Git blame<CR>

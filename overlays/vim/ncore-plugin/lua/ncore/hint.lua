@@ -150,18 +150,30 @@ map('N',  '<Plug>(hint-N)')
 map('g#', '<Plug>(hint-g#)')
 map('g*', '<Plug>(hint-g*)')
 map('n',  '<Plug>(hint-n)')
-map('',   '<Plug>(hint_add_highlight)')
+map('',   '<Plug>(hint_highlight)')
 
-if not hasmapto('<Plug>(hint_toggle_highlight)') and not hasmapfrom('<M-u>', 'n') then
-  keymap.set('n', '<M-u>', '<Plug>(hint_toggle_highlight)', {
+if not hasmapto('<Plug>(hint_toggle)') and not hasmapfrom('<M-u>', 'n') then
+  keymap.set('n', '<M-u>', '<Plug>(hint_toggle)', {
     silent = true,
     remap = true,
     unique = true,
   })
 end
 
-if not hasmapto('<Plug>(hint_clear_highlight)') and not hasmapfrom('<Esc>', 'n') then
-  keymap.set('n', '<Esc>', '<Plug>(hint_clear_highlight)<Cmd>diffupdate<CR>', {
+if not hasmapto('<Plug>(hint_clear)') and not hasmapfrom('<Esc>', 'n') then
+  keymap.set('n', '<Esc>', '<Plug>(hint_clear)<Cmd>diffupdate<CR>', {
+    silent = true,
+    remap = true,
+    unique = true,
+  })
+end
+
+if not hasmapfrom('<Esc><Space>', 'n') then
+  keymap.set('n', '<Esc><Space>', table.concat({
+    '<Plug>(hint_clear)',
+    '<Cmd>diffupdate',
+    '<Bar>normal! <C-l><CR>'
+  }), {
     silent = true,
     remap = true,
     unique = true,
@@ -176,7 +188,7 @@ if not hasmapto('<Plug>(hint_cword)') and not hasmapfrom('<M-U>', 'n') then
   })
 end
 
-keymap.set('n', '<Plug>(hint_toggle_highlight)', function()
+keymap.set('n', '<Plug>(hint_toggle)', function()
   if is_highlighted() then
     clear_highlight()
   else
@@ -184,7 +196,7 @@ keymap.set('n', '<Plug>(hint_toggle_highlight)', function()
   end
 end, { silent = true, unique = true })
 
-keymap.set('n', '<Plug>(hint_clear_highlight)', function()
+keymap.set('n', '<Plug>(hint_clear)', function()
   clear_highlight()
 end, { silent = true, unique = true })
 
