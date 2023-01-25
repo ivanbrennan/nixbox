@@ -80,7 +80,7 @@
     gc.dates = "03:15";
 
     extraOptions = ''
-      experimental-features = nix-command
+      experimental-features = nix-command flakes
     '';
   };
 
