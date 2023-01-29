@@ -35,6 +35,29 @@ then
     # NOTE: does this break mouse selection in less?
 fi
 
+# Provide a function to manually disable focus notify events, in case detaching
+# an abduco session from within Neovim drops us back into an interactive shell.
+# Since Neovim doesn't know about the detach, it doesn't tell the terminal to
+# stop sending focus notify events, and as a result, the terminal will print
+# control sequences (^[[I, ^[[O) to the screen upon FocusIn/FocusOut events.
+disable-focus-notify() {
+    echo -ne '\e[?1004l'
+}
+enable-focus-notify() {
+    echo -ne '\e[?1004h'
+}
+# Workaround for abduco alternate screen buffer issues
+# https://github.com/martanne/abduco/issues/35#issuecomment-901738018
+abduco-attach {
+    (
+        until abduco | grep -q "\*.*${1}"
+        do
+            sleep 0.01
+        done && echo "tput rmcup" | abduco -a "${1}" &
+    )
+    abduco -a "${1}"
+}
+
 complete -F _tmux t
 
 ghcWithPackages() {

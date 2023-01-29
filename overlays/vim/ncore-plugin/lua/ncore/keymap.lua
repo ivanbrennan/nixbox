@@ -312,26 +312,63 @@ set('n', '<C-.>', '<Plug>(ArticulateTag)', { remap = true })
 set('x', '<C-.>', '<Plug>(ArticulateTag)', { remap = true })
 set('n', '<C-,>', '<Plug>(ArticulatePop)', { remap = true })
 set('x', '<C-,>', '<Plug>(ArticulatePop)', { remap = true })
-set('n', 'g.', '<Plug>(ArticulateTjump)', { remap = true })
-set('x', 'g.', '<Plug>(ArticulateTjump)', { remap = true })
+set('n', '<Leader>.', '<Plug>(ArticulateTjump)', { remap = true })
+set('x', '<Leader>.', '<Plug>(ArticulateTjump)', { remap = true })
 set('n', 'g:', ':tjump ')
 
 -- telescope
-local telescope = require('telescope.builtin')
-set('n', '<M-o>', telescope.find_files)
-set('n', '<Leader>fg', telescope.live_grep)
-set('n', '<Leader>/', telescope.live_grep)
-set('n', '<Leader>fh', telescope.help_tags)
-set('n', '<Leader>,', telescope.buffers)
-set('n', 'g<Space>', ':tjump ')
--- nnoremap <silent> g<leader>     :Grepper<CR>
-set('n', '<C-;>', '<Cmd>ls<CR>')
--- nnoremap <silent> <C-;>         :Buffers<CR>
--- nnoremap <silent> <leader>fh    :History/<CR>
--- nnoremap <silent> <leader>fg    :Tags<CR>
--- nnoremap <silent> <M-H>         :Helptags<CR>
--- cnoremap <expr>     :   refract#if_cmd_match(['^$'], "Commands\<CR>", ':')
--- cnoremap <expr>   <C-R> refract#if_cmd_match(['^$'], "History:\<CR>", "\<C-R>")
+local tel = require('telescope.builtin')
+set('n', '<Leader>fo', tel.find_files)
+set('n', '<Leader>fh', tel.oldfiles)
+set('n', 'g<Space>', tel.live_grep)
+set('n', 'g.', function()
+  tel.grep_string({ word_match = '-w' })
+end)
+set('n', '<C-;>', tel.buffers)
+set('n', 'g/', tel.current_buffer_fuzzy_find)
+set('n', '<Leader>j', tel.tags)
+set('n', '<Leader><C-j>', tel.current_buffer_tags)
+set('n', '<Leader>co', tel.commands)
+set('n', '<Leader>ch', tel.command_history)
+set('n', '<Leader>/', tel.search_history)
+set('n', '<Leader>fm', tel.man_pages)
+set('n', '<Leader>fl', tel.quickfix)
+set('n', '<Leader>fL', tel.quickfixhistory)
+set('n', '<Leader>jl', tel.jumplist)
+set('n', '<Leader>"', tel.registers)
+set('n', 'z<Space>', tel.spell_suggest)
+set('n', '<Leader>vo', tel.vim_options)
+set('n', '<Leader>vk', tel.keymaps)
+set('n', '<Leader>vh', tel.highlights)
+set('n', 'gh', tel.help_tags)
+set('n', '<Leader>r', tel.resume)
+-- interesting keys:
+-- gl (toggle quickfix)
+-- go
+-- gp
+-- g. (grep for word under cursor)
+-- <Leader>,
+-- <Leader>gj
+local cmd_match = function(patterns)
+  if fn.getcmdtype() == ':' then
+    local line = fn.getcmdline()
+    if fn.getcmdpos() > #line then
+      for i=1, #patterns do
+        if fn.match(line, patterns[i]) ~= -1 then
+          return true
+        end
+      end
+    end
+  end
+  return false
+end
+
+set('c', ':', function()
+  return cmd_match({'^$'}) and 'Telescope commands<CR>' or ':'
+end, { expr = true })
+set('c', '<C-r>', function()
+  return cmd_match({'^$'}) and 'Telescope command_history<CR>' or '<C-r>'
+end, { expr = true })
 
 -- terminal keys
 set('t', '<C-w>h',     [[<C-\><C-n><C-w>h]])
@@ -346,7 +383,137 @@ set('t', '<C-w>;',     [[<C-\><C-n>:]])
 set('t', '<C-w><C-;>', [[<C-\><C-n>:]])
 
 -- shell
-set('n', '<Leader>i', '<C-z>', { remap = true })
+local safe_suspend = function()
+  -- Suspend if the parent process is an interactive shell. Otherwise, do
+  -- nothing. This avoids dumping us into a blank, unusable terminal from which
+  -- we cannot return.
+  --
+  -- The parent process won't be an interactive shell if nvim was run directly
+  -- in the terminal invocation (`alacritty -e nvim`) or as the direct child of
+  -- an abduco session (`abduco -c session-name nvim`).
+  local parent = fn.systemlist({
+    'ps', '--no-headers',
+    '-p', vim.loop.os_getppid(),
+    'c',        -- derive command name from the actual executable
+    'o', 'comm' -- output just the command name
+  })[1]
+  if parent == 'bash' or parent == 'sh' then
+    cmd.suspend()
+  else
+    cmd.terminal() -- TODO: look into toggleterm
+  end
+  -- When suspending from within an abduco session, we must consider the
+  -- arrangement of server and client abduco processes. This breaks down to the
+  -- following cases.
+  --
+  --  A) nvim is a direct child of the server and the client is a direct child
+  --     of a terminal.
+  --
+  --              (server)
+  --     systemd─┬─abduco───nvim
+  --             └─···───alacritty───abduco (client)
+  --
+  --     Quitting nvim would terminate server, client, and the terminal in which
+  --     the client was running. Suspending normally would foreground the server
+  --     process, leaving us in an empty, unusable terminal. Instead, we should
+  --     detach the client.
+  --
+  -- B) nvim is a direct client of the server and the client is a direct child
+  --    of an interactive shell.
+  --
+  --              (server)
+  --     systemd─┬─abduco───nvim
+  --             └─···───alacritty───bash───abduco (client)
+  --
+  --     Quitting nvim would terminate server and client, and redisplay the
+  --     interactive shell in the terminal that was running the client.
+  --     Suspending normally would foreground the server process, leaving us in
+  --     an unusable terminal. Instead, we should detach the client.
+  --
+  -- C) nvim is a direct client of an interactive shell and the client is a
+  --    direct child of a terminal.
+  --
+  --              (server)
+  --     systemd─┬─abduco───bash───nvim
+  --             └─···───alacritty───abduco (client)
+  --
+  --     Quitting nvim would return to the interactive shell. Suspending
+  --     would do the same. In both cases, the shell is well behaved (e.g.
+  --     scrollback and mouse scrolling work). Note, however, that upon first
+  --     launching an interactive shell in abduco (or reattaching to one),
+  --     scrollback (and mouse scrolling) does not work until you either execute
+  --     a comman that uses the alternate screen buffer, or manually run `tput
+  --     rmcup`. Detaching the client will cleanly terminate the terminal, but
+  --     reattaching will only be clean if performed as part of a fresh terminal
+  --     invocation, e.g. `alacritty -e abduco -a foo`. If done from an already
+  --     running interactive shell, the screen won't redraw automatically,
+  --     although the :mode command will fix it.
+  --
+  --     # workaround for alternate screen buffer issues
+  --     # https://github.com/martanne/abduco/issues/35#issuecomment-901738018
+  --     function abduco-attach {
+  --       (until abduco | grep -q "\*.*${1}"; do sleep 0.01; done && echo "tput rmcup" | abduco -a "${1}" &); abduco -a "${1}"
+  --     }
+  --
+  -- D) nvim is a direct client of an interactive shell and the client is also a
+  --    direct child of an interactive shell.
+  --
+  --              (server)
+  --     systemd─┬─abduco───bash───nvim
+  --             └─···───alacritty───bash───abduco (client)
+  --
+  -- If the session is
+  -- running an interactive shell from which we invoked nvim, susp
+  -- If nvim was run directly as part of an abduco session invocation, then
+  -- suspend won't work. The abduco session should instead detached by sending
+  -- SIGTERM to the abduco client process. NOTE, however, that this won't
+  -- reset the terminal state, so behaves best when detaching the client will
+  -- kill the containing terminal window, e.g. when it was invoked like,
+  --
+  --   alacritty -e abduco -A session-name nvim &
+  --
+  -- local session = env.ABDUCO_SESSION
+  -- if session then
+  --   local outs = fn.systemlist({
+  --     'ps', '--no-header', '-C', 'abduco', 'o', 'pid,tty,args'
+  --   })
+  --   local client_pids = {}
+  --   for i=1, #outs do
+  --     local out  = outs[i]
+  --     local pid  = string.match(out, '^(%d+)')
+  --     local tty  = string.match(out, '^%d+%s+(%S+)')
+  --     local args = string.match(out, '^%d+%s+%S+%s+(.*)')
+  --     if tty ~= '?' and fn.match(args, string.format('\\<%s\\>', session)) ~= -1 then
+  --       client_pids[#client_pids+1] = pid
+  --     end
+  --   end
+  --   if #client_pids > 0 then
+  --     local kill_cmd = { 'kill' }
+  --     for i=1, #client_pids do
+  --       kill_cmd[#kill_cmd+1] = client_pids[i]
+  --     end
+  --     fn.system(kill_cmd) -- detach clients
+  --   end
+  --   -- local client_pid = tonumber(fn.system(table.concat({
+  --   --   'ps a o pid,command',
+  --   --   ' | ',
+  --   --   'grep -oP ',
+  --   --   '"',
+  --   --   '[0-9]+',                     -- pid
+  --   --   '(?=\\s+(/\\S*?/)?abduco\\b', -- executable
+  --   --   '.*',                         -- options, etc.
+  --   --   '\\b',
+  --   --   env.ABDUCO_SESSION,           -- session name
+  --   --   '\\b)',
+  --   --   '"'
+  --   -- })))
+  --   -- fn.system({ 'kill', client_pid })
+  -- else
+  --   cmd.suspend()
+  -- end
+end
+set('n', '<Leader>i', safe_suspend)
+set('n', '<C-z>', safe_suspend)
 
 -- autocompletion
 set('i', '<C-;>', '<C-X><C-f>')
@@ -391,8 +558,10 @@ set('n', '<Plug>(ArticulateZoom)', function()
   end
 end)
 
+local unzoomable_buftypes = [[\C\v^%(quickfix|nowrite|nofile)$]]
+
 set('n', '<CR>', function()
-  if bo.filetype == 'qf' then
+  if fn.match(bo.buftype, unzoomable_buftypes) ~= -1 then
     return '<Plug>(ArticulateEnter)'
   else
     return '<Plug>(ArticulateZoom)'
