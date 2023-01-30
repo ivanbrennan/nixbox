@@ -64,4 +64,28 @@ control-n: next-history
 # Meta-Enter
 "\e[13;3u": nop
 
+# Ctrl-Shift-<letter>
+"\e[65;6u": "A"
+"\e[66;6u": "B"
+"\e[68;6u": "D"
+"\e[69;6u": "E"
+"\e[71;6u": "G"
+"\e[72;6u": "H"
+"\e[73;6u": "I"
+"\e[74;6u": "J"
+"\e[75;6u": "K"
+"\e[76;6u": "L"
+"\e[77;6u": "M"
+"\e[78;6u": "N"
+"\e[79;6u": "O"
+"\e[80;6u": "P"
+"\e[81;6u": "Q"
+"\e[82;6u": "R"
+"\e[83;6u": "S"
+"\e[84;6u": "T"
+"\e[87;6u": "W"
+"\e[88;6u": "X"
+"\e[89;6u": "Y"
+"\e[90;6u": "Z"
+
 $include ~/.inputrc.local

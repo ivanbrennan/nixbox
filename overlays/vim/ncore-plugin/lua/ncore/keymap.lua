@@ -391,6 +391,11 @@ local safe_suspend = function()
   -- The parent process won't be an interactive shell if nvim was run directly
   -- in the terminal invocation (`alacritty -e nvim`) or as the direct child of
   -- an abduco session (`abduco -c session-name nvim`).
+  --
+  -- In practice, such abduco sessions behave best if configured to treat ^z as
+  -- their detach key (`abduco -c -e ^z session-name nvim`), because the default
+  -- ^\ key can cause nvim to print an unwanted control sequence:
+  -- https://github.com/neovim/neovim/issues/14298
   local parent = fn.systemlist({
     'ps', '--no-headers',
     '-p', vim.loop.os_getppid(),
@@ -399,12 +404,12 @@ local safe_suspend = function()
   })[1]
   if parent == 'bash' or parent == 'sh' then
     cmd.suspend()
-  else
-    cmd.terminal() -- TODO: look into toggleterm
   end
 end
 set('n', '<Leader>i', safe_suspend)
 set('n', '<C-z>', safe_suspend)
+
+set('t', '<C-S-n>', '<C-\\><C-n>')
 
 -- autocompletion
 set('i', '<C-;>', '<C-X><C-f>')

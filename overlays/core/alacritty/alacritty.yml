@@ -805,6 +805,17 @@ mouse_bindings:
 #
 # If the same trigger is assigned to multiple actions, all of them are executed
 # in the order they were defined in.
+#
+# ┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
+# https://github.com/alexherbo2/alacritty-extended-keys/blob/master/keys.yml
+# Fix keyboard input on terminals: http://www.leonerd.org.uk/hacks/fixterms/
+# Key names: https://docs.rs/glutin/latest/glutin/event/enum.VirtualKeyCode.html
+#
+# Useful commands to get code-points and key names:
+#
+# showkey --ascii
+# alacritty --print-events
+# ┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
 key_bindings:
   - { key: Paste,                                        action: Paste          }
   - { key: Copy,                                         action: Copy           }
@@ -1011,6 +1022,28 @@ key_bindings:
   - { key: X,               mods: Alt|Shift,               chars: "\x1bX"              }
   - { key: Y,               mods: Alt|Shift,               chars: "\x1bY"              }
   - { key: Z,               mods: Alt|Shift,               chars: "\x1bZ"              }
+  - { key: A,               mods: Control|Shift,           chars: "\x1b[65;6u"         }
+  - { key: B,               mods: Control|Shift,           chars: "\x1b[66;6u"         }
+  - { key: D,               mods: Control|Shift,           chars: "\x1b[68;6u"         }
+  - { key: E,               mods: Control|Shift,           chars: "\x1b[69;6u"         }
+  - { key: G,               mods: Control|Shift,           chars: "\x1b[71;6u"         }
+  - { key: H,               mods: Control|Shift,           chars: "\x1b[72;6u"         }
+  - { key: I,               mods: Control|Shift,           chars: "\x1b[73;6u"         }
+  - { key: J,               mods: Control|Shift,           chars: "\x1b[74;6u"         }
+  - { key: K,               mods: Control|Shift,           chars: "\x1b[75;6u"         }
+  - { key: L,               mods: Control|Shift,           chars: "\x1b[76;6u"         }
+  - { key: M,               mods: Control|Shift,           chars: "\x1b[77;6u"         }
+  - { key: N,               mods: Control|Shift,           chars: "\x1b[78;6u"         }
+  - { key: O,               mods: Control|Shift,           chars: "\x1b[79;6u"         }
+  - { key: P,               mods: Control|Shift,           chars: "\x1b[80;6u"         }
+  - { key: Q,               mods: Control|Shift,           chars: "\x1b[81;6u"         }
+  - { key: R,               mods: Control|Shift,           chars: "\x1b[82;6u"         }
+  - { key: S,               mods: Control|Shift,           chars: "\x1b[83;6u"         }
+  - { key: T,               mods: Control|Shift,           chars: "\x1b[84;6u"         }
+  - { key: W,               mods: Control|Shift,           chars: "\x1b[87;6u"         }
+  - { key: X,               mods: Control|Shift,           chars: "\x1b[88;6u"         }
+  - { key: Y,               mods: Control|Shift,           chars: "\x1b[89;6u"         }
+  - { key: Z,               mods: Control|Shift,           chars: "\x1b[90;6u"         }
   - { key: Key1,            mods: Alt,                     chars: "\x1b1"              }
   - { key: Key2,            mods: Alt,                     chars: "\x1b2"              }
   - { key: Key3,            mods: Alt,                     chars: "\x1b3"              }
