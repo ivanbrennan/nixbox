@@ -770,6 +770,12 @@ keys' conf@(XConfig {modMask}) =
       ( (noModMask, xF86XK_MonBrightnessDown),
         safeSpawn "light" ["-U", "5"]
       ),
+      ( (shiftMask, xF86XK_MonBrightnessUp),
+        safeSpawn "light" ["-S", "100"]
+      ),
+      ( (shiftMask, xF86XK_MonBrightnessDown),
+        safeSpawn "light" ["-S", "0"]
+      ),
       -- copy/paste
       ( (modMask, xK_c),
         bindFirst
