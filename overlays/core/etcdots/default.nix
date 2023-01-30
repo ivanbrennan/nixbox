@@ -20,7 +20,6 @@ stdenv.mkDerivation {
   installPhase = ''
     install -D -m644 $src/lesskey               $out/lesskey
 
-    install -D -m644 $src/shell/inputrc         $out/etc/inputrc
     install -D -m644 $src/tmux/tmux.conf        $out/etc/tmux.conf
     install -D -m644 $src/irbrc                 $out/etc/irbrc
     install -D -m644 $src/abcde/abcde.conf      $out/etc/abcde.conf
