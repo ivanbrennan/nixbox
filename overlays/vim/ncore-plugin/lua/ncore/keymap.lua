@@ -383,26 +383,26 @@ set('t', '<C-w>;',     [[<C-\><C-n>:]])
 set('t', '<C-w><C-;>', [[<C-\><C-n>:]])
 
 -- shell
-local safe_suspend = function()
-  -- Suspend if the parent process is an interactive shell. Otherwise, do
-  -- nothing. This avoids dumping us into a blank, unusable terminal from which
-  -- we cannot return.
-  --
-  -- The parent process won't be an interactive shell if nvim was run directly
-  -- in the terminal invocation (`alacritty -e nvim`) or as the direct child of
-  -- an abduco session (`abduco -c session-name nvim`).
-  --
-  -- In practice, such abduco sessions behave best if configured to treat ^z as
-  -- their detach key (`abduco -c -e ^z session-name nvim`), because the default
-  -- ^\ key can cause nvim to print an unwanted control sequence:
-  -- https://github.com/neovim/neovim/issues/14298
-  local parent = fn.systemlist({
+local parent_process_name = function()
+  return fn.systemlist({
     'ps', '--no-headers',
     '-p', vim.loop.os_getppid(),
     'c',        -- derive command name from the actual executable
     'o', 'comm' -- output just the command name
   })[1]
-  if parent == 'bash' or parent == 'sh' then
+end
+
+local safe_suspend = function()
+  -- Suspend if the parent process is a shell. Otherwise, do nothing.
+  --
+  -- A couple case in which the parent process is not a shell:
+  -- - nvim was run as part of a terminal invocation (`alacritty -e nvim`)
+  -- - nvim was run as part of an abduco invocation (`abduco -c foo nvim`)
+  --
+  -- In such cases, suspending would drop us into an unusable terminal.
+  local p = parent_process_name()
+
+  if p == 'bash' or p == 'sh' then
     cmd.suspend()
   end
 end
