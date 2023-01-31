@@ -8,6 +8,10 @@ local current = function()
   return b and tonumber(b) == api.nvim_get_current_buf()
 end
 
+local is_prompt = function()
+  return o.buftype == 'prompt'
+end
+
 mline_bufname = function()
   return current() and fn.bufname('%') or ''
 end
@@ -17,19 +21,31 @@ mline_bufname_nc = function()
 end
 
 mline_filetype = function()
-  return current() and o.filetype or ''
+  return current() and not is_prompt() and o.filetype or ''
 end
 
 mline_filetype_nc = function()
-  return not current() and o.filetype or ''
+  return not current() and not is_prompt() and o.filetype or ''
 end
 
 mline_before_filetype = function()
-  return #o.filetype > 0 and '[' or ''
+  return #o.filetype > 0 and not is_prompt() and '[' or ''
 end
 
 mline_after_filetype = function()
-  return #o.filetype > 0 and ']' or ''
+  return #o.filetype > 0 and not is_prompt() and ']' or ''
+end
+
+mline_modified = function()
+  if is_prompt() then
+    return ''
+  elseif not o.modifiable then
+    return '-'
+  elseif o.modified then
+    return '+'
+  else
+    return ''
+  end
 end
 
 g.mline_branch_maxwidth = g.mline_branch_maxwidth or 20
@@ -72,7 +88,7 @@ local statusline = function()
     '%*',                                 -- reset highlight group
     ' ',
     '%w',                                 -- preview
-    '%M',                                 -- modified
+    '%{v:lua.mline_modified()}',          -- modified
     '%=',                                 -- separator
     ' ',
     '%{toupper(&fenc)}',                  -- encoding

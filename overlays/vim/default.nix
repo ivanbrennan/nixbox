@@ -30,7 +30,9 @@ let
         start =
           [ ncore-plugin
             lush-nvim
+            nvim-treesitter
             shipwright-nvim
+            telescope-nvim
             wool
           ];
       };

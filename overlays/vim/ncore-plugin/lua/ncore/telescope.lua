@@ -22,7 +22,7 @@ telescope.setup({
     selection_caret = '  ',
     multi_icon = '⋅',
     border = true,
-    borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
+    borderchars = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
     hl_result_eol = true,
     results_title = false,
     history = { limit = 1000 },

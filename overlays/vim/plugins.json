@@ -319,8 +319,8 @@
     "src": {
       "owner": "ivanbrennan",
       "repo": "wool",
-      "rev": "4ae691da9fe3594d27631b758bcc3f9b7ecaf00c",
-      "sha256": "sha256-rNhObXH34MEyLgHgcUIy5mB+NW1WMUXthUFw2ga/V4o="
+      "rev": "a922251f0b5e2cf6b067f7b42f6822856cbab26f",
+      "sha256": "sha256-N3ESrv3sOb1oGxdtvtYcouOT+teeyn/gZS9jSwmplOY="
     }
   },
   "wmgraphviz": {
