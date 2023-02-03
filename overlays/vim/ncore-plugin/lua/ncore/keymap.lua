@@ -60,8 +60,12 @@ set({ 'n', 'v' }, 'q;', 'q:')
 set('n', '<Leader>x', ':!')
 set('n', '<Leader>h', ':help ')
 set('n', '<Leader>H', ':help <C-r><C-w>')
---set('c', ';', '<Plug>(refract_semicolon_recall)', { remap = true })
---set('c', 's', '<Plug>(refract_autoreturn_ls_vs)', { remap = true })
+set('c', ';', function()
+  return cmd_match({'^$', "^'<,'>$"}) and '<Up>' or ';'
+end, { expr = true, remap = true })
+set('c', 's', function()
+  return cmd_match({'^l$', '^v$'}) and 's<CR>' or 's'
+end, { expr = true })
 
 -- add blank line above / below
 set('n', '<S-CR>', '<Cmd>call append(line(".") - 1, "")<CR>')
@@ -283,8 +287,10 @@ set('n', '<C-M-d>', '<Cmd>buffer #<Bar>bdelete #<CR>')
 -- + -
 set('n', '+', '<C-a>')
 set('x', '+', '<C-a>')
+set('v', 'g+', 'g<C-a>')
 set('n', '_', '<C-x>')
 set('x', '_', '<C-x>')
+set('v', 'g_', 'g<C-x>')
 
 -- scroll
 set({ 'n', 'v', 's' }, '<C-j>', '<C-e>')
@@ -369,6 +375,7 @@ end, { expr = true })
 set('c', '<C-r>', function()
   return cmd_match({'^$'}) and 'Telescope command_history<CR>' or '<C-r>'
 end, { expr = true })
+set('c', '<C-x><C-r>', '<C-r>')
 
 -- terminal keys
 set('t', '<C-w>h',     [[<C-\><C-n><C-w>h]])
@@ -395,11 +402,11 @@ end
 local safe_suspend = function()
   -- Suspend if the parent process is a shell. Otherwise, do nothing.
   --
-  -- A couple case in which the parent process is not a shell:
+  -- A couple examples where the parent process won't be a shell:
   -- - nvim was run as part of a terminal invocation (`alacritty -e nvim`)
   -- - nvim was run as part of an abduco invocation (`abduco -c foo nvim`)
   --
-  -- In such cases, suspending would drop us into an unusable terminal.
+  -- In these cases, suspending would drop us into an unusable terminal.
   local p = parent_process_name()
 
   if p == 'bash' or p == 'sh' then
@@ -408,6 +415,9 @@ local safe_suspend = function()
 end
 set('n', '<Leader>i', safe_suspend)
 set('n', '<C-z>', safe_suspend)
+
+-- Workaround https://github.com/neovim/neovim/issues/11393
+set('c', '<C-g>', '<C-u><Esc>')
 
 set('t', '<C-S-n>', '<C-\\><C-n>')
 
