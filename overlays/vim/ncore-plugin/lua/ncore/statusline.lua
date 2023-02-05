@@ -12,11 +12,47 @@ local is_prompt = function()
   return o.buftype == 'prompt'
 end
 
+local get_dir = function()
+  if #fn.bufname('%') > 0 then
+    local tree = fn.FugitiveWorkTree()
+    return #tree > 0 and (fn.fnamemodify(tree, ':t') .. '/') or ''
+  else
+    return ''
+  end
+end
+
+local get_bufname = function()
+  local bufname = fn.bufname('%')
+  local tree = fn.FugitiveWorkTree()
+
+  if #bufname > 0 and #tree > 0 then
+    return string.sub(fn.FugitivePath(), #tree + 2)
+  else
+    return bufname
+  end
+end
+
+mline_dir = function()
+  return current() and get_dir() or ''
+end
+
+mline_dir_nc = function()
+  return not current() and get_dir() or ''
+end
+
 mline_bufname = function()
-  return current() and fn.bufname('%') or ''
+  return current() and get_bufname() or ''
 end
 
 mline_bufname_nc = function()
+  return not current() and get_bufname() or ''
+end
+
+mline_basic_bufname = function()
+  return current() and fn.bufname('%') or ''
+end
+
+mline_basic_bufname_nc = function()
   return not current() and fn.bufname('%') or ''
 end
 
@@ -69,17 +105,21 @@ mline_tabdot = function()
 end
 
 local statusline = function()
+  local fugitive = g.loaded_fugitive
   -- TODO: try converting to string.format() for performance
   return table.concat({
     ' ',
-    '%1*',                                -- User1 highlight group (filename)
-    '%{v:lua.mline_bufname()}',           -- relative path
+    '%1*',                                -- User1 highlight group (dirname)
+    fugitive and '%{v:lua.mline_dir()}' or '', -- worktree
+    '%2*',                                -- User2 highlight group (filename)
+    fugitive and '%{v:lua.mline_bufname()}' or '%{v:lua.mline_basic_bufname()}', -- relative path
     '%*',                                 -- reset highlight group
-    '%{v:lua.mline_bufname_nc()}',        -- relative path (non-current)
+    fugitive and '%{v:lua.mline_dir_nc()}' or '', -- worktree (non-current)
+    fugitive and '%{v:lua.mline_bufname_nc()}' or '%{v:lua.mline_basic_bufname_nc()}', -- relative path (non-current)
     ' ',
     '%#StatusLineNC#',                    -- StatusLineNC highlight group
     '%{v:lua.mline_before_filetype()}',   -- dimmed '['
-    '%2*',                                -- User2 highlight group (filetype)
+    '%3*',                                -- User3 highlight group (filetype)
     '%{v:lua.mline_filetype()}',          -- filetype (current)
     '%*',                                 -- reset highlight group
     '%{v:lua.mline_filetype_nc()}',       -- filetype (non-current)
@@ -92,7 +132,7 @@ local statusline = function()
     '%=',                                 -- separator
     ' ',
     '%{toupper(&fenc)}',                  -- encoding
-    g.loaded_fugitive and '%(  %{v:lua.mline_branch()}%)' or '', -- branch
+    fugitive and '%(  %{v:lua.mline_branch()}%)' or '', -- branch
     ' ',
     '%{v:lua.mline_tabdot()}',            -- tabs indicator
     '%l:',                                -- line:
@@ -104,20 +144,25 @@ local statusline = function()
 end
 
 mline_update_highlight = function()
-  local ok, defn = pcall(api.nvim_get_hl_by_name, 'StatusLine', true)
+  local ok, stat = pcall(api.nvim_get_hl_by_name, 'StatusLine', true)
   if not ok then return end
 
-  local bg = defn.background
-  local fg = defn.foreground
+  local ok, cmt = pcall(api.nvim_get_hl_by_name, 'Comment', true)
+  if not ok then return end
+
+  local bg = stat.background
+  local fg = stat.foreground
+  local cmt_fg = cmt.foreground
 
   if o.modified then
     api.nvim_set_hl(0, 'User1', { bg = bg, fg = fg, italic = true, bold = true })
-    api.nvim_set_hl(0, 'User2', { bg = bg, fg = fg, italic = true })
+    api.nvim_set_hl(0, 'User2', { bg = bg, fg = fg, italic = true, bold = true })
+    api.nvim_set_hl(0, 'User3', { bg = bg, fg = fg, italic = true })
   else
-    api.nvim_set_hl(0, 'User1', { bg = bg, fg = fg, bold = true })
-    api.nvim_set_hl(0, 'User2', { bg = bg, fg = fg })
+    api.nvim_set_hl(0, 'User1', { bg = bg, fg = cmt_fg, bold = true })
+    api.nvim_set_hl(0, 'User2', { bg = bg, fg = fg, bold = true })
+    api.nvim_set_hl(0, 'User3', { bg = bg, fg = fg })
   end
-  api.nvim_set_hl(0, 'User3', { bg = bg, fg = fg, italic = true })
 end
 
 local highlight_modified = false
