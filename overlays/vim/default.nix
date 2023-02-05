@@ -21,29 +21,34 @@ let
   neovim-runtime = super.linkFarm "neovim-runtime" (
     super.lib.mapAttrs (name: value: value.source) neovim-runtime-attrs
   );
-  neovim-with-lush = super.neovim.override {
-    configure = {
-      customRC = neovim-init + ''
-        set runtimepath^=${neovim-runtime}/etc
-      '';
-      packages.ncore = with (super.vimPlugins) // (self.vimPrivatePlugins); {
-        start =
-          [ ncore-plugin
-            lush-nvim
-            nvim-treesitter
-            shipwright-nvim
-            telescope-nvim
-            wool
-          ];
-      };
-    };
-  };
 in
 
 {
   dotvim = super.callPackage ./dotvim.nix { };
 
   vimPrivatePlugins = (import ./plugins.nix) super;
+
+  nvim-configured-packages = with super.vimPlugins // self.vimPrivatePlugins; {
+    ncore = {
+      start =
+        [ ncore-plugin
+          commentary
+          dirvish
+          fugitive
+          nvim-treesitter
+          telescope-nvim
+          wool
+        ];
+      # NOTE: To list/load opt plugins, type :packadd <Tab>
+      opt =
+        [ # haskell-vim
+          lush-nvim
+          nvim-colorizer-lua
+          shipwright-nvim
+          # splitjoin
+        ];
+    };
+  };
 
   vim_configurable = super.vim_configurable.overrideAttrs (old: {
     # Make the X Toolkit Intrinsics library (libXt) available during the build
@@ -58,9 +63,14 @@ in
 
   inherit neovim-init neovim-runtime-attrs;
 
-  neovim-lush = super.runCommandLocal "neovim-lush" {
-    buildInputs = [ super.makeWrapper neovim-with-lush ];
-  } ''
-    makeWrapper ${neovim-with-lush}/bin/nvim $out/bin/nvim-lush
-  '';
+  neovim-qt = super.neovim-qt.override {
+    neovim = super.neovim.override {
+      configure = {
+        customRC = neovim-init + ''
+          set runtimepath^=${neovim-runtime}/etc
+        '';
+        packages = self.nvim-configured-packages;
+      };
+    };
+  };
 }
