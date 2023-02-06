@@ -320,7 +320,14 @@ set('n', '<Leader>fd', function()
     select_buffer = true,
   })
 end)
-set('n', 'g<Space>', tel.live_grep)
+set('n', 'g<Space>', function()
+  -- https://github.com/nvim-telescope/telescope-fzf-native.nvim/issues/53#issuecomment-1015126459
+  tel.grep_string({
+    search = '',
+    only_sort_text = true,
+    path_display = { 'shorten' },
+  })
+end)
 set('n', 'g.', function()
   tel.grep_string({ word_match = '-w' })
 end)
