@@ -7,15 +7,6 @@ local o = vim.o
 local bo = vim.bo
 local wo = vim.wo
 
---[[ Defaults
-set('n', 'Y', 'y$')
-set('i', '<C-u>', '<C-g>u<C-u>')
-set('i', '<C-w>', '<C-g>u<C-w>')
-set('x', '*', 'y/\V<C-r>"<CR>')
-set('x', '#', 'y?\V<C-r>"<CR>')
-set('n', '&', ':&&<CR>')
---]]
-
 vim.g.mapleader = ' '
 -- Don't move the cursor if a leader mapping times out.
 set('n', '<Space>', '<Nop>', { silent = true})
@@ -60,12 +51,6 @@ set({ 'n', 'v' }, 'q;', 'q:')
 set('n', '<Leader>x', ':!')
 set('n', '<Leader>h', ':help ')
 set('n', '<Leader>H', ':help <C-r><C-w>')
-set('c', ';', function()
-  return cmd_match({'^$', "^'<,'>$"}) and '<Up>' or ';'
-end, { expr = true, remap = true })
-set('c', 's', function()
-  return cmd_match({'^l$', '^v$'}) and 's<CR>' or 's'
-end, { expr = true })
 
 -- add blank line above / below
 set('n', '<S-CR>', '<Cmd>call append(line(".") - 1, "")<CR>')
@@ -324,10 +309,17 @@ set('n', 'g:', ':tjump ')
 
 -- telescope
 local tel = require('telescope.builtin')
+local telx = require('telescope').extensions
 set('n', '<Leader>fo', tel.find_files)
 set('n', '<M-o>', tel.find_files)
 set('n', '<Leader>fh', tel.oldfiles)
-set('n', '<Leader>fd', '<Cmd>Telescope file_browser<CR>')
+set('n', '<Leader>fe', telx.file_browser.file_browser)
+set('n', '<Leader>fd', function()
+  telx.file_browser.file_browser({
+    path = '%:p:h',
+    select_buffer = true,
+  })
+end)
 set('n', 'g<Space>', tel.live_grep)
 set('n', 'g.', function()
   tel.grep_string({ word_match = '-w' })
@@ -371,6 +363,12 @@ local cmd_match = function(patterns)
   return false
 end
 
+set('c', ';', function()
+  return cmd_match({'^$', "^'<,'>$"}) and '<Up>' or ';'
+end, { expr = true, remap = true })
+set('c', 's', function()
+  return cmd_match({'^l$', '^v$'}) and 's<CR>' or 's'
+end, { expr = true })
 set('c', ':', function()
   return cmd_match({'^$'}) and 'Telescope commands<CR>' or ':'
 end, { expr = true })

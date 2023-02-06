@@ -3,6 +3,7 @@
 local telescope = require('telescope')
 local actions = require('telescope.actions')
 local layout = require('telescope.actions.layout')
+local fb_actions = require('telescope').extensions.file_browser.actions
 local o = vim.o
 
 telescope.setup({
@@ -68,9 +69,25 @@ telescope.setup({
                                       -- the default case_mode is "smart_case"
     },
     file_browser = {
-      theme = "ivy",
+      theme = 'ivy',
       hijack_netrw = false, -- dirvish still takes precedence
       dir_icon = '',
+      mappings = {
+        ['i'] = {
+          ['<A-d>'] = false,
+          ['<A-r>'] = false,
+          ['<C-e>'] = false,
+          ['<C-f>'] = false,
+          ['<C-t>'] = false,
+          ['<C-w>'] = { '<C-S-w>', type = 'command' },
+          ['<C-S-n>'] = fb_actions.create,
+          ['<C-S-d>'] = fb_actions.remove,
+          ['<C-S-r>'] = fb_actions.rename,
+          ['<A-g>'] = fb_actions.toggle_browser,
+          ['<C-.>'] = fb_actions.toggle_hidden,
+          ['<C-S-a>'] = fb_actions.toggle_all,
+        },
+      },
     },
   },
 })

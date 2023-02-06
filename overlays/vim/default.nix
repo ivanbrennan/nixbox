@@ -36,6 +36,8 @@ in
           dirvish
           fugitive
           nvim-treesitter
+          telescope-file-browser-nvim
+          telescope-fzf-native-nvim
           telescope-nvim
           wool
         ];
