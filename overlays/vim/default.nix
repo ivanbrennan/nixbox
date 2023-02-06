@@ -28,7 +28,7 @@ in
 
   vimPrivatePlugins = (import ./plugins.nix) super;
 
-  nvim-configured-packages = with super.vimPlugins // self.vimPrivatePlugins; {
+  neovim-configured-packages = with super.vimPlugins // self.vimPrivatePlugins; {
     ncore = {
       start =
         [ ncore-plugin
@@ -69,7 +69,7 @@ in
         customRC = neovim-init + ''
           set runtimepath^=${neovim-runtime}/etc
         '';
-        packages = self.nvim-configured-packages;
+        packages = self.neovim-configured-packages;
       };
     };
   };
