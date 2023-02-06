@@ -325,7 +325,7 @@ set('n', 'g<Space>', function()
   tel.grep_string({
     search = '',
     only_sort_text = true,
-    path_display = { 'shorten' },
+    path_display = { 'smart' },
   })
 end)
 set('n', 'g.', function()

@@ -52,6 +52,13 @@ telescope.setup({
     },
   },
   pickers = {
+    grep_string = {
+      mappings = {
+        i = {
+          ["<C-r>"] = actions.to_fuzzy_refine,
+        },
+      },
+    },
     live_grep = {
       mappings = {
         i = {
