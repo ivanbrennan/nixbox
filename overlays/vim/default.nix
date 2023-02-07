@@ -11,7 +11,15 @@ let
   # TODO: Remove etc/ prefix once we have the following fix:
   # https://github.com/NixOS/nixpkgs/pull/209755
   neovim-runtime-attrs = {
+    "etc/ftplugin/asm.vim".source = ./runtime/ftplugin/asm.vim;
     "etc/ftplugin/c.vim".source = ./runtime/ftplugin/c.vim;
+    "etc/ftplugin/cpp.vim".source = ./runtime/ftplugin/cpp.vim;
+    "etc/ftplugin/help.lua".source = ./runtime/ftplugin/help.lua;
+    "etc/indent/c.vim".source = ./runtime/indent/c.vim;
+    "etc/indent/cpp.vim".source = ./runtime/indent/cpp.vim;
+    "etc/indent/java.vim".source = ./runtime/indent/java.vim;
+    "etc/indent/make.vim".source = ./runtime/indent/make.vim;
+    "etc/indent/sh.vim".source = ./runtime/indent/sh.vim;
     # "ftplugin/c.vim".text = "setlocal omnifunc=v:lua.vim.lsp.omnifunc";
     # "ftplugin/d.vim".source = ./ftplugin/d.vim;
     # "ftplugin/d.vim".enabled = false;

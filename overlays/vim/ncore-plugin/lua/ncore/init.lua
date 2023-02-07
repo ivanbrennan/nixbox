@@ -1,3 +1,6 @@
+local autoload = require('ncore.autoload')
+ncore = autoload('ncore')
+
 require('ncore.options')
 require('ncore.keymap')
 require('ncore.statusline')
