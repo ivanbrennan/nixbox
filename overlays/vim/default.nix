@@ -11,6 +11,10 @@ let
   # TODO: Remove etc/ prefix once we have the following fix:
   # https://github.com/NixOS/nixpkgs/pull/209755
   neovim-runtime-attrs = {
+    "etc/ftdetect/bats.lua".source = ./runtime/ftdetect/bats.lua;
+    "etc/ftdetect/geojson.lua".source = ./runtime/ftdetect/geojson.lua;
+    "etc/ftdetect/mutt.lua".source = ./runtime/ftdetect/mutt.lua;
+    "etc/ftdetect/ssh.lua".source = ./runtime/ftdetect/ssh.lua;
     "etc/ftplugin/asm.lua".source = ./runtime/ftplugin/asm.lua;
     "etc/ftplugin/c.lua".source = ./runtime/ftplugin/c.lua;
     "etc/ftplugin/cpp.lua".source = ./runtime/ftplugin/cpp.lua;
@@ -20,9 +24,6 @@ let
     "etc/indent/java.lua".source = ./runtime/indent/java.lua;
     "etc/indent/make.lua".source = ./runtime/indent/make.lua;
     "etc/indent/sh.lua".source = ./runtime/indent/sh.lua;
-    # "ftplugin/c.vim".text = "setlocal omnifunc=v:lua.vim.lsp.omnifunc";
-    # "ftplugin/d.vim".source = ./ftplugin/d.vim;
-    # "ftplugin/d.vim".enabled = false;
   };
 
   # NOTE: Based on nixos/modules/programs/neovim.nix
