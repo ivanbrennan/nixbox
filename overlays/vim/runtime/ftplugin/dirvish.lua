@@ -22,32 +22,24 @@ set('n', 'q', '<Plug>(dirvish_quit)', {
   nowait = true,
 })
 
--- For some reason, conceallevel=3 only takes effect if we run these commands
--- in-line, rather than performing them within a function.
-local conceal_script = table.concat({
-  ':let b:saved_position=getcurpos()<Bar>',
-  [[silent keeppatterns g@\v/\.[^\/]+/?$@d _<CR>]],
-  ':setlocal conceallevel=3<Bar>',
-  'let b:showing_hidden_files=0<Bar>',
-  'call setpos(".", b:saved_position)<Bar>',
-  'unlet b:saved_position<CR>',
-})
-set('n', '<Plug>(conceal_hidden_files)', conceal_script, {
-  buffer = true,
-  silent = true,
-})
+set('n', '<Plug>(toggle_hidden_files)', function()
+  local position = fn.getcurpos()
 
-set('n', '<Plug>(reveal_hidden_files)', function()
-  local saved_position = fn.getcurpos()
-  cmd.Dirvish()
-  b.showing_hidden_files = 1
-  fn.setpos(".", saved_position)
-end, { buffer = true, silent = true })
-
-set('n', 'h', function()
   if b.showing_hidden_files == 1 then
-    return '<Plug>(conceal_hidden_files)'
+    cmd([[silent keeppatterns g@\v/\.[^\/]+/?$@d _]])
+    b.showing_hidden_files = 0
   else
-    return '<Plug>(reveal_hidden_files)'
+    cmd.Dirvish()
+    b.showing_hidden_files = 1
   end
-end, { buffer = true, expr = true })
+
+  fn.setpos('.', position)
+end, { buffer = true })
+
+-- Due to a TextChanged autocommand that dirvish sets up, it's necessary to set
+-- conceallevel in a subsequent command, rather than attempting to do so in the
+-- same command that modifies the dirvish buffer contents.
+-- https://github.com/justinmk/vim-dirvish/blob/6233243f0caa71d27d27ea102540a88bce8eb6ea/autoload/dirvish.vim#L184-L185
+set('n', '<Plug>(conceallevel3)', '<Cmd>setlocal conceallevel=3<CR>', { buffer = true })
+
+set('n', 'h', '<Plug>(toggle_hidden_files)<Plug>(conceallevel3)', { buffer = true, remap = true })
