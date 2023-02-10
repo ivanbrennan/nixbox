@@ -1,6 +1,6 @@
-g = vim.g
-ol = vim.opt_local
-set = vim.keymap.set
+local g = vim.g
+local ol = vim.opt_local
+local set = vim.keymap.set
 
 ol.omnifunc = 'rubycomplete#Complete'
 ol.foldmethod = 'indent'
