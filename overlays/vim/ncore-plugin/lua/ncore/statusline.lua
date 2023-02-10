@@ -163,6 +163,9 @@ mline_update_highlight = function()
     api.nvim_set_hl(0, 'User2', { bg = bg, fg = fg, bold = true })
     api.nvim_set_hl(0, 'User3', { bg = bg, fg = fg })
   end
+
+  -- Unconditional italics, for use in the Quickfix statusline.
+  api.nvim_set_hl(0, 'User4', { bg = bg, fg = fg, italic = true })
 end
 
 local highlight_modified = false

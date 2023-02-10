@@ -13,6 +13,7 @@ let
   runtime-attr = str: {
     "etc/${str}".source = ./runtime + ("/" + str);
   };
+  # NOTE: See also environment.etc."xdg/nvim/after/{ftplugin,plugin,syntax}/"
   neovim-runtime-attrs =
     builtins.foldl' (attrs: x: attrs // runtime-attr x) {} [
       "ftdetect/bats.lua"
@@ -22,7 +23,16 @@ let
       "ftplugin/asm.lua"
       "ftplugin/c.lua"
       "ftplugin/cpp.lua"
+      "ftplugin/dirvish.lua"
+      "ftplugin/fugitiveblame.lua"
+      "ftplugin/git.lua"
+      "ftplugin/haskell.lua"
       "ftplugin/help.lua"
+      "ftplugin/mail.lua"
+      "ftplugin/netrw.lua"
+      "ftplugin/ruby.lua"
+      "ftplugin/sh.lua"
+      "ftplugin/vim.lua"
       "indent/c.lua"
       "indent/cpp.lua"
       "indent/java.lua"

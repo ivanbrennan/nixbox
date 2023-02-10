@@ -56,6 +56,12 @@ in {
         login ${githubUsername}
         password ${githubToken}
       '';
+      "xdg/nvim/after/ftplugin/qf.lua".source = etc/xdg/nvim/after/ftplugin/qf.lua;
+      "xdg/nvim/after/plugin/keymap.lua".source = etc/xdg/nvim/after/plugin/keymap.lua;
+      "xdg/nvim/after/syntax/c.vim".source = etc/xdg/nvim/after/syntax/c.vim;
+      "xdg/nvim/after/syntax/gitcommit.lua".source = etc/xdg/nvim/after/syntax/gitcommit.lua;
+      "xdg/nvim/after/syntax/readline.vim".source = etc/xdg/nvim/after/syntax/readline.vim;
+      "xdg/nvim/after/syntax/sh.vim".source = etc/xdg/nvim/after/syntax/sh.vim;
       "xdg/gtk-3.0/settings.ini".source = etc/xdg/gtk-3.0/settings.ini;
       "xdg/gtk-2.0/gtkrc".source = etc/xdg/gtk-2.0/gtkrc;
       "xdg/kitty/kitty.conf".source = etc/xdg/kitty/kitty.conf;

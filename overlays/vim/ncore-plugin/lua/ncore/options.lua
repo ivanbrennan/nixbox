@@ -31,6 +31,7 @@ opt.showtabline = 0
 opt.sidescroll = 2
 opt.smartcase = true
 opt.softtabstop = -1 -- use shiftwidth
+opt.splitright = true
 opt.synmaxcol = 256
 opt.tabstop = 2
 opt.tags:append('./tags;~') -- search for tags recursively upwards until ~

@@ -14,6 +14,17 @@ let g:vimsyn_noerror = 1     " vim.vim sometimes gets it wrong
 let g:fugitive_no_maps = 1   " leave me free to remap <C-R>
 let g:loaded_netrwPlugin = 1 " disable netrw (use dirvish instead)
 
+augroup RestoreCursor
+  autocmd!
+  autocmd BufRead * autocmd FileType <buffer> ++once call s:restore_cursor_position()
+augroup end
+
+func! s:restore_cursor_position() abort
+  if &ft !~# 'commit\|rebase' && line("'\"") > 1 && line("'\"") <= line("$")
+    exec 'normal! g`"'
+  endif
+endf
+
 " ~/.config/nvim/local.vim
 execute 'silent! source ' . stdpath('config') . '/local.vim'
 
