@@ -5,7 +5,7 @@
 
   configure = {
     customRC = pkgs.neovim-init;
-    packages = pkgs.nvim-configured-packages;
+    packages = pkgs.neovim-configured-packages;
   };
 
   runtime = pkgs.neovim-runtime-attrs;
