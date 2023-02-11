@@ -1,13 +1,4 @@
 {
-  "abolish": {
-    "name": "abolish",
-    "src": {
-      "owner": "tpope",
-      "repo": "vim-abolish",
-      "rev": "7e4da6e78002344d499af9b6d8d5d6fcd7c92125",
-      "sha256": "1n35igng3a6d5y4nh5pyb09s6khgcwbr3v0lnh33qb51cv4cnjh4"
-    }
-  },
   "articulate": {
     "name": "articulate",
     "src": {

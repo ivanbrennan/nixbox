@@ -62,6 +62,7 @@ in
           telescope-file-browser-nvim
           telescope-fzf-native-nvim
           telescope-nvim
+          vim-abolish
           vim-eunuch
           wool
         ];
