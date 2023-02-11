@@ -330,6 +330,7 @@ set('n', '<Leader>fd', function()
     select_buffer = true,
   })
 end)
+set('n', '<Leader>tu', telx.undo.undo)
 set('n', 'g<Space>', function()
   -- https://github.com/nvim-telescope/telescope-fzf-native.nvim/issues/53#issuecomment-1015126459
   tel.grep_string({

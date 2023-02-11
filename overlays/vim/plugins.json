@@ -188,6 +188,15 @@
       "sha256": "1f5f4p3y31ricyjsfgpizxfrqf6wa4iybc0vlh14rfix82rkrzzj"
     }
   },
+  "telescope-undo-nvim": {
+    "name": "telescope-undo-nvim",
+    "src": {
+      "owner": "debugloop",
+      "repo": "telescope-undo.nvim",
+      "rev": "b5e31b358095074b60d87690bd1dc0a020a2afab",
+      "sha256": "sha256-6vxd9a754E2Vsq2DdoGzOIqQ+dBXaLxasTGA9Rpo+MI="
+    }
+  },
   "traces": {
     "name": "traces",
     "src": {

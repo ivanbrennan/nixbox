@@ -96,8 +96,13 @@ telescope.setup({
         },
       },
     },
+    undo = {
+      use_delta = true,
+      side_by_side = false, -- TODO: make undo() accept parameters
+    },
   },
 })
 
 require('telescope').load_extension('fzf')
 require('telescope').load_extension('file_browser')
+require('telescope').load_extension('undo')
