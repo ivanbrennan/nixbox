@@ -21,13 +21,25 @@ set('n', '<Leader>o', function()
 end, { expr = true })
 set('n', '<Leader>e', ':edit ')
 set('n', '<Leader>.', ':edit **/')
-set('n', '<Leader>fs', '<Cmd>write<CR>')
+set('n', '<Leader>fs', function()
+  local ok, msg = pcall(cmd.write)
+  if ok then return end
+  -- TODO: https://github.com/neovim/neovim/commit/d337814906b1377e34aa2c2dfd8aa16285328692
+  -- if msg:match(':E212:') and fn.confirm('Create parent directories?', 'y\nn') == 1 then
+  --   ok, msg = pcall(cmd, { cmd = 'write ++p' })
+  --   if ok then return end
+  -- end
+  cmd.echohl('ErrorMsg')
+  cmd.echomsg(string.format('"%s"', msg))
+  cmd.echohl('none')
+end)
+set('n', '<Leader>fR', ':Rename ')
+set('n', '<Leader>fM', ':Move ')
+set('n', '<Leader>fP', ':Chmod ')
+set('n', '<Leader>fD', '<Cmd>Delete!<CR>')
 set('n', '<Leader>wq', '<Cmd>wq<CR>')
 set('n', '<Leader>dd', '<Cmd>bdelete<CR>')
--- TODO: I use this <Leader>dl binding when I want to delete a buffer
--- without closing the window it's occupying. I switch to a different
--- buffer, then use this to delete the (now alternate) buffer. Let's
--- find a more straightforward (1-step) solution.
+set('n', '<C-M-d>', '<Cmd>buffer #<Bar>bdelete #<CR>')
 set('n', '<Leader>dl', '<Cmd>bdelete#<CR>')
 set('n', '<Leader>l', '<C-^>')
 set('n', '<Leader>F', ':setf ')
@@ -266,8 +278,6 @@ set('n', '<Leader>qq', function()
     cmd.quitall()
   end
 end)
-
-set('n', '<C-M-d>', '<Cmd>buffer #<Bar>bdelete #<CR>')
 
 -- + -
 set('n', '+', '<C-a>')

@@ -62,6 +62,7 @@ in
           telescope-file-browser-nvim
           telescope-fzf-native-nvim
           telescope-nvim
+          vim-eunuch
           wool
         ];
       # NOTE: To list/load opt plugins, type :packadd <Tab>
