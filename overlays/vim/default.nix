@@ -60,6 +60,7 @@ in
           dirvish
           fugitive
           nvim-treesitter
+          super-shell-indent
           telescope-file-browser-nvim
           telescope-fzf-native-nvim
           telescope-nvim
