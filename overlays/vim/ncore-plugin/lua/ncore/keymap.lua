@@ -513,9 +513,7 @@ end)
 set('n', '<C-l>', 'zz')
 set('n', '<C-u><C-l>', 'zt')
 
--- " git
--- noremap <silent> gb :Git blame<CR>
--- noremap <silent> gs :Git<CR>
-
--- " alternates
--- nnoremap <Leader><Tab>  :A<CR>
+-- TODO: magit (neogit?)
+-- git
+set('n', '<Leader>gb', '<Cmd>Git blame<CR>')
+set('n', '<Leader>gs', '<Cmd>Git<CR>')
