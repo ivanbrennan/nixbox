@@ -30,6 +30,7 @@ let
       "ftplugin/help.lua"
       "ftplugin/mail.lua"
       "ftplugin/netrw.lua"
+      "ftplugin/qf.lua"
       "ftplugin/ruby.lua"
       "ftplugin/sh.lua"
       "ftplugin/vim.lua"
