@@ -27,7 +27,7 @@ calculate_tabline = function()
   return table.concat(elems)
 end
 
-tabline_init = function()
+local tabline_init = function()
   vim.opt.tabline = '%!v:lua.calculate_tabline()'
   vim.cmd.redrawtabline()
 end

@@ -129,7 +129,7 @@ local hasmapfrom = function(keys, mode)
   return #fn.maparg(keys, mode) > 0
 end
 
-local hasmapto = function(target)
+local hasmapto = function(plug)
   return fn.hasmapto(plug) == 1
 end
 

@@ -207,15 +207,15 @@ opt.cedit = '<C-o>'
 local special_buftype = [[\C\v^%(help|quickfix|nowrite|nofile)$]]
 
 local is_regular_buffer = function(bufnr)
-  local o = bo[bufnr]
-  return fn.match(o.buftype, special_buftype) == -1 and o.buflisted
+  local buftype = bo[bufnr].buftype
+  return fn.match(buftype, special_buftype) == -1 and o.buflisted
 end
 
 local win_get_buf = api.nvim_win_get_buf
 
 local any_other_regular_windows = function()
-  local windows = api.nvim_list_wins()
   local current_win = api.nvim_get_current_win()
+  local windows = api.nvim_list_wins()
 
   for i=1, #windows do
     local w = windows[i]

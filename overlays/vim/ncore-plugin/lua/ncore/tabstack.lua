@@ -30,7 +30,7 @@ local function goto_previous()
   end
 end
 
-tabstack_init = function()
+local tabstack_init = function()
   api.nvim_create_autocmd('TabLeave', {
     group = group,
     callback = function()

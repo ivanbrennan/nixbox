@@ -86,14 +86,16 @@ local go = function(command)
   local ok, err = pcall(unsafe_go, prefix, command)
 
   if ok then
-    -- Success.
-  elseif err:match(':E42:') or err:match(':E553:') then
-    -- No items, or no more items.
-  elseif err:match(':E380:') or err:match(':E381:') then
-    -- No more lists.
-  else
-    error(err)
+    return -- Success.
   end
+  if err:match(':E42:') or err:match(':E553:') then
+    return -- No items, or no more items.
+  end
+  if err:match(':E380:') or err:match(':E381:') then
+    return -- No more lists.
+  end
+
+  error(err)
 end
 
 quickfix.toggle = function()

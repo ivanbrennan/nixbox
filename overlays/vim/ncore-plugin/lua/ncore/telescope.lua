@@ -4,7 +4,6 @@ local telescope = require('telescope')
 local actions = require('telescope.actions')
 local layout = require('telescope.actions.layout')
 local fb_actions = require('telescope').extensions.file_browser.actions
-local o = vim.o
 
 telescope.setup({
   defaults = {

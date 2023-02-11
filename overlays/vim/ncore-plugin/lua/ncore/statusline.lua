@@ -144,11 +144,11 @@ local statusline = function()
 end
 
 mline_update_highlight = function()
-  local ok, stat = pcall(api.nvim_get_hl_by_name, 'StatusLine', true)
-  if not ok then return end
+  local ok1, stat = pcall(api.nvim_get_hl_by_name, 'StatusLine', true)
+  if not ok1 then return end
 
-  local ok, cmt = pcall(api.nvim_get_hl_by_name, 'Comment', true)
-  if not ok then return end
+  local ok2, cmt = pcall(api.nvim_get_hl_by_name, 'Comment', true)
+  if not ok2 then return end
 
   local bg = stat.background
   local fg = stat.foreground
@@ -209,7 +209,7 @@ local init_autocommands = function()
   })
 end
 
-mline_init = function()
+local mline_init = function()
   init_statusline()
   init_autocommands()
 end
