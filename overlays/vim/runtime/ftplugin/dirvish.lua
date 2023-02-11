@@ -16,6 +16,8 @@ vim.opt_local.number = false
 
 set('n', 'm', '<CR>', { buffer = true, remap  = true })
 
+set('n', '<Tab>', '<Plug>(dirvish_arg)', { buffer = true, remap  = true })
+
 set('n', 'q', '<Plug>(dirvish_quit)', {
   buffer = true,
   remap  = true,
