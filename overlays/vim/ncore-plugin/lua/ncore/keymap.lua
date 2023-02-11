@@ -47,14 +47,23 @@ set('n', '<C-i>', '<C-i>') -- Distinguish <C-i> from <Tab>
 set('n', '<Tab>', '<Cmd>bnext<CR>')
 set('n', '<S-Tab>', '<Cmd>bprevious<CR>')
 
--- " quickfix/loclist
--- nmap     <Leader><Space> <Plug>(listical_toggle)
--- nmap     <M-n>           <Plug>(listical_next)<Plug>
--- nmap     <M-N>           <Plug>(listical_next_file)<Plug>
--- nmap     <M-p>           <Plug>(listical_previous)<Plug>
--- nmap     <M-P>           <Plug>(listical_previous_file)<Plug>
--- nmap     <M-h>           <Plug>(listical_older)
--- nmap     <M-l>           <Plug>(listical_newer)
+-- quickfix
+local qf = ncore.quickfix
+set('n', '<Plug>(quickfix_toggle)', qf.toggle, { silent = true })
+set('n', '<Plug>(quickfix_next)', qf.next, { silent = true })
+set('n', '<Plug>(quickfix_next_file)', qf.next_file, { silent = true })
+set('n', '<Plug>(quickfix_previous)', qf.previous, { silent = true })
+set('n', '<Plug>(quickfix_previous_file)', qf.previous_file, { silent = true })
+set('n', '<Plug>(quickfix_newer)', qf.newer, { silent = true })
+set('n', '<Plug>(quickfix_older)', qf.older, { silent = true })
+
+set('n', '<Leader><Space>', '<Plug>(quickfix_toggle)', { remap = true })
+set('n', '<M-n>', '<Plug>(quickfix_next)<Plug>', { remap = true })
+set('n', '<M-N>', '<Plug>(quickfix_next_file)<Plug>', { remap = true })
+set('n', '<M-p>', '<Plug>(quickfix_previous)<Plug>', { remap = true })
+set('n', '<M-P>', '<Plug>(quickfix_previous_file)<Plug>', { remap = true })
+set('n', '<Leader>[', '<Plug>(quickfix_older)', { remap = true })
+set('n', '<Leader>]', '<Plug>(quickfix_newer)', { remap = true })
 
 -- cmdline
 set({ 'n', 'v' }, ';', ':')
