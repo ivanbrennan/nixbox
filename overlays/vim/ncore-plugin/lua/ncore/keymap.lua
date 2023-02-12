@@ -304,6 +304,13 @@ set({ 'n', 'v', 's' }, '<C-k>', '<C-y>')
 set({ 'x', 'n', 'o' }, '<Leader>;', '<Plug>Commentary', { remap = true })
 set('n', '<Leader>;;', '<Plug>CommentaryLine', { remap = true })
 
+-- surround
+set('n', 'ms',  '<Plug>Ysurround',  { remap = true })
+set('n', 'mS',  '<Plug>YSurround',  { remap = true })
+set('n', 'mss', '<Plug>Yssurround', { remap = true })
+set('n', 'mSs', '<Plug>YSsurround', { remap = true })
+set('n', 'mSS', '<Plug>YSsurround', { remap = true })
+
 -- " EasyAlign
 -- nmap     ga          <Plug>(EasyAlign)
 -- xmap     ga          <Plug>(EasyAlign)
