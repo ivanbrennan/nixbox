@@ -459,6 +459,12 @@ set('t', '<C-S-n>', '<C-\\><C-n>')
 set('i', '<C-;>', '<C-X><C-f>')
 set('i', '<C-l>', '<C-X><C-l>')
 set('i', '<C-.>', '<C-X><C-.>')
+set('i', '<Tab>', function()
+  return ncore.tabkey.complete_or_indent(1)
+end, { expr = true })
+set('i', '<S-Tab>', function()
+  return ncore.tabkey.complete_or_indent(-1)
+end, { expr = true })
 
 -- indentation
 set('v', '<Tab>', '=')
