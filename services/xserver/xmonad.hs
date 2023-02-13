@@ -771,10 +771,10 @@ keys' conf@(XConfig {modMask}) =
         safeSpawn "light" ["-U", "5"]
       ),
       ( (shiftMask, xF86XK_MonBrightnessUp),
-        safeSpawn "light" ["-S", "100"]
+        safeSpawn "light" ["-A", "20"]
       ),
       ( (shiftMask, xF86XK_MonBrightnessDown),
-        safeSpawn "light" ["-S", "0"]
+        safeSpawn "light" ["-U", "20"]
       ),
       -- copy/paste
       ( (modMask, xK_c),
