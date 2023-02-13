@@ -16,6 +16,7 @@ let
   # NOTE: See also environment.etc."xdg/nvim/after/{ftplugin,plugin,syntax}/"
   neovim-runtime-attrs =
     builtins.foldl' (attrs: x: attrs // runtime-attr x) {} [
+      "ftdetect/avsc.lua"
       "ftdetect/bats.lua"
       "ftdetect/geojson.lua"
       "ftdetect/mutt.lua"
