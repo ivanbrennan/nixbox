@@ -60,6 +60,7 @@ in
           dirvish
           fugitive
           hydra-nvim
+          mini-align
           nvim-treesitter
           super-shell-indent
           surround
