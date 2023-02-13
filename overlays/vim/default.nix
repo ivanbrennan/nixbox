@@ -70,6 +70,7 @@ in
           telescope-undo-nvim
           vim-abolish
           vim-eunuch
+          vim-nix
           wool
         ];
       # NOTE: To list/load opt plugins, type :packadd <Tab>
