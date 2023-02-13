@@ -23,5 +23,6 @@ globals = {
   'mline_tabdot',
   'mline_update_highlight',
   'ncore',
+  'penlight',
   'vim',
 }
