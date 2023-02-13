@@ -288,6 +288,9 @@ set('n', '<Leader>qq', function()
   end
 end)
 
+set('n', '<C-w>;', '<C-w><C-w>')
+set('n', '<C-w><C-;>', '<C-w><C-w>')
+
 -- + -
 set('n', '+', '<C-a>')
 set('x', '+', '<C-a>')

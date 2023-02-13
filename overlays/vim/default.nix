@@ -59,6 +59,7 @@ in
           commentary
           dirvish
           fugitive
+          hydra-nvim
           nvim-treesitter
           super-shell-indent
           surround

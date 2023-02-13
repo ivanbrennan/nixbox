@@ -71,6 +71,15 @@
       "sha256": "0qhjsdrg2nj8cxw27iv4kmr7zlpx9m919wjg5p0dqwybz3ybvn8j"
     }
   },
+  "hydra-nvim": {
+    "name": "hydra.nvim",
+    "src": {
+      "owner": "ivanbrennan",
+      "repo": "hydra.nvim",
+      "rev": "03bc3447557faa2def7084b10d6d303b204a7ff3",
+      "sha256": "sha256-BjTuqmrD6AfLZmseGHLuJQ3O6vD9M/mN2a+ElVFzgcM="
+    }
+  },
   "iota": {
     "name": "iota",
     "src": {
@@ -319,8 +328,8 @@
     "src": {
       "owner": "ivanbrennan",
       "repo": "wool",
-      "rev": "655e6c5fef77f83f4d7ed8a048ef9fa9bd391685",
-      "sha256": "sha256-UL2n9B58PiggVPJ4REiO4LsBCE9tNXTVIpqV2dsw/NA="
+      "rev": "479a55e44fe29f8d1616bdc2fa329095e6c2abd7",
+      "sha256": "sha256-wtMbYg83EDlJrKgQYiJQM2j3uuG2SvAnC2fijB1dh7Y="
     }
   },
   "wmgraphviz": {

@@ -14,7 +14,7 @@ opt.formatoptions:remove('t')
 opt.guifont = { "Source Code Pro:h14" }
 opt.ignorecase = true
 opt.laststatus = 3
-opt.lazyredraw = true
+opt.lazyredraw = true -- problematic for hydra cmdline
 opt.list = true
 opt.listchars = { tab = "▸ ", trail = "·", extends = "»", precedes = "«" }
 opt.matchtime = 2
