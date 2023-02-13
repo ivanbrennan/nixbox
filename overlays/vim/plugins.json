@@ -197,6 +197,15 @@
       "sha256": "1f5f4p3y31ricyjsfgpizxfrqf6wa4iybc0vlh14rfix82rkrzzj"
     }
   },
+  "telescope-file-browser-nvim": {
+    "name": "telescope-file-browser.nvim",
+    "src": {
+      "owner": "nvim-telescope",
+      "repo": "telescope-file-browser.nvim",
+      "rev": "a18f78121d74c4fae9edd29e138a918a8ede2a70",
+      "sha256": "sha256-7oAiP72Eym9vmy55pU3zLbAAxj6EcV1S1KT9AL9923Q="
+    }
+  },
   "telescope-undo-nvim": {
     "name": "telescope-undo-nvim",
     "src": {

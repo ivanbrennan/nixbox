@@ -77,7 +77,7 @@ telescope.setup({
     file_browser = {
       theme = 'ivy',
       hijack_netrw = false, -- dirvish still takes precedence
-      dir_icon = '',
+      dir_icon = ' ',
       mappings = {
         ['i'] = {
           ['<A-d>'] = false,
