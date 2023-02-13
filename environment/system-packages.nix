@@ -73,6 +73,7 @@ with pkgs; [
   lshw
   lsof
   lsscsi
+  lua51Packages.luacheck
   minikube
   mkcue
   mkpasswd
