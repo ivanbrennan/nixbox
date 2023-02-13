@@ -71,6 +71,7 @@ in
           vim-abolish
           vim-eunuch
           vim-nix
+          # TODO: vim-repeat ?
           wool
         ];
       # NOTE: To list/load opt plugins, type :packadd <Tab>
@@ -79,6 +80,7 @@ in
           lush-nvim
           nvim-colorizer-lua
           shipwright-nvim
+          vim-projectionist
           # splitjoin
         ];
     };

@@ -3,6 +3,7 @@ local opt = vim.opt
 opt.backup = true
 opt.backupdir = vim.fn.stdpath('state') .. "/backup//"
 opt.clipboard = 'unnamedplus'
+-- opt.cmdheight = 0 -- still experimental
 opt.cursorline = true
 opt.expandtab = true
 opt.fillchars = { eob = " " }

@@ -3,6 +3,7 @@ local api = vim.api
 local cmd = vim.cmd
 local fn = vim.fn
 local opt = vim.opt
+local opt_local = vim.opt_local
 local o = vim.o
 local bo = vim.bo
 local wo = vim.wo
@@ -299,6 +300,10 @@ set('n', '_', '<C-x>')
 set('x', '_', '<C-x>')
 set('v', 'g_', 'g<C-x>')
 
+-- option toggles
+set('n', '<Leader>th', '<Cmd>set cursorline!<CR>')
+set('n', '<Leader>tw', '<Cmd>set wrap!<CR>')
+
 -- scroll
 set({ 'n', 'v', 's' }, '<C-j>', '<C-e>')
 set({ 'n', 'v', 's' }, '<C-k>', '<C-y>')
@@ -313,12 +318,6 @@ set('n', 'mS',  '<Plug>YSurround',  { remap = true })
 set('n', 'mss', '<Plug>Yssurround', { remap = true })
 set('n', 'mSs', '<Plug>YSsurround', { remap = true })
 set('n', 'mSS', '<Plug>YSsurround', { remap = true })
-
--- " EasyAlign
--- nmap     ga          <Plug>(EasyAlign)
--- xmap     ga          <Plug>(EasyAlign)
--- nnoremap gA          ga
--- xnoremap gA          ga
 
 -- Articulated keybindings. These <Plug> pseudokeys provide a common interface
 -- I can target when setting custom keymaps, e.g. in ftplugin files.

@@ -125,6 +125,15 @@
       "sha256": "sha256-UT9srTiO6DbQMt64NfmNVCSzUUVvzoS/zOhIogURjeM=="
     }
   },
+  "mini-align": {
+    "name": "mini-align",
+    "src": {
+      "owner": "echasnovski",
+      "repo": "mini.align",
+      "rev": "b088ddab3495e5c1c84681e6db23dd3cc0660683",
+      "sha256": "sha256-L0ewucV8mQkQ/VhwyIJ75kgYIN9OhHStS5z8pTDLR4M="
+    }
+  },
   "ocursor": {
     "name": "ocursor",
     "src": {
