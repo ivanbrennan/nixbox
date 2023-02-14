@@ -3,7 +3,6 @@ local api = vim.api
 local cmd = vim.cmd
 local fn = vim.fn
 local opt = vim.opt
-local opt_local = vim.opt_local
 local o = vim.o
 local bo = vim.bo
 local wo = vim.wo
@@ -58,7 +57,7 @@ set('n', '<Plug>(quickfix_previous_file)', qf.previous_file, { silent = true })
 set('n', '<Plug>(quickfix_newer)', qf.newer, { silent = true })
 set('n', '<Plug>(quickfix_older)', qf.older, { silent = true })
 
-set('n', '<Leader><Space>', '<Plug>(quickfix_toggle)', { remap = true })
+set('n', 'm<Space>', '<Plug>(quickfix_toggle)', { remap = true })
 set('n', '<M-n>', '<Plug>(quickfix_next)<Plug>', { remap = true })
 set('n', '<M-N>', '<Plug>(quickfix_next_file)<Plug>', { remap = true })
 set('n', '<M-p>', '<Plug>(quickfix_previous)<Plug>', { remap = true })
@@ -385,8 +384,11 @@ set('n', '<Leader>r', tel.resume)
 -- interesting keys:
 -- gl (toggle quickfix)
 -- go
+-- gm
 -- gp
 -- g. (grep for word under cursor)
+-- m<Space>
+-- <Leader>m
 -- <Leader>,
 -- <Leader>gj
 local cmd_match = function(patterns)

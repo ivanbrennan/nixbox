@@ -81,8 +81,8 @@ in
           lush-nvim
           nvim-colorizer-lua
           shipwright-nvim
-          vim-projectionist
           # splitjoin
+          vim-projectionist
         ];
     };
   };
