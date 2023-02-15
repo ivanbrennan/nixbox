@@ -14,7 +14,7 @@ b.loaded_user_ftplugin = 1
 
 vim.opt_local.number = false
 
-set('n', 'm', '<CR>', { buffer = true, remap  = true })
+set('n', 'm', '<CR>', { buffer = true, remap = true, nowait = true })
 
 set('n', '<Tab>', '<Plug>(dirvish_arg)', { buffer = true, remap  = true })
 
