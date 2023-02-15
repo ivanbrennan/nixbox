@@ -5,6 +5,9 @@ local shared_config = {
   },
   exit = false,
   foreign_keys = nil,
+  on_enter = function()
+    vim.o.lazyredraw = false
+  end,
 }
 
 hydra({
