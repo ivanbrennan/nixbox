@@ -391,6 +391,7 @@ set('n', '<Leader>r', tel.resume)
 -- <Leader>m
 -- <Leader>,
 -- <Leader>gj
+-- <C-u><C-u>
 local cmd_match = function(patterns)
   if fn.getcmdtype() == ':' then
     local line = fn.getcmdline()
