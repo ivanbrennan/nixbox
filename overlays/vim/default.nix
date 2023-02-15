@@ -62,13 +62,14 @@ in
           fugitive
           hydra-nvim
           mini-align
-          nvim-treesitter
+          nvim-treesitter.withAllGrammars
           super-shell-indent
           surround
           telescope-file-browser-nvim
           telescope-fzf-native-nvim
           telescope-nvim
           telescope-undo-nvim
+          treesj
           vim-abolish
           vim-eunuch
           vim-nix
@@ -80,6 +81,7 @@ in
         [ # haskell-vim
           lush-nvim
           nvim-colorizer-lua
+          playground
           shipwright-nvim
           # splitjoin
           vim-projectionist
