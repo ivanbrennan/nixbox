@@ -36,7 +36,7 @@ then
 fi
 
 # Provide a function to manually disable focus notify events, in case detaching
-# an abduco session from within Neovim drops us back into an interactive shell.
+# a diss session from within Neovim drops us back into an interactive shell.
 # Since Neovim doesn't know about the detach, it doesn't tell the terminal to
 # stop sending focus notify events, and as a result, the terminal will print
 # control sequences (^[[I, ^[[O) to the screen upon FocusIn/FocusOut events.
@@ -48,6 +48,7 @@ enable-focus-notify() {
 }
 # Workaround for abduco alternate screen buffer issues
 # https://github.com/martanne/abduco/issues/35#issuecomment-901738018
+# TODO: Check whether something like this is needed for diss as well.
 abduco-attach() {
     (
         until abduco | grep -q "\*.*${1}"

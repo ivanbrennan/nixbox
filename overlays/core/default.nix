@@ -16,8 +16,6 @@ in self: super: {
 
   diss = super.callPackage ./diss { };
 
-  dmenu_abduco = super.callPackage ./dmenu_abduco { };
-
   dmenu_diss = super.callPackage ./dmenu_diss { };
 
   dmenu_cdpath = super.callPackage ./dmenu_cdpath { };

@@ -447,7 +447,7 @@ local safe_suspend = function()
   --
   -- A couple examples where the parent process won't be a shell:
   -- - nvim was run as part of a terminal invocation (`alacritty -e nvim`)
-  -- - nvim was run as part of an abduco invocation (`abduco -c foo nvim`)
+  -- - nvim was run as part of a diss invocation (`diss -a foo nvim`)
   --
   -- In these cases, suspending would drop us into an unusable terminal.
   local p = parent_process_name()
