@@ -1,0 +1,9 @@
+#! /usr/bin/env bash
+
+diss=@diss@
+dmenu=@dmenu@
+sort=@sort@
+
+set -u
+
+$diss -l | $sort | $dmenu "$@"

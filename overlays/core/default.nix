@@ -14,6 +14,12 @@ in self: super: {
   bleep = super.callPackage ./bleep { };
   bloop = super.callPackage ./bloop { };
 
+  diss = super.callPackage ./diss { };
+
+  dmenu_abduco = super.callPackage ./dmenu_abduco { };
+
+  dmenu_diss = super.callPackage ./dmenu_diss { };
+
   dmenu_cdpath = super.callPackage ./dmenu_cdpath { };
 
   dmenu_fontpreview = super.callPackage ./dmenu_fontpreview { };

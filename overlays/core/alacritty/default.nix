@@ -8,8 +8,13 @@ let
   transparentConfig = runCommand "alacritty-transparent.yml" {
     buildInputs = [ gnused ];
   } ''
-    sed 's/opacity: .*/opacity: 0.9/' ${./alacritty.yml} \
-      > $out
+    sed 's/opacity: .*/opacity: 0.9/' ${./alacritty.yml} > $out
+  '';
+
+  greyConfig = runCommand "alacritty-grey.yml" {
+    buildInputs = [ gnused ];
+  } ''
+    sed "s/'#181818'/'#212226'/" ${./alacritty.yml} > $out
   '';
 in
 
@@ -29,4 +34,7 @@ runCommand "alacritty" {
 
   makeWrapper ${alacritty}/bin/alacritty $out/bin/alacritty-transparent \
     --add-flags "--config-file ${transparentConfig}"
+
+  makeWrapper ${alacritty}/bin/alacritty $out/bin/alacritty-grey \
+    --add-flags "--config-file ${greyConfig}"
 ''

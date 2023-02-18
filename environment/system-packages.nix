@@ -3,7 +3,6 @@ pkgs:
 with pkgs; [
   _1password
   abcde
-  abduco
   silver-searcher
   alacritty-wrapped
   arc-icon-theme
@@ -27,8 +26,10 @@ with pkgs; [
   computables
   conky
   direnv
+  diss
   dmenu
   dmenu_cdpath
+  dmenu_diss
   dmenu_fontpreview
   dmidecode
   docker

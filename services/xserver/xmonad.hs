@@ -5,10 +5,10 @@
 import Control.Arrow (second)
 import Control.Monad (when, (>=>))
 import Data.Bits ((.|.))
-import Data.Char (isSpace)
+import Data.Char (isSpace, toLower)
 import Data.Dynamic (Typeable)
 import Data.Foldable (find)
-import Data.List (dropWhileEnd, intercalate, isInfixOf)
+import Data.List (dropWhileEnd, intercalate, isInfixOf, sortOn)
 import Data.Monoid (All)
 import System.Directory (getHomeDirectory)
 import System.Environment (getArgs)
@@ -34,10 +34,10 @@ import System.Posix.Process (executeFile)
 import Graphics.X11
   ( Button, KeyMask, KeySym, Window, button1, controlMask, mod1Mask, mod4Mask,
     noModMask, shiftMask, xK_1, xK_9, xK_Alt_L, xK_Alt_R, xK_BackSpace,
-    xK_Delete, xK_Insert, xK_Print, xK_Return, xK_Tab, xK_a, xK_c, xK_comma,
-    xK_d, xK_e, xK_equal, xK_f, xK_h, xK_i, xK_j, xK_k, xK_l, xK_m, xK_minus,
-    xK_n, xK_p, xK_period, xK_q, xK_r, xK_s, xK_semicolon, xK_slash, xK_space,
-    xK_u, xK_v, xK_w, xK_x, xK_y, xK_z,
+    xK_Delete, xK_Insert, xK_Print, xK_Return, xK_Tab, xK_a, xK_backslash, xK_c,
+    xK_comma, xK_d, xK_e, xK_equal, xK_f, xK_h, xK_i, xK_j, xK_k, xK_l, xK_m,
+    xK_minus, xK_n, xK_o, xK_p, xK_period, xK_q, xK_r, xK_s, xK_semicolon,
+    xK_slash, xK_space, xK_u, xK_v, xK_w, xK_x, xK_y, xK_z,
   )
 import Graphics.X11.ExtraTypes
   ( xF86XK_AudioLowerVolume, xF86XK_AudioMute, xF86XK_AudioRaiseVolume,
@@ -122,6 +122,7 @@ import XMonad.Prompt
     deleteConsecutive, fgColor, fgHLight, font, height, historyFilter,
     moveHistory, position, promptBorderWidth, promptKeymap,
   )
+import XMonad.Prompt.AppLauncher (launchApp)
 import XMonad.Prompt.AppendFile (appendFilePrompt')
 import XMonad.Prompt.ConfirmPrompt (confirmPrompt)
 import XMonad.Prompt.Input (inputPrompt, (?+))
@@ -131,6 +132,7 @@ import XMonad.Prompt.Workspace (workspacePrompt)
 import XMonad.Prompt.XMonad (xmonadPromptC)
 import XMonad.Util.ClickableWorkspaces (clickablePP)
 import qualified XMonad.Util.ExtensibleState as XS
+import XMonad.Util.Dmenu (menuArgs)
 import XMonad.Util.Hacks
   ( trayerAboveXmobarEventHook, trayerPaddingXmobarEventHook,
   )
@@ -830,6 +832,19 @@ keys' conf@(XConfig {modMask}) =
                  ( (noModMask, xK_f),
                    gotoMenuArgs dmenuOpts
                  ),
+                 ( (noModMask, xK_i),
+                   dmenuDissRettachTerminal "alacritty-grey"
+                 ),
+                 ( (shiftMask, xK_i),
+                   launchApp xPConfig "alacritty-grey -e diss -a"
+                 ),
+                 -- TODO: Investigate session management within Neovim
+                 ( (noModMask, xK_o),
+                   bindFirst
+                     [ (isTerminal, switchDissSession),
+                       (pure True,  sendKey noModMask xK_o)
+                     ]
+                 ),
                  ( (noModMask, xK_m),
                    renameWorkspace xPConfig
                  ),
@@ -1028,6 +1043,26 @@ keys' conf@(XConfig {modMask}) =
     dmenuSpawnTerminal =
       safeSpawn "dmenu_cdpath-alacritty" $
         "~/Development" : "--" : dmenuOpts
+
+    dmenuDissRettachTerminal :: String -> X ()
+    dmenuDissRettachTerminal term =
+      safeSpawn "dmenu_diss-reattach-terminal" (term : dmenuOpts)
+
+    switchDissSession :: X ()
+    switchDissSession = do
+      sessions <- fmap lines (runProcessWithInput "diss" ["-l"] "")
+      when (not $ null sessions) $ do
+        session <- menuArgs "dmenu" dmenuOpts $ sortOn (map toLower) sessions
+        when (session `elem` sessions) $ do
+          inDiss <- dissSessionHasFocus
+          when inDiss (sendKey controlMask xK_backslash)
+          safeSpawn "alacritty-grey" ["-e", "diss", "-a", session]
+
+    dissSessionHasFocus :: X Bool
+    dissSessionHasFocus = do
+      pid <- runProcessWithInput "xdotool" ["getwindowfocus", "getwindowpid"] ""
+      tree <- runProcessWithInput "pstree" ["-A", "-T", filter (/= '\n') pid] ""
+      fmap (not . null) (runProcessWithInput "grep" ["\\<diss\\>"] tree)
 
     dmenuOpts :: [String]
     dmenuOpts =

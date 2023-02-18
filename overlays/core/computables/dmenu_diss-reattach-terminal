@@ -1,0 +1,33 @@
+#! /usr/bin/env bash
+
+diss=@diss@
+dmenu_diss=@dmenu_diss@
+
+set -u
+
+usage() {
+    $cat >&2 <<EOF
+Usage: $0 TERMINAL [dmenu-options]
+e.g.
+  ${0##*/} alacritty
+  ${0##*/} alacritty -l 24
+EOF
+}
+(( $# == 0 )) && { usage ; exit 1 ; }
+
+terminal="$1"
+shift
+
+# I commonly call dmenu_diss after detaching from a diss session within neovim.
+# Since neovim turns on focus reporting and is unaware of the disconnect, the
+# terminal will receive a Focus Lost event upon launching dmenu, and a Focus
+# Gained event when dmenu exits. These events manifest as control sequences
+# (^[[O and ^[[I) that are printed to the terminal's output. To prevent this,
+# make sure focus reporting is turned off before we invoke dmenu.
+echo -ne '\e[?1004l'
+
+session=$($dmenu_diss "$@")
+
+[ -n "$session" ] || exit 1
+
+exec $terminal --command $diss -a "$session" &

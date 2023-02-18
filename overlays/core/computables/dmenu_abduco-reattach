@@ -1,0 +1,46 @@
+#! /usr/bin/env bash
+#
+# Neovim sends the terminal a \e[?1004h control sequence to request focus notify
+# events.
+#
+# Alacritty, upon receiving a FocusIn/FocusOut event, notifies Neovim by writing
+# the appropriate control sequence to the pty, \e[I or \e[O depending on whether
+# focus was gained or lost.
+#
+# If, from an interactive shell, we create/attach to an abduco session, run
+# nvim, then detach from the session, we'll land back in the shell with focus
+# notify events still enabled. (In contrast, if we weren't using abduco and just
+# suspended nvim, it would disable these notify events before returning the
+# shell to the foreground).
+#
+# For this reason, it would be best to find a way to create/reattach abduco
+# sessions that doesn't originate from an interactive shell. That way, upon
+# detaching, our terminal window simply exits (until we reattach). If, however,
+# we do land back in the shell, we can manually disable focus notify events by
+# running:
+#
+#   echo -ne '\e[?1004l'
+#
+# They can be manually enabled again, if desired, by running:
+#
+#   echo -ne '\e[?1004h'
+#
+# It's not yet clear to me whether Neovim automatically re-enables them upon
+# reattaching, or what the implications are if it does not do so.
+#
+# https://invisible-island.net/xterm/ctlseqs/ctlseqs.html#h3-FocusIn_FocusOut
+# https://unix.stackexchange.com/a/480138/47044
+# https://github.com/neovim/neovim/issues/9959
+
+abduco=@abduco@
+alacritty=@alacritty@
+dmenu_abduco=@dmenu_abduco@
+
+set -ux
+
+echo -ne '\e[?1004l'
+session=$($dmenu_abduco "$@")
+
+[ -n "$session" ] || exit 1
+
+exec $alacritty --command $abduco -a "$session" &
