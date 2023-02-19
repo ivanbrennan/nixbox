@@ -80,7 +80,7 @@ import XMonad.Hooks.InsertPosition
   ( Focus (Newer, Older), Position (Above, Below), insertPosition,
   )
 import XMonad.Hooks.ManageDebug (debugManageHookOn)
-import XMonad.Hooks.ManageDocks (ToggleStruts (ToggleStruts), avoidStruts, docks)
+import XMonad.Hooks.ManageDocks (AvoidStruts, ToggleStruts (ToggleStruts), avoidStruts, docks)
 import XMonad.Hooks.ManageHelpers
   ( composeOne, doCenterFloat, doRectFloat, isDialog, (-?>),
   )
@@ -92,7 +92,7 @@ import XMonad.Hooks.StatusBar
   ( StatusBarConfig, dynamicSBs, statusBarProp, xmonadDefProp,
   )
 import XMonad.Hooks.StatusBar.PP
-  ( pad, ppCurrent, ppHidden, ppLayout, ppSep, ppTitle, ppWsSep, wrap,
+  ( PP, pad, ppCurrent, ppHidden, ppLayout, ppSep, ppTitle, ppWsSep, wrap,
     xmobarColor, xmobarPP, filterOutWsPP,
   )
 import XMonad.Layout.BoringWindows
@@ -146,6 +146,10 @@ import XMonad.Util.Paste (sendKey)
 import XMonad.Util.Run (runProcessWithInput, runInTerm, safeSpawn, safeSpawnProg)
 import XMonad.Util.WorkspaceCompare (filterOutWs)
 
+import XMonad.Experimental.Layout.WorkScope
+  ( WorkScope, getWorkScopeStr, rescopeWorkspace, workScopes,
+  )
+
 
 main :: IO ()
 main = do
@@ -166,7 +170,7 @@ main = do
       ewmhFullscreen $
       ewmh $
         def
-          { layoutHook         = avoidStruts layoutHook',
+          { layoutHook         = layoutHook',
             workspaces         = withScreens nScreens (workspaces def),
             startupHook        = startupHook',
             handleEventHook    = handleEventHook',
@@ -180,6 +184,8 @@ main = do
           }
 
 
+type Struts       a = ModifiedLayout AvoidStruts a
+type Scopes       a = ModifiedLayout WorkScope a
 type SmartBorders a = ModifiedLayout SmartBorder a
 type Refocus      a = ModifiedLayout RefocusLastLayoutHook (FocusTracking a)
 type Boring       a = ModifiedLayout BoringWindows a
@@ -197,9 +203,11 @@ type Layouts
         )
       )
 
-layoutHook' :: SmartBorders (Refocus (Boring Layouts)) Window
+layoutHook' :: Struts (Scopes (SmartBorders (Refocus (Boring Layouts)))) Window
 layoutHook' =
   id
+    . avoidStruts
+    . workScopes
     . smartBorders
     . refocusLastLayoutHook
     . focusTracking
@@ -266,7 +274,7 @@ xmobarSpawner :: ScreenId -> IO StatusBarConfig
 xmobarSpawner s =
   pure
     . statusBarProp (xmobar s)
-    . (workspaceNamesPP >=> clickablePP)
+    . (workspaceNamesPP >=> clickablePP >=> scopeNamePP)
     . filterOutWsPP [scratchpadWorkspaceTag]
     . marshallPP s
     $ xmobarPP
@@ -278,6 +286,26 @@ xmobarSpawner s =
           ppLayout  = ppLayout'
         }
   where
+    scopeNamePP :: PP -> X PP
+    scopeNamePP pp = withWindowSet $ \ws ->
+      pure $ case scopeName ws of
+        Nothing -> pp
+        Just "" -> pp
+        Just name -> pp { ppLayout = \str ->
+                            concat
+                              [ ppLayout pp str,
+                                " ",
+                                xmobarColor grey1 "" "[",
+                                xmobarColor grey2 "" name,
+                                xmobarColor grey1 "" "]"
+                              ]
+                        }
+
+    scopeName :: WindowSet -> Maybe String
+    scopeName ws =
+      find ((== s) . W.screen) (W.current ws : W.visible ws)
+        >>= (getWorkScopeStr layoutHook' . W.workspace)
+
     ppLayout' :: String -> String
     ppLayout' str
       | "Full"  `isInfixOf` str = xmobarColor cyan "" "·"
@@ -725,6 +753,13 @@ keys' conf@(XConfig {modMask}) =
         debugStackString
           >>= trace . unlines . uncurry (++) . second reverse . splitAt 1 . lines
       ),
+      ( (mod4Mask .|. modMask, xK_l),
+        withWindowSet $ \ws ->
+          let scr = W.current ws
+              wks = W.workspace scr
+              dir = maybe "<err>" id (getWorkScopeStr layoutHook' wks)
+           in trace dir
+      ),
       ( (noModMask, xK_Print),
         safeSpawn "screenshot" []
       ),
@@ -874,6 +909,9 @@ keys' conf@(XConfig {modMask}) =
                  ),
                  ( (noModMask, xK_s),
                    sudoTerm "/etc/nixos"
+                 ),
+                 ( (modMask, xK_s),
+                   rescopeWorkspace xPConfig
                  ),
                  ( (noModMask, xF86XK_AudioMute),
                    safeSpawn "resound" []

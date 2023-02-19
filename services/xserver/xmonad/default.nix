@@ -4,6 +4,11 @@
     ps.data-default
     ps.xmonad-contrib
   ];
-  config = ./xmonad.hs;
   enableConfiguredRecompile = true;
+  config = ./xmonad.hs;
+  ghcArgs = [
+    "-i${./lib}"
+    "-hidir /tmp"
+    "-odir /tmp"
+  ];
 }
