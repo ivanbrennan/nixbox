@@ -149,7 +149,7 @@ import XMonad.Util.WorkspaceCompare (filterOutWs)
 
 import XMonad.Experimental.Layout.WorkScopes
   ( WorkScopes, ScopeName, addWorkspaceToScope, getWorkScopeNames,
-    rescopeWorkspace, unScopeName, workScopes,
+    removeWorkspaceFromScope, rescopeWorkspace, unScopeName, workScopes,
   )
 
 
@@ -924,6 +924,9 @@ keys' conf@(XConfig {modMask}) =
                    addWorkspaceToScope xPConfig
                  ),
                  ( (modMask .|. shiftMask, xK_s),
+                   removeWorkspaceFromScope xPConfig
+                 ),
+                 ( (modMask .|. controlMask, xK_s),
                    rescopeWorkspace xPConfig
                  ),
                  ( (noModMask, xF86XK_AudioMute),

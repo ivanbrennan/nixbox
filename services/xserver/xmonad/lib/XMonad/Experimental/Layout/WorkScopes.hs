@@ -10,11 +10,12 @@ module XMonad.Experimental.Layout.WorkScopes
     workScopes,
     getWorkScopeNames,
     addWorkspaceToScope,
+    removeWorkspaceFromScope,
     rescopeWorkspace,
   )
 where
 
-import Data.Set (Set, insert, singleton)
+import Data.Set (Set, delete, insert, singleton)
 import XMonad
   ( LayoutClass, Message, Window, WindowSpace, X, fromMessage, sendMessage,
   )
@@ -33,16 +34,20 @@ newtype ScopeName = ScopeName { unScopeName :: String }
 newtype AssignScopes = AssignScopes (Set ScopeName)
 instance Message AssignScopes
 
-newtype InsertScope = InsertScope ScopeName
-instance Message InsertScope
+newtype AddToScope = AddToScope ScopeName
+instance Message AddToScope
+
+newtype RemoveFromScope = RemoveFromScope ScopeName
+instance Message RemoveFromScope
 
 data WorkScopes a = WorkScopes (Set ScopeName)
   deriving (Show, Read)
 
 instance LayoutModifier WorkScopes a where
   handleMess (WorkScopes scopes) m
-    | Just (AssignScopes names) <- fromMessage m = pure $ Just (WorkScopes names)
-    | Just (InsertScope name) <- fromMessage m = pure $ Just (WorkScopes (insert name scopes))
+    | Just (AssignScopes names)   <- fromMessage m = pure $ Just (WorkScopes names)
+    | Just (AddToScope name)      <- fromMessage m = pure $ Just (WorkScopes (insert name scopes))
+    | Just (RemoveFromScope name) <- fromMessage m = pure $ Just (WorkScopes (delete name scopes))
     | otherwise = pure Nothing
 
 workScopes :: LayoutClass l a => l a -> ModifiedLayout WorkScopes l a
@@ -72,5 +77,10 @@ rescopeWorkspace conf =
 -- TODO: A more useful function would be to prompt for a workspace to pull into the current scope.
 addWorkspaceToScope :: XPConfig -> X ()
 addWorkspaceToScope conf =
-  mkXPrompt pr conf (const (return [])) (sendMessage . InsertScope . ScopeName)
+  mkXPrompt pr conf (const (return [])) (sendMessage . AddToScope . ScopeName)
   where pr = ScopePrompt "Add to scope name: "
+
+removeWorkspaceFromScope :: XPConfig -> X ()
+removeWorkspaceFromScope conf =
+  mkXPrompt pr conf (const (return [])) (sendMessage . RemoveFromScope . ScopeName)
+  where pr = ScopePrompt "Remove from scope name: "
