@@ -148,8 +148,8 @@ import XMonad.Util.Run (runProcessWithInput, runInTerm, safeSpawn, safeSpawnProg
 import XMonad.Util.WorkspaceCompare (filterOutWs)
 
 import XMonad.Experimental.Layout.WorkScopes
-  ( WorkScopes, ScopeName, getWorkScopeNames, rescopeWorkspace, unScopeName,
-    workScopes,
+  ( WorkScopes, ScopeName, addWorkspaceToScope, getWorkScopeNames,
+    rescopeWorkspace, unScopeName, workScopes,
   )
 
 
@@ -299,7 +299,7 @@ xmobarSpawner s =
                      " ",
                      xmobarColor grey1 "" "[",
                      intercalate
-                       (xmobarColor grey1 "" ", ")
+                       (xmobarColor grey1 "" ",")
                        (map (xmobarColor grey2 "") names),
                      xmobarColor grey1 "" "]"
                    ]
@@ -921,6 +921,9 @@ keys' conf@(XConfig {modMask}) =
                    sudoTerm "/etc/nixos"
                  ),
                  ( (modMask, xK_s),
+                   addWorkspaceToScope xPConfig
+                 ),
+                 ( (modMask .|. shiftMask, xK_s),
                    rescopeWorkspace xPConfig
                  ),
                  ( (noModMask, xF86XK_AudioMute),
