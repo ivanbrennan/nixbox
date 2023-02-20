@@ -20,6 +20,7 @@ import Text.Printf (printf)
 {- containers -}
 import Data.Map (Map)
 import qualified Data.Map as M
+import qualified Data.Set as Set
 
 {- data-default -}
 import Data.Default (def)
@@ -146,8 +147,9 @@ import XMonad.Util.Paste (sendKey)
 import XMonad.Util.Run (runProcessWithInput, runInTerm, safeSpawn, safeSpawnProg)
 import XMonad.Util.WorkspaceCompare (filterOutWs)
 
-import XMonad.Experimental.Layout.WorkScope
-  ( WorkScope, getWorkScopeStr, rescopeWorkspace, workScopes,
+import XMonad.Experimental.Layout.WorkScopes
+  ( WorkScopes, ScopeName, getWorkScopeNames, rescopeWorkspace, unScopeName,
+    workScopes,
   )
 
 
@@ -185,7 +187,7 @@ main = do
 
 
 type Struts       a = ModifiedLayout AvoidStruts a
-type Scopes       a = ModifiedLayout WorkScope a
+type Scopes       a = ModifiedLayout WorkScopes a
 type SmartBorders a = ModifiedLayout SmartBorder a
 type Refocus      a = ModifiedLayout RefocusLastLayoutHook (FocusTracking a)
 type Boring       a = ModifiedLayout BoringWindows a
@@ -274,7 +276,7 @@ xmobarSpawner :: ScreenId -> IO StatusBarConfig
 xmobarSpawner s =
   pure
     . statusBarProp (xmobar s)
-    . (workspaceNamesPP >=> clickablePP >=> scopeNamePP)
+    . (workspaceNamesPP >=> clickablePP >=> scopeNamesPP)
     . filterOutWsPP [scratchpadWorkspaceTag]
     . marshallPP s
     $ xmobarPP
@@ -286,25 +288,29 @@ xmobarSpawner s =
           ppLayout  = ppLayout'
         }
   where
-    scopeNamePP :: PP -> X PP
-    scopeNamePP pp = withWindowSet $ \ws ->
-      pure $ case scopeName ws of
-        Nothing -> pp
-        Just "" -> pp
-        Just name -> pp { ppLayout = \str ->
-                            concat
-                              [ ppLayout pp str,
-                                " ",
-                                xmobarColor grey1 "" "[",
-                                xmobarColor grey2 "" name,
-                                xmobarColor grey1 "" "]"
-                              ]
-                        }
+    scopeNamesPP :: PP -> X PP
+    scopeNamesPP pp = withWindowSet $ \ws ->
+      pure $ case map unScopeName (scopeNames ws) of
+        [] -> pp
+        names@(_:_) ->
+          pp { ppLayout = \str ->
+                 concat
+                   [ ppLayout pp str,
+                     " ",
+                     xmobarColor grey1 "" "[",
+                     intercalate
+                       (xmobarColor grey1 "" ", ")
+                       (map (xmobarColor grey2 "") names),
+                     xmobarColor grey1 "" "]"
+                   ]
+             }
 
-    scopeName :: WindowSet -> Maybe String
-    scopeName ws =
-      find ((== s) . W.screen) (W.current ws : W.visible ws)
-        >>= (getWorkScopeStr layoutHook' . W.workspace)
+    scopeNames :: WindowSet -> [ScopeName]
+    scopeNames ws =
+      maybe [] Set.toList $
+        ( find ((== s) . W.screen) (W.current ws : W.visible ws)
+            >>= getWorkScopeNames layoutHook' . W.workspace
+        )
 
     ppLayout' :: String -> String
     ppLayout' str
@@ -757,8 +763,12 @@ keys' conf@(XConfig {modMask}) =
         withWindowSet $ \ws ->
           let scr = W.current ws
               wks = W.workspace scr
-              dir = maybe "<err>" id (getWorkScopeStr layoutHook' wks)
-           in trace dir
+              names =
+                maybe
+                  "<err>"
+                  (list . map unScopeName . Set.toList)
+                  (getWorkScopeNames layoutHook' wks)
+           in trace names
       ),
       ( (noModMask, xK_Print),
         safeSpawn "screenshot" []
