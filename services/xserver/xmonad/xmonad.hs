@@ -5,7 +5,7 @@
 import Control.Arrow (second)
 import Control.Monad (when, (>=>))
 import Data.Bits ((.|.))
-import Data.Char (chr, isSpace, toLower)
+import Data.Char (isSpace, toLower)
 import Data.Dynamic (Typeable)
 import Data.Foldable (find)
 import Data.List (dropWhileEnd, intercalate, isInfixOf, nub, sortOn)
@@ -147,8 +147,8 @@ import XMonad.Util.Run (runProcessWithInput, runInTerm, safeSpawn, safeSpawnProg
 import XMonad.Util.WorkspaceCompare (filterOutWs)
 
 import XMonad.Experimental.Layout.WorkspaceLayers
-  ( WorkspaceLayers, LayerId, setCurrentScreenLayer, -- switchToLayer,
-    removeWorkspaceFromLayer, assignSingleLayer, unLayerId, workspaceLayers,
+  ( WorkspaceLayers, LayerId (LayerId), setCurrentScreenLayer, -- switchToLayer,
+    removeWorkspaceFromLayer, assignSingleLayer, workspaceLayers,
     currentLayer, defaultLayerId, updateScreenLayer,
   )
 import qualified XMonad.Experimental.Layout.WorkspaceLayers as L
@@ -308,12 +308,14 @@ xmobarSpawner s =
           then
             Nothing
           else
-            Just $ concat
-              [ " ",
-                xmobarColor grey1 "" "₍",
-                xmobarColor grey2 "" . pure . chr . (+ 8320) . unLayerId $ li,
-                xmobarColor grey1 "" "₎"
-              ]
+            Just (" " ++ xmobarColor orange "" (braille li))
+
+    braille :: LayerId -> String
+    braille (LayerId 1) = " "
+    braille (LayerId 2) = fontN 1 "⠊"
+    braille (LayerId 3) = fontN 1 "⠋"
+    braille (LayerId 4) = fontN 1 "⠛"
+    braille (LayerId n) = show n
 
 xmobar :: ScreenId -> String
 xmobar s@(S i) =
