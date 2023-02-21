@@ -8,7 +8,7 @@ import Data.Bits ((.|.))
 import Data.Char (isSpace, toLower)
 import Data.Dynamic (Typeable)
 import Data.Foldable (find)
-import Data.List (dropWhileEnd, intercalate, isInfixOf, sortOn)
+import Data.List (dropWhileEnd, intercalate, isInfixOf, nub, sortOn)
 import Data.Monoid (All)
 import System.Directory (getHomeDirectory)
 import System.Environment (getArgs)
@@ -64,7 +64,7 @@ import qualified XMonad.StackSet as W
 
 {- xmonad-contrib -}
 import XMonad.Actions.CycleWS
-  ( Direction1D (Next, Prev), WSType (WSIs, Not), emptyWS, moveTo,
+  ( Direction1D (Next, Prev), WSType (WSIs, Not, (:&:)), emptyWS, moveTo,
   )
 import XMonad.Actions.DynamicProjects (dynamicProjects, changeProjectDirPrompt)
 import XMonad.Actions.FlexibleResize (mouseResizeEdgeWindow)
@@ -101,7 +101,7 @@ import XMonad.Layout.BoringWindows
   )
 import XMonad.Layout.IndependentScreens
   ( PhysicalWorkspace, VirtualWorkspace, countScreens, marshall, marshallPP,
-    unmarshallS, withScreens, workspaces',
+    unmarshallS, unmarshallW, withScreens, workspaces',
   )
 import XMonad.Layout.LayoutModifier (ModifiedLayout)
 import XMonad.Layout.LimitWindows
@@ -148,9 +148,11 @@ import XMonad.Util.Run (runProcessWithInput, runInTerm, safeSpawn, safeSpawnProg
 import XMonad.Util.WorkspaceCompare (filterOutWs)
 
 import XMonad.Experimental.Layout.WorkspaceLayers
-  ( WorkspaceLayers, LayerId, addWorkspaceToLayer, getWorkspaceLayerIds,
+  ( WorkspaceLayers, LayerId, setCurrentScreenLayer, getWorkspaceLayerIds,
     removeWorkspaceFromLayer, assignSingleLayer, unLayerId, workspaceLayers,
+    currentLayer,
   )
+import qualified XMonad.Experimental.Layout.WorkspaceLayers as L
 
 
 main :: IO ()
@@ -173,7 +175,11 @@ main = do
       ewmh $
         def
           { layoutHook         = layoutHook',
-            workspaces         = withScreens nScreens (workspaces def),
+            workspaces         = withScreens nScreens $
+              [ show layer ++ "_" ++ show wkspc
+                | layer <- [1 .. 2 :: Int],
+                  wkspc <- [1 .. 9 :: Int]
+              ],
             startupHook        = startupHook',
             handleEventHook    = handleEventHook',
             manageHook         = manageHook',
@@ -276,7 +282,7 @@ xmobarSpawner :: ScreenId -> IO StatusBarConfig
 xmobarSpawner s =
   pure
     . statusBarProp (xmobar s)
-    . (workspaceNamesPP >=> clickablePP >=> layerIdsPP)
+    . (L.marshallPP unmarshallW s >=> workspaceNamesPP >=> clickablePP >=> layerIdsPP)
     . filterOutWsPP [scratchpadWorkspaceTag]
     . marshallPP s
     $ xmobarPP
@@ -760,17 +766,6 @@ keys' conf@(XConfig {modMask}) =
         debugStackString
           >>= trace . unlines . uncurry (++) . second reverse . splitAt 1 . lines
       ),
-      ( (mod4Mask .|. modMask, xK_l),
-        withWindowSet $ \ws ->
-          let scr = W.current ws
-              wks = W.workspace scr
-              names =
-                maybe
-                  "<err>"
-                  (list . map show . map unLayerId . Set.toList)
-                  (getWorkspaceLayerIds layoutHook' wks)
-           in trace names
-      ),
       ( (noModMask, xK_Print),
         safeSpawn "screenshot" []
       ),
@@ -922,7 +917,7 @@ keys' conf@(XConfig {modMask}) =
                    sudoTerm "/etc/nixos"
                  ),
                  ( (modMask, xK_s),
-                   addWorkspaceToLayer xPConfig
+                   setCurrentScreenLayer xPConfig
                  ),
                  ( (shiftMask, xK_s),
                    removeWorkspaceFromLayer xPConfig
@@ -963,9 +958,9 @@ keys' conf@(XConfig {modMask}) =
     -- mod-shift-[1..9], Move client to workspace N
     workspaceTagKeys =
       [ ( (m .|. modMask, k),
-          windows =<< onCurrentScreenX f i
+          windows =<< onCurrentLayerX f i
         )
-        | (k, i) <- zip [xK_1..xK_9] (workspaces' conf),
+        | (k, i) <- zip [xK_1..xK_9] (virtualWorkspaces conf),
           (m, f) <- [ (noModMask, pure . W.view),
                       (shiftMask, shiftRLWhen isFloat)
                     ]
@@ -983,9 +978,18 @@ keys' conf@(XConfig {modMask}) =
                     ]
       ]
 
-    onCurrentScreenX :: (PhysicalWorkspace -> X a) -> (VirtualWorkspace -> X a)
-    onCurrentScreenX f vwsp =
-      withCurrentScreen (f . flip marshall vwsp)
+    virtualWorkspaces :: XConfig l -> [VirtualWorkspace]
+    virtualWorkspaces =
+      nub . map L.unmarshallW . workspaces'
+
+    onCurrentLayerX :: (PhysicalWorkspace -> X a) -> (VirtualWorkspace -> X a)
+    onCurrentLayerX f vwsp =
+      withCurrentScreen $ \s ->
+        (f . marshall s . flip L.marshall vwsp) =<< currentLayer s
+
+    -- onCurrentScreenX :: (PhysicalWorkspace -> X a) -> (VirtualWorkspace -> X a)
+    -- onCurrentScreenX f vwsp =
+    --   withCurrentScreen (f . flip marshall vwsp)
 
     withCurrentScreen :: (ScreenId -> X a) -> X a
     withCurrentScreen f =
@@ -1016,8 +1020,10 @@ keys' conf@(XConfig {modMask}) =
       pure . description . W.layout . W.workspace . W.current
 
     cycledWorkspace :: WSType
-    cycledWorkspace =
-      WSIs $ withCurrentScreen (pure . cycledWorkspaceOnScreen)
+    cycledWorkspace = onScreen :&: onLayer
+      where
+        onScreen = WSIs $ withCurrentScreen (pure . cycledWorkspaceOnScreen)
+        onLayer = WSIs $ withCurrentScreen (fmap cycledWorkspaceOnLayer . currentLayer)
 
     cycledWorkspaceOnScreen :: ScreenId -> WindowSpace -> Bool
     cycledWorkspaceOnScreen s wsp =
@@ -1027,6 +1033,10 @@ keys' conf@(XConfig {modMask}) =
           (not . emptyWorkspace),
           isOnScreen s
         ]
+
+    cycledWorkspaceOnLayer :: LayerId -> WindowSpace -> Bool
+    cycledWorkspaceOnLayer li =
+      (li ==) . L.unmarshallL . unmarshallW . W.tag
 
     emptyWorkspace :: WindowSpace -> Bool
     emptyWorkspace = null . W.stack
