@@ -147,9 +147,9 @@ import XMonad.Util.Paste (sendKey)
 import XMonad.Util.Run (runProcessWithInput, runInTerm, safeSpawn, safeSpawnProg)
 import XMonad.Util.WorkspaceCompare (filterOutWs)
 
-import XMonad.Experimental.Layout.WorkScopes
-  ( WorkScopes, ScopeName, addWorkspaceToScope, getWorkScopeNames,
-    removeWorkspaceFromScope, rescopeWorkspace, unScopeName, workScopes,
+import XMonad.Experimental.Layout.WorkspaceLayers
+  ( WorkspaceLayers, LayerId, addWorkspaceToLayer, getWorkspaceLayerIds,
+    removeWorkspaceFromLayer, assignSingleLayer, unLayerId, workspaceLayers,
   )
 
 
@@ -187,7 +187,7 @@ main = do
 
 
 type Struts       a = ModifiedLayout AvoidStruts a
-type Scopes       a = ModifiedLayout WorkScopes a
+type Layers       a = ModifiedLayout WorkspaceLayers a
 type SmartBorders a = ModifiedLayout SmartBorder a
 type Refocus      a = ModifiedLayout RefocusLastLayoutHook (FocusTracking a)
 type Boring       a = ModifiedLayout BoringWindows a
@@ -205,11 +205,11 @@ type Layouts
         )
       )
 
-layoutHook' :: Struts (Scopes (SmartBorders (Refocus (Boring Layouts)))) Window
+layoutHook' :: Struts (Layers (SmartBorders (Refocus (Boring Layouts)))) Window
 layoutHook' =
   id
     . avoidStruts
-    . workScopes
+    . workspaceLayers
     . smartBorders
     . refocusLastLayoutHook
     . focusTracking
@@ -276,7 +276,7 @@ xmobarSpawner :: ScreenId -> IO StatusBarConfig
 xmobarSpawner s =
   pure
     . statusBarProp (xmobar s)
-    . (workspaceNamesPP >=> clickablePP >=> scopeNamesPP)
+    . (workspaceNamesPP >=> clickablePP >=> layerIdsPP)
     . filterOutWsPP [scratchpadWorkspaceTag]
     . marshallPP s
     $ xmobarPP
@@ -288,11 +288,12 @@ xmobarSpawner s =
           ppLayout  = ppLayout'
         }
   where
-    scopeNamesPP :: PP -> X PP
-    scopeNamesPP pp = withWindowSet $ \ws ->
-      pure $ case map unScopeName (scopeNames ws) of
+    -- TODO: highlight current layer differently
+    layerIdsPP :: PP -> X PP
+    layerIdsPP pp = withWindowSet $ \ws ->
+      pure $ case map unLayerId (layerIds ws) of
         [] -> pp
-        names@(_:_) ->
+        lis@(_:_) ->
           pp { ppLayout = \str ->
                  concat
                    [ ppLayout pp str,
@@ -300,16 +301,16 @@ xmobarSpawner s =
                      xmobarColor grey1 "" "[",
                      intercalate
                        (xmobarColor grey1 "" ",")
-                       (map (xmobarColor grey2 "") names),
+                       (map (xmobarColor grey2 "" . show) lis),
                      xmobarColor grey1 "" "]"
                    ]
              }
 
-    scopeNames :: WindowSet -> [ScopeName]
-    scopeNames ws =
+    layerIds :: WindowSet -> [LayerId]
+    layerIds ws =
       maybe [] Set.toList $
         ( find ((== s) . W.screen) (W.current ws : W.visible ws)
-            >>= getWorkScopeNames layoutHook' . W.workspace
+            >>= getWorkspaceLayerIds layoutHook' . W.workspace
         )
 
     ppLayout' :: String -> String
@@ -766,8 +767,8 @@ keys' conf@(XConfig {modMask}) =
               names =
                 maybe
                   "<err>"
-                  (list . map unScopeName . Set.toList)
-                  (getWorkScopeNames layoutHook' wks)
+                  (list . map show . map unLayerId . Set.toList)
+                  (getWorkspaceLayerIds layoutHook' wks)
            in trace names
       ),
       ( (noModMask, xK_Print),
@@ -921,13 +922,13 @@ keys' conf@(XConfig {modMask}) =
                    sudoTerm "/etc/nixos"
                  ),
                  ( (modMask, xK_s),
-                   addWorkspaceToScope xPConfig
+                   addWorkspaceToLayer xPConfig
                  ),
-                 ( (modMask .|. shiftMask, xK_s),
-                   removeWorkspaceFromScope xPConfig
+                 ( (shiftMask, xK_s),
+                   removeWorkspaceFromLayer xPConfig
                  ),
-                 ( (modMask .|. controlMask, xK_s),
-                   rescopeWorkspace xPConfig
+                 ( (controlMask, xK_s),
+                   assignSingleLayer xPConfig
                  ),
                  ( (noModMask, xF86XK_AudioMute),
                    safeSpawn "resound" []
