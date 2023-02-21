@@ -176,7 +176,7 @@ main = do
           { layoutHook         = layoutHook',
             workspaces         = withScreens nScreens $
               [ show layer ++ "_" ++ show wkspc
-                | layer <- [1 .. 2 :: Int],
+                | layer <- [1 .. 4 :: Int],
                   wkspc <- [1 .. 9 :: Int]
               ],
             startupHook        = startupHook',
@@ -1107,16 +1107,33 @@ keys' conf@(XConfig {modMask}) =
       where
         findWS :: WindowSet -> Maybe WindowSet
         findWS ws =
-          case recentLayer s p ws of
-            [] -> Nothing
+          case recentNonEmptyLayer s p ws of
+            [] -> case recentLayer s p ws of
+              [] -> Nothing
+              (x:_) -> fmap (`W.view` x)
+                         . find ((== (s, layer x)) . screenLayer)
+                         $ workspaces conf
             (x:_) -> Just x
 
         layer :: WindowSet -> LayerId
         layer = L.unmarshallL . unmarshallW . W.tag . W.workspace . W.current
 
+        screenLayer :: WorkspaceId -> (ScreenId, LayerId)
+        screenLayer i =
+          let (sid, i') = unmarshall i
+           in (sid, L.unmarshallL i')
+
         goto :: WindowSet -> X ()
         goto ws =
           updateScreenLayer s (layer ws) >> windows (const ws)
+
+    recentNonEmptyLayer :: ScreenId -> (LayerId -> Bool) -> WindowSet -> [WindowSet]
+    recentNonEmptyLayer s p ws =
+      map (`W.view` ws)
+        . filter (\t -> let (s', t') = unmarshall t
+                         in s' == s && p (L.unmarshallL t')
+                 )
+        $ recentNonEmptyTags ws
 
     recentLayer :: ScreenId -> (LayerId -> Bool) -> WindowSet -> [WindowSet]
     recentLayer s p ws =
