@@ -11,14 +11,14 @@
 -- how do we determine a workspace's tag and position within a layer?
 -- we can additionally use extensible state to attach optional names to layer numbers
 
--- Layers
--- WorkspaceLayers
+-- TODO: attach layerid to workspace layout instead of extensible state
 
 module XMonad.Experimental.Layout.WorkspaceLayers
   ( WorkspaceLayers,
     LayerId (..),
     LayerName (..),
     currentLayer,
+    defaultLayerId,
     workspaceLayers,
     getWorkspaceLayerIds,
     addWorkspaceToLayer,
@@ -29,8 +29,10 @@ module XMonad.Experimental.Layout.WorkspaceLayers
     marshallPP,
     removeWorkspaceFromLayer,
     assignSingleLayer,
-    updateScreenLayer,
     setCurrentScreenLayer,
+    updateCurrentScreenLayer,
+    updateScreenLayer,
+    switchToLayer,
   )
 where
 
@@ -85,7 +87,6 @@ marshallPP f s pp = do
 workspacesOn :: (WorkspaceId -> WorkspaceId) -> LayerId -> [WindowSpace] -> [WindowSpace]
 workspacesOn f li = filter (\ws -> unmarshallL (f $ W.tag ws) == li)
 
--- TODO: track which workspace is focused within each layer (and switch to it when switching to that layer)
 newtype LayerState = LayerState { layersByScreen :: Map ScreenId LayerId }
   deriving (Read, Show)
 
@@ -164,6 +165,15 @@ setCurrentScreenLayer xP =
     pr = LayerPrompt "Layer: "
     f li = withWindowSet $ \ws ->
       updateScreenLayer (W.screen . W.current $ ws) li
+
+switchToLayer :: LayerId -> X ()
+switchToLayer =
+  updateCurrentScreenLayer
+
+updateCurrentScreenLayer :: LayerId -> X ()
+updateCurrentScreenLayer li =
+  withWindowSet $ \ws ->
+    updateScreenLayer (W.screen $ W.current ws) li
 
 updateScreenLayer :: ScreenId -> LayerId -> X ()
 updateScreenLayer si li =
