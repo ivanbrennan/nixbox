@@ -232,9 +232,12 @@ layoutHook' =
 baseWorkspaces :: [WorkspaceId]
 baseWorkspaces =
   [ show layer ++ "_" ++ show wkspc
-    | layer <- [1 .. 6 :: Int],
+    | layer <- [1 .. numLayers],
       wkspc <- [1 .. 9 :: Int]
   ]
+
+numLayers :: Int
+numLayers = 6
 
 
 startupHook' :: X ()
@@ -625,6 +628,13 @@ keys' conf@(XConfig {modMask}) =
       ),
       ( (modMask, xK_comma),
         moveTo Prev cycledWorkspace
+      ),
+      -- layers
+      ( (modMask .|. shiftMask, xK_period),
+        cycleNextLayer
+      ),
+      ( (modMask .|. shiftMask, xK_comma),
+        cyclePrevLayer
       ),
       ( (modMask, xK_l),
         toggleRecentWSOnLayer
@@ -1103,6 +1113,18 @@ keys' conf@(XConfig {modMask}) =
       withCurrentScreen $ \s -> do
         li <- currentLayer s
         gotoWorkspace s (/= li)
+
+    cycleNextLayer :: X ()
+    cycleNextLayer = cycleNthLayer 1
+
+    cyclePrevLayer :: X ()
+    cyclePrevLayer = cycleNthLayer (-1)
+
+    cycleNthLayer :: Int -> X ()
+    cycleNthLayer n =
+      withCurrentScreen $ \s -> do
+        LayerId i <- currentLayer s
+        gotoWorkspace s (== LayerId (1 + ((i - 1 + n) `mod` numLayers)))
 
     gotoLayer :: LayerId -> X ()
     gotoLayer li =
