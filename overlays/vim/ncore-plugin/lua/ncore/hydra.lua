@@ -1,3 +1,6 @@
+local cmd = vim.cmd
+local set = vim.keymap.set
+
 local hydra = require('hydra')
 local shared_config = {
   hint = {
@@ -38,12 +41,12 @@ local vertical_scroll = hydra({
   },
   config = shared_config,
 })
-vim.keymap.set('n', '<C-f>', function()
-  vim.cmd.execute('"normal! \\<C-f>"')
+set('n', '<C-f>', function()
+  cmd.execute('"normal! \\<C-f>"')
   vertical_scroll:activate()
 end)
-vim.keymap.set('n', '<C-b>', function()
-  vim.cmd.execute('"normal! \\<C-b>"')
+set('n', '<C-b>', function()
+  cmd.execute('"normal! \\<C-b>"')
   vertical_scroll:activate()
 end)
 
@@ -68,3 +71,33 @@ hydra({
   },
   config = shared_config,
 })
+
+local recenter_switch = 0
+recenter = hydra({
+  name = 'recenter',
+  hint = ' ─ ',
+  mode = 'n',
+  heads = {
+    {
+      '<C-l>', function()
+        if recenter_switch == 0 then
+          cmd.execute('"normal! zz"')
+        elseif recenter_switch == 1 then
+          cmd.execute('"normal! zt"')
+        else
+          cmd.execute('"normal! zb"')
+        end
+        recenter_switch = (recenter_switch + 1) % 3
+      end, { desc = false }
+    },
+    {
+      '<Esc>', nil, { exit = true, desc = false }
+    },
+  },
+  config = shared_config,
+})
+set('n', '<C-l>', function()
+  cmd.execute('"normal! zz"')
+  recenter_switch = 1
+  recenter:activate()
+end)

@@ -541,10 +541,6 @@ set('n', '<Leader><Esc>', function()
   end
 end)
 
--- recenter / redraw
-set('n', '<C-l>', 'zz')
-set('n', '<C-u><C-l>', 'zt')
-
 -- TODO: magit (neogit?)
 -- git
 set('n', '<Leader>gb', '<Cmd>Git blame<CR>')
