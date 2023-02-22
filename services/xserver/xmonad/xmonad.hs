@@ -174,11 +174,7 @@ main = do
       ewmh $
         def
           { layoutHook         = layoutHook',
-            workspaces         = withScreens nScreens $
-              [ show layer ++ "_" ++ show wkspc
-                | layer <- [1 .. 4 :: Int],
-                  wkspc <- [1 .. 9 :: Int]
-              ],
+            workspaces         = withScreens nScreens baseWorkspaces,
             startupHook        = startupHook',
             handleEventHook    = handleEventHook',
             manageHook         = manageHook',
@@ -231,6 +227,14 @@ layoutHook' =
 
     tall :: ResizableTall Window
     tall = ResizableTall 1 (1/100) (52/100) []
+
+
+baseWorkspaces :: [WorkspaceId]
+baseWorkspaces =
+  [ show layer ++ "_" ++ show wkspc
+    | layer <- [1 .. 6 :: Int],
+      wkspc <- [1 .. 9 :: Int]
+  ]
 
 
 startupHook' :: X ()
@@ -308,13 +312,15 @@ xmobarSpawner s =
           then
             Nothing
           else
-            Just (" " ++ xmobarColor orange "" (braille li))
+            Just (" " ++ xmobarColor cyan "" (braille li))
 
     braille :: LayerId -> String
     braille (LayerId 1) = " "
-    braille (LayerId 2) = fontN 1 "⠊"
-    braille (LayerId 3) = fontN 1 "⠋"
-    braille (LayerId 4) = fontN 1 "⠛"
+    braille (LayerId 2) = fontN 1 "⠌"
+    braille (LayerId 3) = fontN 1 "⠪"
+    braille (LayerId 4) = fontN 1 "⠭"
+    braille (LayerId 5) = fontN 1 "⠯"
+    braille (LayerId 6) = fontN 1 "⠿"
     braille (LayerId n) = show n
 
 xmobar :: ScreenId -> String
