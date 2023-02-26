@@ -92,15 +92,15 @@ import XMonad.Hooks.StatusBar
   ( StatusBarConfig, dynamicSBs, statusBarProp, xmonadDefProp,
   )
 import XMonad.Hooks.StatusBar.PP
-  ( pad, ppCurrent, ppExtras, ppHidden, ppLayout, ppSep, ppTitle, ppWsSep, wrap,
-    xmobarColor, xmobarPP, filterOutWsPP,
+  ( PP, filterOutWsPP, pad, ppCurrent, ppExtras, ppHidden, ppLayout, ppRename,
+    ppSep, ppSort, ppTitle, ppWsSep, wrap, xmobarColor, xmobarPP,
   )
 import XMonad.Layout.BoringWindows
   ( BoringWindows, boringAuto, focusDown, focusUp, siftDown, siftUp,
   )
 import XMonad.Layout.IndependentScreens
   ( PhysicalWorkspace, VirtualWorkspace, countScreens, marshall, marshallPP,
-    unmarshall, unmarshallS, unmarshallW, withScreens, workspaces',
+    unmarshallS, withScreens, workspaces',
   )
 import XMonad.Layout.LayoutModifier (ModifiedLayout)
 import XMonad.Layout.LimitWindows
@@ -145,13 +145,10 @@ import qualified XMonad.Util.NamedScratchpad as NS
 import XMonad.Util.Paste (sendKey)
 import XMonad.Util.Run (runProcessWithInput, runInTerm, safeSpawn, safeSpawnProg)
 import XMonad.Util.WorkspaceCompare (filterOutWs)
-
-import XMonad.Experimental.Layout.WorkspaceLayers
-  ( WorkspaceLayers, LayerId (LayerId), setCurrentScreenLayer, -- switchToLayer,
-    removeWorkspaceFromLayer, assignSingleLayer, workspaceLayers,
-    currentLayer, defaultLayerId, updateScreenLayer,
+import XMonad.Actions.WorkspaceCursors
+  ( Cursors, WorkspaceCursors, makeCursors, workspaceCursors,
   )
-import qualified XMonad.Experimental.Layout.WorkspaceLayers as L
+import qualified XMonad.Actions.WorkspaceCursors as WC
 
 
 main :: IO ()
@@ -174,7 +171,7 @@ main = do
       ewmh $
         def
           { layoutHook         = layoutHook',
-            workspaces         = withScreens nScreens baseWorkspaces,
+            workspaces         = withScreens nScreens (WC.toList wCursors),
             startupHook        = startupHook',
             handleEventHook    = handleEventHook',
             manageHook         = manageHook',
@@ -187,8 +184,8 @@ main = do
           }
 
 
+type Layers       a = ModifiedLayout WorkspaceCursors a
 type Struts       a = ModifiedLayout AvoidStruts a
-type Layers       a = ModifiedLayout WorkspaceLayers a
 type SmartBorders a = ModifiedLayout SmartBorder a
 type Refocus      a = ModifiedLayout RefocusLastLayoutHook (FocusTracking a)
 type Boring       a = ModifiedLayout BoringWindows a
@@ -206,11 +203,11 @@ type Layouts
         )
       )
 
-layoutHook' :: Struts (Layers (SmartBorders (Refocus (Boring Layouts)))) Window
+layoutHook' :: Layers (Struts (SmartBorders (Refocus (Boring Layouts)))) Window
 layoutHook' =
   id
+    . workspaceCursors wCursors
     . avoidStruts
-    . workspaceLayers
     . smartBorders
     . refocusLastLayoutHook
     . focusTracking
@@ -229,15 +226,21 @@ layoutHook' =
     tall = ResizableTall 1 (1/100) (52/100) []
 
 
-baseWorkspaces :: [WorkspaceId]
-baseWorkspaces =
-  [ show layer ++ "_" ++ show wkspc
-    | layer <- [1 .. numLayers],
-      wkspc <- [1 .. 9 :: Int]
-  ]
+wCursors :: Cursors WorkspaceId
+wCursors = makeCursors $
+  map (map show) [[1 .. 9], staticLayers]
 
-numLayers :: Int
-numLayers = 6
+staticLayers :: [Int]
+staticLayers = [1 .. 4]
+
+takeLayerSuffix :: WorkspaceId -> String
+takeLayerSuffix = take 1 . reverse
+
+dropLayerSuffix :: WorkspaceId -> String
+dropLayerSuffix = reverse . drop 1 . reverse
+
+layerSuffix :: WindowSpace -> String
+layerSuffix = takeLayerSuffix . W.tag
 
 
 startupHook' :: X ()
@@ -288,9 +291,10 @@ xmobarSpawner :: ScreenId -> IO StatusBarConfig
 xmobarSpawner s =
   pure
     . statusBarProp (xmobar s)
-    . (L.marshallPP unmarshallW s >=> workspaceNamesPP >=> clickablePP)
+    . (workspaceNamesPP >=> clickablePP)
     . filterOutWsPP [scratchpadWorkspaceTag]
     . marshallPP s
+    . layerPP
     $ xmobarPP
         { ppCurrent = xmobarColor grey6 blue . pad,
           ppHidden  = xmobarColor grey4 grey1 . pad,
@@ -298,33 +302,43 @@ xmobarSpawner s =
           ppWsSep   = "",
           ppTitle   = const "",
           ppLayout  = ppLayout',
-          ppExtras  = [ppLayerId]
+          ppExtras  = [ppLayer]
         }
   where
+    layerPP :: PP -> PP
+    layerPP pp = pp
+      { ppRename = ppRename pp . take 1,
+        ppSort   = withCurrentWorkspace $ \wk ->
+          (filter (sameLayer wk) .) <$> ppSort pp
+      }
+
+    withCurrentWorkspace :: (WindowSpace -> X a) -> X a
+    withCurrentWorkspace f = withWindowSet (f . W.workspace . W.current)
+
+    sameLayer :: WindowSpace -> WindowSpace -> Bool
+    sameLayer x y = layerSuffix x == layerSuffix y
+
     ppLayout' :: String -> String
     ppLayout' str
       | "Full"  `isInfixOf` str = xmobarColor cyan "" "·"
       | "Limit" `isInfixOf` str = xmobarColor grey2 "" "·"
       | otherwise               = ""
 
-    ppLayerId :: X (Maybe String)
-    ppLayerId = do
-      li <- currentLayer s
-      pure $
-        if li == defaultLayerId
-          then
-            Nothing
-          else
-            Just (" " ++ xmobarColor cyan "" (braille li))
+    ppLayer :: X (Maybe String)
+    ppLayer =
+      withCurrentWorkspace $
+        pure . Just . (" " ++) . xmobarColor cyan "" . layerGlyph
 
-    braille :: LayerId -> String
-    braille (LayerId 1) = " "
-    braille (LayerId 2) = fontN 1 "⠌"
-    braille (LayerId 3) = fontN 1 "⠪"
-    braille (LayerId 4) = fontN 1 "⠭"
-    braille (LayerId 5) = fontN 1 "⠯"
-    braille (LayerId 6) = fontN 1 "⠿"
-    braille (LayerId n) = show n
+    layerGlyph :: WindowSpace -> String
+    layerGlyph x =
+      case layerSuffix x of
+        "1" -> ""
+        "2" -> fontN 1 "⠌"
+        "3" -> fontN 1 "⠪"
+        "4" -> fontN 1 "⠭"
+        "5" -> fontN 1 "⠟"
+        "6" -> fontN 1 "⠿"
+        str -> str
 
 xmobar :: ScreenId -> String
 xmobar s@(S i) =
@@ -637,7 +651,7 @@ keys' conf@(XConfig {modMask}) =
         cyclePrevLayer
       ),
       ( (modMask, xK_l),
-        toggleRecentWSOnLayer
+        toggleRecentWorkspace
       ),
       ( (modMask .|. shiftMask, xK_l),
         toggleRecentLayer
@@ -927,15 +941,6 @@ keys' conf@(XConfig {modMask}) =
                  ( (noModMask, xK_s),
                    sudoTerm "/etc/nixos"
                  ),
-                 ( (modMask, xK_s),
-                   setCurrentScreenLayer xPConfig
-                 ),
-                 ( (shiftMask, xK_s),
-                   removeWorkspaceFromLayer xPConfig
-                 ),
-                 ( (controlMask, xK_s),
-                   assignSingleLayer xPConfig
-                 ),
                  ( (noModMask, xF86XK_AudioMute),
                    safeSpawn "resound" []
                  ),
@@ -964,7 +969,7 @@ keys' conf@(XConfig {modMask}) =
                  ++ [ ( (noModMask, k),
                         gotoLayer i
                       )
-                      | (k, i) <- zip [xK_1..xK_9] (layerIds conf)
+                      | (k, i) <- zip [xK_1..xK_9] staticLayers
                     ]
            )
            | alt <- [xK_Alt_L, xK_Alt_R]
@@ -994,22 +999,15 @@ keys' conf@(XConfig {modMask}) =
                     ]
       ]
 
-    layerIds :: XConfig l -> [LayerId]
-    layerIds =
-      nub . map L.unmarshallL . workspaces'
-
     virtualWorkspaces :: XConfig l -> [VirtualWorkspace]
     virtualWorkspaces =
-      nub . map L.unmarshallW . workspaces'
+      nub . map dropLayerSuffix . workspaces'
 
     onCurrentLayerX :: (PhysicalWorkspace -> X a) -> (VirtualWorkspace -> X a)
     onCurrentLayerX f vwsp =
       withCurrentScreen $ \s ->
-        (f . marshall s . flip L.marshall vwsp) =<< currentLayer s
-
-    -- onCurrentScreenX :: (PhysicalWorkspace -> X a) -> (VirtualWorkspace -> X a)
-    -- onCurrentScreenX f vwsp =
-    --   withCurrentScreen (f . flip marshall vwsp)
+        withWindowSet $
+          f . marshall s . (vwsp ++) . show . layer
 
     withCurrentScreen :: (ScreenId -> X a) -> X a
     withCurrentScreen f =
@@ -1043,7 +1041,7 @@ keys' conf@(XConfig {modMask}) =
     cycledWorkspace = onScreen :&: onLayer
       where
         onScreen = WSIs $ withCurrentScreen (pure . cycledWorkspaceOnScreen)
-        onLayer = WSIs $ withCurrentScreen (fmap cycledWorkspaceOnLayer . currentLayer)
+        onLayer = WSIs $ withWindowSet $ (pure . cycledWorkspaceOnLayer . layer)
 
     cycledWorkspaceOnScreen :: ScreenId -> WindowSpace -> Bool
     cycledWorkspaceOnScreen s wsp =
@@ -1051,12 +1049,11 @@ keys' conf@(XConfig {modMask}) =
         ($ wsp)
         [ (not . scratchpadWorkspace),
           (not . emptyWorkspace),
-          isOnScreen s
+          (s ==) . screenId
         ]
 
-    cycledWorkspaceOnLayer :: LayerId -> WindowSpace -> Bool
-    cycledWorkspaceOnLayer li =
-      (li ==) . L.unmarshallL . unmarshallW . W.tag
+    cycledWorkspaceOnLayer :: Int -> WindowSpace -> Bool
+    cycledWorkspaceOnLayer li = (li ==) . layerId . W.tag
 
     emptyWorkspace :: WindowSpace -> Bool
     emptyWorkspace = null . W.stack
@@ -1064,55 +1061,42 @@ keys' conf@(XConfig {modMask}) =
     scratchpadWorkspace :: WindowSpace -> Bool
     scratchpadWorkspace = null . filterOutWs [scratchpadWorkspaceTag] . (:[])
 
-    isOnScreen :: ScreenId -> WindowSpace -> Bool
-    isOnScreen s = (s ==) . unmarshallS . W.tag
+    screenId :: WindowSpace -> ScreenId
+    screenId = unmarshallS . W.tag
 
-    -- toggleRecentWS :: X ()
-    -- toggleRecentWS =
-    --   withWindowSet (windows . const . head . recentWS)
+    toggleRecentWorkspace :: X ()
+    toggleRecentWorkspace =
+      windows (head . recentWindowSets)
 
-    -- recentWS :: WindowSet -> [WindowSet]
-    -- recentWS ws = map (`W.view` ws) (recentTags ws)
+    recentWindowSets :: WindowSet -> [WindowSet]
+    recentWindowSets wst@W.StackSet {W.current} =
+      map ((`W.view` wst) . W.tag)
+        . filter (\x -> screenId x == s && layerSuffix x == l)
+        $ recentNonEmptyWorkspaces wst
+      where
+        s :: ScreenId
+        s = W.screen current
 
-    recentTags :: WindowSet -> [WorkspaceId]
-    recentTags =
-      map W.tag . recentWorkspaces
-
-    recentNonEmptyTags :: WindowSet -> [WorkspaceId]
-    recentNonEmptyTags =
-      map W.tag . recentNonEmptyWorkspaces
+        l :: String
+        l = layerSuffix (W.workspace current)
 
     recentNonEmptyWorkspaces :: WindowSet -> [WindowSpace]
     recentNonEmptyWorkspaces =
-      filter (not . null . W.stack)
-        . recentWorkspaces
+      filter (not . null . W.stack) . recentWorkspaces
 
     recentWorkspaces :: WindowSet -> [WindowSpace]
-    recentWorkspaces ws =
+    recentWorkspaces wst =
       filterOutWs [scratchpadWorkspaceTag]
-        $ map W.workspace (W.visible ws)
-          ++ W.hidden ws
-          ++ [W.workspace (W.current ws)]
-
-    toggleRecentWSOnLayer :: X ()
-    toggleRecentWSOnLayer =
-      withCurrentScreen $ \s -> do
-        li <- currentLayer s
-        withWindowSet (windows . const . head . recentWSOnLayer s li)
-
-    recentWSOnLayer :: ScreenId -> LayerId -> WindowSet -> [WindowSet]
-    recentWSOnLayer s li ws =
-      map (`W.view` ws)
-        . filter (\t -> let (s', t') = unmarshall t
-                         in s' == s && L.unmarshallL t' == li
-                 )
-        $ recentNonEmptyTags ws
+        $ map W.workspace (W.visible wst)
+          ++ W.hidden wst
+          ++ [W.workspace (W.current wst)]
 
     toggleRecentLayer :: X ()
     toggleRecentLayer =
-      withCurrentScreen $ \s -> do
-        li <- currentLayer s
-        gotoWorkspace s (/= li)
+      withWindowSet $ gotoWorkspace . (/=) . layer
+
+    layer :: WindowSet -> Int
+    layer = layerId . W.currentTag
 
     cycleNextLayer :: X ()
     cycleNextLayer = cycleNthLayer 1
@@ -1122,56 +1106,42 @@ keys' conf@(XConfig {modMask}) =
 
     cycleNthLayer :: Int -> X ()
     cycleNthLayer n =
-      withCurrentScreen $ \s -> do
-        LayerId i <- currentLayer s
-        gotoWorkspace s (== LayerId (1 + ((i - 1 + n) `mod` numLayers)))
+      withWindowSet $ \wst ->
+        gotoWorkspace (== (1 + ((layer wst - 1 + n) `mod` length staticLayers)))
 
-    gotoLayer :: LayerId -> X ()
-    gotoLayer li =
-      withCurrentScreen $ \s ->
-        gotoWorkspace s (== li)
+    gotoLayer :: Int -> X ()
+    gotoLayer n = gotoWorkspace (== n)
 
-    gotoWorkspace :: ScreenId -> (LayerId -> Bool) -> X ()
-    gotoWorkspace s p =
-      withWindowSet (maybe (pure ()) goto . findWS)
+    gotoWorkspace :: (Int -> Bool) -> X ()
+    gotoWorkspace p = windows (findWS p)
+
+    findWS :: (Int -> Bool) -> WindowSet -> WindowSet
+    findWS p wst@W.StackSet {W.current} =
+      case recentNonEmptyLayer of
+        [] -> case recentLayer of
+          [] -> wst
+          (x:_) -> maybe wst (`W.view` x)
+                     . find (\t -> unmarshallS t == s && layerId t == layer x)
+                     $ workspaces conf
+        (x:_) -> x
       where
-        findWS :: WindowSet -> Maybe WindowSet
-        findWS ws =
-          case recentNonEmptyLayer s p ws of
-            [] -> case recentLayer s p ws of
-              [] -> Nothing
-              (x:_) -> fmap (`W.view` x)
-                         . find ((== (s, layer x)) . screenLayer)
-                         $ workspaces conf
-            (x:_) -> Just x
+        s :: ScreenId
+        s = W.screen current
 
-        layer :: WindowSet -> LayerId
-        layer = L.unmarshallL . unmarshallW . W.tag . W.workspace . W.current
+        recentNonEmptyLayer :: [WindowSet]
+        recentNonEmptyLayer =
+          map ((`W.view` wst) . W.tag)
+            . filter (\x -> screenId x == s && p (layerId $ W.tag x))
+            $ recentNonEmptyWorkspaces wst
 
-        screenLayer :: WorkspaceId -> (ScreenId, LayerId)
-        screenLayer i =
-          let (sid, i') = unmarshall i
-           in (sid, L.unmarshallL i')
+        recentLayer :: [WindowSet]
+        recentLayer =
+          map ((`W.view` wst) . W.tag)
+            . filter (\x -> screenId x == s && p (layerId $ W.tag x))
+            $ recentWorkspaces wst
 
-        goto :: WindowSet -> X ()
-        goto ws =
-          updateScreenLayer s (layer ws) >> windows (const ws)
-
-    recentNonEmptyLayer :: ScreenId -> (LayerId -> Bool) -> WindowSet -> [WindowSet]
-    recentNonEmptyLayer s p ws =
-      map (`W.view` ws)
-        . filter (\t -> let (s', t') = unmarshall t
-                         in s' == s && p (L.unmarshallL t')
-                 )
-        $ recentNonEmptyTags ws
-
-    recentLayer :: ScreenId -> (LayerId -> Bool) -> WindowSet -> [WindowSet]
-    recentLayer s p ws =
-      map (`W.view` ws)
-        . filter (\t -> let (s', t') = unmarshall t
-                         in s' == s && p (L.unmarshallL t')
-                 )
-        $ recentTags ws
+    layerId :: WorkspaceId -> Int
+    layerId = read . takeLayerSuffix
 
     cycleFloat :: [W.RationalRect] -> Window -> WindowSet -> WindowSet
     cycleFloat recs w s =
