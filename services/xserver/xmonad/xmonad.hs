@@ -655,16 +655,16 @@ keys' conf@(XConfig {modMask}) =
       ),
       -- layers
       ( (modMask .|. shiftMask, xK_period),
-        cycleNextLayer
+        windows cycleNextLayer
       ),
       ( (modMask .|. shiftMask, xK_comma),
-        cyclePrevLayer
+        windows cyclePrevLayer
       ),
       ( (modMask, xK_l),
-        toggleRecentWorkspace
+        windows toggleRecentWorkspace
       ),
       ( (modMask .|. shiftMask, xK_l),
-        toggleRecentLayer
+        windows toggleRecentLayer
       ),
       ( (mod4Mask, xK_Tab),
         moveTo Next (Not emptyWS)
@@ -977,7 +977,7 @@ keys' conf@(XConfig {modMask}) =
                  )
                ]
                  ++ [ ( (noModMask, k),
-                        gotoLayer i
+                        windows (viewLayer i)
                       )
                       | (k, i) <- zip [xK_1..xK_9] layerIds
                     ]
@@ -1072,22 +1072,20 @@ keys' conf@(XConfig {modMask}) =
     scratchpadWorkspace :: WindowSpace -> Bool
     scratchpadWorkspace = null . filterOutWs [scratchpadWorkspaceTag] . (:[])
 
-    toggleRecentWorkspace :: X ()
-    toggleRecentWorkspace = windows $ \wset ->
-      let s :: ScreenId
-          s = W.screen (W.current wset)
+    toggleRecentWorkspace :: WindowSet -> WindowSet
+    toggleRecentWorkspace wset =
+      case filter p (recentNonEmptyWorkspaces wset) of
+        (x : _) -> W.view (W.tag x) wset
+        [] -> wset
+      where
+        p :: WindowSpace -> Bool
+        p x = screenId x == s && layerId x == l
 
-          l :: LayerId
-          l = currentLayerId wset
+        s :: ScreenId
+        s = W.screen (W.current wset)
 
-          recentNonEmpties :: [WindowSpace]
-          recentNonEmpties =
-            filter
-              (\x -> screenId x == s && layerId x == l)
-              (recentNonEmptyWorkspaces wset)
-       in case recentNonEmpties of
-            (x : _) -> W.view (W.tag x) wset
-            [] -> wset
+        l :: LayerId
+        l = currentLayerId wset
 
     recentNonEmptyWorkspaces :: WindowSet -> [WindowSpace]
     recentNonEmptyWorkspaces =
@@ -1100,55 +1098,52 @@ keys' conf@(XConfig {modMask}) =
           ++ W.hidden wset
           ++ [W.workspace (W.current wset)]
 
-    toggleRecentLayer :: X ()
-    toggleRecentLayer =
-      withWindowSet $ gotoWorkspace . (/=) . currentLayerId
+    toggleRecentLayer :: WindowSet -> WindowSet
+    toggleRecentLayer wset =
+      viewWorkspace (/= currentLayerId wset) wset
 
-    cycleNextLayer :: X ()
+    cycleNextLayer :: WindowSet -> WindowSet
     cycleNextLayer = cycleNthLayer 1
 
-    cyclePrevLayer :: X ()
+    cyclePrevLayer :: WindowSet -> WindowSet
     cyclePrevLayer = cycleNthLayer (-1)
 
-    cycleNthLayer :: Int -> X ()
-    cycleNthLayer n =
-      withWindowSet $
-        maybe (pure ()) (gotoLayer . nth)
-          . index
-          . currentLayerId
+    cycleNthLayer :: Int -> WindowSet -> WindowSet
+    cycleNthLayer i wset =
+      case elemIndex (currentLayerId wset) layerIds of
+        Nothing -> wset
+        Just x -> viewLayer (nth (x + i)) wset
       where
-        index :: LayerId -> Maybe Int
-        index = flip elemIndex layerIds
-
         nth :: Int -> LayerId
-        nth i = head $ drop ((i + n) `mod` length layerIds) layerIds
+        nth n = head $ drop (n `mod` length layerIds) layerIds
 
-    gotoLayer :: LayerId -> X ()
-    gotoLayer = gotoWorkspace . (==)
+    viewLayer :: LayerId -> WindowSet -> WindowSet
+    viewLayer i = viewWorkspace (== i)
 
-    gotoWorkspace :: (LayerId -> Bool) -> X ()
-    gotoWorkspace p = windows $ \wset ->
-      let s :: ScreenId
-          s = W.screen (W.current wset)
+    viewWorkspace :: (LayerId -> Bool) -> WindowSet -> WindowSet
+    viewWorkspace p wset =
+      case recentNonEmpties of
+        (x : _) -> W.view (W.tag x) wset
+        [] -> case recents of
+          (x : _) -> maybe wset (`W.view` wset)
+                       . find ((== layerId x) . layer)
+                       . filter ((== s) . unmarshallS)
+                       $ workspaces conf
+          [] -> wset
+      where
+        s :: ScreenId
+        s = W.screen (W.current wset)
 
-          p' :: WindowSpace -> Bool
-          p' x = screenId x == s && p (layerId x)
+        p' :: WindowSpace -> Bool
+        p' x = screenId x == s && p (layerId x)
 
-          recentNonEmpties :: [WindowSpace]
-          recentNonEmpties =
-            filter p' (recentNonEmptyWorkspaces wset)
+        recentNonEmpties :: [WindowSpace]
+        recentNonEmpties =
+          filter p' (recentNonEmptyWorkspaces wset)
 
-          recents :: [WindowSpace]
-          recents =
-            filter p' (recentWorkspaces wset)
-       in case recentNonEmpties of
-            (x : _) -> W.view (W.tag x) wset
-            [] -> case recents of
-              (x : _) -> maybe wset (`W.view` wset)
-                           . find ((== layerId x) . layer)
-                           . filter ((== s) . unmarshallS)
-                           $ workspaces conf
-              [] -> wset
+        recents :: [WindowSpace]
+        recents =
+          filter p' (recentWorkspaces wset)
 
     cycleFloat :: [W.RationalRect] -> Window -> WindowSet -> WindowSet
     cycleFloat recs w s =
