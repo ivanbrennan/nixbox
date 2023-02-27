@@ -230,8 +230,11 @@ layoutHook' =
 wCursors :: Cursors WorkspaceId
 wCursors = makeCursors $
   [ map show [1 .. 9 :: Int],
-    layerIds
+    map (layerSep :) layerIds
   ]
+
+layerSep :: Char
+layerSep = ':'
 
 type LayerId = String
 
@@ -239,10 +242,13 @@ layerIds :: [LayerId]
 layerIds = map show [1 .. 4 :: Int]
 
 layer :: WorkspaceId -> LayerId
-layer = take 1 . reverse
+layer t =
+  case dropWhile (/= layerSep) t of
+    (_ : x : xs) -> x : xs
+    _ -> head layerIds
 
 elideLayer :: WorkspaceId -> WorkspaceId
-elideLayer = reverse . drop 1 . reverse
+elideLayer = takeWhile (/= layerSep)
 
 layerId :: WindowSpace -> LayerId
 layerId = layer . W.tag
@@ -1017,7 +1023,7 @@ keys' conf@(XConfig {modMask}) =
     onCurrentLayerX :: (PhysicalWorkspace -> X a) -> (VirtualWorkspace -> X a)
     onCurrentLayerX fn vwsp =
       withCurrentScreenLayer $ \s l ->
-        fn $ marshall s (vwsp ++ l)
+        fn $ marshall s (vwsp ++ layerSep : l)
 
     withCurrentScreenLayer :: (ScreenId -> LayerId -> X a) -> X a
     withCurrentScreenLayer fn =
