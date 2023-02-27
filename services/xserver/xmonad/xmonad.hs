@@ -976,10 +976,11 @@ keys' conf@(XConfig {modMask}) =
                    safeSpawn "dunstctl" ["history-pop"]
                  )
                ]
-                 ++ [ ( (noModMask, k),
-                        windows (viewLayer i)
-                      )
-                      | (k, i) <- zip [xK_1..xK_9] layerIds
+                 ++ [ ((m, k), f i)
+                      | (k, i) <- zip [xK_1..xK_9] layerIds,
+                        (m, f) <- [ (noModMask, windows . viewLayer),
+                                    (shiftMask, (windows =<<) . shiftToLayer)
+                                  ]
                     ]
            )
            | alt <- [xK_Alt_L, xK_Alt_R]
@@ -1144,6 +1145,10 @@ keys' conf@(XConfig {modMask}) =
         recents :: [WindowSpace]
         recents =
           filter p' (recentWorkspaces wset)
+
+    shiftToLayer :: LayerId -> X (WindowSet -> WindowSet)
+    shiftToLayer i = withWindowSet $
+      shiftRLWhen isFloat . W.currentTag . viewLayer i
 
     cycleFloat :: [W.RationalRect] -> Window -> WindowSet -> WindowSet
     cycleFloat recs w s =
