@@ -190,7 +190,7 @@ main = do
     makeCursors' :: Int -> Cursors WorkspaceId
     makeCursors' nScreens = makeCursors
       [ map show [1 .. 9 :: Int],
-        map (layerSep :) layerIds,
+        map ((layerSep :) . unLayerId) layerIds,
         map ((layerSep :) . show) [0 .. nScreens - 1]
       ]
 
@@ -243,11 +243,12 @@ layoutHook' cursors =
 layerSep :: Char
 layerSep = ':'
 
--- TODO: newtype
-type LayerId = String
+newtype LayerId
+  = LayerId { unLayerId :: String }
+  deriving Eq
 
 layerIds :: [LayerId]
-layerIds = map show [1 .. 4 :: Int]
+layerIds = map (LayerId . show) [1 .. 4 :: Int]
 
 layer :: WorkspaceId -> LayerId
 layer = fst . snd . fromTag
@@ -265,13 +266,14 @@ fromTag t =
       (l@(_ : _), (_ : t'')) <- Just (break' t')
       (n@(_ : _), [])        <- Just (break' t'')
       s                      <- readMaybe n
-      Just (w, (l, S s))
+      Just (w, (LayerId l, S s))
 
     break' :: String -> (String, String)
     break' = break (== layerSep)
 
 toTag :: (WorkspaceId, (LayerId, ScreenId)) -> WorkspaceId
-toTag (w, (l, S s)) = intercalate [layerSep] [w, l, show s]
+toTag (w, (LayerId l, S s)) =
+  intercalate [layerSep] [w, l, show s]
 
 virtualWorkspace :: WorkspaceId -> WorkspaceId
 virtualWorkspace = fst . fromTag
@@ -370,8 +372,8 @@ xmobarSpawner s =
         . layerGlyph
 
     layerGlyph :: LayerId -> Maybe String
-    layerGlyph l =
-      case l of
+    layerGlyph (LayerId i) =
+      case i of
         "1" -> Nothing
         "2" -> Just (fontN 1 "⠌")
         "3" -> Just (fontN 1 "⠪")
