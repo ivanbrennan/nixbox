@@ -9,7 +9,7 @@ import Data.Char (isSpace, toLower)
 import Data.Dynamic (Typeable)
 import Data.Foldable (find)
 import Data.Function (on)
-import Data.List (dropWhileEnd, elemIndex, intercalate, isInfixOf, nub, sortOn)
+import Data.List (dropWhileEnd, intercalate, isInfixOf, nub, sortOn)
 import Data.Maybe (fromMaybe)
 import Data.Monoid (All)
 import System.Directory (getHomeDirectory)
@@ -694,7 +694,7 @@ keys' conf@(XConfig {modMask}) =
         modifyLayer W.focusDown' 2
       ),
       ( (modMask .|. shiftMask, xK_comma),
-        windows cyclePrevLayer
+        modifyLayer W.focusUp' 2
       ),
       ( (modMask, xK_l),
         windows toggleRecentWorkspace
@@ -1138,18 +1138,6 @@ keys' conf@(XConfig {modMask}) =
     toggleRecentLayer :: WindowSet -> WindowSet
     toggleRecentLayer wset =
       viewWorkspace (/= currentLayerId wset) wset
-
-    cyclePrevLayer :: WindowSet -> WindowSet
-    cyclePrevLayer = cycleNthLayer (-1)
-
-    cycleNthLayer :: Int -> WindowSet -> WindowSet
-    cycleNthLayer i wset =
-      case elemIndex (currentLayerId wset) layerIds of
-        Nothing -> wset
-        Just x -> viewLayer (nth (x + i)) wset
-      where
-        nth :: Int -> LayerId
-        nth n = head $ drop (n `mod` length layerIds) layerIds
 
     viewLayer :: LayerId -> WindowSet -> WindowSet
     viewLayer i = viewWorkspace (== i)
