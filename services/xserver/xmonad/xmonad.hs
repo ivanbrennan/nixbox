@@ -75,6 +75,10 @@ import XMonad.Actions.RotateSome (surfaceNext, surfacePrev)
 import XMonad.Actions.RotSlaves (rotAllDown, rotAllUp, rotSlavesDown, rotSlavesUp)
 import XMonad.Actions.Submap (submap)
 import XMonad.Actions.WindowBringer (gotoMenuArgs)
+import XMonad.Actions.WorkspaceCursors
+  ( Cursors, WorkspaceCursors, makeCursors, modifyLayer, workspaceCursors,
+  )
+import qualified XMonad.Actions.WorkspaceCursors as WC
 import XMonad.Actions.WorkspaceNames (renameWorkspace, workspaceNamesPP)
 import XMonad.Hooks.DebugStack (debugStackString)
 import XMonad.Hooks.DynamicProperty (dynamicTitle)
@@ -145,10 +149,6 @@ import qualified XMonad.Util.NamedScratchpad as NS
 import XMonad.Util.Paste (sendKey)
 import XMonad.Util.Run (runProcessWithInput, runInTerm, safeSpawn, safeSpawnProg)
 import XMonad.Util.WorkspaceCompare (filterOutWs)
-import XMonad.Actions.WorkspaceCursors
-  ( Cursors, WorkspaceCursors, makeCursors, modifyLayer, workspaceCursors,
-  )
-import qualified XMonad.Actions.WorkspaceCursors as WC
 
 
 main :: IO ()
