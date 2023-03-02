@@ -99,7 +99,7 @@ import XMonad.Hooks.StatusBar.PP
     ppSep, ppSort, ppTitle, ppWsSep, wrap, xmobarColor, xmobarPP,
   )
 import XMonad.Layout.BoringWindows
-  ( BoringWindows, boringAuto, focusDown, focusUp, siftDown, siftUp,
+  ( BoringWindows, boringAuto, focusDown, focusUp, swapDown, swapUp,
   )
 import XMonad.Layout.IndependentScreens (countScreens)
 import XMonad.Layout.LayoutModifier (ModifiedLayout)
@@ -763,10 +763,10 @@ keys' conf@(XConfig {modMask}) =
         windows W.swapMaster
       ),
       ( (modMask .|. shiftMask, xK_j),
-        siftDown
+        swapDown
       ),
       ( (modMask .|. shiftMask, xK_k),
-        siftUp
+        swapUp
       ),
       -- resize
       ( (mod4Mask, xK_h),
