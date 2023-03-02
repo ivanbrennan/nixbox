@@ -353,7 +353,7 @@ xmobarSpawner s =
     layerPP pp = pp
       { ppRename = ppRename pp . virtualWorkspace,
         ppSort   = withLayerOnScreen $ \l ->
-          ((filter ((== l) . layerId) . filter ((== s) . screenId)) .)
+          (filter (\x -> layerId x == l && screenId x == s) .)
              <$> ppSort pp
       }
 
