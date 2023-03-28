@@ -2,13 +2,11 @@
 {-# OPTIONS_GHC -Wall -Werror -O2 #-}
 
 {- base -}
-import Control.Arrow (second)
 import Control.Monad (when, (>=>))
 import Data.Bits ((.|.))
 import Data.Char (isSpace, toLower)
 import Data.Dynamic (Typeable)
 import Data.Foldable (find)
-import Data.Function (on)
 import Data.List (dropWhileEnd, elemIndex, intercalate, isInfixOf, sortOn)
 import Data.Maybe (fromMaybe)
 import Data.Monoid (All)
@@ -58,15 +56,16 @@ import XMonad
     focus, focusedBorderColor, getDirectories, gets, handleEventHook,
     initialValue, io, keys, kill, launch, layoutHook, local, manageHook,
     modMask, mouseBindings, mouseMoveWindow, normalBorderColor, recompile,
-    refresh, restart, sendMessage, spawn, startupHook, terminal, title, trace,
-    whenX, windows, windowset, withFocused, withWindowSet, workspaces,
-    writeStateToFile, (=?), (|||), (<&&>), (-->),
+    refresh, restart, screenWorkspace, sendMessage, spawn, startupHook,
+    terminal, title, trace, whenX, windows, windowset, withFocused,
+    withWindowSet, workspaces, writeStateToFile, (=?), (|||), (<&&>), (-->),
   )
 import qualified XMonad.StackSet as W
 
 {- xmonad-contrib -}
 import XMonad.Actions.CycleWS
   ( Direction1D (Next, Prev), WSType (WSIs, Not, (:&:)), emptyWS, moveTo,
+    wsTagGroup,
   )
 import XMonad.Actions.DynamicProjects (dynamicProjects, changeProjectDirPrompt)
 import XMonad.Actions.FlexibleResize (mouseResizeEdgeWindow)
@@ -75,13 +74,7 @@ import XMonad.Actions.RotateSome (surfaceNext, surfacePrev)
 import XMonad.Actions.RotSlaves (rotAllDown, rotAllUp, rotSlavesDown, rotSlavesUp)
 import XMonad.Actions.Submap (submap)
 import XMonad.Actions.WindowBringer (gotoMenuArgs)
-import XMonad.Actions.WorkspaceCursors
-  ( Cursors, WorkspaceCursors, focusNth', getFocus, makeCursors, modifyLayer,
-    modifyLayer', shiftLayer, workspaceCursors,
-  )
-import qualified XMonad.Actions.WorkspaceCursors as WC
 import XMonad.Actions.WorkspaceNames (renameWorkspace, workspaceNamesPP)
-import XMonad.Hooks.DebugStack (debugStackString)
 import XMonad.Hooks.DynamicProperty (dynamicTitle)
 import XMonad.Hooks.EwmhDesktops (ewmh, ewmhFullscreen)
 import XMonad.Hooks.InsertPosition
@@ -159,21 +152,19 @@ main = do
     cfgDir:   ~/.config/xmonad
     cacheDir: ~/.cache/xmonad
   -}
-  launch (xconfig $ makeCursors' nScreens) dirs
+  launch (xconfig nScreens) dirs
   where
-    xconfig :: Cursors WorkspaceId -> XConfig LayeredLayout
-    xconfig cursors =
+    xconfig :: Int -> XConfig ConfiguredLayout
+    xconfig nScreens =
       docks $
-      dynamicSBs xmobarSpawner $
+      dynamicSBs statusBarConfig $
       debugManageHookOn "M1-M4-v" $
       dynamicProjects [] $
       ewmhFullscreen $
       ewmh $
         def
-          { layoutHook         = layoutHook' cursors,
-            -- NOTE: Sort to ensure that when screen initialization occurs, each
-            -- screen will be assigned a workspace that we intended it to manage.
-            workspaces         = sortOn fromTag (WC.toList cursors),
+          { layoutHook         = layoutHook',
+            workspaces         = workspaceIds nScreens,
             startupHook        = startupHook',
             handleEventHook    = handleEventHook',
             manageHook         = manageHook',
@@ -186,7 +177,6 @@ main = do
           }
 
 
-type Layers       a = ModifiedLayout WorkspaceCursors a
 type Struts       a = ModifiedLayout AvoidStruts a
 type SmartBorders a = ModifiedLayout SmartBorder a
 type Refocus      a = ModifiedLayout RefocusLastLayoutHook (FocusTracking a)
@@ -205,13 +195,12 @@ type Layouts
         )
       )
 
-type LayeredLayout
-  = Layers (Struts (SmartBorders (Refocus (Boring Layouts))))
+type ConfiguredLayout
+  = Struts (SmartBorders (Refocus (Boring Layouts)))
 
-layoutHook' :: Cursors WorkspaceId -> LayeredLayout Window
-layoutHook' cursors =
+layoutHook' :: ConfiguredLayout Window
+layoutHook' =
   id
-    . workspaceCursors cursors
     . avoidStruts
     . smartBorders
     . refocusLastLayoutHook
@@ -231,11 +220,15 @@ layoutHook' cursors =
     tall = ResizableTall 1 (1/100) (52/100) []
 
 
--- | A 'NominalId' represents the ID that users see, e.g. "1" to "9". It
--- identifies a workspace within the scope of a given layer on a given screen.
-newtype NominalId
-  = NominalId { unNominalId :: String }
-  deriving (Eq, Ord)
+{-
+  This config provides each screen with four layers of nine workspaces.
+
+  Workspace tags take the form S_L:N, where S denotes the screen, L denotes a
+  layer within that screen, and N denotes a position within that layer. For
+  example, the first workspace in the first layer on screen 0 is tagged "0_1:1" 
+
+  Operations are provided for navigating screens/layers/workspaces.
+-}
 
 -- | A 'LayerId' identifies a group of workspaces within the scope of a given
 -- screen.
@@ -243,82 +236,180 @@ newtype LayerId
   = LayerId { unLayerId :: String }
   deriving (Eq, Ord)
 
+-- | A 'NominalId' represents the ID that users see, e.g. "1" to "9". It
+-- identifies a workspace within the scope of a given layer on a given screen.
+newtype NominalId
+  = NominalId { unNominalId :: String }
+  deriving (Eq, Ord)
+
+layer1 :: LayerId
+layer1 = LayerId "1"
+
+layerIds :: [LayerId]
+layerIds = layer1 : map (LayerId . show) [2 .. 4 :: Int]
+
 nominalIds :: [NominalId]
 nominalIds = map (NominalId . show) [1 .. 9 :: Int]
 
-layerIds :: [LayerId]
-layerIds = map (LayerId . show) [1 .. 4 :: Int]
+screenSeparator :: Char
+screenSeparator = '_'
 
-separator :: Char
-separator = ':'
+layerSeparator :: Char
+layerSeparator = ':'
 
--- Tag workspaces along 3 dimensions, producing tags of the form x:y:z,
--- where x is a nominal workspace id from "1" to "9", y is a layer id from
--- "1" to "4", and z is a screen id from "0" to nScreens - 1.
-makeCursors' :: Int -> Cursors WorkspaceId
-makeCursors' nScreens = makeCursors
-  [ map unNominalId nominalIds,                    -- 9 nominal workspaces
-    map ((separator :) . unLayerId) layerIds,      -- replicated across 4 layers
-    map ((separator :) . show) [0 .. nScreens - 1] -- replicated across n screens
-  ]
+-- | Encode ScreenId, LayerId and NominalId into a WorkspaceId
+toTag :: (ScreenId, (LayerId, NominalId)) -> WorkspaceId
+toTag (S i, (LayerId l, NominalId n)) =
+  show i
+    <> (screenSeparator : l)
+    <> (layerSeparator : n)
 
--- The resulting 'Cursors' structure is deeply nested. These are the depths
--- within that structure at which screens, layers, and nominals are managed.
-newtype CursorDepth = CursorDepth { getCursorDepth :: Int }
-
-screensCursor, layersCursor, nominalsCursor :: CursorDepth
-screensCursor  = CursorDepth 1
-layersCursor   = CursorDepth 2
-nominalsCursor = CursorDepth 3
-
--- -- | Encode a 'NominalId', 'LayerId', and 'ScreenId' as a 'WorkspaceId'.
--- toTag :: (NominalId, (LayerId, ScreenId)) -> WorkspaceId
--- toTag (NominalId n, (LayerId l, S s)) =
---   intercalate [separator] [n, l, show s]
--- -- Example use of toTag
--- onCurrentLayerX :: (WorkspaceId -> X a) -> (WorkspaceId -> X a)
--- onCurrentLayerX fn vwsp =
---   withWindowSet $ \wset ->
---     fn $ toTag
---       ( vwsp,
---         ( currentLayerId wset,
---           W.screen (W.current wset)
---         )
---       )
-
--- | Decode 'NominalId', 'LayerId', and 'ScreenId' from a 'WorkspaceId'.
-fromTag :: WorkspaceId -> (NominalId, (LayerId, ScreenId))
+-- | Decode ScreenId, LayerId and NominalId from a WorkspaceId.
+fromTag :: WorkspaceId -> (ScreenId, (LayerId, NominalId))
 fromTag t =
   fromMaybe fallback parsed
   where
-    fallback :: (NominalId, (LayerId, ScreenId))
-    fallback = (NominalId t, (head layerIds, S 0))
+    fallback :: (ScreenId, (LayerId, NominalId))
+    fallback = (S 0, (layer1, NominalId t))
 
-    parsed :: Maybe (NominalId, (LayerId, ScreenId))
+    parsed :: Maybe (ScreenId, (LayerId, NominalId))
     parsed = do
-      (n@(_ : _), (_ : t'))  <- Just (break (== separator) t)
-      (l@(_ : _), (_ : t'')) <- Just (break (== separator) t')
-      (x@(_ : _), [])        <- Just (break (== separator) t'')
-      s                      <- readMaybe x
-      Just (NominalId n, (LayerId l, S s))
+      (s@(_ : _), (_ : t')) <- Just (break (== screenSeparator) t)
+      (l@(_ : _), (_ : n))  <- Just (break (== layerSeparator) t')
+      i                     <- readMaybe s
+      Just (S i, (LayerId l, NominalId n))
 
-nominalId :: WorkspaceId -> NominalId
-nominalId = fst . fromTag
+-- | This ordering ensures that when screen initialization occurs, each screen
+-- is assigned a workspace we intended for it to manage.
+-- ["0_1:1", "1_1:1", "0_2:1", ..., "1_1:9", "0_2:9", "1_2:9"]
+workspaceIds :: Int -> [WorkspaceId]
+workspaceIds nScreens =
+  [ toTag (s, (g, n))
+    | n <- nominalIds,
+      g <- layerIds,
+      s <- map S [0 .. nScreens - 1]
+  ]
+
+screenId :: WorkspaceId -> ScreenId
+screenId = fst . fromTag
 
 layerId :: WorkspaceId -> LayerId
 layerId = fst . snd . fromTag
 
-screenId :: WorkspaceId -> ScreenId
-screenId = snd . snd . fromTag
-
-eqLayerId :: LayerId -> WindowSpace -> Bool
-eqLayerId i = (i ==) . layerId . W.tag
+nominalId :: WorkspaceId -> NominalId
+nominalId = snd . snd . fromTag
 
 eqScreenId :: ScreenId -> WindowSpace -> Bool
 eqScreenId s = (s ==) . screenId . W.tag
 
-currentLayerId :: WindowSet -> LayerId
-currentLayerId = layerId . W.tag . W.workspace . W.current
+eqLayerId :: LayerId -> WindowSpace -> Bool
+eqLayerId l = (l ==) . layerId . W.tag
+
+-- | View a workspace satisfying predicate @p@, giving priority to more recently
+-- viewed non-empty workspaces.
+view :: (WindowSpace -> Bool) -> WindowSet -> WindowSet
+view p wset =
+  maybe id (W.view . W.tag) (find p ws) wset
+  where
+    ws :: [WindowSpace]
+    ws = recentWorkspaces wset
+
+-- | Recency list of workspaces, with non-empty spaces given priority.
+recentWorkspaces :: WindowSet -> [WindowSpace]
+recentWorkspaces wset =
+  filter (not . null . W.stack) ws ++ ws
+  where
+    ws :: [WindowSpace]
+    ws = filterOutWs [scratchpadWorkspaceTag] (W.workspaces wset)
+
+-- | View nominal workspace @n@ in the active layer on the current screen.
+viewNominal :: NominalId -> WindowSet -> WindowSet
+viewNominal n wset =
+  let s = W.screen $ W.current wset
+      l = layerId . W.tag . W.workspace $ W.current wset
+      t = toTag (s, (l, n))
+   in view ((== t) . W.tag) wset
+
+-- | View the most recently viewed workspace in the active layer on the current
+-- screen.
+viewRecentNominal :: WindowSet -> WindowSet
+viewRecentNominal wset =
+  let s = W.screen $ W.current wset
+      t = W.currentTag wset
+      l = layerId t
+      p x = eqLayerId l x && eqScreenId s x && t /= W.tag x
+   in view p wset
+
+-- | View layer @l@ on the current screen.
+viewLayer :: LayerId -> WindowSet -> WindowSet
+viewLayer l wset =
+  let s = W.screen $ W.current wset
+      p x = eqLayerId l x && eqScreenId s x
+   in view p wset
+
+-- | View the most recently viewed layer on the current screen.
+viewRecentLayer :: WindowSet -> WindowSet
+viewRecentLayer wset =
+  let s = W.screen $ W.current wset
+      l = layerId $ W.currentTag wset
+      p x = not (eqLayerId l x) && eqScreenId s x
+   in view p wset
+
+-- | View screen @s@.
+viewScreen :: ScreenId -> WindowSet -> WindowSet
+viewScreen s wset =
+  maybe id W.view (W.lookupWorkspace s wset) wset
+
+-- | Cycle through workspaces within the active layer on the current screen.
+layerWS :: WSType
+layerWS = wsTagGroup layerSeparator
+
+-- | Cycle to next layer on the current screen.
+viewNextLayer :: WindowSet -> WindowSet
+viewNextLayer = cycleLayer succ
+
+-- | Cycle to previous layer on the current screen.
+viewPrevLayer :: WindowSet -> WindowSet
+viewPrevLayer = cycleLayer pred
+
+cycleLayer :: (Int -> Int) -> WindowSet -> WindowSet
+cycleLayer f wset =
+  maybe id (viewLayer . nth . f) (elemIndex l layerIds) wset
+  where
+    l :: LayerId
+    l = layerId . W.tag . W.workspace $ W.current wset
+
+    nth :: Int -> LayerId
+    nth n = head $ drop (n `mod` length layerIds) layerIds
+
+-- | Shift the currently focused window to nominal workspace @n@ in the active
+-- layer on the current screen.
+shiftToNominal :: NominalId -> WindowSet -> WindowSet
+shiftToNominal n wset =
+  let s = W.screen $ W.current wset
+      l = layerId . W.tag . W.workspace $ W.current wset
+      t = toTag (s, (l, n))
+   in W.shift t wset
+
+-- | Shift the currently focused window to layer @l@ on the current screen.
+shiftToLayer :: LayerId -> WindowSet -> WindowSet
+shiftToLayer l wset =
+  let s = W.screen $ W.current wset
+      ws = recentWorkspaces wset
+      p x = eqLayerId l x && eqScreenId s x
+   in maybe id (W.shift . W.tag) (find p ws) wset
+
+-- | Shift the currently focused window to screen @s@.
+shiftToScreen :: ScreenId -> WindowSet -> WindowSet
+shiftToScreen s wset =
+  maybe id W.shift (W.lookupWorkspace s wset) wset
+
+-- | Run a WindowSet transformation, and if the originally-focused window was
+-- floating, attempt to refocus it, or the window that had focus prior to it.
+windowsRL :: (WindowSet -> WindowSet) -> X ()
+windowsRL f = do
+  refocus <- withWindowSet (refocusWhen isFloat . W.currentTag)
+  windows (refocus . f)
 
 
 startupHook' :: X ()
@@ -386,7 +477,7 @@ xmobar s@(S i) =
     ]
 
 xmobarTemplate :: ScreenId -> String
-xmobarTemplate (S i) = concat $
+xmobarTemplate s@(S i) = concat $
   if i == 0
     then
       [ cmd prop,
@@ -407,11 +498,11 @@ xmobarTemplate (S i) = concat $
         pad "}{"
       ]
   where
-    prop = xmonadProp (S i)
+    prop = xmonadProp s
     cmd = wrap "%" "%"
 
 xmobarCommands :: ScreenId -> [String]
-xmobarCommands (S i) = map unwords $
+xmobarCommands s@(S i) = map unwords $
   if i == 0
     then [disk, cpu, vpn, battery, volume, date', xmonadLog, traypad]
     else [xmonadLog]
@@ -469,7 +560,7 @@ xmobarCommands (S i) = map unwords $
     dateFormat = "%a %b %-d  " ++ xmobarColor chalk "" "%l:%M"
 
     xmonadLog = ["Run UnsafeXPropertyLog", quote prop]
-    prop = xmonadProp (S i)
+    prop = xmonadProp s
 
     traypad = ["Run UnsafeXPropertyLog", quote traypadProp]
 
@@ -498,8 +589,9 @@ traypadProp = "_XMONAD_TRAYPAD"
 xmonadProp :: ScreenId -> String
 xmonadProp (S i) = "_XMONAD_LOG_" ++ show i
 
-xmobarSpawner :: ScreenId -> IO StatusBarConfig
-xmobarSpawner s =
+-- | StatusBar showing nominal ids for workspaces in the screen's active group.
+statusBarConfig :: ScreenId -> IO StatusBarConfig
+statusBarConfig s =
   pure
     . statusBarPropTo (xmonadProp s) (xmobar s)
     . (workspaceNamesPP >=> clickablePP)
@@ -516,12 +608,11 @@ xmobarSpawner s =
   where
     layerIndicator :: LayerId -> Maybe String
     layerIndicator =
-      fmap ((" " ++) . xmobarColor cyan "")
-        . layerGlyph
+      fmap ((" " ++) . xmobarColor cyan "") . layerGlyph
 
     layerGlyph :: LayerId -> Maybe String
-    layerGlyph (LayerId i) =
-      case i of
+    layerGlyph l =
+      case unLayerId l of
         "1" -> Nothing
         "2" -> Just (fontN 1 "⠌")
         "3" -> Just (fontN 1 "⠪")
@@ -536,26 +627,17 @@ xmobarSpawner s =
       | "Limit" `isInfixOf` str = xmobarColor grey2 "" "·"
       | otherwise               = ""
 
--- | Transform a pretty printer into one that's aware of screen layers. The
--- pretty printer returned by @layerPP f s pp@ first filters out workspaces
--- on other screens, as well as workspaces on layers other than the currently
--- active layer on screen @s@. Then, it converts workspace tags to their nominal
--- ids (e.g. "1" through "9"). Finally, it applies @f@ to the 'LayerId' that's
--- currently active on @s@ and prepends the result to 'ppExtras'.
+-- | Make a pretty printer aware of workspace layers.
 layerPP :: (LayerId -> X (Maybe String)) -> ScreenId -> PP -> PP
-layerPP f s pp = pp
-  { ppSort   = withLayer $ \l -> (. filter (onLayer l)) <$> ppSort pp,
-    ppRename = ppRename pp . unNominalId . nominalId,
-    ppExtras = withLayer f : ppExtras pp
+layerPP indicator s pp = pp
+  { ppRename = ppRename pp . unNominalId . nominalId,
+    ppSort   = withLayer $ \l -> (. filter (onLayer l)) <$> ppSort pp,
+    ppExtras = withLayer indicator : ppExtras pp
   }
   where
     withLayer :: (LayerId -> X a) -> X a
-    withLayer fn =
-      withWindowSet $
-        fn
-          . maybe (head layerIds) (layerId . W.tag . W.workspace)
-          . find ((== s) . W.screen)
-          . W.screens
+    withLayer f =
+      (f . maybe layer1 layerId) =<< screenWorkspace s
 
     onLayer :: LayerId -> WindowSpace -> Bool
     onLayer l x = eqLayerId l x && eqScreenId s x
@@ -741,17 +823,17 @@ keys' conf@(XConfig {modMask}) =
         moveTo Prev cycledWorkspace
       ),
       ( (modMask, xK_l),
-        withWindowSet toggleRecentWorkspace
+        windows viewRecentNominal
       ),
       -- layers
       ( (modMask .|. shiftMask, xK_period),
-        viewNext layersCursor
+        windows viewNextLayer
       ),
       ( (modMask .|. shiftMask, xK_comma),
-        viewPrev layersCursor
+        windows viewPrevLayer
       ),
       ( (modMask .|. shiftMask, xK_l),
-        withWindowSet toggleRecentLayer
+        windows viewRecentLayer
       ),
       ( (mod4Mask, xK_Tab),
         moveTo Next (Not emptyWS)
@@ -885,8 +967,7 @@ keys' conf@(XConfig {modMask}) =
         namedScratchpadAction scratchpads (NS.name scratchpadEmacs)
       ),
       ( (mod4Mask .|. modMask, xK_y),
-        debugStackString
-          >>= trace . unlines . uncurry (++) . second reverse . splitAt 1 . lines
+        withWindowSet (trace . show)
       ),
       ( (noModMask, xK_Print),
         safeSpawn "screenshot" []
@@ -1067,8 +1148,8 @@ keys' conf@(XConfig {modMask}) =
                  -- shift-[1..9], Move client to layer L
                  ++ [ ((m, k), f l)
                       | (k, l) <- zip [xK_1 .. xK_9] layerIds,
-                        (m, f) <- [ (noModMask, viewLayer),
-                                    (shiftMask, shiftToLayer)
+                        (m, f) <- [ (noModMask, windows . viewLayer),
+                                    (shiftMask, windowsRL . shiftToLayer)
                                   ]
                     ]
            )
@@ -1080,8 +1161,8 @@ keys' conf@(XConfig {modMask}) =
     workspaceTagKeys =
       [ ((m .|. modMask, k), f n)
         | (k, n) <- zip [xK_1..xK_9] nominalIds,
-          (m, f) <- [ (noModMask, viewNominal),
-                      (shiftMask, shiftToNominal)
+          (m, f) <- [ (noModMask, windows . viewNominal),
+                      (shiftMask, windowsRL . shiftToNominal)
                     ]
       ]
 
@@ -1090,8 +1171,8 @@ keys' conf@(XConfig {modMask}) =
     screenKeys =
       [ ((m .|. mod4Mask, k), f s)
         | (k, s) <- zip [xK_w, xK_e, xK_r] [0..],
-          (m, f) <- [ (noModMask, viewScreen),
-                      (shiftMask, shiftToScreen)
+          (m, f) <- [ (noModMask, windows . viewScreen),
+                      (shiftMask, windowsRL . shiftToScreen)
                     ]
       ]
 
@@ -1119,72 +1200,13 @@ keys' conf@(XConfig {modMask}) =
     layoutDescription = gets $
       description . W.layout . W.workspace . W.current . windowset
 
-    -- NOTE: we could leverage WSTagGroup if we could make the workspace cursors
-    -- with tags z.y:x (without altering the cursors structure).
     cycledWorkspace :: WSType
-    cycledWorkspace = screenLayerWS :&: Not emptyWS :&: Not scratchWS
+    cycledWorkspace = layerWS :&: Not emptyWS :&: Not scratchWS
 
     scratchWS :: WSType
     scratchWS = WSIs (pure isScratch)
       where
         isScratch = null . filterOutWs [scratchpadWorkspaceTag] . (:[])
-
-    toggleRecentWorkspace :: WindowSet -> X ()
-    toggleRecentWorkspace wset =
-      case filter p (recentNonEmptyWorkspaces wset) of
-        (x : _) -> viewNominal $ nominalId (W.tag x)
-        [] -> pure ()
-      where
-        p :: WindowSpace -> Bool
-        p x = eqScreenId s x && eqLayerId l x
-
-        s :: ScreenId
-        s = W.screen (W.current wset)
-
-        l :: LayerId
-        l = currentLayerId wset
-
-    recentNonEmptyWorkspaces :: WindowSet -> [WindowSpace]
-    recentNonEmptyWorkspaces =
-      filter (not . null . W.stack) . recentWorkspaces
-
-    recentWorkspaces :: WindowSet -> [WindowSpace]
-    recentWorkspaces wset =
-      filterOutWs [scratchpadWorkspaceTag]
-        $ map W.workspace (W.visible wset)
-          ++ W.hidden wset
-          ++ [W.workspace (W.current wset)]
-
-    toggleRecentLayer :: WindowSet -> X ()
-    toggleRecentLayer wset =
-      viewLayer
-        . layerId
-        . W.currentTag
-        $ viewRecentWorkspace (/= currentLayerId wset) wset
-
-    viewRecentWorkspace :: (LayerId -> Bool) -> WindowSet -> WindowSet
-    viewRecentWorkspace p wset =
-      case recentNonEmpties of
-        (x : _) -> W.view (W.tag x) wset
-        [] -> case recents of
-          (x : _) -> maybe wset (`W.view` wset)
-                       . find (((==) `on` (snd . fromTag)) $ W.tag x)
-                       $ workspaces conf
-          [] -> wset
-      where
-        s :: ScreenId
-        s = W.screen (W.current wset)
-
-        p' :: WindowSpace -> Bool
-        p' x = eqScreenId s x && p (layerId $ W.tag x)
-
-        recentNonEmpties :: [WindowSpace]
-        recentNonEmpties =
-          filter p' (recentNonEmptyWorkspaces wset)
-
-        recents :: [WindowSpace]
-        recents =
-          filter p' (recentWorkspaces wset)
 
     cycleFloat :: [W.RationalRect] -> Window -> WindowSet -> WindowSet
     cycleFloat recs w s =
@@ -1277,71 +1299,6 @@ keys' conf@(XConfig {modMask}) =
         then safeSpawn "killall" ["ffmpeg"]
         else safeSpawn "screencast" args
       XS.put $ Screencast (not isOn)
-
-
--- | Set focus to nominal workspace @n@ on the current screen layer.
-viewNominal :: NominalId -> X ()
-viewNominal n =
-  maybe (pure ()) (viewNth nominalsCursor) (elemIndex n nominalIds)
-
--- | Set focus to layer @l@ on the current screen.
-viewLayer :: LayerId -> X ()
-viewLayer l =
-  maybe (pure ()) (viewNth layersCursor) (elemIndex l layerIds)
-
--- | View the workspace visible on screen @s@.
-viewScreen :: ScreenId -> X ()
-viewScreen (S s) =
-  viewNth screensCursor s
-
-viewNth :: CursorDepth -> Int -> X ()
-viewNth (CursorDepth depth) i =
-  modifyLayer'
-    (\st -> do
-      let st' = focusNth' i st
-      windows $ W.view $ getFocus (W.focus st')
-      pure st'
-    )
-    depth
-
--- | Set focus to next element in cycle.
-viewNext :: CursorDepth -> X ()
-viewNext = modifyLayer W.focusDown' . getCursorDepth
-
--- | Set focus to previous element in cycle.
-viewPrev :: CursorDepth -> X ()
-viewPrev = modifyLayer W.focusUp' . getCursorDepth
-
-shiftNth :: CursorDepth -> Int -> X ()
-shiftNth (CursorDepth depth) i = do
-  refocus <- withWindowSet (refocusWhen isFloat . W.currentTag)
-  shiftLayer (focusNth' i) depth
-  windows refocus
-
--- | Move the focused window of the current workspace to nominal workspace @n@
--- on the current screen layer.
-shiftToNominal :: NominalId -> X ()
-shiftToNominal n =
-  maybe (pure ()) (shiftNth nominalsCursor) (elemIndex n nominalIds)
-
--- | Move the focused window of the current workspace to layer @l@.
-shiftToLayer :: LayerId -> X ()
-shiftToLayer l =
-  maybe (pure ()) (shiftNth layersCursor) (elemIndex l layerIds)
-
--- | Move the focused window of the current workspace to the workspace visible
--- on screen @s@.
-shiftToScreen :: ScreenId -> X ()
-shiftToScreen (S s) =
-  shiftNth screensCursor s
-
--- | We can constrain workspace cycles to the current screen layer.
-screenLayerWS :: WSType
-screenLayerWS = WSIs (gets onScreen) :&: WSIs (gets onLayer)
-  where
-    current  = W.current  . windowset
-    onScreen = eqScreenId . W.screen . current
-    onLayer  = eqLayerId  . layerId  . W.tag . W.workspace . current
 
 
 newtype Screencast = Screencast Bool deriving (Read, Show, Typeable)
