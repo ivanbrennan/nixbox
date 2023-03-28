@@ -608,7 +608,7 @@ statusBarConfig s =
   where
     layerIndicator :: LayerId -> Maybe String
     layerIndicator =
-      fmap ((" " ++) . xmobarColor cyan "") . layerGlyph
+      fmap ((" " ++) . xmobarColor grey4 "") . layerGlyph
 
     layerGlyph :: LayerId -> Maybe String
     layerGlyph l =
@@ -616,7 +616,7 @@ statusBarConfig s =
         "1" -> Nothing
         "2" -> Just (fontN 1 "⠌")
         "3" -> Just (fontN 1 "⠪")
-        "4" -> Just (fontN 1 "⠭")
+        "4" -> Just (fontN 1 "⠫")
         "5" -> Just (fontN 1 "⠟")
         "6" -> Just (fontN 1 "⠿")
         str -> Just str
