@@ -1,3 +1,13 @@
+{-
+  This module provides each screen with four layers of nine workspaces.
+
+  Workspace tags take the form S_L:N, where S denotes the screen, L denotes a
+  layer within that screen, and N denotes a position within that layer. For
+  example, the first workspace in the first layer on screen 0 is tagged "0_1:1" 
+
+  Operations are provided for navigating screens/layers/workspaces.
+-}
+
 module XMonad.Actions.ScreenLayers (
   LayerId(..),
   NominalId(..),
@@ -38,16 +48,6 @@ import XMonad.Layout.IndependentScreens (countScreens)
 import XMonad.Util.NamedScratchpad (scratchpadWorkspaceTag)
 import XMonad.Util.WorkspaceCompare (filterOutWs)
 
-
-{-
-  This module provides each screen with four layers of nine workspaces.
-
-  Workspace tags take the form S_L:N, where S denotes the screen, L denotes a
-  layer within that screen, and N denotes a position within that layer. For
-  example, the first workspace in the first layer on screen 0 is tagged "0_1:1" 
-
-  Operations are provided for navigating screens/layers/workspaces.
--}
 
 -- | A 'LayerId' identifies a group of workspaces within the scope of a given
 -- screen.
