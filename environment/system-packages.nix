@@ -99,6 +99,7 @@ with pkgs; [
   pup
   qalculate-gtk
   qbittorrent
+  qrencode
   redis
   reptyr
   resound
@@ -147,5 +148,6 @@ with pkgs; [
   xorg.xwininfo
   xsel
   zathura
+  zbar
   zip
 ]
