@@ -98,9 +98,9 @@ fromTag t =
       i                     <- readMaybe s
       Just (S i, (LayerId l, NominalId n))
 
--- | This ordering ensures that when screen initialization occurs, each screen
--- is assigned a workspace we intended for it to manage.
--- ["0_1:1", "1_1:1", ..., "0_2:9", "1_2:9"]
+-- | Given a number of screens, construct a list of workspace tags. The tags are
+-- ordered such that when screen initialization occurs (in 'XMonad.launch') each
+-- screen will be allocated a workspace it was intended to manage.
 workspaceIds :: Int -> [WorkspaceId]
 workspaceIds nScreens =
   [ toTag (s, (g, n))

@@ -105,7 +105,7 @@ with pkgs; [
   reptyr
   resound
   ripgrep
-  rover
+  # rover # FIXME
   rxvt_unicode-with-plugins
   screencast
   screenshot
