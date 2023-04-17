@@ -25,6 +25,7 @@ with pkgs; [
   cmus
   computables
   conky
+  confluent-cli
   direnv
   diss
   dmenu
