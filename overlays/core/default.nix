@@ -70,12 +70,6 @@ in self: super: {
       sha256 = "0j9qfkjwvh5a2g24bflz15qss17hi29lhpfz7gzlpwx03n1rgdp9";
     }).kubectl;
 
-  stack =
-    (pinned {
-      url = "https://github.com/NixOS/nixpkgs/archive/bc94dcf500286495e3c478a9f9322debc94c4304.tar.gz";
-      sha256 = "1siqklf863181fqk19d0x5cd0xzxf1w0zh08lv0l0dmjc8xic64a";
-    }).stack;
-
   _1password = super._1password.overrideAttrs (old: rec {
     version = "1.4.0";
     src = super.fetchzip {
