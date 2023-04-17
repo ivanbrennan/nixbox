@@ -148,6 +148,7 @@ with pkgs; [
   xorg.xprop
   xorg.xwininfo
   xsel
+  yq
   zathura
   zbar
   zip
