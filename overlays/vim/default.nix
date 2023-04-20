@@ -8,10 +8,10 @@ let
 
   neovim-init = builtins.readFile ./init.vim;
 
-  # TODO: Remove etc/ prefix once we have the following fix:
-  # https://github.com/NixOS/nixpkgs/pull/209755
+  # TODO: This will need to change once we have:
+  # https://github.com/NixOS/nixpkgs/pull/221832
   runtime-attr = str: {
-    "etc/${str}".source = ./runtime + ("/" + str);
+    "${str}".source = ./runtime + ("/" + str);
   };
   # NOTE: See also environment.etc."xdg/nvim/after/{ftplugin,plugin,syntax}/"
   neovim-runtime-attrs =

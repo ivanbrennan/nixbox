@@ -434,26 +434,31 @@ set('t', '<C-w>;',     [[<C-\><C-n>:]])
 set('t', '<C-w><C-;>', [[<C-\><C-n>:]])
 
 -- shell
-local parent_process_name = function()
-  return fn.systemlist({
+local gparent_process_name = function()
+  local gpid = fn.systemlist({
     'ps', '--no-headers',
     '-p', vim.loop.os_getppid(),
+    'o', 'ppid' -- output just the parent process ID
+  })[1]
+  return fn.systemlist({
+    'ps', '--no-headers',
+    '-p', gpid,
     'c',        -- derive command name from the actual executable
     'o', 'comm' -- output just the command name
   })[1]
 end
 
 local safe_suspend = function()
-  -- Suspend if the parent process is a shell. Otherwise, do nothing.
+  -- Suspend if the grandparent process is a shell. Otherwise, do nothing.
   --
-  -- A couple examples where the parent process won't be a shell:
+  -- A couple examples where the grandparent process won't be a shell:
   -- - nvim was run as part of a terminal invocation (`alacritty -e nvim`)
   -- - nvim was run as part of a diss invocation (`diss -a foo nvim`)
   --
   -- In these cases, suspending would drop us into an unusable terminal.
-  local p = parent_process_name()
+  local gp = gparent_process_name()
 
-  if p == 'bash' or p == 'sh' then
+  if gp == 'bash' or gp == 'sh' then
     cmd.suspend()
   end
 end
