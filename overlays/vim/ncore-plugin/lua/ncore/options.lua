@@ -2,9 +2,11 @@ local opt = vim.opt
 
 opt.backup = true
 opt.backupdir = vim.fn.stdpath('state') .. "/backup//"
+opt.backupdir = vim.opt.backupdir + '.' -- fallback
 opt.clipboard = 'unnamedplus'
 -- opt.cmdheight = 0 -- still experimental
 opt.cursorline = true
+opt.diffopt = opt.diffopt + 'foldcolumn:0'
 opt.expandtab = true
 opt.fillchars = { eob = " " }
 opt.foldenable = false

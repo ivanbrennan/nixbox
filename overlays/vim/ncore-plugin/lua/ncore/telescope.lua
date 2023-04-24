@@ -35,6 +35,7 @@ telescope.setup({
         ["<C-k>"] = actions.preview_scrolling_up,
         ["<C-d>"] = false,
         ["<C-u>"] = false,
+        ["<C-t>"] = false,
 
         ["<M-n>"] = actions.cycle_history_next,
         ["<M-p>"] = actions.cycle_history_prev,
