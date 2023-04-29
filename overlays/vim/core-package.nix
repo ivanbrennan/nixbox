@@ -2,8 +2,7 @@ pkgs:
 
 with (pkgs.vimPlugins) // (pkgs.vimPrivatePlugins); {
   start =
-    [ abolish
-      articulate
+    [ articulate
       bstack
       coherent
       commentary
@@ -29,6 +28,7 @@ with (pkgs.vimPlugins) // (pkgs.vimPrivatePlugins); {
       tabtab
       targets-vim
       traces
+      vim-abolish
       vim-easy-align
       vim-elixir
       vim-eunuch

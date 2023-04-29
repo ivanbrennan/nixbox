@@ -1,13 +1,4 @@
 {
-  "abolish": {
-    "name": "abolish",
-    "src": {
-      "owner": "tpope",
-      "repo": "vim-abolish",
-      "rev": "7e4da6e78002344d499af9b6d8d5d6fcd7c92125",
-      "sha256": "1n35igng3a6d5y4nh5pyb09s6khgcwbr3v0lnh33qb51cv4cnjh4"
-    }
-  },
   "articulate": {
     "name": "articulate",
     "src": {
@@ -31,8 +22,8 @@
     "src": {
       "owner": "ivanbrennan",
       "repo": "coherent",
-      "rev": "6c2f3b91c7cc16702f486ac76adf5f848d15045c",
-      "sha256": "14hi3arciim94bklm38sdq89f429jjafjs1sq1jrjzvrfa0k2cr3"
+      "rev": "d8646e9861a083455e90eb642449375426fb2ee2",
+      "sha256": "sha256-085liupaQEp8WDnUkDtGhrywGqukp4wfVCdSiwMQwhw="
     }
   },
   "coot": {
@@ -40,8 +31,8 @@
     "src": {
       "owner": "ivanbrennan",
       "repo": "coot",
-      "rev": "943b520d4fb366eef590bfb6437e848c310955ec",
-      "sha256": "0agmzwz7p2bwsm376m4zq52mha9xynm0gn2m5gnaswz9pkch72ss"
+      "rev": "f9e2bfe6ad830c929b3abe17b13ac7419328613c",
+      "sha256": "sha256-83Td5iOpAzNITEvPIK373s/Nr+gxQwtgFZ6gatRfg/I="
     }
   },
   "dirvish": {
@@ -49,8 +40,8 @@
     "src": {
       "owner": "justinmk",
       "repo": "vim-dirvish",
-      "rev": "7c4dc5945b15a6b97ebef860070d30e36da01788",
-      "sha256": "0mg8fdfsr59015m309kr9v5akwc3zfwfygn36x47c8q2bwjjr052"
+      "rev": "6233243f0caa71d27d27ea102540a88bce8eb6ea",
+      "sha256": "sha256-Dr/jGt9U78+oUgm5H4DYuB4i3Ae9jzcdgVPsT3zZ2w4="
     }
   },
   "edot": {
@@ -67,8 +58,8 @@
     "src": {
       "owner": "ivanbrennan",
       "repo": "ftglue",
-      "rev": "fc18ca66d0b03acbc55ec01f85a8a5dc2564818c",
-      "sha256": "0h84mlggqaxvw7n1rhykddmmalx2j0vmvh2br50nlymaw06m6xh9"
+      "rev": "c54c4141efddb8b223d0a265ad111d35fc81846a",
+      "sha256": "sha256-UDOa0pTIN/7nlAmZaRx4hysuPNJ+NQ2DWuqPB8oZmZA="
     }
   },
   "hint": {
@@ -107,13 +98,31 @@
       "sha256": "1l8hxdxqgz9b68939q8r1r3hahw0f3qfyp700zgiw9dwz641sdrj"
     }
   },
+  "lush-nvim": {
+    "name": "lush-nvim",
+    "src": {
+      "owner": "rktjmp",
+      "repo": "lush.nvim",
+      "rev": "b1e8eb1da3fee95ef31515a73c9eff9bf251088d",
+      "sha256": "sha256-+M5tPNuL8OtkIZcB3+5+snygocWPhnXoZzen6gjOd2A="
+    }
+  },
   "mline": {
     "name": "mline",
     "src": {
       "owner": "ivanbrennan",
       "repo": "mline",
-      "rev": "69195fb88fa406f51a0ada9a845815d5863dd2b4",
-      "sha256": "0pjp75f3av5p3vjrb64r0cib3g2pxqlk1s54cr8pl03qv3yp53w7"
+      "rev": "2b6fa72607746139ee0867d7476cd905baafd600",
+      "sha256": "sha256-UT9srTiO6DbQMt64NfmNVCSzUUVvzoS/zOhIogURjeM=="
+    }
+  },
+  "mini-align": {
+    "name": "mini-align",
+    "src": {
+      "owner": "echasnovski",
+      "repo": "mini.align",
+      "rev": "b088ddab3495e5c1c84681e6db23dd3cc0660683",
+      "sha256": "sha256-L0ewucV8mQkQ/VhwyIJ75kgYIN9OhHStS5z8pTDLR4M="
     }
   },
   "ocursor": {
@@ -141,6 +150,15 @@
       "repo": "refract",
       "rev": "ef9cc91cbb571e54e32ccaa556e56491ba8c4385",
       "sha256": "1ycb6gjd202smx7q8yvx7576v86sz2l6xkg8ps0ry0minirgaf6g"
+    }
+  },
+  "shipwright-nvim": {
+    "name": "shipwright-nvim",
+    "src": {
+      "owner": "rktjmp",
+      "repo": "shipwright.nvim",
+      "rev": "ab70e80bb67b7ed3350bec89dd73473539893932",
+      "sha256": "sha256-Gy0tIqH1dmZgcUvrUcNrqpMXi3gOgHq9X1SbjIZqSns="
     }
   },
   "sohi": {
@@ -177,6 +195,24 @@
       "repo": "tabtab",
       "rev": "cfd2119fdfd22c62af63a11417d6a2bb09b12534",
       "sha256": "1f5f4p3y31ricyjsfgpizxfrqf6wa4iybc0vlh14rfix82rkrzzj"
+    }
+  },
+  "telescope-file-browser-nvim": {
+    "name": "telescope-file-browser.nvim",
+    "src": {
+      "owner": "nvim-telescope",
+      "repo": "telescope-file-browser.nvim",
+      "rev": "a18f78121d74c4fae9edd29e138a918a8ede2a70",
+      "sha256": "sha256-7oAiP72Eym9vmy55pU3zLbAAxj6EcV1S1KT9AL9923Q="
+    }
+  },
+  "telescope-undo-nvim": {
+    "name": "telescope-undo-nvim",
+    "src": {
+      "owner": "debugloop",
+      "repo": "telescope-undo.nvim",
+      "rev": "b5e31b358095074b60d87690bd1dc0a020a2afab",
+      "sha256": "sha256-6vxd9a754E2Vsq2DdoGzOIqQ+dBXaLxasTGA9Rpo+MI="
     }
   },
   "traces": {
@@ -294,6 +330,15 @@
       "repo": "vmux",
       "rev": "2773a8772f097f5ae491dc33ad2231e5417066db",
       "sha256": "18g6zhfcp30lxcdgqr45fpdw0aqvi5zvm9m1ag0abc84c2lk7h3g"
+    }
+  },
+  "wool": {
+    "name": "wool",
+    "src": {
+      "owner": "ivanbrennan",
+      "repo": "wool",
+      "rev": "3711a0ca8e16e4370c9dc9d5de8b128225a28365",
+      "sha256": "sha256-DxbsWWUQ8Oj+gyFut539UzCm8zGLgXeBV8sDTGWWYAg="
     }
   },
   "wmgraphviz": {
