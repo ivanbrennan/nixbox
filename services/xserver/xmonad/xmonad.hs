@@ -2,19 +2,17 @@
 {-# OPTIONS_GHC -Wall -Werror -O2 #-}
 
 {- base -}
-import Control.Arrow (second)
-import Control.Monad (filterM, when, (>=>))
+import Control.Monad (when, (>=>))
 import Data.Bits ((.|.))
-import Data.Char (isSpace)
+import Data.Char (isSpace, toLower)
 import Data.Dynamic (Typeable)
 import Data.Foldable (find)
-import Data.List (dropWhileEnd, intercalate, isInfixOf)
+import Data.List (dropWhileEnd, intercalate, isInfixOf, sortOn)
 import Data.Monoid (All)
 import System.Directory (getHomeDirectory)
 import System.Environment (getArgs)
 import System.Exit (exitSuccess)
 import System.FilePath ((</>))
-import System.IO (Handle)
 import System.Info (arch, os)
 import Text.Printf (printf)
 
@@ -33,40 +31,37 @@ import System.Posix.Process (executeFile)
 
 {- X11 -}
 import Graphics.X11
-  ( Button, KeyMask, KeySym, Window, button1, controlMask, lowerWindow, mod1Mask,
-    mod4Mask, noModMask, shiftMask, xK_1, xK_9, xK_Alt_L, xK_Alt_R, xK_BackSpace,
-    xK_Delete, xK_Insert, xK_Print, xK_Return, xK_Tab, xK_a, xK_c, xK_comma,
-    xK_d, xK_e, xK_equal, xK_f, xK_h, xK_i, xK_j, xK_k, xK_l, xK_m, xK_minus,
-    xK_n, xK_p, xK_period, xK_q, xK_r, xK_s, xK_semicolon, xK_slash, xK_space,
-    xK_u, xK_v, xK_w, xK_x, xK_y, xK_z,
+  ( Button, KeyMask, KeySym, Window, button1, controlMask, mod1Mask, mod4Mask,
+    noModMask, shiftMask, xK_1, xK_9, xK_Alt_L, xK_Alt_R, xK_BackSpace,
+    xK_Delete, xK_Insert, xK_Print, xK_Return, xK_Tab, xK_a, xK_backslash, xK_c,
+    xK_comma, xK_d, xK_e, xK_equal, xK_f, xK_h, xK_i, xK_j, xK_k, xK_l, xK_m,
+    xK_minus, xK_n, xK_o, xK_p, xK_period, xK_q, xK_r, xK_s, xK_semicolon,
+    xK_slash, xK_space, xK_u, xK_v, xK_w, xK_x, xK_y, xK_z,
   )
 import Graphics.X11.ExtraTypes
   ( xF86XK_AudioLowerVolume, xF86XK_AudioMute, xF86XK_AudioRaiseVolume,
     xF86XK_Copy, xF86XK_MonBrightnessDown, xF86XK_MonBrightnessUp, xF86XK_Paste,
   )
-import Graphics.X11.Xlib.Extras
-  ( Event (ConfigureEvent), ev_above, ev_window, none, queryTree,
-  )
+import Graphics.X11.Xlib.Extras (Event)
 
 {- xmonad -}
 import XMonad
   ( ChangeLayout (NextLayout), Choose, ExtensionClass, IncMasterN (IncMasterN),
-    Layout, ManageHook, MonadIO, Query, Resize (Expand, Shrink), ScreenId (S),
-    StateExtension (PersistentExtension), WindowSet, WindowSpace, WorkspaceId, X,
-    XConf, XConfig (XConfig), appName, asks, catchIO, className, clickJustFocuses,
-    composeAll, config, description, doFloat, doIgnore, extensionType, focus,
-    focusedBorderColor, getXMonadDataDir, handleEventHook, initialValue, io, keys,
-    kill, launch, layoutHook, local, logHook, manageHook, modMask, mouseBindings,
-    mouseMoveWindow, normalBorderColor, recompile, refresh, restart, runQuery,
-    screenWorkspace, sendMessage, spawn, startupHook, terminal, theRoot, title,
-    trace, whenJust, whenX, windows, withDisplay, withFocused, withWindowSet,
-    workspaces, writeStateToFile, (=?), (|||),
+    Layout, ManageHook, Query, Resize (Expand, Shrink), ScreenId (S),
+    StateExtension (PersistentExtension), WindowSet, X, XConf, XConfig (XConfig),
+    appName, catchIO, className, clickJustFocuses, composeAll, cacheDir, config,
+    description, doFloat, doIgnore, extensionType, focus, focusedBorderColor,
+    getDirectories, gets, handleEventHook, initialValue, io, keys, kill, launch,
+    layoutHook, local, manageHook, modMask, mouseBindings, mouseMoveWindow,
+    normalBorderColor, recompile, refresh, restart, sendMessage, spawn,
+    startupHook, terminal, title, trace, whenX, windows, windowset, withFocused,
+    withWindowSet, workspaces, writeStateToFile, (=?), (|||), (<&&>), (-->),
   )
 import qualified XMonad.StackSet as W
 
 {- xmonad-contrib -}
 import XMonad.Actions.CycleWS
-  ( Direction1D (Next, Prev), WSType (WSIs, NonEmptyWS), moveTo,
+  ( Direction1D (Next, Prev), WSType (WSIs, Not, (:&:)), emptyWS, moveTo,
   )
 import XMonad.Actions.DynamicProjects (dynamicProjects, changeProjectDirPrompt)
 import XMonad.Actions.FlexibleResize (mouseResizeEdgeWindow)
@@ -75,34 +70,28 @@ import XMonad.Actions.RotateSome (surfaceNext, surfacePrev)
 import XMonad.Actions.RotSlaves (rotAllDown, rotAllUp, rotSlavesDown, rotSlavesUp)
 import XMonad.Actions.Submap (submap)
 import XMonad.Actions.WindowBringer (gotoMenuArgs)
-import XMonad.Actions.WorkspaceNames (renameWorkspace)
-import XMonad.Hooks.DebugStack (debugStackString)
-import XMonad.Hooks.DynamicBars
-  ( dynStatusBarEventHook, dynStatusBarStartup, multiPPFormat,
-  )
-import XMonad.Hooks.DynamicLog
-  ( PP, dynamicLogString, pad, ppCurrent, ppHidden, ppLayout, ppSep, ppTitle,
-    ppWsSep, wrap, xmobarColor, xmobarPP, filterOutWsPP,
-  )
-import XMonad.Hooks.EwmhDesktops (ewmh, fullscreenEventHook)
+import XMonad.Actions.WorkspaceNames (renameWorkspace, workspaceNamesPP)
+import XMonad.Hooks.DynamicProperty (dynamicTitle)
+import XMonad.Hooks.EwmhDesktops (ewmh, ewmhFullscreen)
 import XMonad.Hooks.InsertPosition
   ( Focus (Newer, Older), Position (Above, Below), insertPosition,
   )
 import XMonad.Hooks.ManageDebug (debugManageHookOn)
-import XMonad.Hooks.ManageDocks (ToggleStruts (ToggleStruts), avoidStruts, docks)
+import XMonad.Hooks.ManageDocks (AvoidStruts, ToggleStruts (ToggleStruts), avoidStruts, docks)
 import XMonad.Hooks.ManageHelpers
   ( composeOne, doCenterFloat, doRectFloat, isDialog, (-?>),
   )
 import XMonad.Hooks.RefocusLast
   ( RefocusLastLayoutHook, isFloat, refocusLastLayoutHook, refocusLastWhen,
-    shiftRLWhen, swapWithLast, toggleFocus,
+    refocusWhen, swapWithLast, toggleFocus,
+  )
+import XMonad.Hooks.StatusBar (StatusBarConfig, dynamicSBs, statusBarPropTo)
+import XMonad.Hooks.StatusBar.PP
+  ( filterOutWsPP, pad, ppCurrent, ppHidden, ppLayout, ppSep, ppTitle, ppWsSep,
+    wrap, xmobarColor, xmobarPP,
   )
 import XMonad.Layout.BoringWindows
-  ( BoringWindows, boringAuto, focusDown, focusUp, siftDown, siftUp,
-  )
-import XMonad.Layout.IndependentScreens
-  ( PhysicalWorkspace, VirtualWorkspace, countScreens, marshall, unmarshallS,
-    withScreens, workspaces',
+  ( BoringWindows, boringAuto, focusDown, focusUp, swapDown, swapUp,
   )
 import XMonad.Layout.LayoutModifier (ModifiedLayout)
 import XMonad.Layout.LimitWindows
@@ -119,11 +108,12 @@ import XMonad.Layout.ResizableTile
   )
 import XMonad.Layout.StateFull (FocusTracking, focusTracking)
 import XMonad.Prompt
-  ( ComplCaseSensitivity (ComplCaseSensitive), XPConfig, XPPosition (Top),
+  ( ComplCaseSensitivity (CaseInSensitive), XPConfig, XPPosition (Top),
     alwaysHighlight, bgColor, bgHLight, complCaseSensitivity, defaultXPKeymap,
     deleteConsecutive, fgColor, fgHLight, font, height, historyFilter,
     moveHistory, position, promptBorderWidth, promptKeymap,
   )
+import XMonad.Prompt.AppLauncher (launchApp)
 import XMonad.Prompt.AppendFile (appendFilePrompt')
 import XMonad.Prompt.ConfirmPrompt (confirmPrompt)
 import XMonad.Prompt.Input (inputPrompt, (?+))
@@ -131,8 +121,12 @@ import XMonad.Prompt.Man (manPrompt)
 import XMonad.Prompt.RunOrRaise (runOrRaisePrompt)
 import XMonad.Prompt.Workspace (workspacePrompt)
 import XMonad.Prompt.XMonad (xmonadPromptC)
-import XMonad.Util.ClickableWorkspaces (clickableMarshallWorkspaceNamesPP)
+import XMonad.Util.ClickableWorkspaces (clickablePP)
 import qualified XMonad.Util.ExtensibleState as XS
+import XMonad.Util.Dmenu (menuArgs)
+import XMonad.Util.Hacks
+  ( trayerAboveXmobarEventHook, trayerPaddingXmobarEventHook,
+  )
 import XMonad.Util.Loggers (date)
 import XMonad.Util.NamedScratchpad
   ( NamedScratchpad (NS), namedScratchpadAction,
@@ -140,26 +134,41 @@ import XMonad.Util.NamedScratchpad
   )
 import qualified XMonad.Util.NamedScratchpad as NS
 import XMonad.Util.Paste (sendKey)
-import XMonad.Util.Run
-  ( runProcessWithInput, runInTerm, safeSpawn, safeSpawnProg, spawnPipe,
-  )
+import XMonad.Util.Run (runProcessWithInput, runInTerm, safeSpawn, safeSpawnProg)
 import XMonad.Util.WorkspaceCompare (filterOutWs)
+
+{- lib -}
+import XMonad.Actions.ScreenLayers
+  ( LayerId, countScreens, layerIds, layerPP, layerWS, nominalIds, shiftToLayer,
+    shiftToNominal, shiftToScreen, unLayerId, viewLayer, viewNextLayer,
+    viewNominal, viewPrevLayer, viewRecentLayer, viewRecentNominal, viewScreen,
+    workspaceIds,
+  )
 
 
 main :: IO ()
-main =
-  launch . xconfig =<< countScreens
+main = do
+  nScreens <- countScreens
+  dirs <- getDirectories
+  {-
+    dataDir:  ~/.local/share/xmonad
+    cfgDir:   ~/.config/xmonad
+    cacheDir: ~/.cache/xmonad
+  -}
+  launch (xconfig nScreens) dirs
   where
+    xconfig :: Int -> XConfig ConfiguredLayout
     xconfig nScreens =
       docks $
+      dynamicSBs statusBarConfig $
       debugManageHookOn "M1-M4-v" $
       dynamicProjects [] $
+      ewmhFullscreen $
       ewmh $
         def
-          { layoutHook         = avoidStruts layoutHook',
-            workspaces         = withScreens nScreens (workspaces def),
+          { layoutHook         = layoutHook',
+            workspaces         = workspaceIds nScreens,
             startupHook        = startupHook',
-            logHook            = logHook',
             handleEventHook    = handleEventHook',
             manageHook         = manageHook',
             keys               = keys',
@@ -171,6 +180,7 @@ main =
           }
 
 
+type Struts       a = ModifiedLayout AvoidStruts a
 type SmartBorders a = ModifiedLayout SmartBorder a
 type Refocus      a = ModifiedLayout RefocusLastLayoutHook (FocusTracking a)
 type Boring       a = ModifiedLayout BoringWindows a
@@ -188,9 +198,13 @@ type Layouts
         )
       )
 
-layoutHook' :: SmartBorders (Refocus (Boring Layouts)) Window
+type ConfiguredLayout
+  = Struts (SmartBorders (Refocus (Boring Layouts)))
+
+layoutHook' :: ConfiguredLayout Window
 layoutHook' =
   id
+    . avoidStruts
     . smartBorders
     . refocusLastLayoutHook
     . focusTracking
@@ -209,12 +223,16 @@ layoutHook' =
     tall = ResizableTall 1 (1/100) (52/100) []
 
 
-startupHook' :: X ()
-startupHook' = do
-  systray
-  io killAlsactl
-  dynStatusBarStartup xmobar killAlsactl
+-- | Run a WindowSet transformation, and if the originally-focused window was
+-- floating, attempt to refocus it, or the window that had focus prior to it.
+windowsRL :: (WindowSet -> WindowSet) -> X ()
+windowsRL f = do
+  refocus <- withWindowSet (refocusWhen isFloat . W.currentTag)
+  windows (refocus . f)
 
+
+startupHook' :: X ()
+startupHook' = systray *> killAlsactl
 
 systray :: X ()
 systray = spawn $
@@ -247,7 +265,7 @@ systray = spawn $
         ]
 
 -- https://github.com/jaor/xmobar/issues/432
-killAlsactl :: MonadIO m => m ()
+killAlsactl :: X ()
 killAlsactl = spawn $
   intercalate
     " | "
@@ -257,26 +275,31 @@ killAlsactl = spawn $
     ]
 
 
-xmobar :: ScreenId -> IO Handle
-xmobar s@(S i) = spawnPipe $
+{-
+  We provide each screen with its own statusbar displaying the nominal workspace
+  ids ("1" through "9") for that screen's currently focused layer of workspaces.
+-}
+
+xmobar :: ScreenId -> String
+xmobar s@(S i) =
   unwords
     [ "xmobar",
       "-B", translate black,
       "-F", translate grey5,
-      "-f", "xft:monospace:size=11",
-      "-N", "xft:FontAwesome:size=11",
+      "-f", translate "monospace 11",
+      "-N", translate "FontAwesome 11",
       "-i", "/run/current-system/sw/share/icons/xmobar",
       "-x", show i,
-      "-p", translate "Top",
+      "-p", translate "TopH 22",
       "-t", translate (xmobarTemplate s),
       "-c", translate $ list (xmobarCommands s)
     ]
 
 xmobarTemplate :: ScreenId -> String
-xmobarTemplate (S i) = concat $
+xmobarTemplate s@(S i) = concat $
   if i == 0
     then
-      [ cmd "UnsafeStdinReader",
+      [ cmd prop,
         pad "}{",
         cmd "disku",
         " ",
@@ -287,20 +310,21 @@ xmobarTemplate (S i) = concat $
         pad (cmd "battery"),
         pad (cmd "alsa:default:Master"),
         pad (cmd "date"),
-        pad (cmd "trayerpad")
+        pad (cmd traypadProp)
       ]
     else
-      [ cmd "UnsafeStdinReader",
+      [ cmd prop,
         pad "}{"
       ]
   where
+    prop = xmonadProp s
     cmd = wrap "%" "%"
 
 xmobarCommands :: ScreenId -> [String]
-xmobarCommands (S i) = map unwords $
+xmobarCommands s@(S i) = map unwords $
   if i == 0
-    then [disk, cpu, vpn, battery, volume, date', unsafeStdinReader, trayerpad]
-    else [unsafeStdinReader]
+    then [disk, cpu, vpn, battery, volume, date', xmonadLog, traypad]
+    else [xmonadLog]
   where
     disk =
       [ "Run DiskU",
@@ -345,8 +369,8 @@ xmobarCommands (S i) = map unwords $
     volumeArgs =
       [ "--template", "<status>",
         "--",
-        "--on"  , fontN 1 "\xf026" ++ "<volume>",
-        "--off" , fontN 1 "\xf026" ++ "<volume>",
+        "--on"  , fontN 1 "\xf026" ++ " <volume>",
+        "--off" , fontN 1 "\xf026" ++ " <volume>",
         "--onc" , grey5,
         "--offc", grey2
       ]
@@ -354,10 +378,10 @@ xmobarCommands (S i) = map unwords $
     date' = ["Run Date", quote dateFormat, quote "date", "50"]
     dateFormat = "%a %b %-d  " ++ xmobarColor chalk "" "%l:%M"
 
-    unsafeStdinReader = ["Run UnsafeStdinReader"]
+    xmonadLog = ["Run UnsafeXPropertyLog", quote prop]
+    prop = xmonadProp s
 
-    trayerpad =
-      ["Run Com", quote "trayer-padding-icon", list [], quote "trayerpad", "10"]
+    traypad = ["Run UnsafeXPropertyLog", quote traypadProp]
 
 list :: [String] -> String
 list = brackets . intercalate ","
@@ -377,31 +401,22 @@ icon = wrap "<icon=" "/>"
 fontN :: Int -> String -> String
 fontN n = wrap ("<fn=" ++ show n ++ ">") "</fn>"
 
+-- see XMonad/Util/Hacks.trayerPaddingXmobarEventHook
+traypadProp :: String
+traypadProp = "_XMONAD_TRAYPAD"
 
-logHook' :: X ()
-logHook' = multiPP currentScreenPP nonCurrentScreenPP
-  where
-    multiPP :: PP -> PP -> X ()
-    multiPP = multiPPFormat (withCurrentScreen . logString)
+xmonadProp :: ScreenId -> String
+xmonadProp (S i) = "_XMONAD_LOG_" ++ show i
 
-    logString :: PP -> ScreenId -> X String
-    logString pp =
-      composePP pp >=> dynamicLogString
-
-    composePP :: PP -> ScreenId -> X PP
-    composePP pp s =
-      filterOutWsPP [scratchpadWorkspaceTag]
-        <$> clickableMarshallWorkspaceNamesPP s pp
-
-    currentScreenPP :: PP
-    currentScreenPP = barPP
-
-    nonCurrentScreenPP :: PP
-    nonCurrentScreenPP = barPP
-
-    barPP :: PP
-    barPP =
-      xmobarPP
+-- | StatusBar showing nominal ids for workspaces in the screen's active group.
+statusBarConfig :: ScreenId -> IO StatusBarConfig
+statusBarConfig s =
+  pure
+    . statusBarPropTo (xmonadProp s) (xmobar s)
+    . (workspaceNamesPP >=> clickablePP)
+    . filterOutWsPP [scratchpadWorkspaceTag]
+    . layerPP (pure . layerIndicator) s
+    $ xmobarPP
         { ppCurrent = xmobarColor grey6 blue . pad,
           ppHidden  = xmobarColor grey4 grey1 . pad,
           ppSep     = " ",
@@ -409,43 +424,56 @@ logHook' = multiPP currentScreenPP nonCurrentScreenPP
           ppTitle   = const "",
           ppLayout  = ppLayout'
         }
+  where
+    layerIndicator :: LayerId -> Maybe String
+    layerIndicator =
+      fmap ((" " ++) . xmobarColor grey4 "") . layerGlyph
+
+    layerGlyph :: LayerId -> Maybe String
+    layerGlyph l =
+      case unLayerId l of
+        "1" -> Nothing
+        "2" -> Just (fontN 1 "⠌")
+        "3" -> Just (fontN 1 "⠪")
+        "4" -> Just (fontN 1 "⠫")
+        "5" -> Just (fontN 1 "⠟")
+        "6" -> Just (fontN 1 "⠿")
+        str -> Just str
 
     ppLayout' :: String -> String
-    ppLayout' s
-      | "Full"  `isInfixOf` s = xmobarColor cyan "" "·"
-      | "Limit" `isInfixOf` s = xmobarColor grey2 "" "·"
-      | otherwise             = ""
-
-withCurrentScreen :: (ScreenId -> X a) -> X a
-withCurrentScreen f =
-  withWindowSet (f . W.screen . W.current)
+    ppLayout' str
+      | "Full"  `isInfixOf` str = xmobarColor cyan "" "·"
+      | "Limit" `isInfixOf` str = xmobarColor grey2 "" "·"
+      | otherwise               = ""
 
 
 handleEventHook' :: Event -> X All
 handleEventHook' =
-  dynStatusBarEventHook xmobar killAlsactl
-    <> refocusLastWhen isFloat
-    <> trayerDockEventHook
-    <> fullscreenEventHook
+  refocusLastWhen isFloat
+    <> trayerPaddingXmobarEventHook
+    <> trayerAboveXmobarEventHook
+    <> emacsEverywhereEventHook
+
+emacsEverywhereEventHook :: Event -> X All
+emacsEverywhereEventHook =
+  dynamicTitle (isEmacsEverywhere --> doCenteredFloat 0.6 0.6)
   where
-    trayerDockEventHook :: Event -> X All
-    trayerDockEventHook ConfigureEvent {ev_window, ev_above} | ev_above == none =
-      do
-        whenX
-          (runQuery (className =? "trayer") ev_window)
-          (ev_window `stackAbove` "xmobar")
-        mempty
-    trayerDockEventHook _ = mempty
+    isEmacsEverywhere :: Query Bool
+    isEmacsEverywhere = isEmacs <&&> title =? "emacs-anywhere"
 
-    stackAbove :: Window -> String -> X ()
-    w `stackAbove` appname =
-      withDisplay $ \dpy -> do
-        rootw <- asks theRoot
-        (_, _, ws) <- io (queryTree dpy rootw)
-        let ws' = dropWhile (w /=) ws
-        xmobarWs <- filterM (runQuery (appName =? appname)) ws'
-        mapM_ (io . lowerWindow dpy) xmobarWs
 
+isTerminal :: Query Bool
+isTerminal = fmap (`elem` names) className
+  where
+    names :: [String]
+    names =
+      [ "Alacritty",
+        NS.name scratchpadTerminal,
+        NS.name scratchpadVisorTerminal
+      ]
+
+isEmacs :: Query Bool
+isEmacs = className =? "Emacs"
 
 manageHook' :: ManageHook
 manageHook' =
@@ -456,7 +484,8 @@ manageHook' =
           isDialog -?> doFloat,
           className =? "Gcr-prompter" -?> doCenterFloat,
           className =? "Xmessage" -?> doCenterFloat,
-          className =? "tabbed" -?> insertPosition Below Older
+          className =? "tabbed" -?> insertPosition Below Older,
+          className =? "Gpick" -?> doFloat
         ],
       namedScratchpadManageHook scratchpads,
       insertPosition Above Newer
@@ -466,25 +495,57 @@ doCenteredFloat :: Rational -> Rational -> ManageHook
 doCenteredFloat width height =
   doRectFloat (centeredRect width height)
 
+doTopCenteredFloat :: Rational -> Rational -> Rational -> ManageHook
+doTopCenteredFloat margin width height =
+  doRectFloat (topCenteredRect margin width height)
+
 centeredRect :: Rational -> Rational -> W.RationalRect
 centeredRect width height =
+  horizontallyCenter $
+    verticallyCenter $
+    W.RationalRect 0 0 width height
+
+topCenteredRect :: Rational -> Rational -> Rational -> W.RationalRect
+topCenteredRect margin width height =
+  horizontallyCenter $
+    topOffset margin $
+    W.RationalRect 0 0 width height
+
+horizontallyCenter :: W.RationalRect -> W.RationalRect
+horizontallyCenter (W.RationalRect _ y width height) =
   W.RationalRect x y width height
   where
     x :: Rational
     x = (1 - width) / 2
 
+verticallyCenter :: W.RationalRect -> W.RationalRect
+verticallyCenter (W.RationalRect x _ width height) =
+  W.RationalRect x y width height
+  where
     y :: Rational
     y = (1 - height) / 2
+
+topOffset :: Rational -> W.RationalRect -> W.RationalRect
+topOffset margin (W.RationalRect x _ width height) =
+  W.RationalRect x y width height
+  where
+    y :: Rational
+    y = min 1 margin
+
+defaultTopMargin :: Rational
+defaultTopMargin = 0.018 -- height of StatusBar
 
 scratchpads :: [NamedScratchpad]
 scratchpads =
   [ scratchpadTerminal,
-    scratchpadEmacs
+    scratchpadVisorTerminal,
+    scratchpadEmacs,
+    scratchpadColorPicker
   ]
 
 scratchpadTerminal :: NamedScratchpad
 scratchpadTerminal =
-  NS name command (appName =? name) (doCenteredFloat 0.8 0.7)
+  NS name command (appName =? name) hook
   where
     name :: String
     name = "scratchpadTerminal"
@@ -492,9 +553,25 @@ scratchpadTerminal =
     command :: String
     command = "alacritty-transparent --class " ++ name
 
+    hook :: ManageHook
+    hook = doCenteredFloat 0.8 0.7
+
+scratchpadVisorTerminal :: NamedScratchpad
+scratchpadVisorTerminal =
+  NS name command (appName =? name) hook
+  where
+    name :: String
+    name = "scratchpadVisorTerminal"
+
+    command :: String
+    command = "alacritty-transparent --class " ++ name
+
+    hook :: ManageHook
+    hook = doTopCenteredFloat defaultTopMargin 1.0 0.66
+
 scratchpadEmacs :: NamedScratchpad
 scratchpadEmacs =
-  NS name command (title =? name) (doCenteredFloat 0.8 0.7)
+  NS name command (title =? name) hook
   where
     name :: String
     name = "scratchpadEmacs"
@@ -506,6 +583,22 @@ scratchpadEmacs =
     frameParameters :: String
     frameParameters = "'(quote (name . " ++ quote name ++ "))'"
 
+    hook :: ManageHook
+    hook = doCenteredFloat 0.8 0.7
+
+scratchpadColorPicker :: NamedScratchpad
+scratchpadColorPicker =
+  NS name command (className =? name) hook
+  where
+    name :: String
+    name = "scratchpadColorPicker"
+
+    command :: String
+    command = "gpick --class " ++ name
+
+    hook :: ManageHook
+    hook = doTopCenteredFloat 0.02 0.5 0.4
+
 
 -- https://github.com/xmonad/X11/blob/6e5ef8019a0cc49e18410a335dbdeea87b7c4aac/Graphics/X11/Types.hsc
 -- https://stackoverflow.com/questions/6605399/how-can-i-set-an-action-to-occur-on-a-key-release-in-xmonad
@@ -515,10 +608,10 @@ keys' conf@(XConfig {modMask}) =
   M.fromList $
     [ -- layout algorithms
       ( (mod4Mask, xK_space),
-        fullToggleOff >> sendMessage NextLayout
+        fullToggleOff *> sendMessage NextLayout
       ),
       ( (mod4Mask .|. shiftMask, xK_space),
-        fullToggleOff >> sendMessage (Toggle MIRROR)
+        fullToggleOff *> sendMessage (Toggle MIRROR)
       ),
       ( (modMask, xK_space),
         sendMessage (Toggle FULL)
@@ -534,10 +627,20 @@ keys' conf@(XConfig {modMask}) =
         moveTo Prev cycledWorkspace
       ),
       ( (modMask, xK_l),
-        toggleRecentWS
+        windows viewRecentNominal
+      ),
+      -- layers
+      ( (modMask .|. shiftMask, xK_period),
+        windows viewNextLayer
+      ),
+      ( (modMask .|. shiftMask, xK_comma),
+        windows viewPrevLayer
+      ),
+      ( (modMask .|. shiftMask, xK_l),
+        windows viewRecentLayer
       ),
       ( (mod4Mask, xK_Tab),
-        moveTo Next NonEmptyWS
+        moveTo Next (Not emptyWS)
       ),
       -- focus
       ( (modMask, xK_j),
@@ -595,10 +698,10 @@ keys' conf@(XConfig {modMask}) =
         windows W.swapMaster
       ),
       ( (modMask .|. shiftMask, xK_j),
-        siftDown
+        swapDown
       ),
       ( (modMask .|. shiftMask, xK_k),
-        siftUp
+        swapUp
       ),
       -- resize
       ( (mod4Mask, xK_h),
@@ -636,11 +739,11 @@ keys' conf@(XConfig {modMask}) =
       ( (mod4Mask .|. controlMask, xK_q),
         restart "xmonad" False
       ),
-      -- compile ~/.xmonad/xmonad.hs and exec the result, resuming state
+      -- compile ~/.config/xmonad/xmonad.hs and exec the result, resuming state
       ( (mod4Mask .|. mod1Mask, xK_q),
         compileRestart True
       ),
-      -- compile ~/.xmonad/xmonad.hs and exec the result, discarding state
+      -- compile ~/.config/xmonad/xmonad.hs and exec the result, discarding state
       ( (mod4Mask .|. mod1Mask .|. controlMask, xK_q),
         compileRestart False
       ),
@@ -655,21 +758,20 @@ keys' conf@(XConfig {modMask}) =
       ( (modMask .|. shiftMask, xK_i),
         dmenuSpawnTerminal
       ),
-      ( (controlMask, xK_space),
+      ( (modMask .|. shiftMask, xK_space),
         safeSpawn "dmenu_run" dmenuOpts
       ),
       ( (modMask, xK_Tab),
         namedScratchpadAction scratchpads (NS.name scratchpadTerminal)
       ),
       ( (modMask, xK_minus),
-        namedScratchpadAction scratchpads (NS.name scratchpadTerminal)
+        namedScratchpadAction scratchpads (NS.name scratchpadVisorTerminal)
       ),
       ( (modMask .|. shiftMask, xK_minus),
         namedScratchpadAction scratchpads (NS.name scratchpadEmacs)
       ),
       ( (mod4Mask .|. modMask, xK_y),
-        debugStackString
-          >>= trace . unlines . uncurry (++) . second reverse . splitAt 1 . lines
+        withWindowSet (trace . show)
       ),
       ( (noModMask, xK_Print),
         safeSpawn "screenshot" []
@@ -692,15 +794,12 @@ keys' conf@(XConfig {modMask}) =
       ( (mod4Mask .|. shiftMask, xK_d),
         kill
       ),
-      ( (modMask .|. shiftMask, xK_space),
-        safeSpawn "passmenu" dmenuOpts
-      ),
       -- volume
       ( (noModMask, xF86XK_AudioRaiseVolume),
-        spawn "pactl set-sink-mute @DEFAULT_SINK@ 0 && pactl set-sink-volume @DEFAULT_SINK@ +2%"
+        spawn "pactl set-sink-mute @DEFAULT_SINK@ 0 && pactl set-sink-volume @DEFAULT_SINK@ +1%"
       ),
       ( (noModMask, xF86XK_AudioLowerVolume),
-        safeSpawn "pactl" ["set-sink-volume", "@DEFAULT_SINK@", "-2%"]
+        safeSpawn "pactl" ["set-sink-volume", "@DEFAULT_SINK@", "-1%"]
       ),
       ( (noModMask, xF86XK_AudioMute),
         safeSpawn "pactl" ["set-sink-mute", "@DEFAULT_SINK@", "toggle"]
@@ -709,28 +808,38 @@ keys' conf@(XConfig {modMask}) =
         safeSpawn "pactl" ["set-source-mute", "@DEFAULT_SOURCE@", "toggle"]
       ),
       ( (mod4Mask, xF86XK_AudioRaiseVolume),
-        spawn "pactl set-source-mute @DEFAULT_SOURCE@ 0 && pactl set-source-volume @DEFAULT_SOURCE@ +2%"
+        spawn "pactl set-source-mute @DEFAULT_SOURCE@ 0 && pactl set-source-volume @DEFAULT_SOURCE@ +1%"
       ),
       ( (mod4Mask, xF86XK_AudioLowerVolume),
-        safeSpawn "pactl" ["set-source-volume", "@DEFAULT_SOURCE@", "-2%"]
+        safeSpawn "pactl" ["set-source-volume", "@DEFAULT_SOURCE@", "-1%"]
       ),
       -- brightness
       ( (noModMask, xF86XK_MonBrightnessUp),
-        safeSpawn "light" ["-A", "20"]
+        safeSpawn "light" ["-A", "5"]
       ),
       ( (noModMask, xF86XK_MonBrightnessDown),
+        safeSpawn "light" ["-U", "5"]
+      ),
+      ( (shiftMask, xF86XK_MonBrightnessUp),
+        safeSpawn "light" ["-A", "20"]
+      ),
+      ( (shiftMask, xF86XK_MonBrightnessDown),
         safeSpawn "light" ["-U", "20"]
       ),
       -- copy/paste
       ( (modMask, xK_c),
-        ifTerminal
-          (sendKey noModMask xF86XK_Copy)
-          (sendKey controlMask xK_c)
+        bindFirst
+          [ (isTerminal, sendKey noModMask xF86XK_Copy),
+            (isEmacs,    sendKey modMask xK_c),
+            (pure True,  sendKey controlMask xK_c)
+          ]
       ),
       ( (modMask, xK_v),
-        ifTerminal
-          (sendKey noModMask xF86XK_Paste)
-          (sendKey controlMask xK_v)
+        bindFirst
+          [ (isTerminal, sendKey noModMask xF86XK_Paste),
+            (isEmacs,    sendKey modMask xK_v),
+            (pure True,  sendKey controlMask xK_v)
+          ]
       )
     ]
       ++ workspaceTagKeys
@@ -765,14 +874,36 @@ keys' conf@(XConfig {modMask}) =
                  ( (noModMask, xK_equal),
                    calcPrompt xPConfig "qalc"
                  ),
+                 ( (noModMask, xK_e),
+                   safeSpawnProg "emacseverywhere"
+                 ),
                  ( (noModMask, xK_f),
                    gotoMenuArgs dmenuOpts
+                 ),
+                 ( (noModMask, xK_i),
+                   dmenuDissRettachTerminal "alacritty-grey"
+                 ),
+                 ( (shiftMask, xK_i),
+                   launchApp xPConfig "alacritty-grey -e diss -a"
+                 ),
+                 -- TODO: Investigate session management within Neovim
+                 ( (noModMask, xK_o),
+                   bindFirst
+                     [ (isTerminal, switchDissSession),
+                       (pure True,  sendKey noModMask xK_o)
+                     ]
                  ),
                  ( (noModMask, xK_m),
                    renameWorkspace xPConfig
                  ),
                  ( (noModMask, xK_n),
                    safeSpawnProg "networkmanager_dmenu"
+                 ),
+                 ( (noModMask, xK_p),
+                   safeSpawnProg "pick-one-color"
+                 ),
+                 ( (shiftMask, xK_p),
+                   namedScratchpadAction scratchpads (NS.name scratchpadColorPicker)
                  ),
                  ( (noModMask, xK_Insert),
                    safeSpawn "udisks_dmenu" ("mount" : dmenuOpts)
@@ -792,7 +923,13 @@ keys' conf@(XConfig {modMask}) =
                  ( (noModMask, xK_s),
                    sudoTerm "/etc/nixos"
                  ),
+                 ( (noModMask, xF86XK_AudioMute),
+                   safeSpawn "resound" []
+                 ),
                  ( (noModMask, xK_w),
+                   safeSpawn "passmenu" dmenuOpts
+                 ),
+                 ( (shiftMask, xK_w),
                    workspacePrompt xPConfig (windows . W.view)
                  ),
                  ( (noModMask, xK_x),
@@ -811,6 +948,14 @@ keys' conf@(XConfig {modMask}) =
                    safeSpawn "dunstctl" ["history-pop"]
                  )
                ]
+                 -- [1..9], Switch to layer L
+                 -- shift-[1..9], Move client to layer L
+                 ++ [ ((m, k), f l)
+                      | (k, l) <- zip [xK_1 .. xK_9] layerIds,
+                        (m, f) <- [ (noModMask, windows . viewLayer),
+                                    (shiftMask, windowsRL . shiftToLayer)
+                                  ]
+                    ]
            )
            | alt <- [xK_Alt_L, xK_Alt_R]
          ]
@@ -818,92 +963,54 @@ keys' conf@(XConfig {modMask}) =
     -- mod-[1..9], Switch to workspace N
     -- mod-shift-[1..9], Move client to workspace N
     workspaceTagKeys =
-      [ ( (m .|. modMask, k),
-          windows =<< onCurrentScreenX f i
-        )
-        | (k, i) <- zip [xK_1..xK_9] (workspaces' conf),
-          (m, f) <- [ (noModMask, pure . W.view),
-                      (shiftMask, shiftRLWhen isFloat)
+      [ ((m .|. modMask, k), f n)
+        | (k, n) <- zip [xK_1..xK_9] nominalIds,
+          (m, f) <- [ (noModMask, windows . viewNominal),
+                      (shiftMask, windowsRL . shiftToNominal)
                     ]
       ]
 
     -- super-{w,e,r}, Switch to physical/Xinerama screens 1, 2, or 3
     -- super-shift-{w,e,r}, Move client to screen 1, 2, or 3
     screenKeys =
-      [ ( (m .|. mod4Mask, key),
-          screenWorkspace sc >>= flip whenJust (f >=> windows)
-        )
-        | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..],
-          (f, m) <- [ (pure . W.view, noModMask),
-                      (shiftRLWhen isFloat, shiftMask)
+      [ ((m .|. mod4Mask, k), f s)
+        | (k, s) <- zip [xK_w, xK_e, xK_r] [0..],
+          (m, f) <- [ (noModMask, windows . viewScreen),
+                      (shiftMask, windowsRL . shiftToScreen)
                     ]
       ]
 
-    onCurrentScreenX :: (PhysicalWorkspace -> X a) -> (VirtualWorkspace -> X a)
-    onCurrentScreenX f vwsp =
-      withCurrentScreen (f . flip marshall vwsp)
-
     compileRestart :: Bool -> X ()
-    compileRestart resume =
-      whenX (recompile True) $
+    compileRestart resume = do
+      dirs <- io getDirectories
+      whenX (recompile dirs True) $
         when resume writeStateToFile
           *> catchIO
             ( do
-              dir <- getXMonadDataDir
               args <- getArgs
-              executeFile (dir </> printf "xmonad-%s-%s" arch os) False args Nothing
+              executeFile (cacheDir dirs </> printf "xmonad-%s-%s" arch os) False args Nothing
             )
 
     fullToggleOff :: X ()
     fullToggleOff = do
-      on <- isFullToggleOn
-      when on $ sendMessage (Toggle FULL)
+      isOn <- isFullToggleOn
+      when isOn $ sendMessage (Toggle FULL)
 
     isFullToggleOn :: X Bool
     isFullToggleOn =
       fmap ("Full" `isInfixOf`) layoutDescription
 
     layoutDescription :: X String
-    layoutDescription = withWindowSet $
-      pure . description . W.layout . W.workspace . W.current
+    layoutDescription = gets $
+      description . W.layout . W.workspace . W.current . windowset
 
     cycledWorkspace :: WSType
-    cycledWorkspace =
-      WSIs $ withCurrentScreen (pure . cycledWorkspaceOnScreen)
+    cycledWorkspace = layerWS :&: Not emptyWS :&: Not scratchWS
 
-    cycledWorkspaceOnScreen :: ScreenId -> WindowSpace -> Bool
-    cycledWorkspaceOnScreen s wsp =
-      all
-        ($ wsp)
-        [ (not . scratchpadWorkspace),
-          (not . emptyWorkspace),
-          isOnScreen s
-        ]
-
-    emptyWorkspace :: WindowSpace -> Bool
-    emptyWorkspace = null . W.stack
-
-    scratchpadWorkspace :: WindowSpace -> Bool
-    scratchpadWorkspace = null . filterOutWs [scratchpadWorkspaceTag] . (:[])
-
-    isOnScreen :: ScreenId -> WindowSpace -> Bool
-    isOnScreen s = (s ==) . unmarshallS . W.tag
-
-    toggleRecentWS :: X ()
-    toggleRecentWS =
-      withWindowSet (windows . const . head . recentWS)
-
-    recentWS :: WindowSet -> [WindowSet]
-    recentWS ws = map (`W.view` ws) (recentTags ws)
-
-    recentTags :: WindowSet -> [WorkspaceId]
-    recentTags ws =
-      map W.tag
-        . filter (not . null . W.stack)
-        . filterOutWs [scratchpadWorkspaceTag]
-        $ map W.workspace (W.visible ws)
-          ++ W.hidden ws
-          ++ [W.workspace (W.current ws)]
+    scratchWS :: WSType
+    scratchWS = WSIs (pure isScratch)
+      where
+        isScratch = null . filterOutWs [scratchpadWorkspaceTag] . (:[])
 
     cycleFloat :: [W.RationalRect] -> Window -> WindowSet -> WindowSet
     cycleFloat recs w s =
@@ -918,13 +1025,6 @@ keys' conf@(XConfig {modMask}) =
     setTerminal :: String -> XConf -> XConf
     setTerminal t xc =
       xc {config = (config xc) {terminal = t}}
-
-    ifTerminal :: X () -> X () -> X ()
-    ifTerminal thenX elseX =
-      bindFirst [(isTerminal, thenX), (pure True, elseX)]
-
-    isTerminal :: Query Bool
-    isTerminal = className =? "Alacritty"
 
     sudoTerm :: FilePath -> X ()
     sudoTerm dir =
@@ -958,6 +1058,26 @@ keys' conf@(XConfig {modMask}) =
       safeSpawn "dmenu_cdpath-alacritty" $
         "~/Development" : "--" : dmenuOpts
 
+    dmenuDissRettachTerminal :: String -> X ()
+    dmenuDissRettachTerminal term =
+      safeSpawn "dmenu_diss-reattach-terminal" (term : dmenuOpts)
+
+    switchDissSession :: X ()
+    switchDissSession = do
+      sessions <- fmap lines (runProcessWithInput "diss" ["-l"] "")
+      when (not $ null sessions) $ do
+        session <- menuArgs "dmenu" dmenuOpts $ sortOn (map toLower) sessions
+        when (session `elem` sessions) $ do
+          inDiss <- dissSessionHasFocus
+          when inDiss (sendKey controlMask xK_backslash)
+          safeSpawn "alacritty-grey" ["-e", "diss", "-a", session]
+
+    dissSessionHasFocus :: X Bool
+    dissSessionHasFocus = do
+      pid <- runProcessWithInput "xdotool" ["getwindowfocus", "getwindowpid"] ""
+      tree <- runProcessWithInput "pstree" ["-A", "-T", filter (/= '\n') pid] ""
+      fmap (not . null) (runProcessWithInput "grep" ["\\<diss\\>"] tree)
+
     dmenuOpts :: [String]
     dmenuOpts =
       [ "-fn", "monospace:size=12",
@@ -978,11 +1098,11 @@ keys' conf@(XConfig {modMask}) =
 
     screencast :: [String] -> X ()
     screencast args = do
-      Screencast on <- XS.get
-      if on
+      Screencast isOn <- XS.get
+      if isOn
         then safeSpawn "killall" ["ffmpeg"]
         else safeSpawn "screencast" args
-      XS.put $ Screencast (not on)
+      XS.put $ Screencast (not isOn)
 
 
 newtype Screencast = Screencast Bool deriving (Read, Show, Typeable)
@@ -1000,7 +1120,7 @@ xPConfig =
       alwaysHighlight      = False,
       promptBorderWidth    = 0,
       promptKeymap         = keymap `M.union` defaultXPKeymap,
-      complCaseSensitivity = ComplCaseSensitive False,
+      complCaseSensitivity = CaseInSensitive,
       historyFilter        = deleteConsecutive,
       bgColor              = grey0,
       fgColor              = grey6,
@@ -1023,14 +1143,14 @@ mouseBindings' XConfig {modMask} =
     [ ( (modMask, button1),
         \w ->
           focus w
-            >> mouseMoveWindow w
-            >> windows W.shiftMaster
+            *> mouseMoveWindow w
+            *> windows W.shiftMaster
       ),
       ( (mod4Mask, button1),
         \w ->
           focus w
-            >> mouseResizeEdgeWindow (3/4) w
-            >> windows W.shiftMaster
+            *> mouseResizeEdgeWindow (3/4) w
+            *> windows W.shiftMaster
       )
     ]
 

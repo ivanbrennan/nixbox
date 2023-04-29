@@ -38,15 +38,17 @@
     };
 
     colord.enable = true;
-    gnome3.gnome-keyring.enable = true;
+    gnome.gnome-keyring.enable = true;
     hardware.bolt.enable = true;
     udisks2.enable = true;
     upower.enable = config.powerManagement.enable;
     openssh = {
       enable = true;
-      passwordAuthentication = false;
-      challengeResponseAuthentication = false;
-      permitRootLogin = "no";
+      settings = {
+        PermitRootLogin = "no";
+        PasswordAuthentication = false;
+        KbdInteractiveAuthentication = false;
+      };
       extraConfig = ''
         AllowAgentForwarding = no
 

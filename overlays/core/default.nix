@@ -78,8 +78,8 @@ self: super: {
     caps2esc = super.interception-tools-plugins.caps2esc.overrideAttrs (old: {
       name = "interception-tools-caps2esc-0.1.3";
       src = self.fetchurl {
-        url = "https://gitlab.com/mar04/caps2esc/repository/3f9a39c6ce31a626682f05a3880f18e2d08fe3f3/archive.tar.gz";
-        sha256 = "0w58z0b16hr52sjynkpqd1v090sgyd5glwc8wb248j5l8q2b50zv";
+        url = "https://gitlab.com/mar04/caps2esc/-/archive/3f9a39c6ce31a626682f05a3880f18e2d08fe3f3/archive.tar.gz";
+        sha256 = "sha256-pk20DeFw8VSW0I1KUg/xPtSQl4wSQB+sfOPJNCaYWOo=";
       };
     });
   };

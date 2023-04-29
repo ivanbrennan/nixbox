@@ -1,9 +1,8 @@
 { fetchFromGitHub
 , perlPackages
-, buildPerlPackage
 }:
 
-buildPerlPackage rec {
+perlPackages.buildPerlPackage rec {
   pname = "flaccurate";
   version = "1.0";
 

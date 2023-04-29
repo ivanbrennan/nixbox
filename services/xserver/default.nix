@@ -24,13 +24,7 @@ pkgs:
   desktopManager.xterm.enable = false;
 
   # windowManager
-  windowManager = {
-    xmonad = {
-      enable = true;
-      extraPackages = ps: [ ps.xmonad-contrib ];
-      config = ./xmonad.hs;
-    };
-  };
+  windowManager.xmonad = import ./xmonad;
 
   displayManager.defaultSession = "none+xmonad";
 
