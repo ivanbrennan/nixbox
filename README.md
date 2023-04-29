@@ -5,6 +5,9 @@ sudo make -C /etc/nixos machine=MACHINE
 ```
 
 ## Todo
+- "a stop job is running for"
+  - `journalctl --boot=-1 --reverse` (search for "timed out")
+  - `journalctl --user --reverse -u emacs`
 Try some window managers
 - [XMonad](http://xmonad.org)
   - can i use something like dmenu to jump to an existing application/workspace?
