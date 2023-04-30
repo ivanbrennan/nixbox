@@ -11,6 +11,8 @@
       udevmonConfig = ./udevmon.yaml;
     };
 
+    journald.extraConfig = "SystemMaxUse=2G";
+
     kmonad = {
       enable = true;
       configfile = ./config.kbd;
