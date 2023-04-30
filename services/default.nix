@@ -50,7 +50,7 @@
         KbdInteractiveAuthentication = false;
       };
       extraConfig = ''
-        AllowAgentForwarding = no
+        AllowAgentForwarding no
 
         Match User ivan
           AllowAgentForwarding yes
