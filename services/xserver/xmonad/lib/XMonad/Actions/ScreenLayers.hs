@@ -1,5 +1,5 @@
 {-
-  This module provides each screen with four layers of nine workspaces.
+  This module provides each screen with three layers of nine workspaces.
 
   Workspace tags take the form S_L:N, where S denotes the screen, L denotes a
   layer within that screen, and N denotes a position within that layer. For
@@ -65,7 +65,7 @@ layer1 :: LayerId
 layer1 = LayerId "1"
 
 layerIds :: [LayerId]
-layerIds = layer1 : map (LayerId . show) [2 .. 4 :: Int]
+layerIds = layer1 : map (LayerId . show) [2 .. 3 :: Int]
 
 nominalIds :: [NominalId]
 nominalIds = map (NominalId . show) [1 .. 9 :: Int]
