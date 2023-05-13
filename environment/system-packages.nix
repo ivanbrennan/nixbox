@@ -140,9 +140,6 @@ with pkgs; [
   xcolor
   xdg-user-dirs
   xdotool
-  xfce.thunar
-  xfce.thunar-volman
-  xfce.tumbler
   xmobar
   xorg.xmessage
   xorg.xprop
