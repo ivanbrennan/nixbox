@@ -72,6 +72,10 @@
 
     gc.automatic = true;
     gc.dates = "03:15";
+
+    extraOptions = ''
+      experimental-features = nix-command flakes
+    '';
   };
 
   # see machines/self.nix for hostName
