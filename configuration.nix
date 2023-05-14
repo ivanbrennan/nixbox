@@ -31,13 +31,10 @@
   virtualisation = {
     docker.enable = true;
 
-    # Checking that Nix store paths of all wrapped programs exist... FAIL
-    # The path /nix/store/lhxpydkbbzxc59hp7my9zvd75andh4rc-virtualbox-6.1.30/libexec/virtualbox/VBoxSDL does not exist!
-    # Please, check the value of `security.wrappers."VBoxSDL".source`.
-    # virtualbox.host = {
-    #   enable = true;
-    #   headless = true;
-    # };
+    virtualbox.host = {
+      enable = true;
+      headless = true;
+    };
 
     libvirtd.enable = true;
   };
