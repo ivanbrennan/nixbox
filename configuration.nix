@@ -25,8 +25,8 @@
   time.timeZone = null;
 
   # Allow redshift to work.
-  location.latitude = 40.7;
-  location.longitude = -74.0;
+  location.latitude = 41.7;
+  location.longitude = -74.1;
 
   virtualisation = {
     docker.enable = true;
