@@ -11,5 +11,9 @@
     seahorse.enable = true;
     ssh  = (import ./ssh);
     tmux = (import ./tmux) pkgs;
+    wireshark = {
+      enable = true;
+      package = pkgs.wireshark;
+    };
   };
 }
