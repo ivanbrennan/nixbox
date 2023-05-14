@@ -1,6 +1,6 @@
 {
   users = {
-    extraUsers.ivan = {
+    users.ivan = {
       isNormalUser = true;
       uid = 1000;
       createHome = true;
