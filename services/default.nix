@@ -16,12 +16,6 @@
       '';
     };
 
-    kmonad = {
-      # TODO: kmonad config is machine-specific
-      enable = false;
-      configfile = ./config.kbd;
-    };
-
     locate.enable = true;
     locate.pruneNames = [];
 
