@@ -13,7 +13,7 @@
       ./programs
       ./security
       ./services
-      # ./users # TODO: upgrade nixosbox to 21.11
+      ./users
       ./kmonad.nix
     ];
 
@@ -132,24 +132,4 @@
       subpixel.rgba = "rgb";
     };
   };
-
-  users.users.ivan = {
-    isNormalUser = true;
-    uid = 1000;
-    createHome = true;
-    home = "/home/ivan";
-    extraGroups = [
-      "dialout"
-      "docker"
-      "input"
-      "networkmanager"
-      "uinput"
-      "vboxusers"
-      "video"
-      "wheel"
-      "wireshark"
-    ];
-    hashedPassword = "$6$aAJGKQbaRR74cAFn$on/SNMV5pcVPH.dPaYQQgp1ZhBp3FA.0BoRRDQYndY.R8TdjMFqOmWP7kVTXZnpienIw7R/x8hmDeins/U.c/1";
-  };
-  users.mutableUsers = false;
 }
