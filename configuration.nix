@@ -95,9 +95,12 @@
     networkmanager.enable = true;
   };
 
-  hardware.bluetooth.enable = true;
   sound.enable = true;
-  hardware.pulseaudio.enable = true;
+  hardware.pulseaudio = {
+    enable = true;
+    package = pkgs.pulseaudioFull; # support Bluetooth headsets
+  };
+  hardware.bluetooth.enable = true;
 
   fonts = {
     fonts = [

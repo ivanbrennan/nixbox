@@ -31,9 +31,6 @@
     libvdpau-va-gl
   ];
 
-  # support Bluetooth headsets
-  hardware.pulseaudio.package = pkgs.pulseaudioFull;
-
   services.xserver.videoDrivers = [ "intel" ];
   services.kmonad = {
     enable = true;
