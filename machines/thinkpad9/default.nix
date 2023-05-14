@@ -6,7 +6,12 @@
     ./hardware-configuration.nix
   ];
 
-  networking.hostName = "thinkpad9";
+  networking = {
+    hostName = "thinkpad9";
+
+    interfaces.enp0s13f0u3.useDHCP = true;
+    interfaces.wlp0s20f3.useDHCP = true;
+  };
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
