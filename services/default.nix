@@ -13,11 +13,6 @@
 
     journald.extraConfig = "SystemMaxUse=2G";
 
-    kmonad = {
-      enable = true;
-      configfile = ./config.kbd;
-    };
-
     locate.enable = true;
 
     openvpn = import ./openvpn;

@@ -30,6 +30,10 @@
   hardware.pulseaudio.package = pkgs.pulseaudioFull;
 
   services.xserver.videoDrivers = [ "intel" ];
+  services.kmonad = {
+    enable = true;
+    configfile = ./config.kbd;
+  };
 
   # This value determines the NixOS release with which your system is to be
   # compatible, in order to avoid breaking some software such as database
