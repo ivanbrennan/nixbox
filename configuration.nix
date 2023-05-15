@@ -96,11 +96,7 @@
   };
 
   sound.enable = true;
-  hardware.pulseaudio = {
-    enable = true;
-    package = pkgs.pulseaudioFull; # support Bluetooth headsets
-  };
-  hardware.bluetooth.enable = true;
+  hardware.pulseaudio.enable = true;
 
   fonts = {
     fonts = with pkgs; [
