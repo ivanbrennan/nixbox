@@ -115,6 +115,7 @@
       pkgs.roboto-mono
       pkgs.source-code-pro
       pkgs.source-sans
+      pkgs.source-sans-pro
       pkgs.source-serif
       pkgs.vollkorn
     ];
