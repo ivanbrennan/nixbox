@@ -3,6 +3,7 @@ pkgs:
 with pkgs; [
   _1password
   abcde
+  age # TODO: pa, passage
   silver-searcher
   alacritty-wrapped
   arc-icon-theme
