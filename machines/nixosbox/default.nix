@@ -27,6 +27,7 @@
   ];
 
   # support Bluetooth headsets
+  hardware.bluetooth.enable = true;
   hardware.pulseaudio.package = pkgs.pulseaudioFull;
 
   services.xserver.videoDrivers = [ "intel" ];
