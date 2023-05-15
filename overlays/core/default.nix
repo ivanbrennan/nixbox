@@ -1,4 +1,7 @@
-self: super: {
+let
+  pinned = attrs: (import (builtins.fetchTarball attrs) { overlays = []; });
+
+in self: super: {
   abcde = super.abcde.overrideAttrs (old: rec {
     configurePhase = old.configurePhase + ''
       substituteInPlace "abcde" \
@@ -31,27 +34,21 @@ self: super: {
 
   flaccurate = super.callPackage ./flaccurate { };
 
-  fly-7_3_0 =
-    (import (builtins.fetchTarball {
-      url = "https://github.com/NixOS/nixpkgs/archive/ff5aa118274d1c9e9dc4e1010fb1eafdeeddc4d1.tar.gz";
-      sha256 = "1bif9nq5l89if03lvpbzh9ib7aisiq5z9vir76l56m351cw1am2h";
-    }) { }).fly;
+  fly =
+    (pinned {
+      url = "https://github.com/NixOS/nixpkgs/archive/331c54c75a5cc8a795893c1f31524520a9dadb4d.tar.gz";
+      sha256 = "0ld59zlci23q89y4lq6f1hd7vwqg80swjn0rg1248w0jfahq046w";
+    }).fly;
 
   interactive-editor = super.callPackage ./interactive-editor { };
 
-  kubernetes-helm-2_11 =
-    (import (builtins.fetchTarball {
+  kubernetes-helm =
+    (pinned {
       url = "https://github.com/NixOS/nixpkgs/archive/a071bfa7e7bbd62e1b43830e5e79d8b36afe5fa6.tar.gz";
       sha256 = "0yl2bsan5x69a7z6r1fb8zlv4zpibq67pb2x45jjp7wx42ssdkq2";
-    }) { }).kubernetes-helm;
+    }).kubernetes-helm;
 
-  stack-1_9_3 =
-    (import (builtins.fetchTarball {
-      url = "https://github.com/NixOS/nixpkgs/archive/bc94dcf500286495e3c478a9f9322debc94c4304.tar.gz";
-      sha256 = "1siqklf863181fqk19d0x5cd0xzxf1w0zh08lv0l0dmjc8xic64a";
-    }) { }).stack;
-
-  _1password-1_4_0 = super._1password.overrideAttrs (old: rec {
+  _1password = super._1password.overrideAttrs (old: rec {
     version = "1.4.0";
     src = super.fetchzip {
       url = "https://cache.agilebits.com/dist/1P/op/pkg/v${version}/op_linux_amd64_v${version}.zip";
@@ -77,9 +74,11 @@ self: super: {
   interception-tools-plugins = super.interception-tools-plugins // {
     caps2esc = super.interception-tools-plugins.caps2esc.overrideAttrs (old: {
       name = "interception-tools-caps2esc-0.1.3";
-      src = self.fetchurl {
-        url = "https://gitlab.com/mar04/caps2esc/-/archive/3f9a39c6ce31a626682f05a3880f18e2d08fe3f3/archive.tar.gz";
-        sha256 = "sha256-pk20DeFw8VSW0I1KUg/xPtSQl4wSQB+sfOPJNCaYWOo=";
+      src = self.fetchFromGitLab {
+        owner = "ivanbrennan";
+        repo = "caps2esc";
+        rev = "3f9a39c6ce31a626682f05a3880f18e2d08fe3f3";
+        sha256 = "sha256-j+fj6jOjv1oc84mMY7fXITJeaEMPEnq0CFyUPywxswc=";
       };
     });
   };

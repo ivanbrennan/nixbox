@@ -1,9 +1,8 @@
 pkgs:
 
 with pkgs; [
-  _1password-1_4_0
+  _1password
   abcde
-  abduco
   silver-searcher
   alacritty-wrapped
   arc-icon-theme
@@ -41,7 +40,7 @@ with pkgs; [
   file
   flac
   flaccurate
-  fly-7_3_0
+  fly
   fzf
   gimp
   git
@@ -61,7 +60,7 @@ with pkgs; [
   jq
   kitty
   kubectl
-  kubernetes-helm-2_11
+  kubernetes-helm
   libnotify
   libqalculate
   lshw
@@ -75,7 +74,6 @@ with pkgs; [
   nice-backgrounds
   nice-icons
   nix-prefetch-git
-  neovim
   nnn
   openssl
   openvpn_dmenu
@@ -99,7 +97,7 @@ with pkgs; [
   socat
   sqlite-interactive
   st
-  stack-1_9_3
+  stack
   stow
   sxiv
   tabbed
@@ -122,9 +120,6 @@ with pkgs; [
   xclip
   xdg-user-dirs
   xdotool
-  xfce.thunar
-  xfce.thunar-volman
-  xfce.tumbler
   xmobar
   xorg.xmessage
   xsel

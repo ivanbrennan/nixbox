@@ -10,6 +10,10 @@
     nm-applet.enable = true;
     seahorse.enable = true;
     ssh  = (import ./ssh);
+    thunar = {
+      enable = true;
+      plugins = with pkgs.xfce; [ thunar-volman tumbler ];
+    };
     tmux = (import ./tmux) pkgs;
     wireshark = {
       enable = true;
