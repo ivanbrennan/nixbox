@@ -46,18 +46,6 @@ disable-focus-notify() {
 enable-focus-notify() {
     echo -ne '\e[?1004h'
 }
-# Workaround for abduco alternate screen buffer issues
-# https://github.com/martanne/abduco/issues/35#issuecomment-901738018
-# TODO: Check whether something like this is needed for diss as well.
-abduco-attach() {
-    (
-        until abduco | grep -q "\*.*${1}"
-        do
-            sleep 0.01
-        done && echo "tput rmcup" | abduco -a "${1}" &
-    )
-    abduco -a "${1}"
-}
 
 complete -F _tmux t
 
