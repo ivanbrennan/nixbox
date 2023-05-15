@@ -2,6 +2,9 @@
 	whitespace=fix,-indent-with-non-tab,trailing-space,cr-at-eol
 	pager = delta
 	excludesfile = /etc/gitignore
+[init]
+	defaultBranch = main
+	templatedir = /etc/gittemplates
 [interactive]
 	diffFilter = delta --color-only
 [delta]
@@ -28,6 +31,9 @@
 	pretty = %C(cyan dim italic)%h%Creset %s %C(magenta dim)(%an, %cr)%Creset
 [diff "elisp"]
   xfuncname = ^[[:space:]]*(\\(.+)$
+[user]
+	name = ivanbrennan
+	email = ivan.brennan@gmail.com
 [commit]
 	verbose = true
 [push]
@@ -40,6 +46,8 @@
 	showuntrackedfiles = all
 [diff]
 	submodule = log
+[merge]
+	conflictstyle = diff3
 [fetch]
 	recurseSubmodules = on-demand
 [pull]

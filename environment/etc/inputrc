@@ -1,0 +1,91 @@
+set bell-style none
+set colored-completion-prefix on
+set colored-stats off
+set completion-ignore-case on
+set convert-meta off
+set echo-control-characters off
+set enable-bracketed-paste on
+set input-meta on
+set keyseq-timeout 250
+set mark-symlinked-directories on
+set output-meta on
+set skip-completed-text on
+
+# Ctrl-{p|n} ≡ {Up|Down}
+control-p: previous-history
+control-n: next-history
+
+# Meta-{p|n}
+"\ep": history-search-backward
+"\en": history-search-forward
+
+# Ctrl-{Left|Right}
+"\e[1;5D": backward-word
+"\e[1;5C": forward-word
+
+# Shift-{Left|Right}
+"\e[1;2D": backward-word
+"\e[1;2C": forward-word
+
+# Meta-{Left|Right}
+"\e[1;3D": beginning-of-line
+"\e[1;3C": end-of-line
+
+# Meta-{Up|Down}
+"\e[1;3A": beginning-of-history
+"\e[1;3B": end-of-history
+
+# Ctrl-i ≡ Tab
+"\e[105;5u": complete
+
+# Meta-x Meta-x
+"\ex\ex": edit-and-execute-command
+
+# Shift-Space
+"\e[32;2u": nop
+
+# Meta-Shift-Space
+"\e[32;4u": nop
+
+# Ctrl-Shift-Space
+"\e[32;6u": nop
+
+# Ctrl-{,|.|;}
+"\e[44;5u": ","
+"\e[46;5u": "."
+"\e[59;5u": ";"
+
+# Shift-Enter
+"\e[13;2u": nop
+
+# Ctrl-Enter
+"\e[13;5u": nop
+
+# Meta-Enter
+"\e[13;3u": nop
+
+# Ctrl-Shift-<letter>
+"\e[65;6u": "A"
+"\e[66;6u": "B"
+"\e[68;6u": "D"
+"\e[69;6u": "E"
+"\e[71;6u": "G"
+"\e[72;6u": "H"
+"\e[73;6u": "I"
+"\e[74;6u": "J"
+"\e[75;6u": "K"
+"\e[76;6u": "L"
+"\e[77;6u": "M"
+"\e[78;6u": "N"
+"\e[79;6u": "O"
+"\e[80;6u": "P"
+"\e[81;6u": "Q"
+"\e[82;6u": "R"
+"\e[83;6u": "S"
+"\e[84;6u": "T"
+"\e[87;6u": "W"
+"\e[88;6u": "X"
+"\e[89;6u": "Y"
+"\e[90;6u": "Z"
+
+$include ~/.inputrc.local

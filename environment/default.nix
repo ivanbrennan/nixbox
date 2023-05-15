@@ -8,10 +8,45 @@ in {
     systemPackages = (import ./system-packages.nix) pkgs;
     variables = (import ./variables.nix) pkgs;
     etc = {
-      "gitattributes".source = "${pkgs.etcdots}/etc/gitattributes";
+      "gitattributes".source = etc/gitattributes;
       "gitconfig".source = pkgs.lib.mkForce etc/gitconfig;
-      "gitignore".source = "${pkgs.etcdots}/etc/gitignore";
-      "inputrc".source = "${pkgs.etcdots}/etc/inputrc";
+      "gittemplates/hooks/ctags" = {
+        source = pkgs.lib.mkForce etc/gittemplates/hooks/ctags;
+        mode = "0755";
+      };
+      "gittemplates/hooks/gtags" = {
+        source = pkgs.lib.mkForce etc/gittemplates/hooks/gtags;
+        mode = "0755";
+      };
+      "gittemplates/hooks/hasktags" = {
+        source = pkgs.lib.mkForce etc/gittemplates/hooks/hasktags;
+        mode = "0755";
+      };
+      "gittemplates/hooks/post-checkout" = {
+        source = pkgs.lib.mkForce etc/gittemplates/hooks/post-checkout;
+        mode = "0755";
+      };
+      "gittemplates/hooks/post-commit" = {
+        source = pkgs.lib.mkForce etc/gittemplates/hooks/post-commit;
+        mode = "0755";
+      };
+      "gittemplates/hooks/post-merge" = {
+        source = pkgs.lib.mkForce etc/gittemplates/hooks/post-merge;
+        mode = "0755";
+      };
+      "gittemplates/hooks/post-rewrite" = {
+        source = pkgs.lib.mkForce etc/gittemplates/hooks/post-rewrite;
+        mode = "0755";
+      };
+      "gittemplates/hooks/pre-push" = {
+        source = pkgs.lib.mkForce etc/gittemplates/hooks/pre-push;
+        mode = "0755";
+      };
+      "gitignore".source = etc/gitignore;
+      "ripgreprc".source = pkgs.writeText "ripgreprc" ''
+        --ignore-file=/etc/gitignore
+      '';
+      "inputrc".source = etc/inputrc;
       "nix/netrc".source = pkgs.writeText "netrc" ''
         machine github.com
         login ${githubUsername}
@@ -21,6 +56,12 @@ in {
         login ${githubUsername}
         password ${githubToken}
       '';
+      "xdg/nvim/after/ftplugin/qf.lua".source = etc/xdg/nvim/after/ftplugin/qf.lua;
+      "xdg/nvim/after/plugin/keymap.lua".source = etc/xdg/nvim/after/plugin/keymap.lua;
+      "xdg/nvim/after/syntax/c.vim".source = etc/xdg/nvim/after/syntax/c.vim;
+      "xdg/nvim/after/syntax/gitcommit.lua".source = etc/xdg/nvim/after/syntax/gitcommit.lua;
+      "xdg/nvim/after/syntax/readline.vim".source = etc/xdg/nvim/after/syntax/readline.vim;
+      "xdg/nvim/after/syntax/sh.vim".source = etc/xdg/nvim/after/syntax/sh.vim;
       "xdg/gtk-3.0/settings.ini".source = etc/xdg/gtk-3.0/settings.ini;
       "xdg/gtk-2.0/gtkrc".source = etc/xdg/gtk-2.0/gtkrc;
       "xdg/kitty/kitty.conf".source = etc/xdg/kitty/kitty.conf;

@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -e
+
+topd="`git rev-parse --show-toplevel`"
+tmpd=`mktemp --directory --tmpdir gtags.XXXXXXXXXX~`
+trap "rm -rf '$tmpd'" EXIT INT TERM
+
+git ls-files | gtags --file - "$tmpd"
+mv "$tmpd/"{GTAGS,GRTAGS,GPATH} "$topd"
