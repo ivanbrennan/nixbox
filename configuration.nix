@@ -103,21 +103,21 @@
   hardware.bluetooth.enable = true;
 
   fonts = {
-    fonts = [
-      pkgs.cantarell-fonts
-      pkgs.dejavu_fonts
-      pkgs.emacs-all-the-icons-fonts
-      pkgs.fira-code
-      pkgs.mononoki
-      pkgs.nerdfonts
-      pkgs.noto-fonts
-      pkgs.open-sans
-      pkgs.roboto-mono
-      pkgs.source-code-pro
-      pkgs.source-sans
-      pkgs.source-sans-pro
-      pkgs.source-serif
-      pkgs.vollkorn
+    fonts = with pkgs; [
+      cantarell-fonts
+      dejavu_fonts
+      emacs-all-the-icons-fonts
+      fira-code
+      mononoki
+      nerdfonts
+      noto-fonts
+      open-sans
+      roboto-mono
+      source-code-pro
+      source-sans
+      source-sans-pro
+      source-serif
+      vollkorn
     ];
 
     fontconfig = {
