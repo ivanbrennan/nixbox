@@ -29,7 +29,7 @@ _build_color_prompt() {
     host="${SSH_CLIENT:+\[${normal}\]}@${SSH_CLIENT:+\[${gold}\]}\H"
 
     line1="╭\[${bold}\]\w\[${normal}\]\$(_git_ps1_)\[${normal}\] \[${black}\]\$? \d \t\[${normal}\]"
-    line2="╰(\u${VIM_TERMINAL:+:vim}\[${grey}\]${host}\[${normal}\])• "
+    line2="╰(\u${IN_NIX_SHELL:+:nix}${VIM_TERMINAL:+:vim}\[${grey}\]${host}\[${normal}\])• "
 
     PS1="\n${line1}\n${line2}"
     PS2=" ❯ "

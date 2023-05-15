@@ -16,6 +16,9 @@ in
   du1 = "${du} -h -d 1";
   fgg = "fg '%-'";
   finame = "${find} . -name";
+  git-default-branch =
+    "${git} rev-parse 2>/dev/null && " +
+    "${git} branch --list main master | ${grep} -m1 -oP 'main|master'";
   gpc = "${git} log origin/master.. -- | wc -l";
   gpp = "${git} log origin/master.. --reverse -p";
   gpr = "${git} log origin/master.. --reverse";

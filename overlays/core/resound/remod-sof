@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+set -eu
+
+# remove and re-insert problematic kernel module
+modprobe -r snd_sof_pci_intel_tgl
+modprobe    snd_sof_pci_intel_tgl

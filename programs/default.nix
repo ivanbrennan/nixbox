@@ -4,6 +4,7 @@
   programs = {
     bash = (import ./bash) pkgs;
     dconf.enable = true;
+    chromium = (import ./chromium) pkgs;
     gnupg.agent.enable = true;
     less = (import ./less) pkgs;
     light.enable = true;

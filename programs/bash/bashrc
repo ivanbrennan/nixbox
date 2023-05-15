@@ -35,6 +35,18 @@ then
     # NOTE: does this break mouse selection in less?
 fi
 
+# Provide a function to manually disable focus notify events, in case detaching
+# a diss session from within Neovim drops us back into an interactive shell.
+# Since Neovim doesn't know about the detach, it doesn't tell the terminal to
+# stop sending focus notify events, and as a result, the terminal will print
+# control sequences (^[[I, ^[[O) to the screen upon FocusIn/FocusOut events.
+disable-focus-notify() {
+    echo -ne '\e[?1004l'
+}
+enable-focus-notify() {
+    echo -ne '\e[?1004h'
+}
+
 complete -F _tmux t
 
 ghcWithPackages() {
@@ -140,6 +152,22 @@ blink() {
     cursor_code=3
   fi
   printf '\e[%i q' $cursor_code
+}
+
+show_color() {
+    perl -e '
+      foreach $a (@ARGV) {
+        $code = join(":", unpack("C*", pack("H*", $a)));
+        print "\e[48:2::${code}m        \e[49m ${a}\n";
+      }
+    ' "$@"
+}
+
+xcolors() {
+    while true
+    do
+        show_color "$(xcolor --custom='%{02hr}%{02hg}%{02hb}')"
+    done
 }
 
 # gsettings
