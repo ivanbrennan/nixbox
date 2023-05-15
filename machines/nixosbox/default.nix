@@ -3,12 +3,7 @@
 {
   imports = [ ./hardware-configuration.nix ];
 
-  networking = {
-    hostName = "nixosbox";
-
-    interfaces.enp57s0u1.useDHCP = true;
-    interfaces.wlp58s0.useDHCP = true;
-  };
+  networking.hostName = "nixosbox";
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;

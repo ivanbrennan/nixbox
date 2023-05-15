@@ -3,12 +3,7 @@
 {
   imports = [ ./hardware-configuration.nix ];
 
-  networking = {
-    hostName = "bigThinkPad";
-
-    interfaces.enp0s31f6.useDHCP = true;
-    interfaces.wlp3s0.useDHCP = true;
-  };
+  networking.hostName = "bigThinkPad";
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
