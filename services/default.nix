@@ -8,18 +8,27 @@
 
     interception-tools = {
       enable = true;
-      udevmonConfig = ./udevmon.yaml;
+      udevmonConfig = ''
+        - JOB: "${pkgs.interception-tools}/bin/intercept -g $DEVNODE | ${pkgs.interception-tools-plugins.caps2esc}/bin/caps2esc 0.1 | ${pkgs.interception-tools}/bin/uinput -d $DEVNODE"
+          DEVICE:
+            EVENTS:
+              EV_KEY: [KEY_CAPSLOCK, KEY_ESC]
+      '';
     };
 
     journald.extraConfig = "SystemMaxUse=2G";
 
     locate.enable = true;
+    locate.pruneNames = [];
 
     openvpn = import ./openvpn;
 
     redshift = {
       enable = true;
-      temperature.night = 4000;
+      temperature = {
+        day = 5250;
+        night = 3700;
+      };
     };
 
     xbanish.enable = true;
