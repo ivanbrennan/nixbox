@@ -547,7 +547,6 @@ set('n', '<Leader><Esc>', function()
   end
 end)
 
--- TODO: magit (neogit?)
 -- git
 set('n', '<Leader>gb', '<Cmd>Git blame<CR>')
 set('n', '<Leader>gs', '<Cmd>Git<CR>')

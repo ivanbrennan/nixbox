@@ -69,6 +69,7 @@ nvim
   - https://github.com/pwntester/octo.nvim
   - https://github.com/nvim-telescope/telescope-project.nvim
   - https://github.com/luc-tielen/telescope_hoogle
+- lazygit
 
 try neovide
 
