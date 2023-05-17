@@ -9,16 +9,6 @@ opt.cursorline = true
 opt.diffopt = opt.diffopt + 'foldcolumn:0'
 opt.expandtab = true
 opt.fillchars = { eob = " " }
-opt.fillchars = {
-  horiz     = '━',
-  horizup   = '┻',
-  horizdown = '┳',
-  vert      = '┃',
-  vertleft  = '┫',
-  vertright = '┣',
-  verthoriz = '╋',
-  eob       = ' ',
-}
 opt.foldenable = false
 opt.foldlevelstart = 10
 opt.foldmethod = "syntax"
