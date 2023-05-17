@@ -101,3 +101,16 @@ set('n', '<C-l>', function()
   recenter_switch = 1
   recenter:activate()
 end)
+
+hydra({
+  name = 'buffer',
+  hint = ' b ',
+  mode = 'n',
+  body = '<Leader>b',
+  heads = {
+    { 'n', '<Cmd>bnext<CR>', { desc = false } },
+    { 'p', '<Cmd>bprev<CR>', { desc = false } },
+    { '<Esc>', nil, { exit = true, desc = false } },
+  },
+  config = shared_config,
+})

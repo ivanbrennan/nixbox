@@ -45,8 +45,8 @@ set('n', 'gy', '<Cmd>%y +<CR>')
 set('n', '<Leader>l', '<C-^>')
 set('n', '<Leader>F', ':setf ')
 set('n', '<C-i>', '<C-i>') -- Distinguish <C-i> from <Tab>
-set('n', '<Tab>', '<Cmd>bnext<CR>')
-set('n', '<S-Tab>', '<Cmd>bprevious<CR>')
+set('n', '<Tab>', 'gt')
+set('n', '<S-Tab>', 'gT')
 
 -- quickfix
 local qf = ncore.quickfix
