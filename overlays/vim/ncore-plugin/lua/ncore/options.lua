@@ -27,7 +27,7 @@ opt.number = true
 opt.scrolloff = 1
 opt.shiftwidth = 2
 opt.shortmess:append('I')
-opt.showcmd = false
+opt.showcmd = true
 opt.showmatch = true
 opt.showmode = false
 opt.showtabline = 0
