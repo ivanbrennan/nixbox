@@ -66,8 +66,8 @@ in self: super: {
 
   kubectl =
     (pinned {
-      url = "https://github.com/NixOS/nixpkgs/archive/8fdd33cfc443ad15876675475d52b4de2de58d3f.tar.gz";
-      sha256 = "0j9qfkjwvh5a2g24bflz15qss17hi29lhpfz7gzlpwx03n1rgdp9";
+      url = "https://github.com/NixOS/nixpkgs/archive/23d785aa6f853e6cf3430119811c334025bbef55.tar.gz";
+      sha256 = "00fvaap8ibhy63jjsvk61sbkspb8zj7chvg13vncn7scr4jlzd60";
     }).kubectl;
 
   _1password = super._1password.overrideAttrs (old: rec {
