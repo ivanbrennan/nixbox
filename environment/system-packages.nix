@@ -73,6 +73,7 @@ with pkgs; [
   networkmanager_dmenu
   nice-backgrounds
   nice-icons
+  nix-du
   nix-prefetch-git
   nnn
   openssl
