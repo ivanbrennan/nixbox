@@ -25,6 +25,23 @@ opt.mouse = 'a'
 opt.nrformats = { 'unsigned' }
 opt.number = true
 opt.scrolloff = 1
+
+-- Defaults:
+--   Neovim: !,'100,<50,s10,h
+--
+-- - ! save/restore global variables (only all-uppercase variables)
+-- - '100 save/restore marks from last 100 files
+-- - <50 save/restore 50 lines from each register
+-- - s10 max item size 10KB
+-- - h do not save/restore 'hlsearch' setting
+--
+-- Our overrides:
+-- - '0 store marks for 0 files
+-- - <0 don't save registers
+-- - f0 don't store file marks
+--
+opt.shada = "'0,<0,f0,s10,h"
+
 opt.shiftwidth = 2
 opt.shortmess:append('I')
 opt.showcmd = true
