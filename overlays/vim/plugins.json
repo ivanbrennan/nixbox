@@ -229,8 +229,8 @@
     "src": {
       "owner": "mhinz",
       "repo": "vim-grepper",
-      "rev": "e9004ce564891412cfe433cfbb97295cccd06b39",
-      "sha256": "1cs72x3wv4i11x7ch3gna1sxqn5zj3bd34smchfd00g4mf201lhs"
+      "rev": "2b93535752ffcb312f9fab73d90e80dc9f2e60fc",
+      "sha256": "sha256-oVsbUeGC0QwHuCJ0tynKVGsxeLt9NEGQTu2qNWF5jfY="
     }
   },
   "vim-javascript-syntax": {

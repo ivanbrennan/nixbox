@@ -53,6 +53,7 @@
     [ (import ./overlays/core)
       (import ./overlays/haskell)
       (import ./overlays/vim)
+      (import ./overlays/emacs)
     ];
 
   nix = {

@@ -14,7 +14,15 @@ in self: super: {
   bleep = super.callPackage ./bleep { };
   bloop = super.callPackage ./bloop { };
 
+  diss = super.callPackage ./diss { };
+
+  dmenu_diss = super.callPackage ./dmenu_diss { };
+
   dmenu_cdpath = super.callPackage ./dmenu_cdpath { };
+
+  dmenu_fontpreview = super.callPackage ./dmenu_fontpreview { };
+
+  dotinit = super.callPackage ./dotinit { };
 
   dunst = super.callPackage ./dunst {
     dunst = super.dunst;
@@ -28,6 +36,8 @@ in self: super: {
     alacritty = self.alacritty-wrapped;
   };
 
+  emacseverywhere = super.callPackage ./emacseverywhere { };
+
   emc = super.callPackage ./emc { };
 
   etcdots = super.callPackage ./etcdots { };
@@ -40,6 +50,12 @@ in self: super: {
       sha256 = "0ld59zlci23q89y4lq6f1hd7vwqg80swjn0rg1248w0jfahq046w";
     }).fly;
 
+  gpick =
+    (pinned {
+      url = "https://github.com/NixOS/nixpkgs/archive/d2042f91c1ad953825556be3ec2e53cf9a91fc77.tar.gz";
+      sha256 = "0nla2y1j4lfiqixj87y666c5v1n1zza45f3y0d2kr8sidb1ag62i";
+    }).gpick;
+
   interactive-editor = super.callPackage ./interactive-editor { };
 
   kubernetes-helm =
@@ -47,6 +63,12 @@ in self: super: {
       url = "https://github.com/NixOS/nixpkgs/archive/a071bfa7e7bbd62e1b43830e5e79d8b36afe5fa6.tar.gz";
       sha256 = "0yl2bsan5x69a7z6r1fb8zlv4zpibq67pb2x45jjp7wx42ssdkq2";
     }).kubernetes-helm;
+
+  kubectl =
+    (pinned {
+      url = "https://github.com/NixOS/nixpkgs/archive/23d785aa6f853e6cf3430119811c334025bbef55.tar.gz";
+      sha256 = "00fvaap8ibhy63jjsvk61sbkspb8zj7chvg13vncn7scr4jlzd60";
+    }).kubectl;
 
   _1password = super._1password.overrideAttrs (old: rec {
     version = "1.4.0";
@@ -85,9 +107,13 @@ in self: super: {
 
   openvpn_dmenu = super.callPackage ./openvpn_dmenu { };
 
+  pick-one-color = super.callPackage ./pick-one-color { };
+
   udisks_dmenu = super.callPackage ./udisks_dmenu { };
 
   resound = super.callPackage ./resound { };
+
+  rover = super.callPackage ./rover { };
 
   rxvt_unicode = super.rxvt_unicode.overrideAttrs (old: {
     version = "2020-02-12";

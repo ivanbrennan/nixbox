@@ -8,8 +8,8 @@ stdenv.mkDerivation {
   src = fetchFromGitHub {
     owner = "ivanbrennan";
     repo = "dotfiles";
-    rev = "01239d59eb552a18517b5945e9cd22ef24c9c151";
-    sha256 = "1n0m7l0pbw86wj8jbisf03i5sjqy6p11hmrg0lhl54yg516h13hd";
+    rev = "58043806dacb0aed8c2ae9cf6ed8be7271dfd5d4";
+    sha256 = "sha256-bjHHrxf4ry143nb4+2PTT2/LYbNFLfZL95jwcFkQt50=";
   };
 
   phases = [
@@ -20,9 +20,6 @@ stdenv.mkDerivation {
   installPhase = ''
     install -D -m644 $src/lesskey               $out/lesskey
 
-    install -D -m644 $src/git/attributes        $out/etc/gitattributes
-    install -D -m644 $src/git/ignore            $out/etc/gitignore
-    install -D -m644 $src/shell/inputrc         $out/etc/inputrc
     install -D -m644 $src/tmux/tmux.conf        $out/etc/tmux.conf
     install -D -m644 $src/irbrc                 $out/etc/irbrc
     install -D -m644 $src/abcde/abcde.conf      $out/etc/abcde.conf

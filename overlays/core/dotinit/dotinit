@@ -1,0 +1,27 @@
+#! /usr/bin/env bash
+
+out=@out@
+
+set -eu
+
+mkdir -p \
+    "$HOME"/Development/{code,resources} \
+    "$HOME"/.config/git/ \
+    "$HOME"/.gnupg/ \
+    "$HOME"/.vim
+
+for file in "$HOME"/.vim/{vimrc,init.vim}
+do
+    if [ -e "$file" ] && [ ! -L "$file" ]
+    then
+        backup="$file".$(date +%s)
+        echo "Backing up existing $file to $backup" >&2
+        mv "$file" "$backup"
+    fi
+done
+
+targets="$out"/targets
+ln -svnf "$targets"/.config/git/config    "$HOME"/.config/git/config
+ln -svnf "$targets"/.gnupg/gpg-agent.conf "$HOME"/.gnupg/gpg-agent.conf
+ln -svnf "$targets"/.vim/vimrc            "$HOME"/.vim/vimrc
+ln -svnf "$HOME"/.vim/vimrc               "$HOME"/.vim/init.vim

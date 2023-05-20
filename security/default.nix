@@ -24,7 +24,7 @@ in
         }
       ];
 
-      # The NixOS sudo module already preserves SSH_AUTH_SOCK, bu»
+      # The NixOS sudo module already preserves SSH_AUTH_SOCK, but let's also
       # preserve ssh client connection environment variables.
       extraConfig = ''
         Defaults env_keep+="SSH_CLIENT SSH_CONNECTION SSH_TTY"

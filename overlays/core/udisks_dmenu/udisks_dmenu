@@ -1,59 +1,156 @@
 #!/usr/bin/env bash
 
+awk=@awk@
+dmenu=@dmenu@
+jq=@jq@
+lsblk=@lsblk@
+notify_send=@notify_send@
+pinentry=@pinentry@
+sed=@sed@
+sort=@sort@
+tr=@tr@
+udisksctl=@udisksctl@
+
 set -u
 
-list_drives() {
-    lsblk --raw --path --output 'name,rm,size,type,mountpoint'
+blockdevices() {
+    $lsblk --tree --json --output 'uuid,path,rm,size,type,fstype,mountpoint' \
+        | $jq '.blockdevices[]'
 }
 
-list_unmounted_drives() {
-    list_drives |
-    # is removable, is partition, no mountpoint
-        awk '$2==1 && $4=="part" && $5=="" {printf "%s (%s)\n", $1, $3}'
+removable_partitions() {
+    blockdevices \
+        | $jq 'select(.rm and .type == "disk") | .children[]'
 }
 
-list_mounted_drives() {
-    # is removable, is partition, has mountpoint
-    list_drives |
-        awk '$2==1 && $4=="part" && $5!="" {printf "%s (%s)\n", $1, $3}'
+plain_drives() {
+    removable_partitions | $jq 'select(.fstype != "crypto_LUKS")'
+}
+
+luks_drives() {
+    removable_partitions | $jq 'select(.fstype == "crypto_LUKS")'
+}
+
+plain_unmounted_drives() {
+    plain_drives | $jq 'select(.mountpoint == null)'
+}
+
+plain_mounted_drives() {
+    plain_drives | $jq 'select(.mountpoint != null)'
+}
+
+luks_opened_drives() {
+    luks_drives | $jq 'select(.children != null)'
+}
+
+luks_closed_drives() {
+    luks_drives | $jq 'select(.children == null)'
+}
+
+luks_opened_unmounted_drives() {
+    luks_opened_drives \
+        | $jq 'select(.children | all(.mountpoint == null))'
+}
+
+luks_opened_mounted_drives() {
+    luks_opened_drives \
+        | $jq 'select(.children | any(.mountpoint != null))'
+}
+
+get_mount_candidate_drives() {
+    plain_unmounted_drives
+    luks_opened_unmounted_drives
+    luks_closed_drives
+}
+
+get_unmount_candidate_drives() {
+    luks_opened_mounted_drives
+    luks_opened_unmounted_drives
+    plain_mounted_drives
+}
+
+format_choices() {
+    $jq --raw-output '
+      if .fstype == "crypto_LUKS" and .children != null
+      then "\(.path) (\(.size)) \(.children[0].mountpoint // "")"
+      else "\(.path) (\(.size)) \(.mountpoint // "")"
+      end
+    ' | $sort --unique
+}
+
+ask_passphrase() {
+    echo -e 'SETPROMPT Passphrase:\nGETPIN\n' \
+        | $pinentry \
+        | $sed -nE '0,/^D (.+)/s//\1/p' \
+        | $tr -d "\n"
 }
 
 case "${1-}" in
 mount)
     shift
-    drives=$(list_unmounted_drives)
-    if [ -n "$drives" ]
+    drives=$(get_mount_candidate_drives)
+    [ -z "$drives" ] && $notify_send "No drives detected to mount" && exit 0
+
+    path=$(echo "$drives" | format_choices | $dmenu -p "mount" "$@" | $awk '{print $1}')
+    [ -z "$path" ] && exit 0
+
+    drive=$(echo "$drives" | $jq "select(.path == \"$path\")")
+    if $(echo "$drive" | $jq '.fstype == "crypto_LUKS"')
     then
-        drive=$(echo "$drives" | dmenu -p "mount" "$@" | awk '{print $1}')
-        if [ -n "$drive" ]
+        if $(echo "$drive" | $jq '.children == null')
         then
-            result=$(udisksctl mount --no-user-interaction --block-device="$drive" 2>/dev/null)
-            if [ -n "$result" ]
-            then
-                notify-send "$result"
-            fi
+            $udisksctl unlock --block-device "$path" --key-file <(ask_passphrase) || exit 1
         fi
-    else
-        notify-send "No drives detected to mount"
+        path=$(luks_opened_drives | $jq --raw-output "[select(.path == \"$path\")][0].children[0].path")
+    fi
+
+    result=$($udisksctl mount --no-user-interaction --block-device="$path" 2>/dev/null)
+    if [ -n "$result" ]
+    then
+        $notify_send "$result"
     fi
     ;;
 unmount)
     shift
-    drives=$(list_mounted_drives)
-    if [ -n "$drives" ]
+    drives=$(get_unmount_candidate_drives)
+    [ -z "$drives" ] && $notify_send "No drives detected to unmount" && exit 0
+
+    path=$(echo "$drives" | format_choices | $dmenu -p "unmount" "$@" | $awk '{print $1}')
+    [ -z "$path" ] && exit 0
+
+    drive=$(echo "$drives" | $jq "select(.path == \"$path\")")
+    fstype=$(echo "$drive" | $jq --raw-output '.fstype')
+
+    if [ "$fstype" = "crypto_LUKS" ]
     then
-        drive=$(echo "$drives" | dmenu -p "unmount" "$@" | awk '{print $1}')
-        if [ -n "$drive" ]
+        if $(echo "$drive" | $jq '.children[0].mountpoint == null')
         then
-            result=$(udisksctl unmount --no-user-interaction --block-device="$drive" 2>/dev/null)
-            if [ -n "$result" ]
-            then
-                notify-send "$result"
-                udisksctl power-off --no-user-interaction --block-device="$drive"
-            fi
+            unmount_path=
+        else
+            unmount_path=$(echo "$drive" | $jq --raw-output ".children[0].path")
         fi
     else
-        notify-send "No drives detected to unmount"
+        unmount_path=$path
+    fi
+
+    if [ -n "$unmount_path" ]
+    then
+        result=$($udisksctl unmount --no-user-interaction --block-device "$unmount_path" 2>/dev/null)
+    else
+        result="Unmounted"
+    fi
+
+    if [ -n "$result" ]
+    then
+        $notify_send "$result"
+
+        if [ "$fstype" = "crypto_LUKS" ] && ! $udisksctl lock --block-device "$path"
+        then
+            $notify_send --urgency=critical "Failed to lock $path"
+            exit 1
+        fi
+
+        $udisksctl power-off --no-user-interaction --block-device="$path"
     fi
     ;;
 esac

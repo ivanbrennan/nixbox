@@ -9,6 +9,7 @@
         "dialout"
         "docker"
         "input"
+        "libvirtd"
         "networkmanager"
         "uinput"
         "vboxusers"

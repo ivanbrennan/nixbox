@@ -31,21 +31,21 @@ hydra({
 local vertical_scroll = hydra({
   name = 'vertical-scroll',
   hint = ' ↕ ',
-  mode = 'n',
+  mode = { 'n', 'v' },
   heads = {
     { 'f',     '<C-f>', { desc = false } },
     { 'b',     '<C-b>', { desc = false } },
     { '<C-j>', '<C-e>', { desc = false } },
     { '<C-k>', '<C-y>', { desc = false } },
-    { '<Esc>', nil, { exit = true, desc = false } },
+    { '<Esc>', '<Esc>', { exit = true, desc = false } },
   },
   config = shared_config,
 })
-set('n', '<C-f>', function()
+set({ 'n', 'v' }, '<C-f>', function()
   cmd.execute('"normal! \\<C-f>"')
   vertical_scroll:activate()
 end)
-set('n', '<C-b>', function()
+set({ 'n', 'v' }, '<C-b>', function()
   cmd.execute('"normal! \\<C-b>"')
   vertical_scroll:activate()
 end)
@@ -101,3 +101,16 @@ set('n', '<C-l>', function()
   recenter_switch = 1
   recenter:activate()
 end)
+
+hydra({
+  name = 'buffer',
+  hint = ' b ',
+  mode = 'n',
+  body = '<Leader>b',
+  heads = {
+    { 'n', '<Cmd>bnext<CR>', { desc = false } },
+    { 'p', '<Cmd>bprev<CR>', { desc = false } },
+    { '<Esc>', nil, { exit = true, desc = false } },
+  },
+  config = shared_config,
+})

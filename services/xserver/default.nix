@@ -44,4 +44,6 @@ pkgs:
   '';
 
   updateDbusEnvironment = true;
+
+  videoDrivers = [ "modesetting" ];
 }

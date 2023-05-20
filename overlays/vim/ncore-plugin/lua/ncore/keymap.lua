@@ -45,8 +45,8 @@ set('n', 'gy', '<Cmd>%y +<CR>')
 set('n', '<Leader>l', '<C-^>')
 set('n', '<Leader>F', ':setf ')
 set('n', '<C-i>', '<C-i>') -- Distinguish <C-i> from <Tab>
-set('n', '<Tab>', '<Cmd>bnext<CR>')
-set('n', '<S-Tab>', '<Cmd>bprevious<CR>')
+set('n', '<Tab>', 'gt')
+set('n', '<S-Tab>', 'gT')
 
 -- quickfix
 local qf = ncore.quickfix
@@ -434,36 +434,7 @@ set('t', '<C-w>;',     [[<C-\><C-n>:]])
 set('t', '<C-w><C-;>', [[<C-\><C-n>:]])
 
 -- shell
-local gparent_process_name = function()
-  local gpid = fn.systemlist({
-    'ps', '--no-headers',
-    '-p', vim.loop.os_getppid(),
-    'o', 'ppid' -- output just the parent process ID
-  })[1]
-  return fn.systemlist({
-    'ps', '--no-headers',
-    '-p', gpid,
-    'c',        -- derive command name from the actual executable
-    'o', 'comm' -- output just the command name
-  })[1]
-end
-
-local safe_suspend = function()
-  -- Suspend if the grandparent process is a shell. Otherwise, do nothing.
-  --
-  -- A couple examples where the grandparent process won't be a shell:
-  -- - nvim was run as part of a terminal invocation (`alacritty -e nvim`)
-  -- - nvim was run as part of a diss invocation (`diss -a foo nvim`)
-  --
-  -- In these cases, suspending would drop us into an unusable terminal.
-  local gp = gparent_process_name()
-
-  if gp == 'bash' or gp == 'sh' then
-    cmd.suspend()
-  end
-end
-set('n', '<Leader>i', safe_suspend)
-set('n', '<C-z>', safe_suspend)
+set('n', '<Leader>i', '<C-z>')
 
 -- Workaround https://github.com/neovim/neovim/issues/11393
 set('c', '<C-g>', '<C-u><Esc>')
@@ -547,7 +518,6 @@ set('n', '<Leader><Esc>', function()
   end
 end)
 
--- TODO: magit (neogit?)
 -- git
 set('n', '<Leader>gb', '<Cmd>Git blame<CR>')
 set('n', '<Leader>gs', '<Cmd>Git<CR>')

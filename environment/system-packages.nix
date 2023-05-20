@@ -3,6 +3,7 @@ pkgs:
 with pkgs; [
   _1password
   abcde
+  age # TODO: pa, passage
   silver-searcher
   alacritty-wrapped
   arc-icon-theme
@@ -25,15 +26,23 @@ with pkgs; [
   cmus
   computables
   conky
+  confluent-cli
+  direnv
+  diss
   dmenu
   dmenu_cdpath
+  dmenu_diss
+  dmenu_fontpreview
   dmidecode
   docker
   docker-compose
+  dotinit
   dunst
   easyrsa
   emacs
+  emacseverywhere
   emc
+  exfat
   fd
   feh
   ffmpeg
@@ -51,6 +60,7 @@ with pkgs; [
   gnome3.adwaita-icon-theme
   gnumake
   gnupg
+  gpick
   graphviz
   haskellPackages.hasktags
   htop
@@ -66,6 +76,7 @@ with pkgs; [
   lshw
   lsof
   lsscsi
+  lua51Packages.luacheck
   minikube
   mkcue
   mkpasswd
@@ -75,20 +86,28 @@ with pkgs; [
   nice-icons
   nix-du
   nix-prefetch-git
+  nixfmt
+  neovim-qt
   nnn
   openssl
   openvpn_dmenu
   ormolu
+  pandoc
   pass
   par
+  parallel
+  pick-one-color
   procs
   psmisc
   pup
   qalculate-gtk
   qbittorrent
+  qrencode
   redis
   reptyr
+  resound
   ripgrep
+  # rover # FIXME
   rxvt_unicode-with-plugins
   screencast
   screenshot
@@ -110,6 +129,7 @@ with pkgs; [
   udisks_dmenu
   universal-ctags
   unzip
+  urxvt_perls
   vim-configured
   vimPlugins.haskell-vim
   virtualboxHeadless
@@ -119,11 +139,16 @@ with pkgs; [
   wget
   wmctrl
   xclip
+  xcolor
   xdg-user-dirs
   xdotool
   xmobar
   xorg.xmessage
+  xorg.xprop
+  xorg.xwininfo
   xsel
+  yq
   zathura
+  zbar
   zip
 ]

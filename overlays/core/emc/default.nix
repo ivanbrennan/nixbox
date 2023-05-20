@@ -1,5 +1,5 @@
-{ writeShellScriptBin }:
+{ writeShellScriptBin, emacs }:
 
 writeShellScriptBin "emc" ''
-  exec emacsclient --alternate-editor="" --create-frame "$@"
+  exec ${emacs}/bin/emacsclient --alternate-editor="" --create-frame "$@"
 ''
