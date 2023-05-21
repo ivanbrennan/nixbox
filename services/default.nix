@@ -94,9 +94,11 @@
       };
       extraConfig = ''
         AllowAgentForwarding no
+        StreamLocalBindUnlink no
 
         Match User ivan
           AllowAgentForwarding yes
+          StreamLocalBindUnlink yes
       '';
     };
   };
