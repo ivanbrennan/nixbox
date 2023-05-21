@@ -24,6 +24,9 @@
   # timedatectl set-timezone America/New_York
   time.timeZone = null;
 
+  # Enable CUPS to print documents.
+  # services.printing.enable = true;
+
   # Allow redshift to work.
   location.latitude = 41.7;
   location.longitude = -74.1;
