@@ -7,6 +7,7 @@ with pkgs; [
   silver-searcher
   alacritty-wrapped
   arc-icon-theme
+  arp-scan
   aspell
   aspellDicts.en
   aws-iam-authenticator
