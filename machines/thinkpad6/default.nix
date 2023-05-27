@@ -19,7 +19,7 @@
 
   boot.initrd.luks.devices = {
     root = {
-      device = "/dev/disk/by-uuid/ef0fbbb1-f41f-4ae3-9139-1a81b12eb06a";
+      device = "/dev/disk/by-partlabel/primary";
       preLVM = true;
     };
   };
