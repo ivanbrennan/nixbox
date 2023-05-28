@@ -21,6 +21,7 @@
     root = {
       device = "/dev/disk/by-partlabel/primary";
       preLVM = true;
+      bypassWorkqueues = true;
     };
   };
 
