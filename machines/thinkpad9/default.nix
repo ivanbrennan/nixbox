@@ -15,6 +15,7 @@
   boot.initrd.luks.devices = {
     root = {
       device = "/dev/disk/by-partlabel/primary";
+      bypassWorkqueues = true;
       preLVM = true;
     };
   };
