@@ -23,6 +23,7 @@ with pkgs; [
   cachix
   capitaine-cursors
   cdparanoia
+  channel-search
   chromium
   cmus
   computables

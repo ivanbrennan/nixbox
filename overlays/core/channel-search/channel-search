@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+cat=@cat@
+curl=@curl@
+cut=@cut@
+git=@git@
+
+usage() {
+    $cat >&2 <<EOF
+Usage: ${0##*/} /PATH/TO/NIXPKGS COMMIT
+e.g.
+  ${0##*/} ~/Development/code/nixpkgs 236cc2971ac
+EOF
+}
+
+# Expect 2 args, the first a directory, the second a commit.
+(( $# == 2 )) &&
+    [ -d "$1" ] &&
+    [[ "$2" =~ ^[[:xdigit:]]{7,}$ ]] ||
+    { usage ; exit 1 ; }
+
+nixpkgs=$1
+commit=$2
+
+channels=(
+    $($curl -s https://channels.nix.gsc.io/nixos-unstable/history | $cut -d ' ' -f 1)
+)
+min=0
+max=$(( ${#channels[@]} - 1 ))
+
+while (( min < max ))
+do
+    echo -n .
+
+    mid=$(( (max + min) / 2 ))
+    rev=${channels[$mid]}
+
+    if $git -C "$nixpkgs" merge-base --is-ancestor "$commit" "$rev"
+    then
+        max=$mid
+    else
+        min=$(( mid + 1 ))
+    fi
+done
+echo
+
+if (( min == max ))
+then
+    rev=${channels[$min]}
+
+    if $git -C "$nixpkgs" merge-base --is-ancestor "$commit" "$rev"
+    then
+        if (( min > 0 ))
+        then
+            echo "${channels[$(( min - 1 ))]} is the last revision that doesn't contain $commit"
+        fi
+        echo "$rev is the first revision that contains $commit"
+
+        exit 0
+    fi
+fi
+
+echo "Commit not found in nixos-unstable" >&2
+exit 1

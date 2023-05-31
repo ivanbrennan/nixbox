@@ -14,6 +14,8 @@ in self: super: {
   bleep = super.callPackage ./bleep { };
   bloop = super.callPackage ./bloop { };
 
+  channel-search = super.callPackage ./channel-search { };
+
   diss = super.callPackage ./diss { };
 
   dmenu_diss = super.callPackage ./dmenu_diss { };
