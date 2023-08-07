@@ -95,7 +95,7 @@ with pkgs; [
   openvpn_dmenu
   ormolu
   pandoc
-  pass
+  (pass.withExtensions (exts: [exts.pass-otp]))
   par
   parallel
   pick-one-color
