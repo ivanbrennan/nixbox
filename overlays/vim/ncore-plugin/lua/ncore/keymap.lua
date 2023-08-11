@@ -353,6 +353,13 @@ set('n', '<Leader>tu', telx.undo.undo)
 set('n', 'gl', function()
   tel.live_grep({ only_sort_text = true })
 end)
+set('n', 'gL', function()
+  tel.live_grep({
+    only_sort_text = true,
+    additional_args = { "--no-ignore-dot" }
+  })
+end)
+set('n', 'g<C-l>', ":lua require('telescope.builtin').live_grep({ only_sort_text = true, search_dirs = {''} })<Left><Left><Left><Left><Left>")
 set('n', 'g<Space>', function()
   -- https://github.com/nvim-telescope/telescope-fzf-native.nvim/issues/53#issuecomment-1015126459
   tel.grep_string({
@@ -363,6 +370,12 @@ set('n', 'g<Space>', function()
 end)
 set('n', 'g.', function()
   tel.grep_string({ word_match = '-w' })
+end)
+set('n', 'g>', function()
+  tel.grep_string({
+    word_match = '-w',
+    additional_args = { "--no-ignore-dot" }
+  })
 end)
 set('n', '<C-;>', tel.buffers)
 set('n', 'g/', tel.current_buffer_fuzzy_find)
