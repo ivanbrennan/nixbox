@@ -101,7 +101,9 @@ mount)
         then
             $udisksctl unlock --block-device "$path" --key-file <(ask_passphrase) || exit 1
         fi
-        path=$(luks_opened_drives | $jq --raw-output "[select(.path == \"$path\")][0].children[0].path")
+        path=$(luks_opened_drives \
+                | $jq --raw-output "[select(.path == \"$path\")]" \
+                | $jq --raw-output --slurp "flatten | .[0].children[0].path")
     fi
 
     result=$($udisksctl mount --no-user-interaction --block-device="$path" 2>/dev/null)
