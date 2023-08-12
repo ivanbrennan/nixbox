@@ -15,7 +15,23 @@
       ./services
       ./users
       ./kmonad.nix
+
+      # sops-nix
+      (let
+         rev = "c36df4fe4bf4bb87759b1891cab21e7a05219500";
+         tar = builtins.fetchTarball {
+           url = "https://github.com/Mic92/sops-nix/archive/${rev}.tar.gz";
+           sha256 = "1hgd3a4yh7xs2ij9c41vga7chym7qdx0pgksrjka2smsdbpwncn9";
+         };
+       in "${tar}/modules/sops"
+      )
     ];
+
+  sops = {
+    defaultSopsFile = ./sops-nix/secrets/secrets.yaml;
+    age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+    secrets.example_key = {};
+  };
 
   i18n.defaultLocale = "en_US.UTF-8";
   console.useXkbConfig = true;
