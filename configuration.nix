@@ -25,12 +25,26 @@
          };
        in "${tar}/modules/sops"
       )
+
+      # agenix
+      (let
+         rev = "d8c973fd228949736dedf61b7f8cc1ece3236792";
+         tar = builtins.fetchTarball {
+           url = "https://github.com/ryantm/agenix/archive/${rev}.tar.gz";
+           sha256 = "01id7i7gw3r56b2p95411sbmbmmsarpzamig4h8rxbi4bljvnxzm";
+         };
+       in "${tar}/modules/age.nix"
+      )
     ];
 
   sops = {
     defaultSopsFile = ./sops-nix/secrets/secrets.yaml;
     age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
     secrets.example_key = {};
+  };
+
+  age.secrets = {
+    secret1.file = ./agenix/secrets/secret1.age;
   };
 
   i18n.defaultLocale = "en_US.UTF-8";
