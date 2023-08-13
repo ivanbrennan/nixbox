@@ -41,6 +41,7 @@
     defaultSopsFile = ./sops-nix/secrets/secrets.yaml;
     age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
     secrets.example_key = {};
+    secrets.block_key = {};
   };
 
   age.secrets = {
