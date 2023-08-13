@@ -133,7 +133,7 @@
         "2606:4700:4700::1001"
       ];
 
-    firewall.allowedTCPPorts = import ./allowed-tcp-ports.nix.private;
+    firewall.allowedTCPPorts = builtins.genList (x: 19090 + x) 10;
     firewall.allowedUDPPorts = [ ];
 
     networkmanager.enable = true;
