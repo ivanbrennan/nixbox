@@ -21,7 +21,7 @@
     locate.enable = true;
     locate.pruneNames = [];
 
-    openvpn = import ./openvpn;
+    openvpn = (import ./openvpn) config;
 
     redshift = {
       enable = true;

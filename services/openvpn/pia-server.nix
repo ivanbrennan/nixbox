@@ -1,6 +1,4 @@
-{ remote
-, private ? builtins.readFile ./client.private.conf
-}:
+{ config, remoteHost, remotePort }:
 
 {
   autoStart = false;
@@ -46,8 +44,15 @@
     disable-occ
 
     # Server hostname and port.
-    ${remote}
+    remote ${remoteHost} ${builtins.toString remotePort}
 
-    ${private}
+    # Authenticate via username/password.
+    auth-user-pass ${config.sops.secrets.openvpn_pia_login.path}
+
+    # Certificate Authority
+    ca ${config.sops.secrets.openvpn_pia_ca.path}
+
+    # Check server's cert against the revocation list.
+    crl-verify ${config.sops.secrets.openvpn_pia_crl.path}
   '';
 }

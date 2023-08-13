@@ -40,8 +40,18 @@
   sops = {
     defaultSopsFile = ./sops-nix/secrets/secrets.yaml;
     age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
-    secrets.example_key = {};
-    secrets.block_key = {};
+    secrets = {
+      example_key = {};
+      block_key = {};
+      openvpn_pia_login = {};
+      openvpn_pia_ca = {};
+      openvpn_pia_crl = {};
+      openvpn_odeko_ta = {};
+      openvpn_odeko_ca = {};
+      openvpn_odeko_cert = {};
+      openvpn_odeko_key = {};
+      openvpn_odeko_askpass = {};
+    };
   };
 
   age.secrets = {
