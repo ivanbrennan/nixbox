@@ -1,9 +1,6 @@
 { pkgs, ... }:
 
-let
-  githubUsername = import ./github-username.private;
-  githubToken = import ./github-token.private;
-in {
+{
   environment = {
     systemPackages = (import ./system-packages.nix) pkgs;
     variables = (import ./variables.nix) pkgs;
@@ -47,15 +44,6 @@ in {
         --ignore-file=/etc/gitignore
       '';
       "inputrc".source = etc/inputrc;
-      "nix/netrc".source = pkgs.writeText "netrc" ''
-        machine github.com
-        login ${githubUsername}
-        password ${githubToken}
-
-        machine api.github.com
-        login ${githubUsername}
-        password ${githubToken}
-      '';
       "xdg/nvim/after/ftplugin/qf.lua".source = etc/xdg/nvim/after/ftplugin/qf.lua;
       "xdg/nvim/after/plugin/keymap.lua".source = etc/xdg/nvim/after/plugin/keymap.lua;
       "xdg/nvim/after/syntax/c.vim".source = etc/xdg/nvim/after/syntax/c.vim;

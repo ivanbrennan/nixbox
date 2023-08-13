@@ -51,6 +51,9 @@
       openvpn_odeko_cert = {};
       openvpn_odeko_key = {};
       openvpn_odeko_askpass = {};
+      environment_etc_nix_netrc = {
+        path = "/etc/nix/netrc";
+      };
     };
   };
 
@@ -108,11 +111,6 @@
         "nixos-config=/etc/nixos/configuration.nix"
         "/nix/var/nix/profiles/per-user/root/channels"
       ];
-
-    envVars = {
-      NIX_GITHUB_PRIVATE_USERNAME = import ./environment/github-username.private;
-      NIX_GITHUB_PRIVATE_PASSWORD = import ./environment/github-token.private;
-    };
 
     settings.trusted-users = [ "ivan" ];
 
