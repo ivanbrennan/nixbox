@@ -46,6 +46,7 @@
 
   age.secrets = {
     secret1.file = ./agenix/secrets/secret1.age;
+    secret2.file = ./agenix/secrets/secret2.age;
   };
 
   i18n.defaultLocale = "en_US.UTF-8";
