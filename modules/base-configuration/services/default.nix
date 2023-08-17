@@ -21,7 +21,7 @@
     locate.enable = true;
     locate.pruneNames = [];
 
-    openvpn = (import ./openvpn) config;
+    openvpn = (import ./openvpn) { inherit (config.sops) secrets; };
 
     redshift = {
       enable = true;

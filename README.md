@@ -1,18 +1,18 @@
-## make
-
-``` sh
-sudo make -C /etc/nixos machine=MACHINE
-```
-
 sleep battery drain
 https://forums.lenovo.com/t5/Other-Linux-Discussions/X1C-gen9-fan-starts-in-sleep-mode-drains-battery-in-a-few-hours/m-p/5132432
 https://bbs.archlinux.org/viewtopic.php?id=274292
 
 ## Todo
+- remove _1password from overlay, now that nixpkgs has a newer version
+- look into https://github.com/nix-community/nix-doom-emacs/blob/master/docs/reference.md#home-manager
+- impermanence https://github.com/nix-community/impermanence
+- https://nixos.wiki/wiki/Binary_Cache#How_to_check_if_content_is_on_a_binary_cache
+- https://github.com/nix-community/disko
 - "a stop job is running for"
   - `journalctl --boot=-1 --reverse` (search for "timed out")
   - `journalctl --user --reverse -u emacs`
 pass-otp https://github.com/tadfisher/pass-otp
+  - https://github.com/Misterio77/nix-config/blob/5d4e7099910905708029a2fc52eb321644af6ac3/overlays/pass-otp-fix-completion.patch#L4
 rtorrent https://wiki.archlinux.org/title/RTorrent
 tribler https://en.wikipedia.org/wiki/Tribler
 restic https://restic.net/?ref=words.filippo.io

@@ -1,9 +1,8 @@
-config:
+{ secrets }:
 
 let
-  pia-server = { remoteHost, remotePort }: (import ./pia-server.nix) {
-    inherit config remoteHost remotePort;
-  };
+  pia-server = import ./pia-server.nix;
+  odeko-server = import ./odeko-server.nix;
 in
 {
   servers = {
@@ -11,15 +10,18 @@ in
     pia-ca = pia-server {
       remoteHost = "ca-montreal.privateinternetaccess.com";
       remotePort = 1198;
+      inherit secrets;
     };
     pia-nl = pia-server {
       remoteHost = "nl-amsterdam.privacy.network";
       remotePort = 1198;
+      inherit secrets;
     };
     pia-swiss = pia-server {
       remoteHost = "swiss.privacy.network";
       remotePort = 1198;
+      inherit secrets;
     };
-    odeko = import (./odeko-server.nix) { inherit config; };
+    odeko = odeko-server { inherit secrets; };
   };
 }

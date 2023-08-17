@@ -1,4 +1,4 @@
-{ config, remoteHost, remotePort }:
+{ remoteHost, remotePort, secrets }:
 
 {
   autoStart = false;
@@ -47,12 +47,12 @@
     remote ${remoteHost} ${builtins.toString remotePort}
 
     # Authenticate via username/password.
-    auth-user-pass ${config.sops.secrets.openvpn_pia_login.path}
+    auth-user-pass ${secrets.openvpn_pia_login.path}
 
     # Certificate Authority
-    ca ${config.sops.secrets.openvpn_pia_ca.path}
+    ca ${secrets.openvpn_pia_ca.path}
 
     # Check server's cert against the revocation list.
-    crl-verify ${config.sops.secrets.openvpn_pia_crl.path}
+    crl-verify ${secrets.openvpn_pia_crl.path}
   '';
 }
