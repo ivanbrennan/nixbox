@@ -1,48 +1,23 @@
 # For help, see ‘man configuration.nix’ and ‘nixos-help’.
 
-{ config, pkgs, ... }:
+{ config, pkgs, sops-nix, ... }:
 
 {
   imports =
-    [ # Symlink: sudo make -C /etc/nixos machine=MACHINE
-      ./machines/self.nix
-
-      # shared
-      ./cachix.nix
+    [ sops-nix.nixosModules.sops
       ./environment
       ./programs
       ./security
       ./services
       ./users
       ./kmonad.nix
-
-      # sops-nix
-      (let
-         rev = "c36df4fe4bf4bb87759b1891cab21e7a05219500";
-         tar = builtins.fetchTarball {
-           url = "https://github.com/Mic92/sops-nix/archive/${rev}.tar.gz";
-           sha256 = "1hgd3a4yh7xs2ij9c41vga7chym7qdx0pgksrjka2smsdbpwncn9";
-         };
-       in "${tar}/modules/sops"
-      )
-
-      # agenix
-      (let
-         rev = "d8c973fd228949736dedf61b7f8cc1ece3236792";
-         tar = builtins.fetchTarball {
-           url = "https://github.com/ryantm/agenix/archive/${rev}.tar.gz";
-           sha256 = "01id7i7gw3r56b2p95411sbmbmmsarpzamig4h8rxbi4bljvnxzm";
-         };
-       in "${tar}/modules/age.nix"
-      )
     ];
 
   sops = {
-    defaultSopsFile = ./sops-nix/secrets/secrets.yaml;
+    defaultSopsFile = ./secrets.yaml;
     age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
     secrets = {
-      example_key = {};
-      block_key = {};
+      # TODO: https://github.com/Mic92/sops-nix#restartingreloading-systemd-units-on-secret-change
       openvpn_pia_login = {};
       openvpn_pia_ca = {};
       openvpn_pia_crl = {};
@@ -55,11 +30,6 @@
         path = "/etc/nix/netrc";
       };
     };
-  };
-
-  age.secrets = {
-    secret1.file = ./agenix/secrets/secret1.age;
-    secret2.file = ./agenix/secrets/secret2.age;
   };
 
   i18n.defaultLocale = "en_US.UTF-8";
@@ -97,32 +67,28 @@
     };
   };
 
-  nixpkgs.overlays =
-    [ (import ./overlays/core)
-      (import ./overlays/haskell)
-      (import ./overlays/vim)
-      (import ./overlays/emacs)
-    ];
-
   nix = {
     nixPath =
-      [ "nixpkgs=/nix/var/nix/profiles/per-user/root/channels/nixos/nixpkgs"
-        "nixpkgs-overlays=/etc/nixos/overlays"
+      [ "nixpkgs-overlays=/etc/nixos/overlays"
         "nixos-config=/etc/nixos/configuration.nix"
         "/nix/var/nix/profiles/per-user/root/channels"
       ];
 
-    settings.trusted-users = [ "ivan" ];
+    settings = {
+      trusted-users = [ "ivan" ];
+      experimental-features = [ "nix-command" "flakes" ];
+      extra-substituters = [
+        "https://nix-community.cachix.org"
+      ];
+      extra-trusted-public-keys = [
+        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      ];
+    };
 
     gc.automatic = true;
     gc.dates = "03:15";
-
-    extraOptions = ''
-      experimental-features = nix-command flakes
-    '';
   };
 
-  # see machines/self.nix for hostName
   networking = {
     nameservers =
       [ # cloudflare IPv4

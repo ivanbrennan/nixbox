@@ -1,17 +1,10 @@
-{ pkgs, ... }:
+{ pkgs, nixos-hardware, ... }:
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      # ( let
-      #     nixos-hardware = builtins.fetchTarball {
-      #       url = "https://github.com/NixOS/nixos-hardware/archive/71ce85372a614d418d5e303dd5702a79d1545c04.tar.gz";
-      #       sha256 = "0000000000000000000000000000000000000000000000000000";
-      #     };
-      #   in "${nixos-hardware}/lenovo/thinkpad/x1/6th-gen"
-      # )
-      ./hardware-configuration.nix
-    ];
+  imports = [
+    ./hardware-configuration.nix
+    # nixos-hardware.nixosModules.lenovo-thinkpad-x1-6th-gen
+  ];
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;

@@ -1,9 +1,9 @@
-{ pkgs, ... }:
+{ pkgs, nixos-hardware, ... }:
 
 {
   imports = [
-    "${builtins.fetchTarball { url = "https://github.com/NixOS/nixos-hardware/archive/d7a12fcc071bff59bd0ead589c975d802952a064.tar.gz"; sha256 = "1a213sa4smqwwhkwjsm2ccrzbq7mb0qrrw54jc2ik7q0v4x93ypn"; }}/lenovo/thinkpad/x1/9th-gen"
     ./hardware-configuration.nix
+    nixos-hardware.nixosModules.lenovo-thinkpad-x1-9th-gen
   ];
 
   networking.hostName = "thinkpad9";

@@ -3,7 +3,7 @@ keys:
   - &thinkpad6 age14mxjnh5yykh0vzqlrz4uufcd3vz295q8grku3fwnkxkrx9td7sqqy9jkyv
   - &thinkpad9 age12wlz6sa2e7lgwrdk8dljvhjlazc5536dgpsmy8eyvtlvqttewp6qzsp699
 creation_rules:
-  - path_regex: sops-nix/secrets/[^/]+\.yaml$
+  - path_regex: modules/base-configuration/secrets\.yaml$
     key_groups:
     - age:
       - *ivan

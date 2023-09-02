@@ -1,4 +1,4 @@
-{ config }:
+{ secrets }:
 
 {
   autoStart = false;
@@ -43,16 +43,16 @@
     resolv-retry 60
 
     # Client needs same tls-auth key that the server uses.
-    tls-auth ${config.sops.secrets.openvpn_odeko_ta.path} 1
+    tls-auth ${secrets.openvpn_odeko_ta.path} 1
 
     # SSL/TLS
-    ca   ${config.sops.secrets.openvpn_odeko_ca.path}
-    cert ${config.sops.secrets.openvpn_odeko_cert.path}
-    key  ${config.sops.secrets.openvpn_odeko_key.path}
+    ca   ${secrets.openvpn_odeko_ca.path}
+    cert ${secrets.openvpn_odeko_cert.path}
+    key  ${secrets.openvpn_odeko_key.path}
 
     # Currently the only way I've found to successfully start client via systemctl.
     # Otherwise systemd-ask-password prompts for the passphrase, but the prompt
     # is never shown. https://forums.openvpn.net/viewtopic.php?f=6&t=26408
-    askpass ${config.sops.secrets.openvpn_odeko_askpass.path}
+    askpass ${secrets.openvpn_odeko_askpass.path}
   '';
 }
