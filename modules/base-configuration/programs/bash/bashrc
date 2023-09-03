@@ -133,10 +133,10 @@ fdoc() {
 
 opf() {
     local items
-    items=$(op list items)
+    items=$(op item list --format=json)
     if [ $? -eq 0 ]
     then
-        op get item "$(jq -r 'map(.overview.title) | .[]' <<< "$items" | fzf)"
+        op item get "$(jq -r 'map(.title) | .[]' <<< "$items" | fzf)" "$@"
     fi
 }
 

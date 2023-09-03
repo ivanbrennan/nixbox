@@ -42,15 +42,6 @@ self: super: {
 
   interactive-editor = super.callPackage ./interactive-editor { };
 
-  _1password = super._1password.overrideAttrs (old: rec {
-    version = "1.4.0";
-    src = super.fetchzip {
-      url = "https://cache.agilebits.com/dist/1P/op/pkg/v${version}/op_linux_amd64_v${version}.zip";
-      sha256 = "1r4wm48ichbq208xzfp86ykspfsizxay06nvsyj2rm789km296fl";
-      stripRoot = false;
-    };
-  });
-
   linuxPackages = (super.linuxPackagesFor super.linuxPackages.kernel).extend (
     self': super': {
       i8042_debounce = super'.callPackage ./i8042-debounce { };
