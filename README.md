@@ -3,7 +3,6 @@ https://forums.lenovo.com/t5/Other-Linux-Discussions/X1C-gen9-fan-starts-in-slee
 https://bbs.archlinux.org/viewtopic.php?id=274292
 
 ## Todo
-- remove _1password from overlay, now that nixpkgs has a newer version
 - look into https://github.com/nix-community/nix-doom-emacs/blob/master/docs/reference.md#home-manager
 - impermanence https://github.com/nix-community/impermanence
 - https://nixos.wiki/wiki/Binary_Cache#How_to_check_if_content_is_on_a_binary_cache
