@@ -2,6 +2,7 @@
 
 {
   SS = "unset __ETC_BASHRC_SOURCED && . /etc/bashrc";
+  shlvl = "echo $SHLVL";
   du1 = "du -h -d 1";
   fgg = "fg '%-'";
   finame = "find . -name";
