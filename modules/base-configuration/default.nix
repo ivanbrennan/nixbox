@@ -109,7 +109,7 @@
   hardware.pulseaudio.enable = true;
 
   fonts = {
-    fonts = with pkgs; [
+    packages = with pkgs; [
       cantarell-fonts
       dejavu_fonts
       emacs-all-the-icons-fonts

@@ -7,7 +7,7 @@
         type = "github";
         owner = "NixOS";
         repo = "nixpkgs";
-        rev = "f294325aed382b66c7a188482101b0f336d1d7db";
+        ref = "nixos-unstable";
       };
 
       # Pinned nixpkgs revisions for specific package versions.
