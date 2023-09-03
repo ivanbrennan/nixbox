@@ -152,5 +152,6 @@ with pkgs; [
   yq
   zathura
   zbar
+  zellij
   zip
 ]
