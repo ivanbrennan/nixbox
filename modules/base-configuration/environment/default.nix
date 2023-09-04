@@ -55,6 +55,7 @@
       "xdg/kitty/kitty.conf".source = etc/xdg/kitty/kitty.conf;
       "zathurarc".source = etc/zathurarc;
       "zellij/config.kdl".source = etc/zellij/config.kdl;
+      "zellij/layouts/default.kdl".source = etc/zellij/layouts/default.kdl;
     };
     extraInit = ''
       export XDG_CONFIG_DIRS="/etc/xdg''${XDG_CONFIG_DIRS:+:}$XDG_CONFIG_DIRS"

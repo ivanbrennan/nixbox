@@ -220,7 +220,7 @@ plugins {
 //   - true (default)
 //   - false
 //
-// pane_frames true
+pane_frames false
 
 // Toggle between having Zellij lay out panes according to a predefined set of layouts whenever possible
 // Options:
@@ -233,21 +233,21 @@ plugins {
 // For more examples, see: https://github.com/zellij-org/zellij/tree/main/example/themes
 // Once these themes are defined, one of them should to be selected in the "theme" section of this file
 //
-// themes {
-//     dracula {
-//         fg 248 248 242
-//         bg 40 42 54
-//         red 255 85 85
-//         green 80 250 123
-//         yellow 241 250 140
-//         blue 98 114 164
-//         magenta 255 121 198
-//         orange 255 184 108
-//         cyan 139 233 253
-//         black 0 0 0
-//         white 255 255 255
-//     }
-// }
+themes {
+    default {
+        fg "#D5D8DC"
+        bg "#181818"
+        black "#181818"
+        red "#DE4D3A"
+        green "#B8E068"
+        yellow "#EBCB8B"
+        blue "#61B3C9"
+        magenta "#617FA0"
+        orange "#D08770"
+        cyan "#69D2E7"
+        white "#D5D8DC"
+    }
+}
 
 // Choose the theme that is specified in the themes section.
 // Default: default

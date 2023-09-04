@@ -27,9 +27,15 @@ _build_color_prompt() {
     normal="\033[0m"
 
     host="${SSH_CLIENT:+\[${normal}\]}@${SSH_CLIENT:+\[${gold}\]}\H"
+    if [ "$ZELLIJ" = 0 ]
+    then
+        dot=○
+    else
+        dot=•
+    fi
 
     line1="╭\[${bold}\]\w\[${normal}\]\$(_git_ps1_)\[${normal}\] \[${black}\]\$? \d \t\[${normal}\]"
-    line2="╰(\u${IN_NIX_SHELL:+:nix}${VIM_TERMINAL:+:vim}\[${grey}\]${host}\[${normal}\])• "
+    line2="╰(\u${IN_NIX_SHELL:+:nix}${VIM_TERMINAL:+:vim}\[${grey}\]${host}\[${normal}\])${dot} "
 
     PS1="\n${line1}\n${line2}"
     PS2=" ❯ "
