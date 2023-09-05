@@ -840,20 +840,16 @@ keys' conf@(XConfig {modMask}) =
             (isEmacs,    sendKey modMask xK_v),
             (pure True,  sendKey controlMask xK_v)
           ]
+      ),
+      -- manpages
+      ( (modMask .|. shiftMask, xK_h),
+        local
+          (setTerminal "alacritty --class=manpage")
+          (manPrompt xPConfig)
       )
     ]
       ++ workspaceTagKeys
       ++ screenKeys
-      ++ [ ( (modMask, xK_slash),
-             submap . M.fromList $
-               [ ( (modMask, xK_slash),
-                   local
-                     (setTerminal "alacritty --class=manpage")
-                     (manPrompt xPConfig)
-                 )
-               ]
-           )
-         ]
       ++ [ ( (modMask, alt),
              submap . M.fromList $
                -- [ ( (noModMask, xK_u),
