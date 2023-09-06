@@ -1,5 +1,5 @@
 { coreutils
-, ffmpeg
+, ffmpeg-full
 , gnugrep
 , libnotify
 , runCommandLocal
@@ -13,7 +13,7 @@ runCommandLocal "screencast" { } ''
   patchShebangs --host $out/bin
   substituteInPlace $out/bin/$name                           \
       --replace "date"        "${coreutils}/bin/date"        \
-      --replace "ffmpeg"      "${ffmpeg}/bin/ffmpeg"         \
+      --replace "ffmpeg"      "${ffmpeg-full}/bin/ffmpeg"    \
       --replace "grep"        "${gnugrep}/bin/grep"          \
       --replace "notify-send" "${libnotify}/bin/notify-send" \
       --replace "slop"        "${slop}/bin/slop"             \
