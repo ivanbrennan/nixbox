@@ -54,10 +54,6 @@ ghcWithPackages() {
         --packages "haskellPackages.ghcWithPackages (p: with p; [${*}])"
 }
 
-nix-revision() {
-    cat $(grep -oP '\bnixpkgs=\K[^:]+' <<< "$NIX_PATH")/.git-revision
-}
-
 quietphones() {
     # https://unix.stackexchange.com/questions/336790/how-to-disable-white-noise-with-headphones-in-dell-xps
     amixer --card 0 set 'Headphone Mic Boost' 10db
