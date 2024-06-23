@@ -7,6 +7,10 @@
   ];
 
   networking.hostName = "thinkpad9";
+  networking.extraHosts = ''
+    127.0.0.1 local.odeko.com
+  '';
+  security.pki.certificateFiles = [ ./localCA.pem ];
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
