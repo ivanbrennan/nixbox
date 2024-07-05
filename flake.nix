@@ -52,12 +52,20 @@
         rev = "3b912580d054557e959d0b282fd12f5c473103f3";
         # inputs.nixpkgs.follows = "nixpkgs";
       };
+
+      docspell = {
+        type = "github";
+        owner = "ivanbrennan";
+        repo = "docspell";
+        rev = "baf5c682b0d78717e42352fe6525e10fb01ab836";
+        inputs.nixpkgs.follows = "nixpkgs";
+      };
     };
 
-  outputs = inputs@{ self, nixpkgs, nixos-hardware, sops-nix, emacs-overlay, ... }:
+  outputs = inputs@{ self, nixpkgs, nixos-hardware, sops-nix, emacs-overlay, docspell, ... }:
     let
       system = "x86_64-linux";
-      specialArgs = { inherit nixos-hardware sops-nix; };
+      specialArgs = { inherit nixos-hardware sops-nix docspell; };
     in {
       overlays = {
         pinned = final: prev: {
@@ -66,6 +74,8 @@
           gpick = inputs.nixpkgs-gpick.legacyPackages.${prev.system}.gpick;
           kubectl = inputs.nixpkgs-kubectl.legacyPackages.${prev.system}.kubectl;
           kubernetes-helm = (import inputs.nixpkgs-kubernetes-helm { system = prev.system; }).kubernetes-helm;
+          docspell-restserver = inputs.docspell.packages.${prev.system}.docspell-restserver;
+          docspell-joex = inputs.docspell.packages.${prev.system}.docspell-joex;
         };
         default = import ./overlays/default;
         haskell = import ./overlays/haskell;
@@ -82,6 +92,7 @@
           nix.registry.nixpkgs.flake = nixpkgs;
           nix.nixPath = [ "nixpkgs=flake:nixpkgs" ];
         };
+        docspell-configuration = ./modules/docspell-configuration;
       };
 
       nixosConfigurations.thinkpad9 = nixpkgs.lib.nixosSystem {
