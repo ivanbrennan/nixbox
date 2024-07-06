@@ -59,7 +59,7 @@ with pkgs; [
   git-annex
   glances
   global
-  gnome3.adwaita-icon-theme
+  adwaita-icon-theme
   gnumake
   gnupg
   gpick
@@ -88,7 +88,7 @@ with pkgs; [
   nice-icons
   nix-du
   nix-prefetch-git
-  nixfmt
+  nixfmt-classic
   neovim-qt
   nnn
   openssl

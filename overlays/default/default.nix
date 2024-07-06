@@ -24,7 +24,7 @@ self: super: {
     dunst = super.dunst;
     iconThemes = [
       self.hicolor-icon-theme
-      self.gnome3.adwaita-icon-theme
+      self.adwaita-icon-theme
     ];
   };
 

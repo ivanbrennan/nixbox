@@ -71,7 +71,6 @@ import XMonad.Actions.RotSlaves (rotAllDown, rotAllUp, rotSlavesDown, rotSlavesU
 import XMonad.Actions.Submap (submap)
 import XMonad.Actions.WindowBringer (gotoMenuArgs)
 import XMonad.Actions.WorkspaceNames (renameWorkspace, workspaceNamesPP)
-import XMonad.Hooks.DynamicProperty (dynamicTitle)
 import XMonad.Hooks.EwmhDesktops (ewmh, ewmhFullscreen)
 import XMonad.Hooks.InsertPosition
   ( Focus (Newer, Older), Position (Above, Below), insertPosition,
@@ -81,6 +80,7 @@ import XMonad.Hooks.ManageDocks (AvoidStruts, ToggleStruts (ToggleStruts), avoid
 import XMonad.Hooks.ManageHelpers
   ( composeOne, doCenterFloat, doRectFloat, isDialog, (-?>),
   )
+import XMonad.Hooks.OnPropertyChange (onTitleChange)
 import XMonad.Hooks.RefocusLast
   ( RefocusLastLayoutHook, isFloat, refocusLastLayoutHook, refocusLastWhen,
     refocusWhen, swapWithLast, toggleFocus,
@@ -93,6 +93,7 @@ import XMonad.Hooks.StatusBar.PP
 import XMonad.Layout.BoringWindows
   ( BoringWindows, boringAuto, focusDown, focusUp, swapDown, swapUp,
   )
+import XMonad.Layout.FocusTracking (FocusTracking, focusTracking)
 import XMonad.Layout.LayoutModifier (ModifiedLayout)
 import XMonad.Layout.LimitWindows
   ( Selection, limitSelect, decreaseLimit, increaseLimit,
@@ -106,7 +107,6 @@ import XMonad.Layout.Renamed (Rename (Append, Prepend), renamed)
 import XMonad.Layout.ResizableTile
   ( ResizableTall (ResizableTall), MirrorResize (MirrorShrink, MirrorExpand),
   )
-import XMonad.Layout.StateFull (FocusTracking, focusTracking)
 import XMonad.Prompt
   ( ComplCaseSensitivity (CaseInSensitive), XPConfig, XPPosition (Top),
     alwaysHighlight, bgColor, bgHLight, complCaseSensitivity, defaultXPKeymap,
@@ -182,7 +182,8 @@ main = do
 
 type Struts       a = ModifiedLayout AvoidStruts a
 type SmartBorders a = ModifiedLayout SmartBorder a
-type Refocus      a = ModifiedLayout RefocusLastLayoutHook (FocusTracking a)
+type FocusTrack   a = ModifiedLayout FocusTracking a
+type Refocus      a = ModifiedLayout RefocusLastLayoutHook (FocusTrack a)
 type Boring       a = ModifiedLayout BoringWindows a
 type Renamed      a = ModifiedLayout Rename a
 type LimitSelect  a = ModifiedLayout Selection a
@@ -456,7 +457,7 @@ handleEventHook' =
 
 emacsEverywhereEventHook :: Event -> X All
 emacsEverywhereEventHook =
-  dynamicTitle (isEmacsEverywhere --> doCenteredFloat 0.6 0.6)
+  onTitleChange (isEmacsEverywhere --> doCenteredFloat 0.6 0.6)
   where
     isEmacsEverywhere :: Query Bool
     isEmacsEverywhere = isEmacs <&&> title =? "emacs-anywhere"

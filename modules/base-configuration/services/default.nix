@@ -2,6 +2,8 @@
 
 {
   services = {
+    displayManager.defaultSession = "none+xmonad";
+
     emacs.enable = true;
 
     gvfs.enable = true;
@@ -14,6 +16,11 @@
             EVENTS:
               EV_KEY: [KEY_CAPSLOCK, KEY_ESC]
       '';
+    };
+
+    libinput = {
+      enable = true;
+      touchpad.naturalScrolling = true;
     };
 
     journald.extraConfig = "SystemMaxUse=2G";

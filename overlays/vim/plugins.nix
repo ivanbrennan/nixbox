@@ -1,7 +1,7 @@
 pkgs:
 
 let
-  build = name: value: pkgs.vimUtils.buildVimPluginFrom2Nix {
+  build = name: value: pkgs.vimUtils.buildVimPlugin {
     name = value.name;
     src = pkgs.fetchFromGitHub value.src;
   };
@@ -16,7 +16,7 @@ let
   # should provide are not actually made available.
 
 in pkgs.lib.mapAttrs build plugins // {
-  ncore-plugin = pkgs.vimUtils.buildVimPluginFrom2Nix {
+  ncore-plugin = pkgs.vimUtils.buildVimPlugin {
     name = "ncore-plugin";
     src = ./ncore-plugin;
   };

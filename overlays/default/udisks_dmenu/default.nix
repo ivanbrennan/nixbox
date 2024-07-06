@@ -4,7 +4,7 @@
 , gnused
 , jq
 , libnotify
-, pinentry-gnome
+, pinentry-gnome3
 , runCommandLocal
 , stdenv
 , udisks2
@@ -20,7 +20,7 @@ runCommandLocal "udisks_dmenu" { } ''
       --subst-var-by "jq"          "${jq}/bin/jq"                  \
       --subst-var-by "lsblk"       "${util-linux}/bin/lsblk"       \
       --subst-var-by "notify_send" "${libnotify}/bin/notify-send"  \
-      --subst-var-by "pinentry"    "${pinentry-gnome}/bin/pinentry" \
+      --subst-var-by "pinentry"    "${pinentry-gnome3}/bin/pinentry" \
       --subst-var-by "sed"         "${gnused}/bin/sed"             \
       --subst-var-by "sort"        "${coreutils}/bin/sort"         \
       --subst-var-by "tr"          "${coreutils}/bin/tr"           \

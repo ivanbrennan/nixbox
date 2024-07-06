@@ -7,11 +7,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1693772660,
-        "narHash": "sha256-U4rnqhGkv3HukItbxtrrcdRnx4kGPNK4hZSaF9gFJYs=",
+        "lastModified": 1720293962,
+        "narHash": "sha256-Qh35eqOulLMrk1dZmFkY/2Qj4Fl4PLfQXiUr3dg1kAk=",
         "owner": "ivanbrennan",
         "repo": "bleep",
-        "rev": "e7acfabff92b160ed766b95aa4f7b99480eadc6f",
+        "rev": "382fb1f4144ce7cd42910e0472569f986f70af16",
         "type": "github"
       },
       "original": {
@@ -248,11 +248,11 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1693663421,
-        "narHash": "sha256-ImMIlWE/idjcZAfxKK8sQA7A1Gi/O58u5/CJA+mxvl8=",
+        "lastModified": 1720031269,
+        "narHash": "sha256-rwz8NJZV+387rnWpTYcXaRNvzUSnnF9aHONoJIYmiUQ=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "e56990880811a451abd32515698c712788be5720",
+        "rev": "9f4128e00b0ae8ec65918efeba59db998750ead6",
         "type": "github"
       },
       "original": {

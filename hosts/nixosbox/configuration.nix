@@ -20,7 +20,7 @@
 
   hardware.cpu.intel.updateMicrocode = true;
 
-  hardware.opengl.extraPackages = with pkgs; [
+  hardware.graphics.extraPackages = with pkgs; [
     vaapiIntel
     vaapiVdpau
     libvdpau-va-gl
