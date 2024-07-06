@@ -26,7 +26,6 @@
         type = "github";
         owner = "NixOS";
         repo = "nixos-hardware";
-        rev = "d7a12fcc071bff59bd0ead589c975d802952a064";
       };
 
       sops-nix = {

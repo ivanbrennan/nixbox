@@ -1,8 +1,5 @@
 # TODO
 
-- update nixos-hardware, but check what changes that brings
-  - trace: warning: The option `services.xserver.libinput.enable' defined in `/nix/store/dibza8s8d6ggpdwjq6yk5an0yrr3kvyq-source/common/pc' has been renamed to `services.libinput.enable'.
-  - trace: warning: The option `hardware.opengl.extraPackages' defined in `/nix/store/dibza8s8d6ggpdwjq6yk5an0yrr3kvyq-source/common/cpu/intel' has been renamed to `hardware.graphics.extraPackages'.
 - upgrade to postgresql_16
 
 ## alacritty
