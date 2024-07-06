@@ -48,17 +48,17 @@
         ]
       },
       "locked": {
-        "lastModified": 1720136307,
+        "lastModified": 1720221413,
         "narHash": "sha256-1AnwPZk2qKZbIutY7nATYb651sVfVeHAqPcx07KG7kM=",
         "owner": "ivanbrennan",
         "repo": "docspell",
-        "rev": "f1390e1c61aa36e8b56812bfa6913ea8a4b1c755",
+        "rev": "baf5c682b0d78717e42352fe6525e10fb01ab836",
         "type": "github"
       },
       "original": {
         "owner": "ivanbrennan",
         "repo": "docspell",
-        "rev": "f1390e1c61aa36e8b56812bfa6913ea8a4b1c755",
+        "rev": "baf5c682b0d78717e42352fe6525e10fb01ab836",
         "type": "github"
       }
     },
