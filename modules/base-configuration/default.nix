@@ -138,6 +138,14 @@
     networkmanager.enable = true;
   };
 
+  # Temporary workaround
+  # https://github.com/NixOS/nixpkgs/issues/296953
+  systemd.services.NetworkManager-wait-online = {
+    serviceConfig = {
+      ExecStart = [ "" "${pkgs.networkmanager}/bin/nm-online -q" ];
+    };
+  };
+
   sound.enable = true;
   hardware.pulseaudio.enable = true;
 

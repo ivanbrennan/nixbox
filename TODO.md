@@ -26,9 +26,6 @@ alacritty.yml deprecated, please migrate to TOML using `alacritty migrate`
 [0.012886978s] [WARN ] [alacritty_config_derive] Unused config key: color_schemes
 ```
 
-## NetworkManager-wait-online.service failure
-https://github.com/NixOS/nixpkgs/issues/296953
-
 ## xmonad / pass-otp
 
 - XMonad.Prompt.Pass: Added passOTPTypePrompt to type out one-time-passwords via xdotool.
