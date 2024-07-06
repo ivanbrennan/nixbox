@@ -1,3 +1,5 @@
+-- TODO: telescope list modified buffers
+
 local set = vim.keymap.set
 local api = vim.api
 local cmd = vim.cmd
@@ -10,6 +12,8 @@ local wo = vim.wo
 vim.g.mapleader = ' '
 -- Don't move the cursor if a leader mapping times out.
 set('n', '<Space>', '<Nop>', { silent = true})
+
+-- TODO: make use of some useless builtin maps, e.g. gm
 
 -- buffers / files
 set('n', '<Leader>o', function()

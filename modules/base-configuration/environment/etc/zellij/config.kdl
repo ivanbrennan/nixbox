@@ -1,4 +1,17 @@
 // If you'd like to override the default keybindings completely, be sure to change "keybinds" to "keybinds clear-defaults=true"
+//
+// - [x] don't clobber Ctrl-g
+// - [ ] build a plugin that renders the status bar I'd like to have
+// - [ ] bind a key to hide/show status bar
+// - [ ] xmonad keybinding to launch zellij?
+//
+// I'm mostly interested in session management. I might start using tabs and
+// panes, but I might just keep managing that at the window-manager level.
+//
+// Introducing a multiplexer will necessitate changing the way I search, select,
+// and copy from the scrollback buffer, since I'll need to search the contents
+// of the multiplexer's scrollback rather than that of the terminal emulator.
+//
 keybinds clear-defaults=true {
 
     // Normal and Locked modes allow unbound keys to pass through to the shell,

@@ -70,6 +70,7 @@ layerIds = layer1 : map (LayerId . show) [2 .. 3 :: Int]
 nominalIds :: [NominalId]
 nominalIds = map (NominalId . show) [1 .. 9 :: Int]
 
+-- TODO: use control characters instead? e.g. '\0'
 screenSeparator :: Char
 screenSeparator = '_'
 
