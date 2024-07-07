@@ -1,0 +1,1314 @@
+# To view documentation for options and bindings:
+# `man 5 alacritty`
+# `man 5 alacritty-bindings`
+
+live_config_reload = true
+working_directory = "None"
+
+[colors]
+draw_bold_text_with_bright_colors = true
+
+[colors.bright]
+black = "#303d4b"
+blue = "#a1b3c9"
+cyan = "#26a6a6"
+green = "#d8e778"
+magenta = "#53769d"
+red = "#f4718c"
+white = "#ffffff"
+yellow = "#f7c352"
+
+[colors.cursor]
+cursor = "#d2d8e3"
+text = "#191e22"
+
+[colors.dim]
+black = "#14171d"
+blue = "#407786"
+cyan = "#3b7681"
+green = "#7b9545"
+magenta = "#40546b"
+red = "#943326"
+white = "#6a6c6e"
+yellow = "#bda370"
+
+[colors.footer_bar]
+background = "#272727"
+foreground = "#c4d5e5"
+
+[colors.line_indicator]
+background = "#1f1f1f"
+foreground = "#99aab6"
+
+[colors.normal]
+black = "#181818"
+blue = "#61b3c9"
+cyan = "#69d2e7"
+green = "#b8e068"
+magenta = "#617fa0"
+red = "#de4d3a"
+white = "#d5d8dc"
+yellow = "#ebcb8b"
+
+[colors.primary]
+background = "#181818"
+foreground = "#d5d8dc"
+
+[colors.search.focused_match]
+background = "#f8bb39"
+foreground = "#181818"
+
+[colors.search.matches]
+background = "#181818"
+foreground = "#f8bb39"
+
+[colors.selection]
+background = "#323848"
+text = "#ffffff"
+
+[colors.vi_mode_cursor]
+cursor = "#404656"
+text = "#ffffff"
+
+# [color_schemes.blight.bright]
+# black = "#555753"
+# blue = "#0479ba"
+# cyan = "#009e9c"
+# green = "#138b59"
+# magenta = "#a8006e"
+# red = "#f9251f"
+# white = "#a0a39d"
+# yellow = "#ff4400"
+
+# [color_schemes.blight.cursor]
+# cursor = "#555753"
+# text = "#ffffff"
+
+# [color_schemes.blight.dim]
+# black = "#f7f8f8"
+# blue = "#3465a4"
+# cyan = "#008482"
+# green = "#4e9a06"
+# magenta = "#75507b"
+# red = "#cc0000"
+# white = "#878a85"
+# yellow = "#c4a000"
+
+# [color_schemes.blight.normal]
+# black = "#2e3436"
+# blue = "#045060"
+# cyan = "#008482"
+# green = "#4e9a06"
+# magenta = "#75507b"
+# red = "#aa1100"
+# white = "#878a85"
+# yellow = "#c4a000"
+
+# [color_schemes.blight.primary]
+# background = "#f7f8f8"
+# foreground = "#424242"
+
+# [color_schemes.moot.bright]
+# black = "#303d4b"
+# blue = "#a1b3c9"
+# cyan = "#26a6a6"
+# green = "#d8e778"
+# magenta = "#53769d"
+# red = "#f4718c"
+# white = "#ffffff"
+# yellow = "#f7c352"
+
+# [color_schemes.moot.cursor]
+# cursor = "#d2d8e3"
+# text = "#191e22"
+
+# [color_schemes.moot.dim]
+# black = "#14171d"
+# blue = "#407786"
+# cyan = "#3b7681"
+# green = "#7b9545"
+# magenta = "#40546b"
+# red = "#943326"
+# white = "#6a6c6e"
+# yellow = "#bda370"
+
+# [color_schemes.moot.footer_bar]
+# background = "#272727"
+# foreground = "#c4d5e5"
+
+# [color_schemes.moot.line_indicator]
+# background = "#1f1f1f"
+# foreground = "#99aab6"
+
+# [color_schemes.moot.normal]
+# black = "#181818"
+# blue = "#61b3c9"
+# cyan = "#69d2e7"
+# green = "#b8e068"
+# magenta = "#617fa0"
+# red = "#de4d3a"
+# white = "#d5d8dc"
+# yellow = "#ebcb8b"
+
+# [color_schemes.moot.primary]
+# background = "#181818"
+# foreground = "#d5d8dc"
+
+# [color_schemes.moot.search.focused_match]
+# background = "#f8bb39"
+# foreground = "#181818"
+
+# [color_schemes.moot.search.matches]
+# background = "#181818"
+# foreground = "#f8bb39"
+
+# [color_schemes.moot.selection]
+# background = "#323848"
+# text = "#ffffff"
+
+# [color_schemes.moot.vi_mode_cursor]
+# cursor = "#404656"
+# text = "#ffffff"
+
+# [color_schemes.nord.bright]
+# black = "#4C566A"
+# blue = "#81A1C1"
+# cyan = "#8FBCBB"
+# green = "#A3BE8C"
+# magenta = "#B48EAD"
+# red = "#BF616A"
+# white = "#ECEFF4"
+# yellow = "#EBCB8B"
+
+# [color_schemes.nord.cursor]
+# cursor = "#D8DEE9"
+# text = "#3B4252"
+
+# [color_schemes.nord.dim]
+# black = "#3B4252"
+# blue = "#81A1C1"
+# cyan = "#88C0D0"
+# green = "#A3BE8C"
+# magenta = "#B48EAD"
+# red = "#BF616A"
+# white = "#E5E9F0"
+# yellow = "#EBCB8B"
+
+# [color_schemes.nord.normal]
+# black = "#3B4252"
+# blue = "#81A1C1"
+# cyan = "#88C0D0"
+# green = "#A3BE8C"
+# magenta = "#B48EAD"
+# red = "#BF616A"
+# white = "#E5E9F0"
+# yellow = "#EBCB8B"
+
+# [color_schemes.nord.primary]
+# background = "#2E3440"
+# foreground = "#D8DEE9"
+
+[cursor]
+unfocused_hollow = true
+
+[cursor.style]
+blinking = "Off"
+shape = "Block"
+
+[debug]
+log_level = "Warn"
+persistent_logging = false
+print_events = false
+render_timer = false
+
+[env]
+TERM = "alacritty-direct"
+
+[font]
+size = 14.0
+
+[font.bold]
+family = "Source Code Pro"
+
+[font.glyph_offset]
+x = 0
+y = 0
+
+[font.italic]
+family = "Liberation Mono"
+
+[font.normal]
+family = "Source Code Pro"
+
+[font.offset]
+x = 0
+y = 0
+
+[[keyboard.bindings]]
+action = "Paste"
+key = "Paste"
+
+[[keyboard.bindings]]
+action = "Copy"
+key = "Copy"
+
+[[keyboard.bindings]]
+action = "ClearLogNotice"
+key = "L"
+mods = "Control"
+
+[[keyboard.bindings]]
+chars = "\f"
+key = "L"
+mode = "~Vi|~Search"
+mods = "Control"
+
+[[keyboard.bindings]]
+action = "ScrollPageUp"
+key = "PageUp"
+mode = "~Alt"
+mods = "Shift"
+
+[[keyboard.bindings]]
+action = "ScrollPageDown"
+key = "PageDown"
+mode = "~Alt"
+mods = "Shift"
+
+[[keyboard.bindings]]
+action = "ScrollToTop"
+key = "Home"
+mode = "~Alt"
+mods = "Shift"
+
+[[keyboard.bindings]]
+action = "ScrollToBottom"
+key = "End"
+mode = "~Alt"
+mods = "Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[Z"
+key = "Tab"
+mods = "Shift"
+
+[[keyboard.bindings]]
+action = "ScrollPageUp"
+key = "Space"
+mode = "Vi|~Search"
+mods = "Shift"
+
+[[keyboard.bindings]]
+action = "ScrollPageDown"
+key = "Space"
+mode = "Vi|~Search"
+
+[[keyboard.bindings]]
+action = "ToggleViMode"
+key = "Space"
+mode = "~Vi|~Search"
+mods = "Shift"
+
+[[keyboard.bindings]]
+action = "ToggleViMode"
+key = "Escape"
+mode = "Vi|~Search"
+
+[[keyboard.bindings]]
+action = "ScrollToBottom"
+key = "Escape"
+mode = "Vi|~Search"
+
+[[keyboard.bindings]]
+action = "ClearSelection"
+key = "Escape"
+mode = "Vi|~Search"
+
+[[keyboard.bindings]]
+action = "ToggleViMode"
+key = "Q"
+mode = "Vi|~Search"
+
+[[keyboard.bindings]]
+action = "ScrollToBottom"
+key = "Q"
+mode = "Vi|~Search"
+
+[[keyboard.bindings]]
+action = "ClearSelection"
+key = "Q"
+mode = "Vi|~Search"
+
+[[keyboard.bindings]]
+action = "ToggleViMode"
+key = "I"
+mode = "Vi|~Search"
+
+[[keyboard.bindings]]
+action = "ScrollToBottom"
+key = "I"
+mode = "Vi|~Search"
+
+[[keyboard.bindings]]
+action = "ScrollLineUp"
+key = "K"
+mode = "Vi|~Search"
+mods = "Control"
+
+[[keyboard.bindings]]
+action = "ScrollLineDown"
+key = "J"
+mode = "Vi|~Search"
+mods = "Control"
+
+[[keyboard.bindings]]
+action = "ScrollToTop"
+key = "G"
+mode = "Vi|~Search"
+
+[[keyboard.bindings]]
+action = "ScrollToBottom"
+key = "G"
+mode = "Vi|~Search"
+mods = "Shift"
+
+[[keyboard.bindings]]
+action = "ScrollPageUp"
+key = "B"
+mode = "Vi|~Search"
+mods = "Control"
+
+[[keyboard.bindings]]
+action = "ScrollPageDown"
+key = "F"
+mode = "Vi|~Search"
+mods = "Control"
+
+[[keyboard.bindings]]
+action = "Copy"
+key = "Y"
+mode = "Vi|~Search"
+
+[[keyboard.bindings]]
+action = "ToggleViMode"
+key = "Y"
+mode = "Vi|~Search"
+
+[[keyboard.bindings]]
+action = "ScrollToBottom"
+key = "Y"
+mode = "Vi|~Search"
+
+[[keyboard.bindings]]
+action = "ClearSelection"
+key = "Y"
+mode = "Vi|~Search"
+
+[[keyboard.bindings]]
+action = "ToggleNormalSelection"
+key = "Y"
+mode = "Vi|~Search"
+mods = "Shift"
+
+[[keyboard.bindings]]
+action = "Last"
+key = "Y"
+mode = "Vi|~Search"
+mods = "Shift"
+
+[[keyboard.bindings]]
+action = "Copy"
+key = "Y"
+mode = "Vi|~Search"
+mods = "Shift"
+
+[[keyboard.bindings]]
+action = "ToggleViMode"
+key = "Y"
+mode = "Vi|~Search"
+mods = "Shift"
+
+[[keyboard.bindings]]
+action = "ScrollToBottom"
+key = "Y"
+mode = "Vi|~Search"
+mods = "Shift"
+
+[[keyboard.bindings]]
+action = "ClearSelection"
+key = "Y"
+mode = "Vi|~Search"
+mods = "Shift"
+
+[[keyboard.bindings]]
+action = "ClearSelection"
+key = "Copy"
+mode = "Vi|~Search"
+
+[[keyboard.bindings]]
+action = "ToggleNormalSelection"
+key = "V"
+mode = "Vi|~Search"
+
+[[keyboard.bindings]]
+action = "ToggleLineSelection"
+key = "V"
+mode = "Vi|~Search"
+mods = "Shift"
+
+[[keyboard.bindings]]
+action = "ToggleBlockSelection"
+key = "V"
+mode = "Vi|~Search"
+mods = "Control"
+
+[[keyboard.bindings]]
+action = "ToggleSemanticSelection"
+key = "V"
+mode = "Vi|~Search"
+mods = "Alt"
+
+[[keyboard.bindings]]
+action = "Open"
+key = "Return"
+mode = "Vi|~Search"
+
+[[keyboard.bindings]]
+action = "CenterAroundViCursor"
+key = "Z"
+mode = "Vi|~Search"
+
+[[keyboard.bindings]]
+action = "Up"
+key = "K"
+mode = "Vi|~Search"
+
+[[keyboard.bindings]]
+action = "Down"
+key = "J"
+mode = "Vi|~Search"
+
+[[keyboard.bindings]]
+action = "Left"
+key = "H"
+mode = "Vi|~Search"
+
+[[keyboard.bindings]]
+action = "Right"
+key = "L"
+mode = "Vi|~Search"
+
+[[keyboard.bindings]]
+action = "Up"
+key = "Up"
+mode = "Vi|~Search"
+
+[[keyboard.bindings]]
+action = "Down"
+key = "Down"
+mode = "Vi|~Search"
+
+[[keyboard.bindings]]
+action = "Left"
+key = "Left"
+mode = "Vi|~Search"
+
+[[keyboard.bindings]]
+action = "Right"
+key = "Right"
+mode = "Vi|~Search"
+
+[[keyboard.bindings]]
+action = "First"
+key = "Key0"
+mode = "Vi|~Search"
+
+[[keyboard.bindings]]
+action = "First"
+key = "A"
+mode = "Vi|~Search"
+mods = "Control"
+
+[[keyboard.bindings]]
+action = "Last"
+key = "E"
+mode = "Vi|~Search"
+mods = "Control"
+
+[[keyboard.bindings]]
+action = "Last"
+key = "Key4"
+mode = "Vi|~Search"
+mods = "Shift"
+
+[[keyboard.bindings]]
+action = "FirstOccupied"
+key = "Key6"
+mode = "Vi|~Search"
+mods = "Shift"
+
+[[keyboard.bindings]]
+action = "High"
+key = "H"
+mode = "Vi|~Search"
+mods = "Shift"
+
+[[keyboard.bindings]]
+action = "Middle"
+key = "M"
+mode = "Vi|~Search"
+mods = "Shift"
+
+[[keyboard.bindings]]
+action = "Low"
+key = "L"
+mode = "Vi|~Search"
+mods = "Shift"
+
+[[keyboard.bindings]]
+action = "SemanticLeft"
+key = "B"
+mode = "Vi|~Search"
+
+[[keyboard.bindings]]
+action = "SemanticRight"
+key = "W"
+mode = "Vi|~Search"
+
+[[keyboard.bindings]]
+action = "SemanticRightEnd"
+key = "E"
+mode = "Vi|~Search"
+
+[[keyboard.bindings]]
+action = "WordLeft"
+key = "B"
+mode = "Vi|~Search"
+mods = "Shift"
+
+[[keyboard.bindings]]
+action = "WordRight"
+key = "W"
+mode = "Vi|~Search"
+mods = "Shift"
+
+[[keyboard.bindings]]
+action = "WordRightEnd"
+key = "E"
+mode = "Vi|~Search"
+mods = "Shift"
+
+[[keyboard.bindings]]
+action = "Bracket"
+key = "Key5"
+mode = "Vi|~Search"
+mods = "Shift"
+
+[[keyboard.bindings]]
+action = "SearchForward"
+key = "Slash"
+mode = "Vi|~Search"
+
+[[keyboard.bindings]]
+action = "SearchBackward"
+key = 53
+mode = "Vi|~Search"
+mods = "Shift"
+
+[[keyboard.bindings]]
+action = "SearchNext"
+key = "N"
+mode = "Vi|~Search"
+
+[[keyboard.bindings]]
+action = "SearchPrevious"
+key = "N"
+mode = "Vi|~Search"
+mods = "Shift"
+
+[[keyboard.bindings]]
+action = "ToggleViMode"
+key = "Slash"
+mode = "~Vi|~Search"
+mods = "Control"
+
+[[keyboard.bindings]]
+action = "SearchBackward"
+key = "Slash"
+mode = "~Vi|~Search"
+mods = "Control"
+
+[[keyboard.bindings]]
+action = "SearchConfirm"
+key = "Return"
+mode = "Search|Vi"
+
+[[keyboard.bindings]]
+action = "SearchCancel"
+key = "Escape"
+mode = "Search"
+
+[[keyboard.bindings]]
+action = "SearchCancel"
+key = "C"
+mode = "Search"
+mods = "Control"
+
+[[keyboard.bindings]]
+action = "SearchClear"
+key = "U"
+mode = "Search"
+mods = "Control"
+
+[[keyboard.bindings]]
+action = "SearchDeleteWord"
+key = "W"
+mode = "Search"
+mods = "Control"
+
+[[keyboard.bindings]]
+action = "SearchHistoryPrevious"
+key = "P"
+mode = "Search"
+mods = "Alt"
+
+[[keyboard.bindings]]
+action = "SearchHistoryNext"
+key = "N"
+mode = "Search"
+mods = "Alt"
+
+[[keyboard.bindings]]
+action = "SearchHistoryPrevious"
+key = "Up"
+mode = "Search"
+
+[[keyboard.bindings]]
+action = "SearchHistoryNext"
+key = "Down"
+mode = "Search"
+
+[[keyboard.bindings]]
+action = "SearchFocusNext"
+key = "P"
+mode = "Search"
+mods = "Control"
+
+[[keyboard.bindings]]
+action = "SearchFocusPrevious"
+key = "N"
+mode = "Search"
+mods = "Control"
+
+[[keyboard.bindings]]
+action = "Paste"
+key = "V"
+mods = "Control|Alt"
+
+[[keyboard.bindings]]
+action = "Copy"
+key = "C"
+mods = "Control|Alt"
+
+[[keyboard.bindings]]
+action = "ClearSelection"
+key = "C"
+mode = "Vi"
+mods = "Control|Alt"
+
+[[keyboard.bindings]]
+chars = "\u001B[13;2u"
+key = "Return"
+mods = "Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[13;4u"
+key = "Return"
+mods = "Alt|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[13;5u"
+key = "Return"
+mods = "Control"
+
+[[keyboard.bindings]]
+chars = "\u001B[32;4u"
+key = "Space"
+mods = "Alt|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[32;6u"
+key = "Space"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+chars = "\u0000"
+key = "Space"
+mods = "Control"
+
+[[keyboard.bindings]]
+chars = "\u001B-"
+key = "Minus"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001B_"
+key = "Minus"
+mods = "Alt|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B\\"
+key = "Backslash"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001B|"
+key = "Backslash"
+mods = "Alt|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[44;5u"
+key = "Comma"
+mods = "Control"
+
+[[keyboard.bindings]]
+chars = "\u001B,"
+key = "Comma"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001B<"
+key = "Comma"
+mods = "Alt|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[46;5u"
+key = "Period"
+mods = "Control"
+
+[[keyboard.bindings]]
+chars = "\u001B."
+key = "Period"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001B>"
+key = "Period"
+mods = "Alt|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[59;5u"
+key = "Semicolon"
+mods = "Control"
+
+[[keyboard.bindings]]
+chars = "\u001B`"
+key = "`"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001B~"
+key = "`"
+mods = "Alt|Shift"
+
+[[keyboard.bindings]]
+action = "ToggleFullscreen"
+key = "F"
+mods = "Alt|Control"
+
+[[keyboard.bindings]]
+action = "SpawnNewInstance"
+key = "N"
+mods = "Alt|Shift|Control"
+
+[[keyboard.bindings]]
+chars = "\u001Ba"
+key = "A"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001Bb"
+key = "B"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001Bc"
+key = "C"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001Bd"
+key = "D"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001Be"
+key = "E"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001Bf"
+key = "F"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001Bg"
+key = "G"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001Bh"
+key = "H"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001Bi"
+key = "I"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001B[105;5u"
+key = "I"
+mods = "Control"
+
+[[keyboard.bindings]]
+chars = "\u001Bj"
+key = "J"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001Bk"
+key = "K"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001Bl"
+key = "L"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001Bm"
+key = "M"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001Bn"
+key = "N"
+mode = "~Search"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001Bo"
+key = "O"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001Bp"
+key = "P"
+mode = "~Search"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001Bq"
+key = "Q"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001Br"
+key = "R"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001Bs"
+key = "S"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001Bt"
+key = "T"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001Bu"
+key = "U"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001Bv"
+key = "V"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001Bw"
+key = "W"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001Bx"
+key = "X"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001By"
+key = "Y"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001Bz"
+key = "Z"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001BA"
+key = "A"
+mods = "Alt|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001BB"
+key = "B"
+mods = "Alt|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001BC"
+key = "C"
+mods = "Alt|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001BD"
+key = "D"
+mods = "Alt|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001BE"
+key = "E"
+mods = "Alt|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001BF"
+key = "F"
+mods = "Alt|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001BG"
+key = "G"
+mods = "Alt|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001BH"
+key = "H"
+mods = "Alt|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001BI"
+key = "I"
+mods = "Alt|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001BJ"
+key = "J"
+mods = "Alt|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001BK"
+key = "K"
+mods = "Alt|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001BL"
+key = "L"
+mods = "Alt|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001BM"
+key = "M"
+mods = "Alt|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001BN"
+key = "N"
+mods = "Alt|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001BO"
+key = "O"
+mods = "Alt|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001BP"
+key = "P"
+mods = "Alt|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001BQ"
+key = "Q"
+mods = "Alt|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001BR"
+key = "R"
+mods = "Alt|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001BS"
+key = "S"
+mods = "Alt|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001BT"
+key = "T"
+mods = "Alt|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001BU"
+key = "U"
+mods = "Alt|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001BV"
+key = "V"
+mods = "Alt|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001BW"
+key = "W"
+mods = "Alt|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001BX"
+key = "X"
+mods = "Alt|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001BY"
+key = "Y"
+mods = "Alt|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001BZ"
+key = "Z"
+mods = "Alt|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[65;6u"
+key = "A"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[66;6u"
+key = "B"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[68;6u"
+key = "D"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[69;6u"
+key = "E"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[71;6u"
+key = "G"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[72;6u"
+key = "H"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[73;6u"
+key = "I"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[74;6u"
+key = "J"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[75;6u"
+key = "K"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[76;6u"
+key = "L"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[77;6u"
+key = "M"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[78;6u"
+key = "N"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[79;6u"
+key = "O"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[80;6u"
+key = "P"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[81;6u"
+key = "Q"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[82;6u"
+key = "R"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[83;6u"
+key = "S"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[84;6u"
+key = "T"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[87;6u"
+key = "W"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[88;6u"
+key = "X"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[89;6u"
+key = "Y"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[90;6u"
+key = "Z"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B1"
+key = "Key1"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001B2"
+key = "Key2"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001B3"
+key = "Key3"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001B4"
+key = "Key4"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001B5"
+key = "Key5"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001B6"
+key = "Key6"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001B7"
+key = "Key7"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001B8"
+key = "Key8"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001B9"
+key = "Key9"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001B0"
+key = "Key0"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001B#"
+key = "Key3"
+mods = "Alt|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B%"
+key = "Key5"
+mods = "Alt|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B^"
+key = "Key6"
+mods = "Alt|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B*"
+key = "Key8"
+mods = "Alt|Shift"
+
+[mouse]
+hide_when_typing = true
+
+[[mouse.bindings]]
+action = "ExpandSelection"
+mouse = "Right"
+
+[[mouse.bindings]]
+action = "ExpandSelection"
+mods = "Control"
+mouse = "Right"
+
+[[mouse.bindings]]
+action = "PasteSelection"
+mode = "~Vi"
+mouse = "Middle"
+
+[scrolling]
+history = 10000
+multiplier = 3
+
+[selection]
+save_to_clipboard = false
+semantic_escape_chars = ",│`|:\"' ()[]{}<>\t"
+
+[window]
+decorations = "full"
+decorations_theme_variant = "None"
+dynamic_padding = false
+dynamic_title = true
+opacity = 1.0
+startup_mode = "Windowed"
+
+[window.class]
+general = "Alacritty"
+instance = "Alacritty"
+
+[window.dimensions]
+columns = 80
+lines = 24
+
+[window.padding]
+x = 4
+y = 4
