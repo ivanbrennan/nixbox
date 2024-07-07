@@ -87,10 +87,6 @@
         use-overlays = {
           nixpkgs.overlays = builtins.attrValues self.overlays;
         };
-        flake-registry = {
-          nix.registry.nixpkgs.flake = nixpkgs;
-          nix.nixPath = [ "nixpkgs=flake:nixpkgs" ];
-        };
         docspell-configuration = ./modules/docspell-configuration;
       };
 
