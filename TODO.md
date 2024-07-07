@@ -1,6 +1,6 @@
 # TODO
 
-## xmonad / pass-otp
+## xmonad
 
 - XMonad.Prompt.Pass: Added passOTPTypePrompt to type out one-time-passwords via xdotool.
 

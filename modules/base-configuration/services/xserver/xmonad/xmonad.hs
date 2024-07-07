@@ -830,14 +830,14 @@ keys' conf@(XConfig {modMask}) =
       -- copy/paste
       ( (modMask, xK_c),
         bindFirst
-          [ (isTerminal, void $ runProcessWithInput "xdotool" ["keyup", "c", "key", "--clearmodifiers", "XF86Copy"] ""),
+          [ (isTerminal, xdotool ["keyup", "c", "key", "--clearmodifiers", "XF86Copy"]),
             (isEmacs,    sendKey modMask xK_c),
             (pure True,  sendKey controlMask xK_c)
           ]
       ),
       ( (modMask, xK_v),
         bindFirst
-          [ (isTerminal, void $ runProcessWithInput "xdotool" ["keyup", "v", "key", "--clearmodifiers", "XF86Paste"] ""),
+          [ (isTerminal, xdotool ["keyup", "v", "key", "--clearmodifiers", "XF86Paste"]),
             (isEmacs,    sendKey modMask xK_v),
             (pure True,  sendKey controlMask xK_v)
           ]
@@ -1085,6 +1085,10 @@ keys' conf@(XConfig {modMask}) =
         "-sb", grey1,
         "-sf", white
       ]
+
+    xdotool :: [String] -> X ()
+    xdotool args =
+      void (runProcessWithInput "xdotool" args "")
 
     commands :: [(String, X ())]
     commands =
