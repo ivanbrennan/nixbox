@@ -1,7 +1,5 @@
 # TODO
 
-- upgrade to postgresql_16
-
 ## xmonad / pass-otp
 
 - XMonad.Prompt.Pass: Added passOTPTypePrompt to type out one-time-passwords via xdotool.

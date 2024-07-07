@@ -15,7 +15,7 @@
 
   services.postgresql = {
     enable = true;
-    package = pkgs.postgresql_15;
+    package = pkgs.postgresql_16;
     enableTCPIP = true;
     initialScript = config.sops.secrets.docspell_pginit.path;
     settings = {
