@@ -8,13 +8,13 @@ let
   transparentConfig = runCommand "alacritty-transparent.toml" {
     buildInputs = [ gnused ];
   } ''
-    sed 's/opacity = .*/opacity: 0.9/' ${./alacritty.toml} > $out
+    sed 's/opacity = .*/opacity = 0.9/' ${./alacritty.toml} > $out
   '';
 
   greyConfig = runCommand "alacritty-grey.toml" {
     buildInputs = [ gnused ];
   } ''
-    sed "s/'#181818'/'#212226'/" ${./alacritty.toml} > $out
+    sed 's/"#181818"/"#212226"/' ${./alacritty.toml} > $out
   '';
 in
 
