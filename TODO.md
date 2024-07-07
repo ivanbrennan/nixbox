@@ -46,11 +46,6 @@ Sep 03 22:04:02 thinkpad9 xmonad[43410]: Fontconfig error: Cannot load default c
 - `journalctl --boot=-1 --reverse` (search for "timed out")
 - `journalctl --user --reverse -u emacs`
 
-## secrets management
-
-https://github.com/tadfisher/pass-otp
-- https://github.com/Misterio77/nix-config/blob/5d4e7099910905708029a2fc52eb321644af6ac3/overlays/pass-otp-fix-completion.patch#L4
-
 ## document management
 
 - https://github.com/paperless-ngx/paperless-ngx
