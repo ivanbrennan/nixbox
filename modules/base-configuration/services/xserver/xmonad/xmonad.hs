@@ -2,7 +2,7 @@
 {-# OPTIONS_GHC -Wall -Werror -O2 #-}
 
 {- base -}
-import Control.Monad (when, (>=>))
+import Control.Monad (when, void, (>=>))
 import Data.Bits ((.|.))
 import Data.Char (isSpace, toLower)
 import Data.Dynamic (Typeable)
@@ -40,7 +40,7 @@ import Graphics.X11
   )
 import Graphics.X11.ExtraTypes
   ( xF86XK_AudioLowerVolume, xF86XK_AudioMute, xF86XK_AudioRaiseVolume,
-    xF86XK_Copy, xF86XK_MonBrightnessDown, xF86XK_MonBrightnessUp, xF86XK_Paste,
+    xF86XK_MonBrightnessDown, xF86XK_MonBrightnessUp,
   )
 import Graphics.X11.Xlib.Extras (Event)
 
@@ -830,14 +830,14 @@ keys' conf@(XConfig {modMask}) =
       -- copy/paste
       ( (modMask, xK_c),
         bindFirst
-          [ (isTerminal, sendKey noModMask xF86XK_Copy),
+          [ (isTerminal, void $ runProcessWithInput "xdotool" ["keyup", "c", "key", "--clearmodifiers", "XF86Copy"] ""),
             (isEmacs,    sendKey modMask xK_c),
             (pure True,  sendKey controlMask xK_c)
           ]
       ),
       ( (modMask, xK_v),
         bindFirst
-          [ (isTerminal, sendKey noModMask xF86XK_Paste),
+          [ (isTerminal, void $ runProcessWithInput "xdotool" ["keyup", "v", "key", "--clearmodifiers", "XF86Paste"] ""),
             (isEmacs,    sendKey modMask xK_v),
             (pure True,  sendKey controlMask xK_v)
           ]
