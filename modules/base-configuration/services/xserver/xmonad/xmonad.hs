@@ -830,16 +830,14 @@ keys' conf@(XConfig {modMask}) =
       -- copy/paste
       ( (modMask, xK_c),
         bindFirst
-          [ (isTerminal, xdotool ["keyup", "c", "key", "--clearmodifiers", "XF86Copy"]),
-            (isEmacs,    sendKey modMask xK_c),
-            (pure True,  sendKey controlMask xK_c)
+          [ (isEmacs,   sendKey modMask xK_c),
+            (pure True, xdotool ["keyup", "c", "key", "--clearmodifiers", "XF86Copy"])
           ]
       ),
       ( (modMask, xK_v),
         bindFirst
-          [ (isTerminal, xdotool ["keyup", "v", "key", "--clearmodifiers", "XF86Paste"]),
-            (isEmacs,    sendKey modMask xK_v),
-            (pure True,  sendKey controlMask xK_v)
+          [ (isEmacs,   sendKey modMask xK_v),
+            (pure True, xdotool ["keyup", "v", "key", "--clearmodifiers", "XF86Paste"])
           ]
       ),
       -- manpages
