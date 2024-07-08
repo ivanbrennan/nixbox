@@ -36,7 +36,7 @@ import Graphics.X11
     xK_Delete, xK_Insert, xK_Print, xK_Return, xK_Tab, xK_a, xK_backslash, xK_c,
     xK_comma, xK_d, xK_e, xK_equal, xK_f, xK_h, xK_i, xK_j, xK_k, xK_l, xK_m,
     xK_minus, xK_n, xK_o, xK_p, xK_period, xK_q, xK_r, xK_s, xK_semicolon,
-    xK_slash, xK_space, xK_u, xK_v, xK_w, xK_x, xK_y, xK_z,
+    xK_slash, xK_space, xK_t, xK_u, xK_v, xK_w, xK_x, xK_y, xK_z,
   )
 import Graphics.X11.ExtraTypes
   ( xF86XK_AudioLowerVolume, xF86XK_AudioMute, xF86XK_AudioRaiseVolume,
@@ -924,7 +924,16 @@ keys' conf@(XConfig {modMask}) =
                    safeSpawn "resound" []
                  ),
                  ( (noModMask, xK_w),
+                   safeSpawn "passmenu" ("--type" : dmenuOpts)
+                 ),
+                 ( (modMask, xK_w),
                    safeSpawn "passmenu" dmenuOpts
+                 ),
+                 ( (noModMask, xK_t),
+                   safeSpawn "dmenu_pass_otp" ("--type" : dmenuOpts)
+                 ),
+                 ( (modMask, xK_t),
+                   safeSpawn "dmenu_pass_otp" dmenuOpts
                  ),
                  ( (shiftMask, xK_w),
                    workspacePrompt xPConfig (windows . W.view)

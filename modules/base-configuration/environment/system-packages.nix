@@ -35,6 +35,7 @@ with pkgs; [
   dmenu_cdpath
   dmenu_diss
   dmenu_fontpreview
+  dmenu_pass_otp
   dmidecode
   docker
   docker-compose

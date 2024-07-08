@@ -18,6 +18,8 @@ self: super: {
 
   dmenu_fontpreview = super.callPackage ./dmenu_fontpreview { };
 
+  dmenu_pass_otp = super.callPackage ./dmenu_pass_otp { };
+
   dotinit = super.callPackage ./dotinit { };
 
   dunst = super.callPackage ./dunst {
