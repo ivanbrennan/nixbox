@@ -11,8 +11,8 @@ runCommandLocal "resound" { } ''
   patchShebangs --host $out/bin
 
   substituteInPlace $out/bin/resound \
-      --replace "systemctl" "${systemd}/bin/systemctl" \
-      --replace "xdotool"   "${xdotool}/bin/xdotool"
+      --replace-fail "systemctl" "${systemd}/bin/systemctl" \
+      --replace-fail "xdotool"   "${xdotool}/bin/xdotool"
 
   ${stdenv.shell} -n $out/bin/resound
   ${stdenv.shell} -n $out/bin/remod-sof
