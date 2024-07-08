@@ -1,9 +1,5 @@
 # TODO
 
-## xmonad
-
-- XMonad.Prompt.Pass: Added passOTPTypePrompt to type out one-time-passwords via xdotool.
-
 ## kmonad
 
 https://github.com/kmonad/kmonad/blob/master/doc/installation.md#nixos
