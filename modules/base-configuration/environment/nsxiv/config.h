@@ -96,6 +96,25 @@ static const unsigned int USED_MODMASK = ShiftMask | ControlMask | Mod1Mask;
 /* abort the keyhandler */
 static const KeySym KEYHANDLER_ABORT = XK_Escape;
 
+/* declarations */
+bool ci_set_zoom(arg_t);
+bool ci_fit_to_win(arg_t);
+
+/* custom functions */
+bool ci_toggle_zoom(arg_t _)
+{
+	extern img_t img;
+
+	if (img.scalemode != SCALE_ZOOM) {
+		return ci_set_zoom(100);
+	} else {
+		return ci_fit_to_win(SCALE_FIT);
+	}
+}
+
+/* Macros to support key-binding custom functions */
+#define i_toggle_zoom { ci_toggle_zoom, MODE_IMAGE }
+
 /* keyboard mappings for image and thumbnail mode: */
 static const keymap_t keys[] = {
 	/* modifiers    key               function              argument */
@@ -171,7 +190,8 @@ static const keymap_t keys[] = {
 	{ 0,            XK_K,             i_scroll_to_edge,     DIR_UP },
 	{ 0,            XK_L,             i_scroll_to_edge,     DIR_RIGHT },
 	{ 0,            XK_z,             i_scroll_to_center,   None },
-	{ 0,            XK_equal,         i_set_zoom,           100 },
+	{ ControlMask,  XK_equal,         i_set_zoom,           100 },
+	{ 0,            XK_equal,         i_toggle_zoom,        None },
 	{ 0,            XK_w,             i_fit_to_win,         SCALE_DOWN },
 	{ 0,            XK_W,             i_fit_to_win,         SCALE_FIT },
 	{ 0,            XK_F,             i_fit_to_win,         SCALE_FILL },
