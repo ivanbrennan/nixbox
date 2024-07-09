@@ -92,7 +92,7 @@ with pkgs; [
   nixfmt-classic
   neovim-qt
   nnn
-  nsxiv
+  (nsxiv.override { conf = builtins.readFile nsxiv/config.h; })
   openssl
   openvpn_dmenu
   ormolu
