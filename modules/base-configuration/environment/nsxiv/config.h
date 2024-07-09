@@ -101,12 +101,12 @@ bool ci_set_zoom(arg_t);
 bool ci_fit_to_win(arg_t);
 
 /* custom functions */
-bool ci_toggle_zoom(arg_t _)
+bool ci_toggle_zoom(arg_t zl)
 {
 	extern img_t img;
 
-	if (img.scalemode != SCALE_ZOOM) {
-		return ci_set_zoom(100);
+	if (prefix || img.scalemode != SCALE_ZOOM) {
+		return ci_set_zoom(zl);
 	} else {
 		return ci_fit_to_win(SCALE_FIT);
 	}
@@ -191,7 +191,7 @@ static const keymap_t keys[] = {
 	{ 0,            XK_L,             i_scroll_to_edge,     DIR_RIGHT },
 	{ 0,            XK_z,             i_scroll_to_center,   None },
 	{ ControlMask,  XK_equal,         i_set_zoom,           100 },
-	{ 0,            XK_equal,         i_toggle_zoom,        None },
+	{ 0,            XK_equal,         i_toggle_zoom,        100 },
 	{ 0,            XK_w,             i_fit_to_win,         SCALE_DOWN },
 	{ 0,            XK_W,             i_fit_to_win,         SCALE_FIT },
 	{ 0,            XK_F,             i_fit_to_win,         SCALE_FILL },
