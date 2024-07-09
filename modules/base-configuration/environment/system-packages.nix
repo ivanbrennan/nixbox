@@ -92,6 +92,7 @@ with pkgs; [
   nixfmt-classic
   neovim-qt
   nnn
+  nsxiv
   openssl
   openvpn_dmenu
   ormolu
@@ -122,7 +123,6 @@ with pkgs; [
   st
   stack
   stow
-  sxiv
   tabbed
   tcpdump
   tmux
