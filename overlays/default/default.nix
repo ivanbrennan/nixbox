@@ -58,6 +58,8 @@ self: super: {
     pathsToLink = ["/share"];
   };
 
+  nsxiv = super.callPackage ./nsxiv { nsxiv = super.nsxiv; };
+
   interception-tools-plugins = super.interception-tools-plugins // {
     caps2esc = super.interception-tools-plugins.caps2esc.overrideAttrs (old: {
       name = "interception-tools-caps2esc-0.1.3";
