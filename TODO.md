@@ -1,5 +1,9 @@
 # TODO
 
+## xmobar
+
+https://codeberg.org/xmobar/xmobar/issues/566
+
 ## kmonad
 
 https://github.com/kmonad/kmonad/blob/master/doc/installation.md#nixos
