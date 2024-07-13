@@ -95,7 +95,7 @@ api.nvim_create_autocmd("FileType", {
   group = formattingGroup,
   callback = function()
     local tw = vim.o.textwidth
-    opt_local.formatprg = "par -w" .. (tw > 0 and tw or 80)
+    opt_local.formatprg = "par -w" .. (tw > 0 and tw or 100)
   end
 })
 
