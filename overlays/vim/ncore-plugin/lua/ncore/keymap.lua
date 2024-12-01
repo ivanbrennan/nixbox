@@ -47,6 +47,7 @@ set('n', '<C-M-d>', '<Cmd>buffer #<Bar>bdelete #<CR>')
 set('n', '<Leader>dl', '<Cmd>bdelete#<CR>')
 set('n', 'gy', '<Cmd>%y +<CR>')
 set('n', '<Leader>l', '<C-^>')
+set('n', '<Leader>a', '<Cmd>ArenaToggle<CR>')
 set('n', '<Leader>F', ':setf ')
 set('n', '<C-i>', '<C-i>') -- Distinguish <C-i> from <Tab>
 set('n', '<Tab>', 'gt')

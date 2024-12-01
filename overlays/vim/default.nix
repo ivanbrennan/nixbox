@@ -56,7 +56,8 @@ in
   neovim-configured-packages = with super.vimPlugins // self.vimPrivatePlugins; {
     ncore = {
       start =
-        [ ncore-plugin
+        [ arena-nvim
+          ncore-plugin
           commentary
           dirvish
           fugitive
