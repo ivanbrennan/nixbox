@@ -381,7 +381,12 @@ set('n', 'g>', function()
     additional_args = { "--no-ignore-dot" }
   })
 end)
-set('n', '<C-;>', tel.buffers)
+set('n', '<C-;>', function()
+  tel.buffers({
+    sort_lastused = true,
+    sort_mru = true
+  })
+end)
 set('n', 'g/', tel.current_buffer_fuzzy_find)
 set('n', '<Leader>j', tel.tags)
 set('n', '<Leader><C-j>', tel.current_buffer_tags)
