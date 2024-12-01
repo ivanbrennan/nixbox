@@ -382,10 +382,7 @@ set('n', 'g>', function()
   })
 end)
 set('n', '<C-;>', function()
-  tel.buffers({
-    sort_lastused = true,
-    sort_mru = true
-  })
+  tel.buffers({ sort_mru = true })
 end)
 set('n', 'g/', tel.current_buffer_fuzzy_find)
 set('n', '<Leader>j', tel.tags)
