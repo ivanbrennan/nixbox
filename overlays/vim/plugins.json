@@ -1,13 +1,4 @@
 {
-  "arena-nvim": {
-    "name": "arena-nvim",
-    "src": {
-      "owner": "dzfrias",
-      "repo": "arena.nvim",
-      "rev": "9c68cf8afe9665241cb3f7a52c9586095c17d0da",
-      "sha256": "sha256-7u/+DHdipch2oG5geMXxvkwjTNu0HOlN4Oc7aRmSIFM="
-    }
-  },
   "articulate": {
     "name": "articulate",
     "src": {
