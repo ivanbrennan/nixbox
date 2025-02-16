@@ -338,6 +338,8 @@ set('n', '<C-,>', '<Plug>(ArticulatePop)', { remap = true })
 set('x', '<C-,>', '<Plug>(ArticulatePop)', { remap = true })
 set('n', '<Leader>.', '<Plug>(ArticulateTjump)', { remap = true })
 set('x', '<Leader>.', '<Plug>(ArticulateTjump)', { remap = true })
+set('n', 'g<C-.>', '<Plug>(ArticulateTjump)', { remap = true })
+set('x', 'g<C-.>', '<Plug>(ArticulateTjump)', { remap = true })
 set('n', 'g:', ':tjump ')
 
 -- telescope
