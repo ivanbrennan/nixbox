@@ -18,19 +18,23 @@ pkgs:
 
   # desktopManager
   desktopManager.xterm.enable = false;
+  desktopManager.wallpaper.mode = "fill";
 
   # windowManager
   windowManager.xmonad = import ./xmonad;
 
   displayManager.lightdm.background = ''
-    ${pkgs.nice-backgrounds}/share/backgrounds/gnome/moscow-subway.jpg
+    ${pkgs.nice-backgrounds}/share/backgrounds/gnome/nix-wallpaper-binary-black_8k.png
   '';
-    # ${pkgs.nice-backgrounds}/share/backgrounds/gnome/owl-eye.jpg
-    # ${pkgs.nice-backgrounds}/share/backgrounds/gnome/lookup.jpg
 
   displayManager.sessionCommands = ''
     ${pkgs.xorg.xrdb}/bin/xrdb -merge ${./Xresources}
     ${pkgs.hsetroot}/bin/hsetroot -solid "#112026"
+    if ! [ -e $HOME/.background-image ]
+    then
+        cp ${pkgs.nice-backgrounds}/share/backgrounds/gnome/nix-wallpaper-binary-black_8k.png \
+        $HOME/.background-image
+    fi
     ${pkgs.lxqt.lxqt-policykit}/bin/lxqt-policykit-agent &
 
     eval $(${pkgs.gnome-keyring}/bin/gnome-keyring-daemon --daemonize)
