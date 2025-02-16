@@ -87,6 +87,14 @@
         use-overlays = {
           nixpkgs.overlays = builtins.attrValues self.overlays;
         };
+        flake-nixpkgs = {
+          # Despite what I thought in commit bee2c84429262510d95a4413c485fc4b9c296907,
+          # removing the following seems to result in nixpkgs being absent from NIX_PATH.
+          # I suspect this is because the automatic configuration I mentioned in that
+          # commit only sets the default value, which I then override in base-configuration.
+          # https://discourse.nixos.org/t/24-05-add-flake-to-nix-path/46310/2
+          nix.nixPath = [ "nixpkgs=flake:nixpkgs" ];
+        };
         docspell-configuration = ./modules/docspell-configuration;
       };
 
