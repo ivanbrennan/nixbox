@@ -19,6 +19,7 @@
   la = "ls -A";
   ll = "ls -l";
   lsd = "ls -d .[!.]*";
+  ldl = "ls -tr ~/Downloads";
   nirb = "nix-shell -p ruby interactive-editor --command irb";
   t = "tmux";
   tls = "tmux ls";
