@@ -147,6 +147,7 @@ with pkgs; [
   xdg-user-dirs
   xdotool
   xmobar
+  xorg.xdpyinfo
   xorg.xmessage
   xorg.xprop
   xorg.xwininfo
