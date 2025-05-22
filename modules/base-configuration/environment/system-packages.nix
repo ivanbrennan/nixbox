@@ -106,6 +106,7 @@ with pkgs; [
   pup
   qalculate-gtk
   qbittorrent
+  qpdf
   qrencode
   redis
   reptyr
