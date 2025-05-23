@@ -14,21 +14,21 @@ udisksctl=@udisksctl@
 set -u
 
 blockdevices() {
-    $lsblk --tree --json --output 'uuid,path,rm,size,type,fstype,mountpoint' \
+    $lsblk --tree --json --output 'uuid,path,tran,size,type,fstype,mountpoint' \
         | $jq '.blockdevices[]'
 }
 
-removable_partitions() {
+usb_partitions() {
     blockdevices \
-        | $jq 'select(.rm and .type == "disk") | .children[]'
+        | $jq 'select(.tran == "usb" and .type == "disk") | .children[]'
 }
 
 plain_drives() {
-    removable_partitions | $jq 'select(.fstype != "crypto_LUKS")'
+    usb_partitions | $jq 'select(.fstype != "crypto_LUKS")'
 }
 
 luks_drives() {
-    removable_partitions | $jq 'select(.fstype == "crypto_LUKS")'
+    usb_partitions | $jq 'select(.fstype == "crypto_LUKS")'
 }
 
 plain_unmounted_drives() {
