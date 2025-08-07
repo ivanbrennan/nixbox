@@ -126,6 +126,7 @@ GLib-GIO-CRITICAL **: 09:51:04.250: g_settings_schema_source_lookup: assertion '
     - this could be composed with additional behavior to swap the specified workspace in at the position of the currently active workspace, and dissassociate the current workspace from the current scope
 - dynamic workspaces (to behave like tmux sessions)?
 - prompt for directory and session-name to launch alacritty with diss running nvim
+- key to grab the 2nd line from a pass entry
 
 ## window managers
 
