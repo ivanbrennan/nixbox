@@ -93,7 +93,7 @@
     udisks2.enable = true;
     upower.enable = config.powerManagement.enable;
     openssh = {
-      enable = false;
+      enable = true;
       settings = {
         PermitRootLogin = "no";
         PasswordAuthentication = false;
