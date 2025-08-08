@@ -60,6 +60,7 @@ with pkgs; [
   git-annex
   glances
   global
+  glow
   adwaita-icon-theme
   gnumake
   gnupg
