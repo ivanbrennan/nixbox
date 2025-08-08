@@ -11,6 +11,7 @@
         "input"
         "libvirtd"
         "networkmanager"
+        "plugdev"
         "uinput"
         "vboxusers"
         "video"

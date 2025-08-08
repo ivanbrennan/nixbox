@@ -148,6 +148,7 @@
 
   sound.enable = true;
   hardware.pulseaudio.enable = true;
+  hardware.keyboard.qmk.enable = true;
 
   fonts = {
     packages = with pkgs; [
