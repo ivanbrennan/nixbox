@@ -11,10 +11,17 @@
     interception-tools = {
       enable = true;
       udevmonConfig = ''
-        - JOB: "${pkgs.interception-tools}/bin/intercept -g $DEVNODE | ${pkgs.interception-tools-plugins.caps2esc}/bin/caps2esc 0.1 | ${pkgs.interception-tools}/bin/uinput -d $DEVNODE"
+        - CMD: "${pkgs.interception-tools}/bin/mux -c caps2esc"
+        - JOB: "${pkgs.interception-tools}/bin/mux -i caps2esc | ${pkgs.interception-tools-plugins.caps2esc}/bin/caps2esc -m 1 | ${pkgs.interception-tools}/bin/uinput -c /etc/interception/keyboard.yaml"
+        - JOB: "${pkgs.interception-tools}/bin/intercept -g $DEVNODE | ${pkgs.interception-tools}/bin/mux -o caps2esc"
           DEVICE:
             EVENTS:
-              EV_KEY: [KEY_CAPSLOCK, KEY_ESC]
+              EV_KEY: [[KEY_CAPSLOCK, KEY_ESC, KEY_LEFTCTRL]]
+            LINK: .*-event-kbd
+        - JOB: "${pkgs.interception-tools}/bin/intercept $DEVNODE | ${pkgs.interception-tools}/bin/mux -o caps2esc"
+          DEVICE:
+            EVENTS:
+              EV_KEY: [BTN_LEFT, BTN_TOUCH]
       '';
     };
 

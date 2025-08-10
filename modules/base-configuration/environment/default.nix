@@ -44,6 +44,7 @@
         --ignore-file=/etc/gitignore
       '';
       "inputrc".source = etc/inputrc;
+      "interception/keyboard.yaml".source = etc/interception/keyboard.yaml;
       "xdg/nvim/after/ftplugin/qf.lua".source = etc/xdg/nvim/after/ftplugin/qf.lua;
       "xdg/nvim/after/plugin/keymap.lua".source = etc/xdg/nvim/after/plugin/keymap.lua;
       "xdg/nvim/after/syntax/c.vim".source = etc/xdg/nvim/after/syntax/c.vim;

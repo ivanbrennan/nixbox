@@ -60,18 +60,6 @@ self: super: {
 
   nsxiv = super.callPackage ./nsxiv { nsxiv = super.nsxiv; };
 
-  interception-tools-plugins = super.interception-tools-plugins // {
-    caps2esc = super.interception-tools-plugins.caps2esc.overrideAttrs (old: {
-      name = "interception-tools-caps2esc-0.1.3";
-      src = self.fetchFromGitLab {
-        owner = "ivanbrennan";
-        repo = "caps2esc";
-        rev = "3f9a39c6ce31a626682f05a3880f18e2d08fe3f3";
-        sha256 = "sha256-j+fj6jOjv1oc84mMY7fXITJeaEMPEnq0CFyUPywxswc=";
-      };
-    });
-  };
-
   openvpn_dmenu = super.callPackage ./openvpn_dmenu { };
 
   pick-one-color = super.callPackage ./pick-one-color { };
