@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+dmenu=@dmenu@
+jq=@jq@
+notify_send=@notify_send@
+pactl=@pactl@
+tac=@tac@
+
+set -eu
+
+get_sinks() {
+    $pactl --format=json list sinks short
+}
+
+get_sink_inputs() {
+    $pactl --format=json list sink-inputs short
+}
+
+format_choices() {
+    $jq --raw-output 'map(.name)[]'
+}
+
+sinks=$(get_sinks)
+if (( $(echo "$sinks" | $jq length) == 0 ))
+then
+    $notify_send "No sinks detected" && exit 0
+fi
+
+name=$(echo "$sinks" | format_choices | tac | $dmenu -p "sink" "$@")
+[ -z "$name" ] && exit 0
+
+sink=$(echo "$sinks" | $jq ".[] | select(.name == \"$name\")")
+[ -z "$sink" ] && exit 0
+
+$pactl set-default-sink "$name"
+if [ $($pactl get-default-sink) == "$name" ]
+then
+    for input in $(get_sink_inputs | $jq --raw-output 'map(.index)[]')
+    do
+        $pactl move-sink-input "$input" "$name"
+    done
+fi

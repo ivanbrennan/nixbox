@@ -97,6 +97,7 @@ with pkgs; [
   openssl
   openvpn_dmenu
   ormolu
+  pactl_sink_dmenu
   pandoc
   (pass.withExtensions (exts: [exts.pass-otp]))
   par

@@ -62,6 +62,8 @@ self: super: {
 
   openvpn_dmenu = super.callPackage ./openvpn_dmenu { };
 
+  pactl_sink_dmenu = super.callPackage ./pactl_sink_dmenu { };
+
   pick-one-color = super.callPackage ./pick-one-color { };
 
   udisks_dmenu = super.callPackage ./udisks_dmenu { };

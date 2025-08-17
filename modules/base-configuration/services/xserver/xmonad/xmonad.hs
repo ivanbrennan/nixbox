@@ -920,6 +920,9 @@ keys' conf@(XConfig {modMask}) =
                  ( (noModMask, xK_s),
                    sudoTerm "/etc/nixos"
                  ),
+                 ( (noModMask, xF86XK_AudioMute),
+                   safeSpawn "pactl_sink_dmenu" dmenuOpts
+                 ),
                  ( (noModMask, xK_w),
                    safeSpawn "passmenu" ("--type" : dmenuOpts)
                  ),
