@@ -920,9 +920,6 @@ keys' conf@(XConfig {modMask}) =
                  ( (noModMask, xK_s),
                    sudoTerm "/etc/nixos"
                  ),
-                 ( (noModMask, xF86XK_AudioMute),
-                   safeSpawn "resound" []
-                 ),
                  ( (noModMask, xK_w),
                    safeSpawn "passmenu" ("--type" : dmenuOpts)
                  ),

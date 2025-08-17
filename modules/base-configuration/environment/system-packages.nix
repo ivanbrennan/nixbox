@@ -111,7 +111,6 @@ with pkgs; [
   qrencode
   redis
   reptyr
-  resound
   ripgrep
   # rover # FIXME
   rxvt_unicode-with-plugins
