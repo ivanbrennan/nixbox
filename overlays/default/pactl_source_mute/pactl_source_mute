@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+pactl=@pactl@
+
+set -eu
+
+$pactl set-source-mute "$@"
+
+if [ "$($pactl get-source-mute @DEFAULT_SOURCE@)" = "Mute: no" ]
+then
+    value=0
+else
+    value=1
+fi
+
+brightness=/sys/class/leds/platform::micmute/brightness
+
+if [ -w "$brightness" ]
+then
+    echo "$value" > "$brightness"
+fi

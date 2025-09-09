@@ -39,8 +39,8 @@ import Graphics.X11
     xK_slash, xK_space, xK_t, xK_u, xK_v, xK_w, xK_x, xK_y, xK_z,
   )
 import Graphics.X11.ExtraTypes
-  ( xF86XK_AudioLowerVolume, xF86XK_AudioMute, xF86XK_AudioRaiseVolume,
-    xF86XK_MonBrightnessDown, xF86XK_MonBrightnessUp,
+  ( xF86XK_AudioLowerVolume, xF86XK_AudioMicMute, xF86XK_AudioMute,
+    xF86XK_AudioRaiseVolume, xF86XK_MonBrightnessDown, xF86XK_MonBrightnessUp,
   )
 import Graphics.X11.Xlib.Extras (Event)
 
@@ -805,11 +805,14 @@ keys' conf@(XConfig {modMask}) =
       ( (noModMask, xF86XK_AudioMute),
         safeSpawn "pactl" ["set-sink-mute", "@DEFAULT_SINK@", "toggle"]
       ),
+      ( (noModMask, xF86XK_AudioMicMute),
+        safeSpawn "pactl_source_mute" ["@DEFAULT_SOURCE@", "toggle"]
+      ),
       ( (mod4Mask, xF86XK_AudioMute),
-        safeSpawn "pactl" ["set-source-mute", "@DEFAULT_SOURCE@", "toggle"]
+        safeSpawn "pactl_source_mute" ["@DEFAULT_SOURCE@", "toggle"]
       ),
       ( (mod4Mask, xF86XK_AudioRaiseVolume),
-        spawn "pactl set-source-mute @DEFAULT_SOURCE@ 0 && pactl set-source-volume @DEFAULT_SOURCE@ +1%"
+        spawn "pactl_source_mute @DEFAULT_SOURCE@ 0 && pactl set-source-volume @DEFAULT_SOURCE@ +1%"
       ),
       ( (mod4Mask, xF86XK_AudioLowerVolume),
         safeSpawn "pactl" ["set-source-volume", "@DEFAULT_SOURCE@", "-1%"]
