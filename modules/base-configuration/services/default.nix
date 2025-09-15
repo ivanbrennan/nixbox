@@ -17,6 +17,13 @@
           DEVICE:
             EVENTS:
               EV_KEY: [[KEY_CAPSLOCK, KEY_ESC, KEY_LEFTCTRL]]
+            LINK: .*-event-kbd
+        - JOB: "${pkgs.interception-tools}/bin/intercept -g $DEVNODE | ${pkgs.interception-tools}/bin/mux -o caps2esc"
+          DEVICE:
+            EVENTS:
+              EV_KEY: [[KEY_CAPSLOCK, KEY_ESC, KEY_LEFTCTRL]]
+            NAME: .*[kK]eychron .*[kK]eyboard.*
+            BUSTYPE: 5
         - JOB: "${pkgs.interception-tools}/bin/intercept $DEVNODE | ${pkgs.interception-tools}/bin/mux -o caps2esc"
           DEVICE:
             EVENTS:
