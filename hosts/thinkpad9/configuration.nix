@@ -27,6 +27,11 @@
   virtualisation.libvirtd.enable = true;
 
   hardware.bluetooth.enable = true;
+  # NOTE: I added the following line while trying to get bluetooth headphones to
+  # work well. I'm not entirely sure it's necessary, but will have to test the
+  # behavior that results from removing/changing it.
+  hardware.bluetooth.settings.General.Enable = "Source,Sink,Media,Socket"; # https://nixos.wiki/wiki/Bluetooth#Enabling_A2DP_Sink
+
   services.udev.extraRules = ''
     # TrackPoint Keyboard II (Bluetooth)
     ACTION=="add", SUBSYSTEM=="hid", ENV{HID_ID}=="0005:000017EF:000060E1", ATTR{fn_lock}="0"

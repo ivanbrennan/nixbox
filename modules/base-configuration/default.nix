@@ -148,6 +148,11 @@
 
   sound.enable = true;
   hardware.pulseaudio.enable = true;
+  # NOTE: I added the following line while trying to get bluetooth headphones to
+  # work well. I'm not entirely sure it's necessary, but will have to test the
+  # behavior that results from removing/changing it.
+  hardware.pulseaudio.package = pkgs.pulseaudioFull; # https://nixos.wiki/wiki/Bluetooth#Enabling_extra_codecs
+
   hardware.keyboard.qmk.enable = true;
 
   fonts = {
