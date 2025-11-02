@@ -116,15 +116,6 @@
       "sha256": "sha256-UT9srTiO6DbQMt64NfmNVCSzUUVvzoS/zOhIogURjeM=="
     }
   },
-  "mini-align": {
-    "name": "mini-align",
-    "src": {
-      "owner": "echasnovski",
-      "repo": "mini.align",
-      "rev": "b088ddab3495e5c1c84681e6db23dd3cc0660683",
-      "sha256": "sha256-L0ewucV8mQkQ/VhwyIJ75kgYIN9OhHStS5z8pTDLR4M="
-    }
-  },
   "ocursor": {
     "name": "ocursor",
     "src": {
@@ -204,15 +195,6 @@
       "repo": "telescope-file-browser.nvim",
       "rev": "a18f78121d74c4fae9edd29e138a918a8ede2a70",
       "sha256": "sha256-7oAiP72Eym9vmy55pU3zLbAAxj6EcV1S1KT9AL9923Q="
-    }
-  },
-  "telescope-undo-nvim": {
-    "name": "telescope-undo-nvim",
-    "src": {
-      "owner": "debugloop",
-      "repo": "telescope-undo.nvim",
-      "rev": "b5e31b358095074b60d87690bd1dc0a020a2afab",
-      "sha256": "sha256-6vxd9a754E2Vsq2DdoGzOIqQ+dBXaLxasTGA9Rpo+MI="
     }
   },
   "traces": {

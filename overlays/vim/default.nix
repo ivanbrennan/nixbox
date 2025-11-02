@@ -89,13 +89,13 @@ in
     };
   };
 
-  vim_configurable = super.vim_configurable.overrideAttrs (old: {
+  vim-full = super.vim-full.overrideAttrs (old: {
     # Make the X Toolkit Intrinsics library (libXt) available during the build
     # so that Vim will compile itself with clipboard support.
     buildInputs = old.buildInputs ++ [ self.xorg.libXt ];
   });
 
-  vim-configured = self.vim_configurable.customize {
+  vim-configured = self.vim-full.customize {
     name = "vim";
     vimrcConfig = configured;
   };

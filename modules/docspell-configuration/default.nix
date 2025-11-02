@@ -20,7 +20,7 @@
     initialScript = config.sops.secrets.docspell_pginit.path;
     settings = {
       port = 5432;
-      ssl = true;
+      ssl = false; # TODO: Fix expired certificate
       ssl_cert_file = config.sops.secrets.postgresql_ssl_cert.path;
       ssl_key_file = config.sops.secrets.postgresql_ssl_key.path;
     };

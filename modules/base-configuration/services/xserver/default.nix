@@ -37,8 +37,12 @@ pkgs:
     fi
     ${pkgs.lxqt.lxqt-policykit}/bin/lxqt-policykit-agent &
 
-    eval $(${pkgs.gnome-keyring}/bin/gnome-keyring-daemon --daemonize)
-    export SSH_AUTH_SOCK
+    # Hack: https://bugzilla.redhat.com/show_bug.cgi?id=2250704 still
+    # applies to sessions not managed by systemd.
+    if [ -z "$SSH_AUTH_SOCK" ] && [ -n "$XDG_RUNTIME_DIR" ]
+    then
+      export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/gcr/ssh"
+    fi
   '';
 
   updateDbusEnvironment = true;

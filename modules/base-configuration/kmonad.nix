@@ -1,3 +1,4 @@
+# TODO: Migrate nixosbox onto interception-utils, then remove this module.
 { pkgs, config, lib, ... }:
 
 let

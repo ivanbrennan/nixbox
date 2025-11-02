@@ -67,15 +67,18 @@
       specialArgs = { inherit nixos-hardware sops-nix docspell; };
     in {
       overlays = {
-        pinned = final: prev: {
-          bleep = inputs.bleep.packages.${prev.system}.bleep;
-          fly = inputs.nixpkgs-fly.legacyPackages.${prev.system}.fly;
-          gpick = inputs.nixpkgs-gpick.legacyPackages.${prev.system}.gpick;
-          kubectl = inputs.nixpkgs-kubectl.legacyPackages.${prev.system}.kubectl;
-          kubernetes-helm = (import inputs.nixpkgs-kubernetes-helm { system = prev.system; }).kubernetes-helm;
-          docspell-restserver = inputs.docspell.packages.${prev.system}.docspell-restserver;
-          docspell-joex = inputs.docspell.packages.${prev.system}.docspell-joex;
-        };
+        pinned = final: prev:
+          let
+            prevSystem = prev.stdenv.hostPlatform.system;
+          in {
+            bleep = inputs.bleep.packages.${prevSystem}.bleep;
+            fly = inputs.nixpkgs-fly.legacyPackages.${prevSystem}.fly;
+            gpick = inputs.nixpkgs-gpick.legacyPackages.${prevSystem}.gpick;
+            kubectl = inputs.nixpkgs-kubectl.legacyPackages.${prevSystem}.kubectl;
+            kubernetes-helm = (import inputs.nixpkgs-kubernetes-helm { system = prevSystem; }).kubernetes-helm;
+            docspell-restserver = inputs.docspell.packages.${prevSystem}.docspell-restserver;
+            docspell-joex = inputs.docspell.packages.${prevSystem}.docspell-joex;
+          };
         default = import ./overlays/default;
         haskell = import ./overlays/haskell;
         vim     = import ./overlays/vim;

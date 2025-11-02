@@ -102,6 +102,7 @@
 
     colord.enable = true;
     gnome.gnome-keyring.enable = true;
+    gnome.gcr-ssh-agent.enable = true;
     hardware.bolt.enable = true;
     udisks2.enable = true;
     upower.enable = config.powerManagement.enable;

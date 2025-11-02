@@ -9,6 +9,7 @@
     less = (import ./less) pkgs;
     light.enable = true;
     neovim = (import ./neovim) pkgs;
+    nix-index.enable = true;
     nm-applet.enable = true;
     seahorse.enable = true;
     ssh  = (import ./ssh);

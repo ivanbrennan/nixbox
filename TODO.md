@@ -54,6 +54,9 @@ follow-mute
 caps2esc timeout
 - how does interception-k2k implement timeout?
 
+fix chrome emacs keybindings
+https://github.com/fultonj/awesome/blob/master/autokey/README.md
+
 ## xmobar
 
 https://codeberg.org/xmobar/xmobar/issues/566
@@ -61,6 +64,8 @@ https://codeberg.org/xmobar/xmobar/issues/566
 ## kmonad
 
 https://github.com/kmonad/kmonad/blob/master/doc/installation.md#nixos
+
+Probably remove, in favor of interception-utils.
 
 ## sleep battery drain
 https://forums.lenovo.com/t5/Other-Linux-Discussions/X1C-gen9-fan-starts-in-sleep-mode-drains-battery-in-a-few-hours/m-p/5132432
@@ -173,6 +178,7 @@ GLib-GIO-CRITICAL **: 09:51:04.250: g_settings_schema_source_lookup: assertion '
 - treesitter
 
 ## xmonad
+- look into https://github.com/xmonad/xmonad-contrib/pull/878#issuecomment-1987254582
 - look into xmonad-contrib/XMonad/Actions/CopyWindow.hs
 - look into X.A.TopicSpace and X.H.WorkspaceHistory
 - workspace metadata :: [ScopeName]
@@ -221,12 +227,3 @@ GLib-GIO-CRITICAL **: 09:51:04.250: g_settings_schema_source_lookup: assertion '
 - https://restic.net/?ref=words.filippo.io
 - https://docs.syncthing.net/
 - https://tools.suckless.org/dmenu/scripts/dmenu_run_with_command_history/
-
-## 25.05 release notes
-https://nixos.org/manual/nixos/stable/release-notes#sec-release-25.05
-
-- https://nixos.org/manual/nixos/stable/#sec-image-nixos-rebuild-build-image
-- > hardware.pulseaudio has been renamed to services.pulseaudio. The deprecated option names will continue to work, but causes a warning.
-- > Rust packages will need to regenerate their cargoHash
-- > kmonad is now hardened by default using common systemd settings. If KMonad is used to execute shell commands, hardening may make some of them fail. In that case, you can disable hardening using services.kmonad.keyboards.<name>.enableHardening option.
-- > confluent-cli was updated from 3.60.0 to 4.16.0, which includes several breaking changes as detailed in [Confluent’s release notes](https://docs.confluent.io/confluent-cli/current/release-notes.html).

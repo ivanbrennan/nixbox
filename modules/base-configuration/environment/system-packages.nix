@@ -1,9 +1,10 @@
 pkgs:
 
 with pkgs; [
-  _1password
+  _1password-cli
   abcde
   age # TODO: pa, passage
+  alsa-utils
   silver-searcher
   alacritty-wrapped
   arc-icon-theme
@@ -29,6 +30,7 @@ with pkgs; [
   computables
   conky
   confluent-cli
+  delta
   direnv
   diss
   dmenu
@@ -56,7 +58,6 @@ with pkgs; [
   fzf
   gimp
   git
-  gitAndTools.delta
   git-annex
   glances
   global
@@ -115,7 +116,8 @@ with pkgs; [
   reptyr
   ripgrep
   # rover # FIXME
-  rxvt_unicode-with-plugins
+  rxvt-unicode
+  rxvt-unicode-plugins.perls
   screencast
   screenshot
   shared-mime-info
@@ -135,7 +137,6 @@ with pkgs; [
   udisks_dmenu
   universal-ctags
   unzip
-  urxvt_perls
   vim-configured
   vimPlugins.haskell-vim
   virtualboxHeadless

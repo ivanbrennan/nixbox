@@ -10,7 +10,6 @@
       ./security
       ./services
       ./users
-      ./kmonad.nix
     ];
 
   sops = {
@@ -146,12 +145,12 @@
     };
   };
 
-  sound.enable = true;
-  hardware.pulseaudio.enable = true;
+  services.pipewire.enable = false;
+  services.pulseaudio.enable = true;
   # NOTE: I added the following line while trying to get bluetooth headphones to
   # work well. I'm not entirely sure it's necessary, but will have to test the
   # behavior that results from removing/changing it.
-  hardware.pulseaudio.package = pkgs.pulseaudioFull; # https://nixos.wiki/wiki/Bluetooth#Enabling_extra_codecs
+  services.pulseaudio.package = pkgs.pulseaudioFull; # https://nixos.wiki/wiki/Bluetooth#Enabling_extra_codecs
 
   hardware.keyboard.qmk.enable = true;
 
@@ -162,7 +161,81 @@
       emacs-all-the-icons-fonts
       fira-code
       mononoki
-      nerdfonts
+
+      # TODO: Now that nerdfonts has been split out into separate packages under
+      # the namespace `nerd-fonts`, figure out which of those fonts I actually
+      # want, and remove the others.
+      nerd-fonts._0xproto
+      nerd-fonts._3270
+      nerd-fonts.adwaita-mono
+      nerd-fonts.agave
+      nerd-fonts.anonymice
+      nerd-fonts.arimo
+      nerd-fonts.atkynson-mono
+      nerd-fonts.aurulent-sans-mono
+      nerd-fonts.bigblue-terminal
+      nerd-fonts.bitstream-vera-sans-mono
+      nerd-fonts.blex-mono
+      nerd-fonts.caskaydia-cove
+      nerd-fonts.caskaydia-mono
+      nerd-fonts.code-new-roman
+      nerd-fonts.comic-shanns-mono
+      nerd-fonts.commit-mono
+      nerd-fonts.cousine
+      nerd-fonts.d2coding
+      nerd-fonts.daddy-time-mono
+      nerd-fonts.dejavu-sans-mono
+      nerd-fonts.departure-mono
+      nerd-fonts.droid-sans-mono
+      nerd-fonts.envy-code-r
+      nerd-fonts.fantasque-sans-mono
+      nerd-fonts.fira-code
+      nerd-fonts.fira-mono
+      nerd-fonts.geist-mono
+      nerd-fonts.go-mono
+      nerd-fonts.gohufont
+      nerd-fonts.hack
+      nerd-fonts.hasklug
+      nerd-fonts.heavy-data
+      nerd-fonts.hurmit
+      nerd-fonts.im-writing
+      nerd-fonts.inconsolata
+      nerd-fonts.inconsolata-go
+      nerd-fonts.inconsolata-lgc
+      nerd-fonts.intone-mono
+      nerd-fonts.iosevka
+      nerd-fonts.iosevka-term
+      nerd-fonts.iosevka-term-slab
+      nerd-fonts.jetbrains-mono
+      nerd-fonts.lekton
+      nerd-fonts.liberation
+      nerd-fonts.lilex
+      nerd-fonts.martian-mono
+      nerd-fonts.meslo-lg
+      nerd-fonts.monaspace
+      nerd-fonts.monofur
+      nerd-fonts.monoid
+      nerd-fonts.mononoki
+      nerd-fonts."m+"
+      nerd-fonts.noto
+      nerd-fonts.open-dyslexic
+      nerd-fonts.overpass
+      nerd-fonts.profont
+      nerd-fonts.proggy-clean-tt
+      nerd-fonts.recursive-mono
+      nerd-fonts.roboto-mono
+      nerd-fonts.shure-tech-mono
+      nerd-fonts.sauce-code-pro
+      nerd-fonts.space-mono
+      nerd-fonts.symbols-only
+      nerd-fonts.terminess-ttf
+      nerd-fonts.tinos
+      nerd-fonts.ubuntu
+      nerd-fonts.ubuntu-mono
+      nerd-fonts.ubuntu-sans
+      nerd-fonts.victor-mono
+      nerd-fonts.zed-mono
+
       noto-fonts
       open-sans
       roboto-mono

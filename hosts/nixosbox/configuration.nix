@@ -28,13 +28,15 @@
 
   # support Bluetooth headsets
   hardware.bluetooth.enable = true;
-  hardware.pulseaudio.package = pkgs.pulseaudioFull;
+  services.pulseaudio.package = pkgs.pulseaudioFull;
 
   services.xserver.videoDrivers = [ "intel" ];
-  services.kmonad = {
-    enable = true;
-    configfile = ./config.kbd;
-  };
+
+  # TODO: Replace with interception-utils
+  # services.kmonad = {
+  #   enable = true;
+  #   configfile = ./config.kbd;
+  # };
 
   # This value determines the NixOS release with which your system is to be
   # compatible, in order to avoid breaking some software such as database

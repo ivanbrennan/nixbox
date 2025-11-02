@@ -410,7 +410,7 @@ xmonadProp :: ScreenId -> String
 xmonadProp (S i) = "_XMONAD_LOG_" ++ show i
 
 -- | StatusBar showing nominal ids for workspaces in the screen's active group.
-statusBarConfig :: ScreenId -> IO StatusBarConfig
+statusBarConfig :: ScreenId -> X StatusBarConfig
 statusBarConfig s =
   pure
     . statusBarPropTo (xmonadProp s) (xmobar s)

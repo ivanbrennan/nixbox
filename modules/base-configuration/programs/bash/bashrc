@@ -97,8 +97,9 @@ man() {
     fi
 }
 
-# hacky workaround for vim_configurable's unexposed view/vimdiff outputs
+# hacky workaround for vim-full's unexposed view/vimdiff outputs
 # https://github.com/NixOS/nixpkgs/issues/11442
+# TODO: Is this still needed?
 view() {
     $(__vim_configurable_bin)/view \
         -u $(__vim_configurable_vimrc) "$@"

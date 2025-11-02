@@ -6,7 +6,14 @@ let
     src = pkgs.fetchFromGitHub value.src;
   };
 
-  plugins = builtins.fromJSON (builtins.readFile ./plugins.json);
+  skipChecks = plugin: plugin.overrideAttrs {
+    nvimRequireCheck = [ "skip" ];
+    nvimSkipModules = [ "skip" ];
+  };
+
+  plugins = pkgs.lib.mapAttrs build (
+    builtins.fromJSON (builtins.readFile ./plugins.json)
+  );
 
   # TODO: Why doesn't pkgs.vimPlugins.lush-nvim work as expected? It doesn't
   # provide a plugin directory. It seems that might be due to the luarocks
@@ -15,9 +22,13 @@ let
   # included in "opt" instead, we can load it with :packadd! but the commands it
   # should provide are not actually made available.
 
-in pkgs.lib.mapAttrs build plugins // {
-  ncore-plugin = pkgs.vimUtils.buildVimPlugin {
-    name = "ncore-plugin";
-    src = ./ncore-plugin;
-  };
+in plugins // {
+  wool = skipChecks plugins.wool;
+
+  ncore-plugin = skipChecks (
+    pkgs.vimUtils.buildVimPlugin {
+      name = "ncore-plugin";
+      src = ./ncore-plugin;
+    }
+  );
 }

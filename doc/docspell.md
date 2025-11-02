@@ -96,3 +96,13 @@ Restore:
 ```sh
 sudo -u postgres psql docspell < docspell_backup.sql
 ```
+
+## Certificate expirations
+
+```sh
+openssl x509 -enddate -noout -in /run/secrets/localhost_ca_root_cert
+# notAfter=Jul  3 21:42:45 2034 GMT
+
+openssl x509 -enddate -noout -in /run/secrets/postgresql_ssl_cert
+# notAfter=Jul  5 21:45:27 2025 GMT
+```
