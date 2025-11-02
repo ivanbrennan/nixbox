@@ -1,5 +1,59 @@
 # TODO
 
+declarative home directory setup
+```nix
+systemd.tmpfiles.rules = [
+    "d ${config.users.users.ivan.home}/Documents 0755 :ivan :users -"
+    "d ${config.users.users.ivan.home}/Pictures 0755 :ivan :users -"
+    "d ${config.users.users.ivan.home}/Music 0755 :ivan :users -"
+  ];
+```
+```nix
+# FIXME: only if value.isNormalUser && value.createHome
+systemd.tmpfiles.settings =
+  lib.mapAttrs' (name: value:
+    let
+      home = value.home;
+      fields = { mode = "0755"; user = ":${name}"; group = ":users"; age = "-"; };
+    in lib.nameValuePair "10-home-${name}-subdirs" {
+      "${home}/Documents" = { d = fields; };
+      "${home}/Pictures" = { d = fields; };
+      "${home}/Music" = { d = fields; };
+    };
+  ) (lib.filterAttrs (name: value: value.isNormalUser && value.createHome) config.users.users);
+```
+https://discourse.nixos.org/t/how-do-i-create-folders-declaratively/36395/4
+
+look into using zram
+https://www.reddit.com/r/linux/comments/1no3uzr/comment/nfrx3up/
+
+understand this
+```sh
+╰(ivan@thinkpad9)• l /sys/class/sound/ctl-led/
+total 0
+drwxr-xr-x 4 root root    0 Sep  9 14:54 mic
+drwxr-xr-x 2 root root    0 Sep  9 14:54 power
+drwxr-xr-x 4 root root    0 Sep  9 14:54 speaker
+lrwxrwxrwx 1 root root    0 Sep  9 14:54 subsystem -> ../../../../class/sound
+-rw-r--r-- 1 root root 4.0K Sep  9 14:54 uevent
+
+╭~ 0 Tue Sep 09 14:54:56
+╰(ivan@thinkpad9)• l /sys/class/sound/ctl-led/mic/
+total 0
+-r--r--r-- 1 root root 4.0K Sep  9 14:55 brightness
+drwxr-xr-x 3 root root    0 Sep  9 14:55 card0
+-rw-r--r-- 1 root root 4.0K Sep  9 14:55 mode
+drwxr-xr-x 2 root root    0 Sep  9 14:55 power
+-rw-r--r-- 1 root root 4.0K Sep  9 14:55 uevent
+
+╭~ 0 Tue Sep 09 14:55:04
+╰(ivan@thinkpad9)• cat /sys/class/sound/ctl-led/mic/mode
+follow-mute
+```
+
+caps2esc timeout
+- how does interception-k2k implement timeout?
+
 ## xmobar
 
 https://codeberg.org/xmobar/xmobar/issues/566
@@ -63,6 +117,7 @@ Sep 03 22:04:02 thinkpad9 xmonad[43410]: Fontconfig error: Cannot load default c
 
 ## vim
 
+- bind Ctrl-h to ^ (move to first non-blank character on current line)
 - https://github.com/nvim-telescope/telescope-frecency.nvim
   - https://github.com/dhruvasagar/vim-buffer-history
 - https://github.com/roginfarrer/vim-dirvish-dovish
@@ -166,3 +221,12 @@ GLib-GIO-CRITICAL **: 09:51:04.250: g_settings_schema_source_lookup: assertion '
 - https://restic.net/?ref=words.filippo.io
 - https://docs.syncthing.net/
 - https://tools.suckless.org/dmenu/scripts/dmenu_run_with_command_history/
+
+## 25.05 release notes
+https://nixos.org/manual/nixos/stable/release-notes#sec-release-25.05
+
+- https://nixos.org/manual/nixos/stable/#sec-image-nixos-rebuild-build-image
+- > hardware.pulseaudio has been renamed to services.pulseaudio. The deprecated option names will continue to work, but causes a warning.
+- > Rust packages will need to regenerate their cargoHash
+- > kmonad is now hardened by default using common systemd settings. If KMonad is used to execute shell commands, hardening may make some of them fail. In that case, you can disable hardening using services.kmonad.keyboards.<name>.enableHardening option.
+- > confluent-cli was updated from 3.60.0 to 4.16.0, which includes several breaking changes as detailed in [Confluent’s release notes](https://docs.confluent.io/confluent-cli/current/release-notes.html).
