@@ -69,7 +69,6 @@ with pkgs; [
   graphviz
   haskellPackages.hasktags
   htop
-  i3lock
   imagemagick
   inkscape
   jq

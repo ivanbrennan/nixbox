@@ -6,6 +6,7 @@
     dconf.enable = true;
     chromium = (import ./chromium) pkgs;
     gnupg.agent.enable = true;
+    i3lock.enable = true;
     less = (import ./less) pkgs;
     light.enable = true;
     neovim = (import ./neovim) pkgs;
