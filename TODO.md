@@ -24,9 +24,6 @@ systemd.tmpfiles.settings =
 ```
 https://discourse.nixos.org/t/how-do-i-create-folders-declaratively/36395/4
 
-look into using zram
-https://www.reddit.com/r/linux/comments/1no3uzr/comment/nfrx3up/
-
 understand this
 ```sh
 ╰(ivan@thinkpad9)• l /sys/class/sound/ctl-led/
