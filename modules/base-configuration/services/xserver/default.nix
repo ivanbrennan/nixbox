@@ -37,6 +37,9 @@ pkgs:
     fi
     ${pkgs.lxqt.lxqt-policykit}/bin/lxqt-policykit-agent &
 
+    # Connect to the gnome-keyring-daemon that was started by PAM on login.
+    eval $(${pkgs.gnome-keyring}/bin/gnome-keyring-daemon --start --components=secrets)
+
     # Hack: https://bugzilla.redhat.com/show_bug.cgi?id=2250704 still
     # applies to sessions not managed by systemd.
     if [ -z "$SSH_AUTH_SOCK" ] && [ -n "$XDG_RUNTIME_DIR" ]
