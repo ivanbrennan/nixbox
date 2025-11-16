@@ -51,8 +51,8 @@
       "xdg/nvim/after/syntax/gitcommit.lua".source = etc/xdg/nvim/after/syntax/gitcommit.lua;
       "xdg/nvim/after/syntax/readline.vim".source = etc/xdg/nvim/after/syntax/readline.vim;
       "xdg/nvim/after/syntax/sh.vim".source = etc/xdg/nvim/after/syntax/sh.vim;
-      "xdg/gtk-3.0/settings.ini".source = etc/xdg/gtk-3.0/settings.ini;
       "xdg/gtk-2.0/gtkrc".source = etc/xdg/gtk-2.0/gtkrc;
+      "xdg/gtk-3.0/settings.ini".source = etc/xdg/gtk-3.0/settings.ini;
       "xdg/kitty/kitty.conf".source = etc/xdg/kitty/kitty.conf;
       "zathurarc".source = etc/zathurarc;
       "zellij/config.kdl".source = etc/zellij/config.kdl;
