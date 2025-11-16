@@ -482,7 +482,7 @@ manageHook' =
     [ composeOne
         [ appName =? "desktop_window" -?> doIgnore,
           appName =? "manpage" -?> doCenteredFloat 0.6 0.6,
-          isDialog -?> doFloat,
+          isDialog -?> doCenterFloat,
           className =? "Gcr-prompter" -?> doCenterFloat,
           className =? "Xmessage" -?> doCenterFloat,
           className =? "tabbed" -?> insertPosition Below Older,
