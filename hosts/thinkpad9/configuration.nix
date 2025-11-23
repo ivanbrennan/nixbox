@@ -34,7 +34,7 @@
 
   services.udev.extraRules = ''
     # TrackPoint Keyboard II (Bluetooth)
-    ACTION=="add", SUBSYSTEM=="hid", ENV{HID_ID}=="0005:000017EF:000060E1", RUN+="${pkgs.runtimeShell} -c '${pkgs.coreutils}/bin/sleep 0.05; echo 0 > %S%p/fn_lock'"
+    ACTION=="bind", SUBSYSTEM=="hid", ENV{HID_ID}=="0005:000017EF:000060E1", ATTR{fn_lock}="0"
 
     # TrackPoint Keyboard II (USB wireless)
     ACTION=="add", SUBSYSTEM=="hid", ENV{HID_ID}=="0003:000017EF:000060EE", ATTR{fn_lock}="0"
