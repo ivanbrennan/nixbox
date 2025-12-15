@@ -98,7 +98,7 @@
           # https://discourse.nixos.org/t/24-05-add-flake-to-nix-path/46310/2
           nix.nixPath = [ "nixpkgs=flake:nixpkgs" ];
         };
-        docspell-configuration = ./modules/docspell-configuration;
+        # docspell-configuration = ./modules/docspell-configuration;
       };
 
       nixosConfigurations.thinkpad9 = nixpkgs.lib.nixosSystem {

@@ -28,39 +28,39 @@
       environment_etc_nix_netrc = {
         path = "/etc/nix/netrc";
       };
-      docspell_joex_config = {
-        owner = config.users.users.docspell.name;
-        group = config.users.users.docspell.group;
-        restartUnits = [ "docspell-joex.service" ];
-      };
-      docspell_restserver_config = {
-        owner = config.users.users.docspell.name;
-        group = config.users.users.docspell.group;
-        restartUnits = [ "docspell-restserver.service" ];
-      };
-      localhost_ca_root_cert = {
-        owner = config.users.users.docspell.name;
-        group = config.users.users.docspell.group;
-        restartUnits = [
-          "docspell-joex.service"
-          "docspell-restserver.service"
-        ];
-      };
-      docspell_pginit = {
-        owner = config.systemd.services.postgresql.serviceConfig.User;
-        restartUnits = [ "postgresql.service" ];
-      };
-      postgresql_ssl_cert = {
-        owner = config.systemd.services.postgresql.serviceConfig.User;
-        group = config.systemd.services.postgresql.serviceConfig.User;
-        restartUnits = [ "postgresql.service" ];
-      };
-      postgresql_ssl_key = {
-        owner = config.systemd.services.postgresql.serviceConfig.User;
-        group = config.systemd.services.postgresql.serviceConfig.User;
-        mode = "0600";
-        restartUnits = [ "postgresql.service" ];
-      };
+      # docspell_joex_config = {
+      #   owner = config.users.users.docspell.name;
+      #   group = config.users.users.docspell.group;
+      #   restartUnits = [ "docspell-joex.service" ];
+      # };
+      # docspell_restserver_config = {
+      #   owner = config.users.users.docspell.name;
+      #   group = config.users.users.docspell.group;
+      #   restartUnits = [ "docspell-restserver.service" ];
+      # };
+      # localhost_ca_root_cert = {
+      #   owner = config.users.users.docspell.name;
+      #   group = config.users.users.docspell.group;
+      #   restartUnits = [
+      #     "docspell-joex.service"
+      #     "docspell-restserver.service"
+      #   ];
+      # };
+      # docspell_pginit = {
+      #   owner = config.systemd.services.postgresql.serviceConfig.User;
+      #   restartUnits = [ "postgresql.service" ];
+      # };
+      # postgresql_ssl_cert = {
+      #   owner = config.systemd.services.postgresql.serviceConfig.User;
+      #   group = config.systemd.services.postgresql.serviceConfig.User;
+      #   restartUnits = [ "postgresql.service" ];
+      # };
+      # postgresql_ssl_key = {
+      #   owner = config.systemd.services.postgresql.serviceConfig.User;
+      #   group = config.systemd.services.postgresql.serviceConfig.User;
+      #   mode = "0600";
+      #   restartUnits = [ "postgresql.service" ];
+      # };
     };
   };
 
