@@ -53,6 +53,6 @@
     ca ${secrets.openvpn_pia_ca.path}
 
     # Check server's cert against the revocation list.
-    crl-verify ${secrets.openvpn_pia_crl.path}
+    # crl-verify ${secrets.openvpn_pia_crl.path}
   '';
 }
