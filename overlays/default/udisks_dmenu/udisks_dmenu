@@ -20,7 +20,7 @@ blockdevices() {
 
 usb_partitions() {
     blockdevices \
-        | $jq 'select(.tran == "usb" and .type == "disk") | .children[]'
+        | $jq 'select(.tran == "usb" and .type == "disk" and .children != null) | .children[]'
 }
 
 plain_drives() {
