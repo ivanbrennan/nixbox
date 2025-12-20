@@ -26,7 +26,6 @@
 
   virtualisation.libvirtd.enable = true;
 
-  hardware.bluetooth.enable = true;
   # NOTE: I added the following line while trying to get bluetooth headphones to
   # work well. I'm not entirely sure it's necessary, but will have to test the
   # behavior that results from removing/changing it.

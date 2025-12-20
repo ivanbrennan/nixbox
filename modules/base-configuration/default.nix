@@ -154,6 +154,8 @@
   # behavior that results from removing/changing it.
   services.pulseaudio.package = pkgs.pulseaudioFull; # https://nixos.wiki/wiki/Bluetooth#Enabling_extra_codecs
 
+  hardware.bluetooth.enable = true;
+
   hardware.keyboard.qmk.enable = true;
 
   fonts = {
