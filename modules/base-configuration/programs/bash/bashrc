@@ -35,6 +35,17 @@ then
     # NOTE: does this break mouse selection in less?
 fi
 
+# https://github.com/weechat/weechat/issues/1364#issuecomment-1908521326
+# https://github.com/weechat/weechat/issues/1701
+weechat() {
+    if [ "$TERM" = "alacritty-direct" ]
+    then
+        TERM=alacritty command weechat
+    else
+        command weechat
+    fi
+}
+
 # Provide a function to manually disable focus notify events, in case detaching
 # a diss session from within Neovim drops us back into an interactive shell.
 # Since Neovim doesn't know about the detach, it doesn't tell the terminal to
