@@ -42,10 +42,19 @@ in
     };
   };
 
+  # Enable a systemd-based initrd so the LUKS passphrase entered at boot
+  # is stored in the kernel keyring.
+  boot.initrd.systemd.enable = true;
+
+  # Configure greetd's PAM stack to:
+  #  - delegate most operations to login's stack
+  #  - transfer the LUKS passphrase into the PAM session during auto-login
+  #  - inject the passphrase for use by gnome-keyring
   security.pam.services.greetd.text = ''
     auth      substack      login
     account   include       login
     password  substack      login
+    session   optional      ${pkgs.pam_fde_boot_pw}/lib/security/pam_fde_boot_pw.so inject_for=gkr
     session   include       login
   '';
 
@@ -58,6 +67,13 @@ in
         enable = true;
         useTextGreeter = greeter.useText;
         settings = {
+          # Automatically start a user session on boot.
+          initial_session = {
+            user = config.users.users.ivan.name;
+            command = "start-xsession";
+          };
+
+          # Start a greeter after the initial session exits.
           default_session = {
             command = greeter.command;
           };
@@ -161,7 +177,11 @@ in
     };
 
     colord.enable = true;
+
+    # Enable GNOME keyring service and configure the login PAM stack to unlock
+    # the user's default keyring when a password is available.
     gnome.gnome-keyring.enable = true;
+
     gnome.gcr-ssh-agent.enable = true;
     hardware.bolt.enable = true;
     udisks2.enable = true;

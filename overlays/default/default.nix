@@ -66,6 +66,8 @@ self: super: {
 
   pactl_sink_dmenu = super.callPackage ./pactl_sink_dmenu { };
 
+  pam_fde_boot_pw = super.callPackage ./pam_fde_boot_pw { };
+
   pick-one-color = super.callPackage ./pick-one-color { };
 
   udisks_dmenu = super.callPackage ./udisks_dmenu { };
