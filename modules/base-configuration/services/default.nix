@@ -42,6 +42,13 @@ in
     };
   };
 
+  security.pam.services.greetd.text = ''
+    auth      substack      login
+    account   include       login
+    password  substack      login
+    session   include       login
+  '';
+
   services = {
     greetd =
       let
