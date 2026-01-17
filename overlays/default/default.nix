@@ -84,6 +84,10 @@ self: super: {
     };
   });
 
+  start-hyprland-session = super.callPackage ./start-hyprland-session { };
+
+  start-xsession = super.callPackage ./start-xsession { };
+
   trayer-padding-icon = super.callPackage ./trayer-padding-icon { };
 
   vln = super.callPackage ./vln { };

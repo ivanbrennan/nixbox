@@ -40,6 +40,11 @@
         mode = "0755";
       };
       "gitignore".source = etc/gitignore;
+      "greetd/environments".source = pkgs.writeText "environments" ''
+        start-xsession
+        start-hyprland-session
+        bash
+      '';
       "ripgreprc".source = pkgs.writeText "ripgreprc" ''
         --ignore-file=/etc/gitignore
       '';

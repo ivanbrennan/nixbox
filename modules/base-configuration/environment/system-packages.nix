@@ -126,6 +126,8 @@ with pkgs; [
   sqlite-interactive
   st
   stack
+  start-hyprland-session
+  start-xsession
   stow
   tabbed
   tcpdump

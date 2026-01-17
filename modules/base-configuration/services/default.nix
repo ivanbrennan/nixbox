@@ -1,8 +1,61 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
+let
+  desktop-sessions = (import ./desktop-sessions) { inherit pkgs lib; };
+
+  greeters = {
+    agreety = {
+      useText = true;
+      command = "${pkgs.greetd}/bin/agreety --cmd '${pkgs.start-xsession}/bin/start-xsession'";
+    };
+    tuigreet = {
+      useText = true;
+      command =
+        let
+          x-sessions = "${desktop-sessions}/share/xsessions";
+          wayland-sessions = "${desktop-sessions}/share/wayland-sessions";
+          args = [
+            "--remember"
+            "--remember-session"
+            "--no-xsession-wrapper"
+            "--sessions ${wayland-sessions}:${x-sessions}"
+          ];
+        in
+          "${lib.getExe pkgs.tuigreet} ${lib.concatStringsSep " " args}";
+    };
+    gtkgreet = {
+      useText = false;
+      command = "systemd-cat --identifier=cage-greeter -- ${lib.getExe pkgs.cage} -d -s -m last -- ${pkgs.gtkgreet}/bin/gtkgreet";
+    };
+  };
+
+in
 {
+  environment.sessionVariables = {
+    XDG_DATA_DIRS = lib.mkBefore [ "${desktop-sessions}/share" ];
+  };
+
+  xdg.portal.config = {
+    xmonad = {
+      default = "gtk";
+      "org.freedesktop.impl.portal.Secret" = "gnome-keyring";
+    };
+  };
+
   services = {
-    displayManager.defaultSession = "none+xmonad";
+    greetd =
+      let
+        greeter = greeters.tuigreet;
+      in
+      {
+        enable = true;
+        useTextGreeter = greeter.useText;
+        settings = {
+          default_session = {
+            command = greeter.command;
+          };
+        };
+      };
 
     emacs.enable = true;
 
@@ -53,7 +106,7 @@
 
     xbanish.enable = true;
 
-    xserver = (import ./xserver) pkgs;
+    xserver = (import ./xserver) { inherit pkgs lib; };
 
     picom = {
       enable = true;
