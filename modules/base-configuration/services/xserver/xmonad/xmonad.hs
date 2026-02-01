@@ -233,7 +233,7 @@ windowsRL f = do
 
 
 startupHook' :: X ()
-startupHook' = systray *> killAlsactl
+startupHook' = systray
 
 systray :: X ()
 systray = spawn $
@@ -264,16 +264,6 @@ systray = spawn $
           "--monitor 0",
           "-l" -- lower on startup
         ]
-
--- https://codeberg.org/xmobar/xmobar/issues/432
-killAlsactl :: X ()
-killAlsactl = spawn $
-  intercalate
-    " | "
-    [ "ps -o pid,ppid,tty,command --ppid 1",
-      "awk '/alsactl monitor default$/ { print $1 }'",
-      "xargs --no-run-if-empty kill 2>/dev/null"
-    ]
 
 
 {-
