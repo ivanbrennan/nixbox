@@ -139,14 +139,6 @@
     networkmanager.enable = true;
   };
 
-  # Temporary workaround
-  # https://github.com/NixOS/nixpkgs/issues/296953
-  systemd.services.NetworkManager-wait-online = {
-    serviceConfig = {
-      ExecStart = [ "" "${pkgs.networkmanager}/bin/nm-online -q" ];
-    };
-  };
-
   services.pipewire.enable = false;
   services.pulseaudio.enable = true;
   # NOTE: I added the following line while trying to get bluetooth headphones to
