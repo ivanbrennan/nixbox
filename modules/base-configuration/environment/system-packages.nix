@@ -84,6 +84,7 @@ with pkgs; [
   minikube
   mkcue
   mkpasswd
+  mpv
   mutt
   networkmanager_dmenu
   nice-backgrounds
