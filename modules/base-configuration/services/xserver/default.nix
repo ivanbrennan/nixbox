@@ -1,4 +1,4 @@
-{ config, pkgs, lib }:
+{ pkgs, lib }:
 
 {
   # Enable the X11 windowing system.
@@ -22,26 +22,7 @@
   desktopManager.wallpaper.mode = "fill";
 
   # windowManager
-  windowManager = {
-    xmonad = import ./xmonad;
-    session = lib.mkForce [
-      {
-        name = "xmonad";
-        start = ''
-          systemd-run \
-              --user \
-              --wait \
-              --quiet \
-              --slice session \
-              --service-type exec \
-              --unit xmonad \
-              -- \
-              /run/current-system/sw/bin/xmonad ${lib.escapeShellArgs config.services.xserver.windowManager.xmonad.xmonadCliArgs} &
-          waitPID=$!
-        '';
-      }
-    ];
-  };
+  windowManager.xmonad = import ./xmonad;
 
   # Normally, enabling startx changes logFile to null so that no `-logfile` arg
   # will be passed to Xorg. That allows Xorg to log to its default log location

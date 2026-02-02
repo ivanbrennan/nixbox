@@ -129,7 +129,7 @@ in
 
     xbanish.enable = true;
 
-    xserver = (import ./xserver) { inherit config pkgs lib; };
+    xserver = (import ./xserver) { inherit pkgs lib; };
 
     picom = {
       enable = true;
