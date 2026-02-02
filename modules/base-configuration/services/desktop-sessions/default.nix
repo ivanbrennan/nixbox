@@ -5,7 +5,7 @@ let
     name = "xmonad-xsession";
     text = ''
       [Desktop Entry]
-      Version=1.0
+      Version=1.5
       Type=Application
       TryExec=${pkgs.start-xsession}/bin/start-xsession
       Exec=${pkgs.start-xsession}/bin/start-xsession
@@ -20,7 +20,7 @@ let
     name = "hyprland-session";
     text = ''
       [Desktop Entry]
-      Version=1.0
+      Version=1.5
       Type=Application
       TryExec=${pkgs.start-hyprland-session}/bin/start-hyprland-session
       Exec=${pkgs.start-hyprland-session}/bin/start-hyprland-session
