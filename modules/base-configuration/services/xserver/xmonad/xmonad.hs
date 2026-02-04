@@ -85,10 +85,13 @@ import XMonad.Hooks.RefocusLast
   ( RefocusLastLayoutHook, isFloat, refocusLastLayoutHook, refocusLastWhen,
     refocusWhen, swapWithLast, toggleFocus,
   )
-import XMonad.Hooks.StatusBar (StatusBarConfig, dynamicSBs, statusBarPropTo)
+import XMonad.Hooks.StatusBar
+  ( StatusBarConfig, dynamicSBs, sbLogHook, sbCleanupHook, sbStartupHook,
+    xmonadPropLog',
+  )
 import XMonad.Hooks.StatusBar.PP
-  ( filterOutWsPP, pad, ppCurrent, ppHidden, ppLayout, ppSep, ppTitle, ppWsSep,
-    wrap, xmobarColor, xmobarPP,
+  ( PP, dynamicLogString, filterOutWsPP, pad, ppCurrent, ppHidden, ppLayout,
+    ppSep, ppTitle, ppWsSep, wrap, xmobarColor, xmobarPP,
   )
 import XMonad.Layout.BoringWindows
   ( BoringWindows, boringAuto, focusDown, focusUp, swapDown, swapUp,
@@ -233,7 +236,7 @@ windowsRL f = do
 
 
 startupHook' :: X ()
-startupHook' = systray *> killAlsactl
+startupHook' = systray *> xmobarCleanAll
 
 systray :: X ()
 systray = spawn $
@@ -265,26 +268,36 @@ systray = spawn $
           "-l" -- lower on startup
         ]
 
--- https://codeberg.org/xmobar/xmobar/issues/432
-killAlsactl :: X ()
-killAlsactl = spawn $
-  intercalate
-    " | "
-    [ "ps -o pid,ppid,tty,command --ppid 1",
-      "awk '/alsactl monitor default$/ { print $1 }'",
-      "xargs --no-run-if-empty kill 2>/dev/null"
-    ]
-
 
 {-
   We provide each screen with its own statusbar displaying the nominal workspace
   ids ("1" through "9") for that screen's currently focused layer of workspaces.
 -}
 
-xmobar :: ScreenId -> String
-xmobar s@(S i) =
+xmobarService :: Maybe ScreenId -> String
+xmobarService s = "xmobar@" ++ name s ++ ".service"
+  where
+    name (Just (S i)) = show i
+    name Nothing      = "*"
+
+xmobarCleanAll :: X ()
+xmobarCleanAll = void $
+  runProcessWithInput "systemctl" ["--user", "stop", xmobarService Nothing] ""
+
+xmobarCleanup :: ScreenId -> X ()
+xmobarCleanup s =
+  safeSpawn "systemctl" ["--user", "stop", xmobarService (Just s)]
+
+xmobarStartup :: ScreenId -> X ()
+xmobarStartup s@(S i) = spawn $
   unwords
-    [ "xmobar",
+    [ "systemd-run",
+      "--user",
+      "--quiet",
+      "--collect",
+      "--unit", xmobarService (Just s),
+      "--",
+      "xmobar",
       "-B", translate black,
       "-F", translate grey5,
       "-f", translate "monospace 11",
@@ -413,7 +426,7 @@ xmonadProp (S i) = "_XMONAD_LOG_" ++ show i
 statusBarConfig :: ScreenId -> X StatusBarConfig
 statusBarConfig s =
   pure
-    . statusBarPropTo (xmonadProp s) (xmobar s)
+    . statusBar (xmonadProp s) (xmobarStartup s) (xmobarCleanup s)
     . (workspaceNamesPP >=> clickablePP)
     . filterOutWsPP [scratchpadWorkspaceTag]
     . layerPP (pure . layerIndicator) s
@@ -426,6 +439,14 @@ statusBarConfig s =
           ppLayout  = ppLayout'
         }
   where
+    statusBar :: String -> X () -> X () -> X PP -> StatusBarConfig
+    statusBar prop startup cleanup pp =
+      def
+        { sbLogHook     = xmonadPropLog' prop =<< dynamicLogString =<< pp,
+          sbStartupHook = startup,
+          sbCleanupHook = cleanup
+        }
+
     layerIndicator :: LayerId -> Maybe String
     layerIndicator =
       fmap ((" " ++) . xmobarColor grey4 "") . layerGlyph
