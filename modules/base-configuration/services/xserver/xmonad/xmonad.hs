@@ -240,31 +240,34 @@ startupHook' = systray *> xmobarCleanAll
 
 systray :: X ()
 systray = spawn $
-  intercalate " ; " [killTray, execTray]
+  intercalate " ; " [trayerCleanup, trayerStartup]
   where
-    killTray =
-      intercalate
-        " | "
-        [ "ps --no-headers -o pid,command -C trayer",
-          "awk '/\\<trayer .*SetDockType true\\>/ { print $1 }'",
-          "xargs --no-run-if-empty kill 2>/dev/null"
-        ]
+    trayerService = "trayer.service"
 
-    execTray =
+    trayerCleanup =
+      unwords ["systemctl", "--user", "stop", trayerService]
+
+    trayerStartup =
       unwords $
-        "exec" :
-        [ "trayer",
-          "--edge top",
-          "--align right",
-          "--height 22",
-          "--widthtype request",
-          "--expand true",
-          "--SetDockType true",
-          "--SetPartialStrut true",
-          "--transparent true",
-          "--alpha 0",
-          "--tint 0x161616",
-          "--monitor 0",
+        [ "exec",
+          "systemd-run",
+          "--user",
+          "--quiet",
+          "--collect",
+          "--unit", trayerService,
+          "--",
+          "trayer",
+          "--edge", "top",
+          "--align", "right",
+          "--height", "22",
+          "--widthtype", "request",
+          "--expand", "true",
+          "--SetDockType", "true",
+          "--SetPartialStrut", "true",
+          "--transparent", "true",
+          "--alpha", "0",
+          "--tint", "0x161616",
+          "--monitor", "0",
           "-l" -- lower on startup
         ]
 
