@@ -778,13 +778,37 @@ keys' conf@(XConfig {modMask}) =
       ),
       -- launch/kill
       ( (modMask, xK_i),
-        safeSpawnProg (terminal conf)
+        spawn $
+          unwords
+            [ "exec",
+              "systemd-run",
+              "--user",
+              "--quiet",
+              "--collect",
+              "--scope",
+              "--unit app-$(systemd-escape '" ++ terminal conf ++ "')-$$",
+              "--",
+              terminal conf
+            ]
       ),
       ( (modMask .|. shiftMask, xK_i),
         dmenuSpawnTerminal
       ),
       ( (modMask .|. shiftMask, xK_space),
-        safeSpawn "dmenu_run" dmenuOpts
+        spawn $
+          unwords
+            [ "exe=$(dmenu_path | dmenu " ++ unwords (map translate dmenuOpts) ++ ")",
+              "&&",
+              "exec",
+              "systemd-run",
+              "--user",
+              "--quiet",
+              "--collect",
+              "--scope",
+              "--unit app-$(systemd-escape \"$exe\")-$$",
+              "--",
+              "\"$exe\""
+            ]
       ),
       ( (modMask, xK_Tab),
         namedScratchpadAction scratchpads (NS.name scratchpadTerminal)
