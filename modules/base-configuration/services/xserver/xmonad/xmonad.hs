@@ -778,37 +778,17 @@ keys' conf@(XConfig {modMask}) =
       ),
       -- launch/kill
       ( (modMask, xK_i),
-        spawn $
-          unwords
-            [ "exec",
-              "systemd-run",
-              "--user",
-              "--quiet",
-              "--collect",
-              "--scope",
-              "--unit app-$(systemd-escape '" ++ terminal conf ++ "')-$$",
-              "--",
-              terminal conf
-            ]
+        scopeSpawn (terminal conf) []
       ),
       ( (modMask .|. shiftMask, xK_i),
         dmenuSpawnTerminal
       ),
       ( (modMask .|. shiftMask, xK_space),
-        spawn $
-          unwords
-            [ "exe=$(dmenu_path | dmenu " ++ unwords (map translate dmenuOpts) ++ ")",
-              "&&",
-              "exec",
-              "systemd-run",
-              "--user",
-              "--quiet",
-              "--collect",
-              "--scope",
-              "--unit app-$(systemd-escape \"$exe\")-$$",
-              "--",
-              "\"$exe\""
-            ]
+        do
+          cmds <- fmap lines (runProcessWithInput "dmenu_path" [] "")
+          cmd <- menuArgs "dmenu" dmenuOpts cmds
+          when (cmd `elem` cmds) $
+            scopeSpawn cmd []
       ),
       ( (modMask, xK_Tab),
         namedScratchpadAction scratchpads (NS.name scratchpadTerminal)
@@ -1078,6 +1058,26 @@ keys' conf@(XConfig {modMask}) =
 
     rationalWidth :: W.RationalRect -> Rational
     rationalWidth (W.RationalRect _ _ w _) = w
+
+    scopeSpawn :: String -> [String] -> X ()
+    scopeSpawn cmd args =
+      spawn $
+        unwords ("exec" : runInScope ++ ["--", cmd] ++ map translate args)
+      where
+        runInScope =
+          [ "systemd-run",
+            "--user",
+            "--quiet",
+            "--collect",
+            "--scope",
+            "--unit app-$(systemd-escape '" ++ appID ++ "')-$$"
+          ]
+
+        appID = M.findWithDefault cmd cmd appIDs
+
+        appIDs = M.fromList
+          [ ("chromium", "org.chromium.Chromium")
+          ]
 
     setTerminal :: String -> XConf -> XConf
     setTerminal t xc =
