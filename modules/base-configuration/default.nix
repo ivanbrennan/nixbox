@@ -80,11 +80,6 @@
 
   virtualisation = {
     docker.enable = true;
-
-    virtualbox.host = {
-      enable = true;
-      headless = true;
-    };
   };
 
   zramSwap.enable = true;

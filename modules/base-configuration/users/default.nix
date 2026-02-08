@@ -13,7 +13,6 @@
         "networkmanager"
         "plugdev"
         "uinput"
-        "vboxusers"
         "video"
         "wheel"
         "wireshark"

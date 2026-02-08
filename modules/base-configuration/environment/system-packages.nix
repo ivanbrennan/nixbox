@@ -81,7 +81,6 @@ with pkgs; [
   lsof
   lsscsi
   lua51Packages.luacheck
-  minikube
   mkcue
   mkpasswd
   mpv
@@ -141,7 +140,6 @@ with pkgs; [
   unzip
   vim-configured
   vimPlugins.haskell-vim
-  virtualboxHeadless
   vlc
   vln
   weechat
