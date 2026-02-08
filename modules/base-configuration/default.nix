@@ -79,7 +79,10 @@
   location.longitude = -74.1;
 
   virtualisation = {
-    docker.enable = true;
+    docker = {
+      enable = true;
+      enableOnBoot = false;
+    };
   };
 
   zramSwap.enable = true;
