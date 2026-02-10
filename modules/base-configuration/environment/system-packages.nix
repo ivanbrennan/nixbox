@@ -81,6 +81,8 @@ with pkgs; [
   lsof
   lsscsi
   lua51Packages.luacheck
+  man-pages
+  man-pages-posix
   mkcue
   mkpasswd
   mpv
