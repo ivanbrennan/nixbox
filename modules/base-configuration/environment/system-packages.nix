@@ -142,7 +142,6 @@ with pkgs; [
   unzip
   vim-configured
   vimPlugins.haskell-vim
-  vlc
   vln
   weechat
   wget
