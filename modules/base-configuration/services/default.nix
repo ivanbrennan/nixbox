@@ -12,13 +12,12 @@ let
       useText = true;
       command =
         let
-          x-sessions = "${desktop-sessions}/share/xsessions";
-          wayland-sessions = "${desktop-sessions}/share/wayland-sessions";
           args = [
             "--remember"
             "--remember-session"
+            "--sessions ${desktop-sessions}/share/wayland-sessions"
+            "--xsessions ${desktop-sessions}/share/xsessions"
             "--no-xsession-wrapper"
-            "--sessions ${wayland-sessions}:${x-sessions}"
           ];
         in
           "${lib.getExe pkgs.tuigreet} ${lib.concatStringsSep " " args}";
