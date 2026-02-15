@@ -42,6 +42,21 @@ self: super: {
 
   flaccurate = super.callPackage ./flaccurate { };
 
+  greetd = super.greetd.overrideAttrs (finalAttrs: oldAttrs: {
+    cargoHash = "sha256-JwTLZawY9+M09IDbMPoNUcNrnW1C2OVlEVn1n7ol6dY=";
+    src = super.fetchFromGitea {
+      domain = "codeberg.org";
+      owner = "ivanbrennan";
+      repo = "greetd";
+      rev = "b9db88305ef185d91b931ba7fc4b7fdeffe4ef47";
+      hash = "sha256-9caVVxp4ZtJX7r2pcGrnXtZy3d26lg/IBBYuCLjKV60=";
+    };
+    cargoDeps = super.rustPlatform.fetchCargoVendor {
+      inherit (finalAttrs) pname src version;
+      hash = finalAttrs.cargoHash;
+    };
+  });
+
   interactive-editor = super.callPackage ./interactive-editor { };
 
   linuxPackages = (super.linuxPackagesFor super.linuxPackages.kernel).extend (

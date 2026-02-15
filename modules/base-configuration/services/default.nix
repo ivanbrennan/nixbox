@@ -45,8 +45,8 @@ in
   # is stored in the kernel keyring.
   boot.initrd.systemd.enable = true;
 
-  # Configure greetd's PAM stack to:
-  #  - delegate most operations to login's stack
+  # Configure greetd PAM service to:
+  #  - delegate most operations to the login PAM service
   #  - transfer the LUKS passphrase into the PAM session during auto-login
   #  - inject the passphrase for use by gnome-keyring
   security.pam.services.greetd.text = ''
@@ -56,6 +56,24 @@ in
     session   optional      ${pkgs.pam_fde_boot_pw}/lib/security/pam_fde_boot_pw.so inject_for=gkr
     session   include       login
   '';
+
+  # Configure greetd-autologin PAM service to:
+  #  - delegate most operations to the greetd PAM service
+  #  - set XDG_SESSION_TYPE early, so that the correct session type is set when
+  #    PAM registers the session in systemd-logind (via pam_systemd).
+  security.pam.services.greetd-autologin.text =
+    let
+      conffile = pkgs.writeText "greetd-autologin-environment" ''
+        XDG_SESSION_TYPE   DEFAULT="x11"
+      '';
+    in
+    ''
+      auth      include       greetd
+      account   include       greetd
+      password  include       greetd
+      session   optional      pam_env.so conffile=${conffile} readenv=0
+      session   include       greetd
+    '';
 
   services = {
     greetd =
@@ -70,6 +88,7 @@ in
           initial_session = {
             user = config.users.users.ivan.name;
             command = "start-xsession";
+            service = "greetd-autologin";
           };
 
           # Start a greeter after the initial session exits.
