@@ -1074,7 +1074,8 @@ keys' conf@(XConfig {modMask}) =
         unit = "app-$(systemd-escape '" ++ appID ++ "')-$$"
         appID = M.findWithDefault cmd cmd appIDs
         appIDs = M.fromList
-          [ ("chromium", "org.chromium.Chromium")
+          [ ("chromium", "org.chromium.Chromium"),
+            ("dmenu_cdpath-alacritty", "alacritty")
           ]
 
     scopeSpawnAs :: String -> String -> [String] -> X ()
@@ -1124,7 +1125,7 @@ keys' conf@(XConfig {modMask}) =
 
     dmenuSpawnTerminal :: X ()
     dmenuSpawnTerminal =
-      safeSpawn "dmenu_cdpath-alacritty" $
+      scopeSpawn "dmenu_cdpath-alacritty" $
         "~/Development" : "--" : dmenuOpts
 
     dmenuDissRettachTerminal :: String -> X ()
