@@ -65,6 +65,8 @@ self: super: {
     }
   );
 
+  mpv = super.callPackage ./mpv { mpv = super.mpv; };
+
   nice-backgrounds = super.callPackage ./nice-backgrounds { };
 
   nice-icons = super.buildEnv {
