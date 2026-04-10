@@ -204,6 +204,13 @@ in
     hardware.bolt.enable = true;
     udisks2.enable = true;
     upower.enable = config.powerManagement.enable;
+    tlp = {
+      enable = true;
+      settings = {
+        START_CHARGE_THRESH_BAT0 = 40;
+        STOP_CHARGE_THRESH_BAT0 = 80;
+      };
+    };
     openssh = {
       enable = true;
       settings = {
