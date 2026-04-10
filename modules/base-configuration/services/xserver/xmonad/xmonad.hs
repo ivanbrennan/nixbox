@@ -9,7 +9,7 @@ import Data.Dynamic (Typeable)
 import Data.Foldable (find)
 import Data.List (dropWhileEnd, intercalate, isInfixOf, sortOn)
 import Data.Monoid (All)
-import System.Directory (getHomeDirectory)
+import System.Directory (doesDirectoryExist, getHomeDirectory)
 import System.Environment (getArgs)
 import System.Exit (exitSuccess)
 import System.FilePath ((</>))
@@ -1124,9 +1124,11 @@ keys' conf@(XConfig {modMask}) =
       appendFilePrompt' xP (time ++) (home </> "thoughts")
 
     dmenuSpawnTerminal :: X ()
-    dmenuSpawnTerminal =
+    dmenuSpawnTerminal = do
+      home <- io getHomeDirectory
+      bool <- io (doesDirectoryExist (home </> "Development"))
       scopeSpawn "dmenu_cdpath-alacritty" $
-        "~/Development" : "--" : dmenuOpts
+        (if bool then "~/Development" else "~") : "--" : dmenuOpts
 
     dmenuDissRettachTerminal :: String -> X ()
     dmenuDissRettachTerminal term =

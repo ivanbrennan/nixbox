@@ -20,6 +20,7 @@ EOF
 
 dir=$($dmenu_cdpath "$@")
 
+[ -n "$dir" ] || exit 1
 [ -d "$dir" ] || exit 1
 
 exec $alacritty --working-directory "$dir"
