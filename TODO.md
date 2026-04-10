@@ -1,5 +1,9 @@
 # TODO
 
+Implement screencast as a transient singleton systemd service.
+The service's main process can run ffmpeg (as a background process?),
+and on receiving SIGUSR1, finish up.
+
 declarative home directory setup
 ```nix
 systemd.tmpfiles.rules = [
