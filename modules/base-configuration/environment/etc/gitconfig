@@ -14,13 +14,9 @@
 	file-style = bold yellow ul
 	file-decoration-style = none
 [alias]
-	st = status
 	co = checkout
-	df = diff
 	ca = diff --cached
 	o = log -1 --pretty=fuller
-	lp = log -p
-	ff = pull --ff-only
 	ctags = !.git/hooks/ctags
 [color]
 	ui = true
