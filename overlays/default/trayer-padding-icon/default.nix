@@ -1,6 +1,6 @@
 { coreutils
 , gnugrep
-, xorg
+, xprop
 , stdenv
 , runCommandLocal
 }:
@@ -12,7 +12,7 @@ runCommandLocal "trayer-padding-icon" { } ''
       --subst-var-by "cat"   "${coreutils}/bin/cat"    \
       --subst-var-by "seq"   "${coreutils}/bin/seq"    \
       --subst-var-by "grep"  "${gnugrep}/bin/grep"     \
-      --subst-var-by "xprop" "${xorg.xprop}/bin/xprop"
+      --subst-var-by "xprop" "${xprop}/bin/xprop"
 
   ${stdenv.shell} -n $out/bin/$name
 ''

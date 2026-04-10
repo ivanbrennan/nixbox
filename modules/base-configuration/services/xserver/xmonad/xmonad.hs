@@ -855,16 +855,16 @@ keys' conf@(XConfig {modMask}) =
       ),
       -- brightness
       ( (noModMask, xF86XK_MonBrightnessUp),
-        safeSpawn "light" ["-A", "5"]
+        safeSpawn "brightnessctl" ["-q", "-n", "s", "+5%"]
       ),
       ( (noModMask, xF86XK_MonBrightnessDown),
-        safeSpawn "light" ["-U", "5"]
+        safeSpawn "brightnessctl" ["-q", "-n", "s", "5%-"]
       ),
       ( (shiftMask, xF86XK_MonBrightnessUp),
-        safeSpawn "light" ["-A", "20"]
+        safeSpawn "brightnessctl" ["-q", "-n", "s", "+20%"]
       ),
       ( (shiftMask, xF86XK_MonBrightnessDown),
-        safeSpawn "light" ["-U", "20"]
+        safeSpawn "brightnessctl" ["-q", "-n", "s", "20%-"]
       ),
       -- copy/paste
       ( (modMask, xK_c),

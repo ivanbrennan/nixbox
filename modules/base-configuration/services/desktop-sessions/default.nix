@@ -34,6 +34,6 @@ let
 in
   pkgs.runCommandLocal "desktop-sessions" { } ''
     mkdir -p "$out/share/"{xsessions,wayland-sessions}
-    ${pkgs.buildPackages.xorg.lndir}/bin/lndir ${xmonad-session}/share/xsessions $out/share/xsessions
-    ${pkgs.buildPackages.xorg.lndir}/bin/lndir ${hyprland-session}/share/wayland-sessions $out/share/wayland-sessions
+    ${pkgs.buildPackages.lndir}/bin/lndir ${xmonad-session}/share/xsessions $out/share/xsessions
+    ${pkgs.buildPackages.lndir}/bin/lndir ${hyprland-session}/share/wayland-sessions $out/share/wayland-sessions
   ''

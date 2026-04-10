@@ -19,6 +19,7 @@ with pkgs; [
   bind
   binutils
   bleep
+  brightnessctl
   cabal-install
   cabal2nix
   cachix
@@ -92,7 +93,7 @@ with pkgs; [
   nice-icons
   nix-du
   nix-prefetch-git
-  nixfmt-classic
+  nixfmt
   neovim-qt
   nnn
   nsxiv
@@ -151,10 +152,10 @@ with pkgs; [
   xdg-user-dirs
   xdotool
   xmobar
-  xorg.xdpyinfo
-  xorg.xmessage
-  xorg.xprop
-  xorg.xwininfo
+  xdpyinfo
+  xmessage
+  xprop
+  xwininfo
   xsel
   yq
   zathura

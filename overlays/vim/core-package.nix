@@ -5,15 +5,15 @@ with (pkgs.vimPlugins) // (pkgs.vimPrivatePlugins); {
     [ articulate
       bstack
       coherent
-      commentary
+      vim-commentary
       coot
       dirvish
       edot
       ftglue
-      fugitive
+      vim-fugitive
       fzf-vim
-      fzfWrapper
-      gundo
+      fzf-wrapper
+      gundo-vim
       hint
       iota
       latitude
@@ -24,7 +24,7 @@ with (pkgs.vimPlugins) // (pkgs.vimPrivatePlugins); {
       refract
       sohi
       super-shell-indent
-      surround
+      vim-surround
       tabtab
       targets-vim
       traces

@@ -34,8 +34,8 @@
     enable = true;
     generateScript = true; # /etc/static/X11/xinit/xinitrc
     extraCommands = ''
-      ${pkgs.xorg.xrdb}/bin/xrdb -merge ${./Xresources}
-      ${pkgs.xorg.xsetroot}/bin/xsetroot -cursor_name left_ptr
+      ${pkgs.xrdb}/bin/xrdb -merge ${./Xresources}
+      ${pkgs.xsetroot}/bin/xsetroot -cursor_name left_ptr
       if ! [ -e $HOME/.background-image ]
       then
           cp ${pkgs.nice-backgrounds}/share/backgrounds/gnome/nix-wallpaper-binary-black_8k.png \

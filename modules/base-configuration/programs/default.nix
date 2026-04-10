@@ -9,7 +9,6 @@
     hyprland.enable = true;
     i3lock.enable = true;
     less = (import ./less) pkgs;
-    light.enable = true;
     neovim = (import ./neovim) pkgs;
     nix-index.enable = true;
     nm-applet.enable = true;
@@ -17,7 +16,7 @@
     ssh  = (import ./ssh);
     thunar = {
       enable = true;
-      plugins = with pkgs.xfce; [ thunar-volman tumbler ];
+      plugins = with pkgs; [ thunar-volman tumbler ];
     };
     tmux = (import ./tmux) pkgs;
     wireshark = {

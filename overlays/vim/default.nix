@@ -57,14 +57,13 @@ in
     ncore = {
       start =
         [ ncore-plugin
-          commentary
+          vim-commentary
           dirvish
-          fugitive
+          vim-fugitive
           hydra-nvim
           mini-align
-          nvim-treesitter.withAllGrammars
           super-shell-indent
-          surround
+          vim-surround
           telescope-file-browser-nvim
           telescope-fzf-native-nvim
           telescope-nvim
@@ -81,7 +80,6 @@ in
         [ # haskell-vim
           lush-nvim
           nvim-colorizer-lua
-          playground
           shipwright-nvim
           # splitjoin
           vim-projectionist
@@ -92,7 +90,7 @@ in
   vim-full = super.vim-full.overrideAttrs (old: {
     # Make the X Toolkit Intrinsics library (libXt) available during the build
     # so that Vim will compile itself with clipboard support.
-    buildInputs = old.buildInputs ++ [ self.xorg.libXt ];
+    buildInputs = old.buildInputs ++ [ self.libXt ];
   });
 
   vim-configured = self.vim-full.customize {

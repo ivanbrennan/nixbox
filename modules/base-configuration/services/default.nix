@@ -165,14 +165,6 @@ in
       vSync = true;
 
       settings = {
-        # --glx-no-stencil
-        #     GLX backend: Avoid using stencil buffer, useful if you don’t have
-        #     a stencil buffer. Might cause incorrect opacity when rendering
-        #     transparent content (but never practically happened) and may not
-        #     work with --blur-background. My tests show a 15% performance
-        #     boost. Recommended.
-        glx-no-stencil = true;
-
         # --glx-no-rebind-pixmap
         #     GLX backend: Avoid rebinding pixmap on window damage. Probably
         #     could improve performance on rapid window content changes, but is
