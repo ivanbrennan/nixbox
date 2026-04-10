@@ -59,7 +59,7 @@ read -r W H X Y < <(echo "$region")
 # in which case ffmpeg exits with code 255.
 #
 expectedExitCode=255
-ffmpeg -y -f x11grab -s "$W"x"$H" -i :0.0+"$X","$Y" "$tmpfile"
+ffmpeg -y -f x11grab -s "$W"x"$H" -i :${DISPLAY}.0+"$X","$Y" "$tmpfile"
 expectedExitCode=0
 
 notify-send 'generating palette'
