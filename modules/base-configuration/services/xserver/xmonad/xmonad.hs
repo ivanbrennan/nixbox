@@ -33,9 +33,9 @@ import System.Posix.Process (executeFile)
 import Graphics.X11
   ( Button, KeyMask, KeySym, Window, button1, controlMask, mod1Mask, mod4Mask,
     noModMask, shiftMask, xK_1, xK_9, xK_Alt_L, xK_Alt_R, xK_BackSpace,
-    xK_Delete, xK_Insert, xK_Print, xK_Return, xK_Tab, xK_a, xK_backslash, xK_c,
-    xK_comma, xK_d, xK_e, xK_equal, xK_f, xK_h, xK_i, xK_j, xK_k, xK_l, xK_m,
-    xK_minus, xK_n, xK_o, xK_p, xK_period, xK_q, xK_r, xK_s, xK_semicolon,
+    xK_Delete, xK_Insert, xK_Print, xK_Return, xK_Tab, xK_a, xK_b, xK_backslash,
+    xK_c, xK_comma, xK_d, xK_e, xK_equal, xK_f, xK_h, xK_i, xK_j, xK_k, xK_l,
+    xK_m, xK_minus, xK_n, xK_o, xK_p, xK_period, xK_q, xK_r, xK_s, xK_semicolon,
     xK_slash, xK_space, xK_t, xK_u, xK_v, xK_w, xK_x, xK_y, xK_z,
   )
 import Graphics.X11.ExtraTypes
@@ -286,6 +286,10 @@ xmobarService s = "xmobar@" ++ name s ++ ".service"
 xmobarCleanAll :: X ()
 xmobarCleanAll = void $
   runProcessWithInput "systemctl" ["--user", "stop", xmobarService Nothing] ""
+
+xmobarRestartAll :: X ()
+xmobarRestartAll = void $
+  safeSpawn "systemctl" ["--user", "restart", xmobarService Nothing]
 
 xmobarCleanup :: ScreenId -> X ()
 xmobarCleanup s =
@@ -775,6 +779,10 @@ keys' conf@(XConfig {modMask}) =
       -- quit xmonad
       ( (mod4Mask .|. shiftMask, xK_q),
         confirmPrompt xPConfig "exit" (io exitSuccess)
+      ),
+      -- restart statusbars
+      ( (mod4Mask, xK_b),
+        xmobarRestartAll
       ),
       -- launch/kill
       ( (modMask, xK_i),
