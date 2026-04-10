@@ -811,16 +811,16 @@ keys' conf@(XConfig {modMask}) =
         withWindowSet (trace . show)
       ),
       ( (noModMask, xK_Print),
-        safeSpawn "screenshot" []
+        scopeSpawn "screenshot" []
       ),
       ( (controlMask, xK_Print),
-        safeSpawn "screenshot" ["-c"]
+        scopeSpawn "screenshot" ["-c"]
       ),
       ( (shiftMask, xK_Print),
-        safeSpawn "screenshot" ["-a"]
+        scopeSpawn "screenshot" ["-a"]
       ),
       ( (controlMask .|. shiftMask, xK_Print),
-        safeSpawn "screenshot" ["-a", "-c"]
+        scopeSpawn "screenshot" ["-a", "-c"]
       ),
       ( (mod4Mask, xK_Print),
         screencast []
@@ -1068,7 +1068,17 @@ keys' conf@(XConfig {modMask}) =
     rationalWidth (W.RationalRect _ _ w _) = w
 
     scopeSpawn :: String -> [String] -> X ()
-    scopeSpawn cmd args =
+    scopeSpawn cmd =
+      scopeSpawnAs unit cmd
+      where
+        unit = "app-$(systemd-escape '" ++ appID ++ "')-$$"
+        appID = M.findWithDefault cmd cmd appIDs
+        appIDs = M.fromList
+          [ ("chromium", "org.chromium.Chromium")
+          ]
+
+    scopeSpawnAs :: String -> String -> [String] -> X ()
+    scopeSpawnAs unit cmd args =
       spawn $
         unwords ("exec" : runInScope ++ ["--", cmd] ++ map translate args)
       where
@@ -1078,13 +1088,7 @@ keys' conf@(XConfig {modMask}) =
             "--quiet",
             "--collect",
             "--scope",
-            "--unit app-$(systemd-escape '" ++ appID ++ "')-$$"
-          ]
-
-        appID = M.findWithDefault cmd cmd appIDs
-
-        appIDs = M.fromList
-          [ ("chromium", "org.chromium.Chromium")
+            "--unit", unit
           ]
 
     setTerminal :: String -> XConf -> XConf
@@ -1170,7 +1174,7 @@ keys' conf@(XConfig {modMask}) =
       Screencast isOn <- XS.get
       if isOn
         then safeSpawn "killall" ["ffmpeg"]
-        else safeSpawn "screencast" args
+        else scopeSpawnAs "app-screencast" "screencast" args
       XS.put $ Screencast (not isOn)
 
 
