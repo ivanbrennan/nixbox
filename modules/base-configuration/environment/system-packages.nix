@@ -151,9 +151,9 @@ with pkgs; [
   xcolor
   xdg-user-dirs
   xdotool
-  xmobar
   xdpyinfo
   xmessage
+  xmobar
   xprop
   xwininfo
   xsel
