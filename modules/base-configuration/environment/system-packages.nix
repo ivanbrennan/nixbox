@@ -154,6 +154,7 @@ with pkgs; [
   xdpyinfo
   xmessage
   xmobar
+  xournalpp
   xprop
   xwininfo
   xsel
