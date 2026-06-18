@@ -60,6 +60,7 @@ with pkgs; [
   gimp
   git
   git-annex
+  git-remote-gcrypt
   glances
   global
   glow
@@ -69,6 +70,8 @@ with pkgs; [
   gpick
   graphviz
   haskellPackages.hasktags
+  hledger
+  hledger-ui
   htop
   imagemagick
   inkscape
