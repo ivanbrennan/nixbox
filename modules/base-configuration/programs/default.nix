@@ -5,7 +5,13 @@
     bash = (import ./bash) pkgs;
     dconf.enable = true;
     chromium = (import ./chromium) pkgs;
-    gnupg.agent.enable = true;
+    gnupg.agent = {
+      enable = true;
+      settings = {
+        default-cache-ttl = 28800;
+        max-cache-ttl = 86400;
+      };
+    };
     hyprland.enable = true;
     i3lock.enable = true;
     less = (import ./less) pkgs;
