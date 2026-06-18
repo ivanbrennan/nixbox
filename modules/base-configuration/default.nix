@@ -20,10 +20,10 @@
       openvpn_pia_login = {};
       openvpn_pia_ca = {};
       openvpn_pia_crl = {};
-      openvpn_odeko_ta = {};
       openvpn_odeko_ca = {};
       openvpn_odeko_cert = {};
       openvpn_odeko_key = {};
+      openvpn_odeko_tls_crypt_v2 = {};
       openvpn_odeko_askpass = {};
       environment_etc_nix_netrc = {
         path = "/etc/nix/netrc";
